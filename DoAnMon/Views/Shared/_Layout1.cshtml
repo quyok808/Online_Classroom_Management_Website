@@ -1,4 +1,9 @@
-﻿<!DOCTYPE html>
+﻿@using DoAnMon.IdentityCudtomUser
+@using Microsoft.AspNetCore.Identity
+@inject SignInManager<CustomUser> SignInManager
+@inject UserManager<CustomUser> UserManager
+
+<!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
     <meta charset="utf-8" />
@@ -17,9 +22,14 @@
     <!-- GOOGLE FONTS-->
     <link href='http://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet' type='text/css' />
     
-    
+    <link rel="icon" href="/pics/exam.ico" type="image/x-icon">
+
 </head>
 <body>
+    @{
+        var user = await UserManager.GetUserAsync(User);
+        var fullname = user?.Name;
+    }
     <div id="wrapper" style="background-color: white;">
         <img class="img-fluid banner-img" src="/Images/banner_google.png" alt="Banner No Image">
         <nav class="navbar navbar-default navbar-cls-top " role="navigation" style="margin-bottom: 0; padding-bottom: 10px">
@@ -58,11 +68,17 @@
                     <li>
                         <div class="user-img-div" style="padding: 10px 15px 0 0;">
                             <div class="col-md-6" style="margin-bottom: 10px">
-                                <img src="/Images/1234.png" class="img-thumbnail img-fluid"style="max-width: 100%; height: auto; max-height: 300px;" />
+                                @if(user.UrlAvt == null)
+                                {
+                                    <img src="/Images/avatar.jpg" class="img-thumbnail img-fluid" style="width: 122.5px; height: auto; height: 160.13px;" />
+                                }else
+                                {
+                                    <img src="/Images/@user.UrlAvt" class="img-thumbnail img-fluid" style="width: 122.5px; height: auto; height: 160.13px;" />
+                                }
                             </div>
                             <div class="col-md-6" style="margin-left: 0; padding-left: 0; align-items: center; padding-top: 15px;">
-                                <p style="line-height: 30px; font-weight: bold; font-size: 20px; padding-bottom: 30px;">Nguyễn Công Quý</p>
-                                <p style="font-weight: bold; font-size: 20px;">2180601234</p>
+                                <p style="line-height: 30px; font-weight: bold; font-size: 20px; padding-bottom: 30px;">@fullname</p>
+                                <p style="font-weight: bold; font-size: 20px;">@user.Mssv</p>
                             </div>
                         </div>
 
