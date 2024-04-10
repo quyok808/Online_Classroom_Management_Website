@@ -1,0 +1,127 @@
+﻿<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>ONLYA</title>
+
+    <!-- BOOTSTRAP STYLES-->
+    <link href="assets/css/bootstrap.css" rel="stylesheet" />
+    <link rel="stylesheet" href="/assets/css/bootstrap.min.css">
+    <!-- FONTAWESOME STYLES-->
+    <link href="assets/css/font-awesome.css" rel="stylesheet" />
+       <!--CUSTOM BASIC STYLES-->
+    <link href="assets/css/basic.css" rel="stylesheet" />
+    <!--CUSTOM MAIN STYLES-->
+    <link href="assets/css/custom.css" rel="stylesheet" />
+    <!-- GOOGLE FONTS-->
+    <link href='http://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet' type='text/css' />
+    
+    
+</head>
+<body>
+    <div id="wrapper" style="background-color: white;">
+        <img class="img-fluid banner-img" src="/Images/banner_google.png" alt="Banner No Image">
+        <nav class="navbar navbar-default navbar-cls-top " role="navigation" style="margin-bottom: 0; padding-bottom: 10px">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".sidebar-collapse">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+            </div>
+
+            <div class="header-right" style="text-align: center;">
+                <div style="display: inline-block;">
+                    <a href="/ClassRooms/Create" class="btn btn-info" title="Create Classroom">
+                        <b>Tạo lớp </b><i class="fa fa-envelope-o fa-2x"></i>
+                    </a>
+                </div>
+                <div style="display: inline-block;">
+                    <a href="message-task.html" class="btn btn-primary" title="RUD Classroom">
+                        <b>Quản lý(xóa sửa) </b><i class="fa fa-bars fa-2x"></i>
+                    </a>
+                </div>
+                <div style="display: inline-block;">
+                    <form class="form-inline dropdown-item" asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Action("Index", "Home", new { area = "" })">
+                        <button type="submit" class="btn btn-danger" style="font-size: 18px; font-weight: bold;">Logout</button>
+                    </form>
+                </div>
+            </div>
+
+        </nav>
+        <!-- /. NAV TOP  -->
+        <nav class="navbar-default navbar-side" role="navigation">
+            <div class="sidebar-collapse">
+                <ul class="nav" id="main-menu">
+                    <li>
+                        <div class="user-img-div" style="padding: 10px 15px 0 0;">
+                            <div class="col-md-6" style="margin-bottom: 10px">
+                                <img src="/Images/1234.png" class="img-thumbnail img-fluid"style="max-width: 100%; height: auto; max-height: 300px;" />
+                            </div>
+                            <div class="col-md-6" style="margin-left: 0; padding-left: 0; align-items: center; padding-top: 15px;">
+                                <p style="line-height: 30px; font-weight: bold; font-size: 20px; padding-bottom: 30px;">Nguyễn Công Quý</p>
+                                <p style="font-weight: bold; font-size: 20px;">2180601234</p>
+                            </div>
+                        </div>
+
+                    </li>
+
+
+                    <li>
+                        <a class="active-menu" href="index.html"><i class="fa fa-dashboard "></i>Danh sách lớp học</a>
+                    </li>
+                    <li>
+                        <a href="#"><i class="fa fa-desktop "></i>Quản lí người dùng<span class="fa arrow"></span></a>
+                         <ul class="nav nav-second-level">
+                            <li>
+                                <a href="#"><i class="fa fa-toggle-on"></i>Giáo viên</a>
+                            </li>
+                            <li>
+                                <a href="#"><i class="fa fa-bell "></i>Sinh viên</a>
+                            </li>
+                             <li>
+                                <a href="#"><i class="fa fa-circle-o "></i>Tất cả người dùng</a>
+                            </li>                          
+                        </ul>
+                    </li>                   
+                    <li>
+                        <a href="#"><i class="fa fa-square-o "></i>Bài Tập</a>
+                    </li>
+                </ul>
+
+            </div>
+
+        </nav>
+        <!-- /. NAV SIDE  -->
+        <div id="page-wrapper">
+            <div id="page-inner">
+                <!-- Renderbody() -->
+                @RenderBody()
+                <!-- END Renderbody() -->
+            </div>
+            <!-- /. PAGE INNER  -->
+        </div>
+        <!-- /. PAGE WRAPPER  -->
+    </div>
+    <!-- /. WRAPPER  -->
+
+    <div id="footer-sec" style="text-align: center;">
+        &copy; 2014 YourCompany | Design By : <a href="http://www.binarytheme.com/" target="_blank">ONLYA</a>
+    </div>
+    <!-- /. FOOTER  -->
+    <!-- SCRIPTS -AT THE BOTOM TO REDUCE THE LOAD TIME-->
+    <!-- JQUERY SCRIPTS -->
+    <script src="/assets/js/jquery-1.10.2.js"></script>
+    <!-- BOOTSTRAP SCRIPTS -->
+    <script src="/assets/js/bootstrap.js"></script>
+    <script src="/assets/js/bootstrap.bundle.min.js"></script>
+    <!-- METISMENU SCRIPTS -->
+    <script src="/assets/js/jquery.metisMenu.js"></script>
+       <!-- CUSTOM SCRIPTS -->
+    <script src="/assets/js/custom.js"></script>
+
+    @RenderSection("Scripts", required: false)
+</body>
+</html>

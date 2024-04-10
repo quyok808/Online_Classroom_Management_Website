@@ -1,0 +1,379 @@
+﻿/*=============================================================
+    Authour URI: www.binarytheme.com
+    License: Commons Attribution 3.0
+
+    http://creativecommons.org/licenses/by/3.0/
+
+    100% To use For Personal And Commercial Use.
+    IN EXCHANGE JUST GIVE US CREDITS AND TELL YOUR FRIENDS ABOUT US
+   
+    ========================================================  */
+
+/*==============================================
+    MAIN BOX  STYLES    
+    =============================================*/
+.main-box {
+  text-align: center;
+  padding: 20px;
+  border-radius: 5px;
+  -moz-border-radius: 5px;
+  -webkit-border-radius: 5px;
+  margin-bottom: 40px;
+}
+.main-box a,
+.main-box a:hover {
+  color: #fff;
+  text-decoration: none;
+}
+.mb-dull {
+  background-color: #8f8f2c;
+}
+.mb-red {
+  background-color: #d36f2e;
+}
+.mb-pink {
+  background-color: #ff2f71;
+}
+.main-box h5 {
+  font-size: 16px;
+  font-weight: 800;
+  text-transform: uppercase;
+}
+/*==============================================
+    CHAT WINDOW  STYLES    
+    =============================================*/
+
+.chat-widget-main {
+  max-height: 500px;
+  padding: 20px;
+  overflow: auto;
+}
+.chat-widget-left:after {
+  top: 100%;
+  left: 10%;
+  border: solid transparent;
+  content: " ";
+  position: absolute;
+  border-top-color: #6792d5;
+  border-width: 15px;
+  margin-left: -15px;
+}
+
+.chat-widget-left {
+  width: 100%;
+  height: auto;
+  padding: 15px;
+  -webkit-border-radius: 5px;
+  -moz-border-radius: 5px;
+  border-radius: 5px;
+  position: relative;
+  border: 1px solid #6792d5;
+  font-size: 14px;
+}
+.chat-widget-right:after {
+  top: 100%;
+  right: 10%;
+  border: solid transparent;
+  content: " ";
+  position: absolute;
+  border-top-color: #d51111;
+  border-width: 15px;
+  margin-left: -15px;
+}
+
+.chat-widget-right {
+  width: 100%;
+  height: auto;
+  padding: 15px;
+  -webkit-border-radius: 5px;
+  -moz-border-radius: 5px;
+  border-radius: 5px;
+  position: relative;
+  border: 1px solid #d51111;
+  font-size: 14px;
+}
+
+.chat-widget-name-left {
+  color: #6792d5;
+  margin-top: 30px;
+  margin-left: 60px;
+  text-align: left;
+  font-weight: 900;
+  padding-bottom: 20px;
+  font-size: 16px;
+}
+.chat-widget-name-right {
+  color: #d51111;
+  margin-top: 30px;
+  margin-right: 60px;
+  font-size: 16px;
+  text-align: right;
+  font-weight: 900;
+  padding-bottom: 20px;
+}
+
+/*==============================================
+        Reviews Styles
+    =============================================*/
+#reviews {
+  min-height: 180px;
+  background-color: #64a2db;
+  padding: 15px;
+}
+#reviews h4 {
+  color: #fff;
+  line-height: 30px;
+  font-size: 16px;
+}
+#reviews .user-img {
+  border: 2px solid #fff;
+  overflow: hidden;
+  border-radius: 50%;
+  display: inline-block;
+}
+
+#reviews .img-u {
+  max-height: 90px;
+  max-width: 90px;
+}
+
+#reviews .c-black {
+  color: #fff;
+  font-style: italic;
+  font-size: 20px;
+  padding: 5px;
+}
+
+/*==============================================
+        NOTICE BOX STYLES
+    =============================================*/
+
+.noti-box {
+  min-height: 100px;
+  color: #fff;
+  padding: 20px;
+}
+.noti-box .icon-box {
+  display: block;
+  float: left;
+  margin: 0 15px 10px 0;
+  width: 70px;
+  height: 70px;
+  line-height: 75px;
+  vertical-align: middle;
+  text-align: center;
+  font-size: 40px;
+}
+.bg-color-black {
+  background-color: #424242;
+  color: #fff;
+}
+.main-text {
+  font-size: 25px;
+  font-weight: 600;
+}
+.color-bottom-txt {
+  font-size: 16px;
+  line-height: 30px;
+}
+.panel-back {
+  background-color: #929292;
+}
+
+/*==========================================
+   GALLERY/ PORTFOLIO STYLES
+    =====================================================*/
+
+#port-folio {
+  padding-top: 10px;
+  padding-bottom: 100px;
+}
+.portfolio-item {
+  border: 1px solid #000;
+  margin: 3px;
+}
+.portfolio-item p {
+  padding: 12px;
+  color: #fff;
+  line-height: 25px;
+}
+
+.portfolio-item .overlay {
+  background-color: #000;
+  text-align: center;
+  padding-bottom: 30px;
+}
+
+/*==========================================
+   GALLERY/ PORTFOLIO FILTER STYLES
+    =====================================================*/
+ul#filters {
+  padding: 0px;
+}
+#filters {
+  margin: 3% 0;
+  padding: 0;
+  list-style: none;
+  text-align: center;
+}
+#filters li {
+  display: -webkit-inline-box;
+}
+#filters li span {
+  display: block;
+  padding: 5px 4px;
+  text-decoration: none;
+  color: #d51111;
+  cursor: pointer;
+  font-size: 18px;
+}
+#port-folio .portfolio-item {
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  -o-box-sizing: border-box;
+  width: 100%;
+  opacity: 0.2;
+  float: left;
+  overflow: hidden;
+}
+
+/* =======================================
+CUSTOM PICTURE HEADER
+==========================================*/
+.img-fluid{
+    max-width: 100%;
+    height: auto;
+}
+
+.banner-img{
+  height: 180px; 
+  justify-content: center;
+  padding-left: 250px;
+}
+/* ========================================
+CUSTOM CLASSROOM CARD
+=========================================*/
+.content{
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  justify-content: flex-start;
+}
+
+.classroom {
+  background-color: #fff;
+  margin-bottom: 20px;
+  margin-right: 20px;
+  border-radius: 5px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.4);
+  width: calc(33.33% - 20px); /* 33.33% width for each post with 20px margin */
+  box-sizing: border-box;
+}
+.classroom img {
+  width: 100%; /* Đảm bảo hình ảnh chiếm toàn bộ chiều rộng của phần tử cha */
+  height: 300px; /* Đặt chiều cao cố định cho hình ảnh */
+  object-fit: cover; /* Đảm bảo hình ảnh không bị méo khi cố gắng thay đổi kích thước */
+  border-radius: 5px;
+}
+
+.classroom p{
+  font-size: 16px;
+  text-align: justify;
+  margin-bottom: 0;
+}
+
+.classroom h2{
+  text-transform: uppercase;
+  font: inherit;
+  font-weight: bold;
+  font-size: 24px;
+  margin: -10px 0 5px 0;
+  padding: 2px 0;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  white-space: nowrap;
+  display: block;
+}
+
+.classroom .meta {
+  color: black;
+  font-size: 13px;
+  margin-bottom: 5px;
+  line-height: 15px;
+  width: 100%;
+  margin-top: 10px;
+  padding-right: 70px;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  white-space: nowrap;
+  display: block;
+}
+
+.classroom a{
+  text-decoration: none;
+  color: black;
+}
+
+/* IMG CARD */
+.card-bottom .PNzAWd{
+  border-radius: 50%;
+  float: right;
+  position: relative;
+  margin-top: -6rem;
+  overflow: clip;
+
+  height: 8rem; /* hoặc bất kỳ giá trị % nào phù hợp */
+  width: 8rem; /* hoặc bất kỳ giá trị % nào phù hợp */
+  max-height: 8rem; /* giới hạn kích thước tối đa */
+  max-width: 8rem; /* giới hạn kích thước tối đa */
+}
+
+.card-bottom{
+  position: relative;
+  height: auto;
+  flex-grow: 1;
+  min-height: 0;
+  padding: 1rem;
+  padding-top: .75rem;
+}
+
+.classroom .card-top{
+  border: 1px solid black;
+  padding: 10px;
+  padding-top: 15px;
+  width: auto;
+  height: 100px;
+  border-radius: 5px 5px 0 0;
+  border-color: #fff;
+}
+/* ===================================================
+CUSTOM BTN VÀO PHÒNG
+======================================================*/
+.btn-custom{
+  display: flex; 
+  justify-content: center; 
+  margin-top: 30px;
+}
+/* ===================================================
+RESPONSIVE CLASSROOM
+======================================================*/
+@media (max-width: 768px) {
+  .content .classroom{
+    width: calc(50% - 20px);;
+  }
+
+  .user-img-div{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .user-img-div img{
+    width: 100px;
+    height: auto;
+  }
+
+  .banner-img{
+    padding: 0;
+  }
+}
