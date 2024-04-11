@@ -7,7 +7,7 @@ namespace DoAnMon.IdentityCudtomUser
     {
         public string? Mssv { get; set; }
         public string? Name { get; set; }
-
+        public string? NgaySinh { get; set; }
         public string? UrlAvt { get; set; }
 
         public ICollection<ClassroomDetail> ClassroomDetails { get; set; }
