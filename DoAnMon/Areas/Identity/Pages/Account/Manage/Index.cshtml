@@ -2,34 +2,147 @@
 @model DoAnMon.Areas.Identity.Pages.Account.Manage.IndexModel
 
 @{
-    Layout = "~/Views/Shared/_Layout.cshtml";
+	Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
 @{
-    ViewData["Title"] = "Profile";
-    ViewData["ActivePage"] = ManageNavPages.Index;
+	ViewData["Title"] = "Profile";
+	ViewData["ActivePage"] = ManageNavPages.Index;
 }
+
+<style>
+	.container {
+		display: flex;
+		width: 1000px
+	}
+
+	.left-column {
+		width: 30%;
+		margin-right: 20px;
+	}
+
+	.right-column {
+		width: 70%;
+	}
+
+	.profile-img {
+		width: 100%;
+		height: 50vh;
+		position: relative;
+		overflow: hidden;
+	}
+
+	.image-container {
+		width: 100%;
+		height: 100%;
+		position: relative;
+	}
+
+	.image-container img {
+		width: 100%;
+		height: 50vh;
+		position: absolute;
+		left: 50%;
+		top: 50%;
+		transform: translate(-50%, -50%);
+	}
+
+	.profile-img .file {
+		position: relative;
+		overflow: hidden;
+		margin-top: -20%;
+		width: 100%;
+		border: none;
+		border-radius: 0;
+		font-size: 15px;
+		background: #212529b8;
+	}
+
+	.profile-img .file input {
+		position: absolute;
+		opacity: 0;
+		right: 0;
+		top: 0;
+	}
+</style>
 
 <h3>@ViewData["Title"]</h3>
 <partial name="_StatusMessage" for="StatusMessage" />
-<div class="row">
-    <div class="col-md-12">
-        <form id="profile-form" method="post">
-            <div asp-validation-summary="ModelOnly" class="text-danger" role="alert"></div>
-            <div class="form-floating mb-3">
-                <input asp-for="Username" class="form-control" placeholder="Please choose your username." disabled />
-                <label asp-for="Username" class="form-label"></label>
-            </div>
-            <div class="form-floating mb-3">
-                <input asp-for="Input.PhoneNumber" class="form-control" placeholder="Please enter your phone number."/>
-                <label asp-for="Input.PhoneNumber" class="form-label"></label>
-                <span asp-validation-for="Input.PhoneNumber" class="text-danger"></span>
-            </div>
-            <button id="update-profile-button" type="submit" class="w-100 btn btn-lg btn-primary">Save</button>
-        </form>
-    </div>
-</div>
+<form id="profile-form" method="post">
+	<div class="container">
+		<div class="left-column">
+			<div class="profile-img">
+				<div class="image-container" id="image-container">
+
+					<div class="image-container" id="image-container">
+						@if (string.IsNullOrEmpty(@Model.Input.ProfilePictureUrl))
+						{
+							<img id="selected-image" src="/Images/avatar.jpg" alt="No Image" />
+						}
+						else
+						{
+							<img id="selected-image" src="/Images/@Model.Input.ProfilePictureUrl" alt="No Image" />
+						}
+					</div>
+				</div>
+				<div class="file btn btn-lg btn-primary">
+					Change Photo
+					<input type="file" id="file-input" name="file" onchange="previewImage()" />
+				</div>
+			</div>
+		</div>
+		<div class="right-column" id="right-column">
+			<div asp-validation-summary="ModelOnly" class="text-danger" role="alert"></div>
+			<div class="form-group">
+				<label asp-for="Input.FullName"></label>
+				<input asp-for="Input.FullName" class="form-control" />
+				<span asp-validation-for="Input.FullName" class="text-danger"></span>
+			</div>
+			<div class="form-group">
+				<label asp-for="Input.Email"></label>
+				<input asp-for="Input.Email" class="form-control" />
+				<span asp-validation-for="Input.Email" class="text-danger"></span>
+			</div>
+			<div class="form-group">
+				<label asp-for="Input.DateOfBirth"></label>
+				<input asp-for="Input.DateOfBirth" class="form-control" />
+				<span asp-validation-for="Input.DateOfBirth" class="text-danger"></span>
+			</div>
+			<div class="form-group" hidden>
+				<label asp-for="Input.ProfilePictureUrl"></label>
+				<input asp-for="Input.ProfilePictureUrl" class="form-control" />
+				<span asp-validation-for="Input.ProfilePictureUrl" class="text-danger"></span>
+			</div>
+			<button id="update-profile-button" type="submit" class="w-100 btn btn-lg btn-primary">Save</button>
+		</div>
+	</div>
+</form>
+
+
+
+
 
 @section Scripts {
-    <partial name="_ValidationScriptsPartial" />
+	<partial name="_ValidationScriptsPartial" />
 }
+
+<script>
+	function previewImage() {
+		const fileInput = document.getElementById('file-input');
+		const selectedImage = document.getElementById('selected-image');
+		const file = fileInput.files[0];
+
+		if (file) {
+			const reader = new FileReader();
+			reader.onload = function (e) {
+				selectedImage.src = e.target.result; // Cập nhật src của hình ảnh
+				const fileName = file.name; // Lấy tên của tệp
+				document.getElementById('Input_ProfilePictureUrl').value = fileName; // Cập nhật giá trị của Input_ProfilePictureUrl
+			}
+			reader.readAsDataURL(file);
+		}
+	}
+
+
+</script>
+

@@ -52,68 +52,106 @@ namespace DoAnMon.Areas.Identity.Pages.Account.Manage
         /// </summary>
         public class InputModel
         {
-            /// <summary>
-            ///     This API supports the ASP.NET Core Identity default UI infrastructure and is not intended to be used
-            ///     directly from your code. This API may change or be removed in future releases.
-            /// </summary>
-            [Phone]
-            [Display(Name = "Phone number")]
-            public string PhoneNumber { get; set; }
-        }
+			/// <summary>
+			///     This API supports the ASP.NET Core Identity default UI infrastructure and is not intended to be used
+			///     directly from your code. This API may change or be removed in future releases.
+			/// </summary>
+			[Required]
+			[Display(Name = "Full Name")]
+			public string FullName { get; set; }
+
+			[Required]
+			[EmailAddress]
+			[Display(Name = "Email")]
+			public string Email { get; set; }
+
+			
+			[DataType(DataType.Date)]
+			[Display(Name = "Date of Birth")]
+			public DateTime? DateOfBirth { get; set; }
+
+			[Url]
+			[Display(Name = "Profile Picture URL")]
+			public string? ProfilePictureUrl { get; set; }
+		}
 
         private async Task LoadAsync(CustomUser user)
         {
-            var userName = await _userManager.GetUserNameAsync(user);
-            var phoneNumber = await _userManager.GetPhoneNumberAsync(user);
+			var userName = await _userManager.GetUserNameAsync(user);
+            var fullName = user.Name;
 
-            Username = userName;
+			Username = userName;
 
-            Input = new InputModel
-            {
-                PhoneNumber = phoneNumber
-            };
-        }
+			DateTime? dateOfBirth = null;
+			if (user.NgaySinh != null)
+			{
+				if (DateTime.TryParse(user.NgaySinh.Trim(), out var parsedDate))
+				{
+					dateOfBirth = parsedDate;
+				}
+				else
+				{
+					dateOfBirth = null;
+				}
+			}
 
-        public async Task<IActionResult> OnGetAsync()
+			Input = new InputModel
+			{
+				FullName = fullName,
+				Email = user.Email,
+				DateOfBirth = dateOfBirth,
+				ProfilePictureUrl = user.UrlAvt
+			};
+
+		}
+
+		public async Task<IActionResult> OnGetAsync()
         {
-            var user = await _userManager.GetUserAsync(User);
-            if (user == null)
-            {
-                return NotFound($"Unable to load user with ID '{_userManager.GetUserId(User)}'.");
-            }
+			var user = await _userManager.GetUserAsync(User);
+			if (user == null)
+			{
+				return NotFound($"Unable to load user with ID '{_userManager.GetUserId(User)}'.");
+			}
 
-            await LoadAsync(user);
-            return Page();
-        }
+			await LoadAsync(user);
+			return Page();
+		}
 
         public async Task<IActionResult> OnPostAsync()
         {
-            var user = await _userManager.GetUserAsync(User);
-            if (user == null)
-            {
-                return NotFound($"Unable to load user with ID '{_userManager.GetUserId(User)}'.");
-            }
+			var user = await _userManager.GetUserAsync(User);
+			if (user == null)
+			{
+				return NotFound($"Unable to load user with ID '{_userManager.GetUserId(User)}'.");
+			}
 
-            if (!ModelState.IsValid)
-            {
-                await LoadAsync(user);
-                return Page();
-            }
+			if (!ModelState.IsValid)
+			{
+				await LoadAsync(user);
+				return Page();
+			}
 
-            var phoneNumber = await _userManager.GetPhoneNumberAsync(user);
-            if (Input.PhoneNumber != phoneNumber)
-            {
-                var setPhoneResult = await _userManager.SetPhoneNumberAsync(user, Input.PhoneNumber);
-                if (!setPhoneResult.Succeeded)
-                {
-                    StatusMessage = "Unexpected error when trying to set phone number.";
-                    return RedirectToPage();
-                }
-            }
+			// Update user properties
+			user.Email = Input.Email;
+			user.Name = Input.FullName;
+			user.NgaySinh = Input.DateOfBirth.ToString();
+			user.UrlAvt = Input.ProfilePictureUrl;
 
-            await _signInManager.RefreshSignInAsync(user);
-            StatusMessage = "Your profile has been updated";
-            return RedirectToPage();
-        }
+			// Save changes to the user
+			var result = await _userManager.UpdateAsync(user);
+			if (!result.Succeeded)
+			{
+				foreach (var error in result.Errors)
+				{
+					ModelState.AddModelError(string.Empty, error.Description);
+				}
+				await LoadAsync(user);
+				return Page();
+			}
+
+			await _signInManager.RefreshSignInAsync(user);
+			StatusMessage = "Your profile has been updated";
+			return RedirectToPage();
+		}
     }
 }
