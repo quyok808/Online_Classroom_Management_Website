@@ -6,7 +6,7 @@
 }
 
 @{
-	ViewData["Title"] = "Profile";
+	ViewData["Title"] = "THÔNG TIN CÁ NHÂN";
 	ViewData["ActivePage"] = ManageNavPages.Index;
 }
 
@@ -66,9 +66,9 @@
 	}
 </style>
 
-<h3>@ViewData["Title"]</h3>
+<h3 style="text-align:center; margin-bottom: 20px;font-size: 34px;">@ViewData["Title"]</h3>
 <partial name="_StatusMessage" for="StatusMessage" />
-<form id="profile-form" method="post">
+<form id="profile-form" method="post" enctype="multipart/form-data">
 	<div class="container">
 		<div class="left-column">
 			<div class="profile-img">
@@ -81,30 +81,34 @@
 						}
 						else
 						{
-							<img id="selected-image" src="/Images/@Model.Input.ProfilePictureUrl" alt="No Image" />
+							<img id="selected-image" src="/Imgs_avtUser/@Model.Input.ProfilePictureUrl" alt="No Image" onerror="this.onerror=null; this.src='/Images/avatar.jpg';" />
+
 						}
 					</div>
 				</div>
 				<div class="file btn btn-lg btn-primary">
 					Change Photo
-					<input type="file" id="file-input" name="file" onchange="previewImage()" />
+					<input type="file" id="file-input" name="Input.ProfilePicture" onchange="previewImage()" />
 				</div>
 			</div>
 		</div>
 		<div class="right-column" id="right-column">
 			<div asp-validation-summary="ModelOnly" class="text-danger" role="alert"></div>
 			<div class="form-group">
-				<label asp-for="Input.FullName"></label>
+				<label asp-for="Username">MSSV</label>
+				<input asp-for="Username" class="form-control" disabled/>
+			</div>
+			<div class="form-group">
+				<label asp-for="Email">Email</label>
+				<input asp-for="Email" class="form-control" disabled/>
+			</div>
+			<div class="form-group">
+				<label asp-for="Input.FullName">Họ và tên</label>
 				<input asp-for="Input.FullName" class="form-control" />
 				<span asp-validation-for="Input.FullName" class="text-danger"></span>
 			</div>
 			<div class="form-group">
-				<label asp-for="Input.Email"></label>
-				<input asp-for="Input.Email" class="form-control" />
-				<span asp-validation-for="Input.Email" class="text-danger"></span>
-			</div>
-			<div class="form-group">
-				<label asp-for="Input.DateOfBirth"></label>
+				<label asp-for="Input.DateOfBirth">Ngày sinh</label>
 				<input asp-for="Input.DateOfBirth" class="form-control" />
 				<span asp-validation-for="Input.DateOfBirth" class="text-danger"></span>
 			</div>
@@ -136,8 +140,8 @@
 			const reader = new FileReader();
 			reader.onload = function (e) {
 				selectedImage.src = e.target.result; // Cập nhật src của hình ảnh
-				const fileName = file.name; // Lấy tên của tệp
-				document.getElementById('Input_ProfilePictureUrl').value = fileName; // Cập nhật giá trị của Input_ProfilePictureUrl
+				// const fileName = file.name; // Lấy tên của tệp
+				// document.getElementById('Input_ProfilePictureUrl').value = fileName; // Cập nhật giá trị của Input_ProfilePictureUrl
 			}
 			reader.readAsDataURL(file);
 		}

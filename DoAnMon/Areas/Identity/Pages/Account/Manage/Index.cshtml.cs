@@ -4,12 +4,15 @@
 
 using System;
 using System.ComponentModel.DataAnnotations;
+using System.Numerics;
 using System.Text.Encodings.Web;
 using System.Threading.Tasks;
 using DoAnMon.IdentityCudtomUser;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.ModelBinding.Validation;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using Microsoft.Extensions.Hosting;
 
 namespace DoAnMon.Areas.Identity.Pages.Account.Manage
 {
@@ -17,13 +20,16 @@ namespace DoAnMon.Areas.Identity.Pages.Account.Manage
     {
         private readonly UserManager<CustomUser> _userManager;
         private readonly SignInManager<CustomUser> _signInManager;
+		private readonly IWebHostEnvironment _environment;
 
-        public IndexModel(
+		public IndexModel(
             UserManager<CustomUser> userManager,
-            SignInManager<CustomUser> signInManager)
+            SignInManager<CustomUser> signInManager,
+			IWebHostEnvironment environment)
         {
             _userManager = userManager;
             _signInManager = signInManager;
+			_environment = environment;
         }
 
         /// <summary>
@@ -32,11 +38,12 @@ namespace DoAnMon.Areas.Identity.Pages.Account.Manage
         /// </summary>
         public string Username { get; set; }
 
-        /// <summary>
-        ///     This API supports the ASP.NET Core Identity default UI infrastructure and is not intended to be used
-        ///     directly from your code. This API may change or be removed in future releases.
-        /// </summary>
-        [TempData]
+		public string Email { get; set; }
+		/// <summary>
+		///     This API supports the ASP.NET Core Identity default UI infrastructure and is not intended to be used
+		///     directly from your code. This API may change or be removed in future releases.
+		/// </summary>
+		[TempData]
         public string StatusMessage { get; set; }
 
         /// <summary>
@@ -60,27 +67,28 @@ namespace DoAnMon.Areas.Identity.Pages.Account.Manage
 			[Display(Name = "Full Name")]
 			public string FullName { get; set; }
 
-			[Required]
-			[EmailAddress]
-			[Display(Name = "Email")]
-			public string Email { get; set; }
-
 			
 			[DataType(DataType.Date)]
 			[Display(Name = "Date of Birth")]
 			public DateTime? DateOfBirth { get; set; }
 
-			[Url]
+			
 			[Display(Name = "Profile Picture URL")]
 			public string? ProfilePictureUrl { get; set; }
+
+			[ValidateNever]
+			[Display(Name = "Profile Picture")]
+			public IFormFile ProfilePicture { get; set; }
 		}
 
         private async Task LoadAsync(CustomUser user)
         {
 			var userName = await _userManager.GetUserNameAsync(user);
             var fullName = user.Name;
+			var email = user.Email;
 
 			Username = userName;
+			Email = email;
 
 			DateTime? dateOfBirth = null;
 			if (user.NgaySinh != null)
@@ -98,7 +106,6 @@ namespace DoAnMon.Areas.Identity.Pages.Account.Manage
 			Input = new InputModel
 			{
 				FullName = fullName,
-				Email = user.Email,
 				DateOfBirth = dateOfBirth,
 				ProfilePictureUrl = user.UrlAvt
 			};
@@ -131,11 +138,23 @@ namespace DoAnMon.Areas.Identity.Pages.Account.Manage
 				return Page();
 			}
 
+			if (Input.ProfilePicture != null && Input.ProfilePicture.Length > 0)
+			{
+				var uploadsFolder = Path.Combine(_environment.WebRootPath, "Imgs_avtUser");
+				//đổi tên sau khi upload
+				var filePath = Path.Combine(uploadsFolder, user.Mssv + ".jpg");
+				
+				using (var fileStream = new FileStream(filePath, FileMode.Create))
+				{
+					await Input.ProfilePicture.CopyToAsync(fileStream);
+				}
+				user.UrlAvt = user.Mssv + ".jpg";
+			}
+
 			// Update user properties
-			user.Email = Input.Email;
 			user.Name = Input.FullName;
 			user.NgaySinh = Input.DateOfBirth.ToString();
-			user.UrlAvt = Input.ProfilePictureUrl;
+			
 
 			// Save changes to the user
 			var result = await _userManager.UpdateAsync(user);
@@ -151,7 +170,10 @@ namespace DoAnMon.Areas.Identity.Pages.Account.Manage
 
 			await _signInManager.RefreshSignInAsync(user);
 			StatusMessage = "Your profile has been updated";
-			return RedirectToPage();
+			TempData["StatusMessage"] = StatusMessage;
+			return RedirectToAction("Index", "ClassRooms");
+
+
 		}
-    }
+	}
 }

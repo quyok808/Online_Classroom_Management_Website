@@ -24,3 +24,8 @@
         }
     }   
 </div>
+
+@if (!string.IsNullOrEmpty(ViewBag.StatusMessage))
+{
+    <script>alert('@ViewBag.StatusMessage');</script>
+}

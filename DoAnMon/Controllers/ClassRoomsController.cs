@@ -22,7 +22,13 @@ namespace DoAnMon.Controllers
         // GET: ClassRooms
         public async Task<IActionResult> Index()
         {
-            return View(await _context.classRooms.ToListAsync());
+			// Lấy thông báo từ TempData
+			var statusMessage = TempData["StatusMessage"] as string;
+
+			// Truyền thông báo vào viewbag để hiển thị trong view
+			ViewBag.StatusMessage = statusMessage;
+
+			return View(await _context.classRooms.ToListAsync());
         }
 
         // GET: ClassRooms/Details/5
