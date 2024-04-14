@@ -17,6 +17,7 @@ namespace DoAnMon.Data
         public DbSet<BaiTapDetail> baiTapsDetail { get; set; }
         public DbSet<ClassRoom> classRooms { get; set; }
         public DbSet<ClassroomDetail> classroomDetail { get; set; }
+        public DbSet<BaiGiang> BaiGiang { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -39,7 +40,12 @@ namespace DoAnMon.Data
                 .HasForeignKey(cd => cd.RoleId)
                 .IsRequired(false);
 
-        }
+			modelBuilder.Entity<ClassRoom>()
+				.HasMany(c => c.BaiGiangs)
+				.WithOne(bg => bg.ClassRoom)
+				.HasForeignKey(bg => bg.ClassId);
+
+		}
 
     }
 }

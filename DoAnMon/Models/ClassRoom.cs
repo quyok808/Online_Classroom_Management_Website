@@ -16,6 +16,8 @@ namespace DoAnMon.Models
         public ICollection<ClassroomDetail> ClassroomDetails { get; set; }
         [ValidateNever]
         public CustomUser? User { get; set; }
-    }
+        [ValidateNever]
+		public ICollection<BaiGiang> BaiGiangs { get; set; }
+	}
 
 }
