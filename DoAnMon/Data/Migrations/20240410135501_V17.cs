@@ -40,7 +40,6 @@ namespace DoAnMon.Data.Migrations
                 name: "FK_classroomDetail_AspNetRoles_RoleId",
                 table: "classroomDetail");
 
-
             migrationBuilder.DropIndex(
                 name: "IX_classroomDetail_RoleId",
                 table: "classroomDetail");
