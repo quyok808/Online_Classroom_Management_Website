@@ -96,8 +96,30 @@ namespace DoAnMon.Controllers
                 return NotFound();
             }
 
-            return View(classRoom);
+            // Truy vấn thông tin của chủ sở hữu từ bảng người dùng
+            var owner = await _context.Users.FirstOrDefaultAsync(u => u.Id == classRoom.UserId);
+            if (owner == null)
+            {
+                return NotFound();
+            }
+            var viewModel = new ClassRoomViewModel();
+            // Kiểm tra null cho owner trước khi thêm vào classRoomViewModels
+            if (owner != null)
+            {
+                viewModel.ClassRoom = classRoom;
+                viewModel.Owner = owner;
+            }
+            else
+            {
+                // Xử lý trường hợp không có chủ sở hữu (nếu cần)
+                viewModel.ClassRoom = classRoom;
+                viewModel.Owner = new CustomUser { UserName = "Unknown" };
+            }
+
+
+            return View(viewModel);
         }
+
 
         // GET: ClassRooms/Create
         public IActionResult Create()
@@ -123,22 +145,6 @@ namespace DoAnMon.Controllers
 
                     return RedirectToAction(nameof(Index));
 				}				
-            }
-            return View(classRoom);
-        }
-
-        // GET: ClassRooms/Edit/5
-        public async Task<IActionResult> Edit(string id)
-        {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
-            var classRoom = await _context.classRooms.FindAsync(id);
-            if (classRoom == null)
-            {
-                return NotFound();
             }
             return View(classRoom);
         }

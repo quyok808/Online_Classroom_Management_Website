@@ -1,10 +1,11 @@
-﻿@model DoAnMon.Models.ClassRoom
+﻿@using static DoAnMon.Models.ClassroomViewModel
+@model ClassRoomViewModel
 
 @{
     ViewData["Title"] = "Details";
     Layout = "~/Views/Shared/_Layout1.cshtml";
 }
-
+@* 
 <h1>Details</h1>
 
 <div>
@@ -34,4 +35,454 @@
 <div>
     <a asp-action="Edit" asp-route-id="@Model?.Id">Edit</a> |
     <a asp-action="Index">Back to List</a>
+</div> *@
+
+<style>
+    body {
+        font-family: Arial, sans-serif;
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+    }
+
+    .cover-photo {
+        width: 100%;
+        height: 300px;
+        background-image: url('path/to/your/cover/photo.jpg');
+        background-size: cover;
+        background-position: center;
+    }
+
+    .class-info {
+        padding: 20px;
+    }
+
+        .class-info h1 {
+            font-size: 24px;
+            margin-bottom: 10px;
+        }
+
+        .class-info p {
+            font-size: 16px;
+            margin-bottom: 15px;
+        }
+
+    .tabs {
+        overflow: hidden;
+        border-bottom: 1px solid #ccc;
+    }
+
+    .tab {
+        float: left;
+        cursor: pointer;
+        padding: 14px 16px;
+        transition: background-color 0.3s;
+    }
+
+        .tab:hover {
+            background-color: #ddd;
+        }
+
+        .tab.active {
+            background-color: #ccc;
+        }
+
+    .tabcontent {
+        display: none;
+        padding: 20px;
+        clear: both;
+    }
+
+    .posts {
+        padding-top: 20px;
+    }
+
+    .post {
+        border-bottom: 1px solid #ccc;
+        padding: 20px 0;
+        margin-bottom: 20px;
+    }
+
+        .post img {
+            max-width: 100%;
+            height: auto;
+            margin-bottom: 10px;
+        }
+
+        .post h2 {
+            font-size: 20px;
+            margin-bottom: 10px;
+        }
+
+        .post p {
+            font-size: 16px;
+            margin-bottom: 10px;
+        }
+
+        .post .author {
+            font-style: italic;
+            color: #666;
+        }
+
+    /* CHAT - Thảo luận */
+
+    .chat-container {
+        max-width: 100%;
+        margin: 20px auto;
+        padding: 20px;
+        border: 1px solid #ccc;
+        border-radius: 10px;
+    }
+
+    .chat-messages {
+        max-height: 100%;
+        /* Chiều cao tối đa của phần hiển thị tin nhắn */
+        overflow-y: auto;
+        /* Tạo thanh cuộn khi cần thiết */
+        padding: 10px;
+        border-bottom: 1px solid #ccc;
+    }
+
+    .message-form-container {
+        margin-top: 10px;
+        /* Khoảng cách giữa phần hiển thị và phần nhập */
+    }
+
+    .message-form {
+        display: flex;
+        align-items: center;
+    }
+
+    .message-input {
+        flex: 1;
+        padding: 10px;
+        border: 1px solid #ccc;
+        border-radius: 5px 0 0 5px;
+        outline: none;
+    }
+
+    .send-button {
+        background-color: #007bff;
+        color: white;
+        border: none;
+        border-radius: 0 5px 5px 0;
+        padding: 10px 20px;
+        cursor: pointer;
+        transition: background-color 0.3s;
+    }
+
+        .send-button:hover {
+            background-color: #0056b3;
+        }
+
+    /* THÔNG TIN GIẢNG VIÊN */
+    .teacher-info {
+        background-color: #f9f9f9;
+        padding: 20px;
+        border-radius: 10px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        /* Thêm bóng đổ */
+    }
+
+    .teacher-details {
+        display: flex;
+        align-items: center;
+    }
+
+    .teacher-image {
+        width: 100px;
+        height: 100px;
+        border-radius: 50%;
+        margin-right: 20px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        /* Thêm bóng đổ */
+    }
+
+    .teacher-text {
+        flex: 1;
+    }
+
+        .teacher-text p {
+            margin-bottom: 10px;
+        }
+
+            .teacher-text p strong {
+                font-weight: bold;
+                color: #e72323;
+            }
+
+    /* POST BÀI GIẢNG */
+    .post {
+        margin-bottom: 20px;
+        padding: 20px;
+        background-color: #f9f9f9;
+        border-radius: 10px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    }
+
+        .post h2 {
+            font-size: 24px;
+            margin-bottom: 10px;
+            text-align: center;
+        }
+
+    .pdf-container {
+        width: 100%;
+        height: 600px;
+        overflow: auto;
+    }
+
+        .pdf-container object {
+            width: 100%;
+            height: 100%;
+        }
+
+        .pdf-container embed {
+            width: 100%;
+            height: 100%;
+        }
+
+    /* BÀI TẬP */
+    .assignment {
+        background-color: #f9f9f9;
+        padding: 20px;
+        border-radius: 5px;
+        margin-bottom: 20px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        border: 1px solid #ccc; /* Thêm viền */
+    }
+
+    .assignment-content {
+        flex-grow: 1;
+        margin-right: 20px;
+    }
+
+    .assignment h3 {
+        margin-top: 0;
+        margin-bottom: 10px;
+    }
+
+    .assignment-description {
+        margin-bottom: 20px;
+    }
+
+    .file-input-wrapper {
+        margin-right: 20px;
+    }
+
+    .file-label {
+        font-weight: bold;
+    }
+
+    .file-input {
+        display: none;
+    }
+
+    .btn {
+        padding: 10px 20px;
+        background-color: #007bff;
+        color: #fff;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        transition: background-color 0.3s; /* Thêm hiệu ứng khi di chuột qua */
+    }
+
+        .btn:hover {
+            background-color: #0056b3;
+        }
+
+    /* UPLOAD BAITAP */
+    .upload-form {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        margin-bottom: 20px; /* Thêm khoảng cách dưới cùng */
+    }
+
+    .file-label {
+        margin-bottom: 10px;
+    }
+
+    .file-input-wrapper {
+        width: 100%;
+    }
+
+    .file-input {
+        width: 100%;
+        padding: 10px;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        background-color: #f9f9f9;
+        transition: border-color 0.3s;
+        margin: 10px;
+    }
+
+        .file-input:focus {
+            border-color: #007bff;
+            outline: none;
+        }
+
+    .btn {
+        width: 100%;
+        max-width: 200px; /* Đảm bảo nút không quá rộng */
+    }
+
+</style>
+
+<div>
+    <img class="img-fluid" src="~/Images/banner_google.png" alt="No Images" />
 </div>
+<div class="class-info">
+    <h1>@Model.ClassRoom.Name</h1>
+    <p>Mô tả lớp học: @Model.ClassRoom.Description</p>
+    <a href="http://" class="btn btn-primary">Tham gia phòng học</a>
+</div>
+<div class="tabs">
+    <div class="tab" onclick="openTab(event, 'teacher')">Thông tin giáo viên</div>
+    <div class="tab" onclick="openTab(event, 'posts')">Bài Giảng</div>
+    <div class="tab" onclick="openTab(event, 'assignments')">Bài tập</div>
+    <div class="tab" onclick="openTab(event, 'discussion')">Thảo luận</div>
+</div>
+<div id="teacher" class="tabcontent" style="display: none;">
+    <div class="teacher-info">
+        <h2>Thông tin giáo viên</h2>
+        <div class="teacher-details">
+            <img src="/Imgs_avtUser/@Model.Owner.UrlAvt" alt="Ảnh giáo viên" class="teacher-image">
+            <div class="teacher-text">
+                <p><strong>Mã giảng viên:</strong> @Model.Owner.Mssv</p>
+                <p><strong>Tên:</strong>@Model.Owner.Name</p>
+                <p><strong>Email:</strong> @Model.Owner.Email</p>
+            </div>
+        </div>
+    </div>
+
+</div>
+<div id="posts" class="tabcontent">
+    <div class="posts">
+        <div class="post">
+            <h2>PDF Document</h2>
+            <div class="pdf-container">
+                <object data="/Images/Bài 4 - Lập trình với ASP.NET Core MVC P2.pdf"
+                        type="application/pdf" width="100%" height="600px">
+                    <embed src="/Images/Bài 4 - Lập trình với ASP.NET Core MVC P2.pdf"
+                           type="application/pdf" />
+                </object>
+            </div>
+        </div>
+
+        <div class="post">
+            <h2>PDF Document</h2>
+            <div class="pdf-container">
+                <object data="/Images/Bài 4 - Lập trình với ASP.NET Core MVC P2.pdf"
+                        type="application/pdf" width="100%" height="600px">
+                    <embed src="/Images/Bài 4 - Lập trình với ASP.NET Core MVC P2.pdf"
+                           type="application/pdf" />
+                </object>
+            </div>
+        </div>
+    </div>
+
+</div>
+<div id="assignments" class="tabcontent">
+    <div class="assignments">
+        <h2>Danh sách bài tập</h2>
+        <div class="assignment" style="height: 30vh;">
+            <div class="assignment-content" style="border-right: 1px solid black; height: 100%; width: 100%; margin: 50px;">
+                <h3 class="text-center">Bài tập 1: Tạo trang web đầu tiên</h3>
+                <p class="assignment-description">Mô tả: Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed non risus.</p>
+            </div>
+            <form action="/submit_assignment" method="post" enctype="multipart/form-data" class="assignment-form ">
+                <div class="upload-form ">
+                    <label for="file-upload" class="file-label">Bài tập của bạn:</label>
+                    <div class="file-input-wrapper">
+                        <input id="file-upload" type="file" name="assignment_file" accept=".pdf" class="file-input">
+                    </div>
+                    <button type="submit" class="btn btn-primary" style="margin-top: 10px; width: 100%;">Nộp bài</button>
+                </div>
+            </form>
+        </div>
+        <!-- Thêm các bài tập khác tương tự -->
+        <div class="assignment" style="height: 30vh;">
+            <div class="assignment-content" style="border-right: 1px solid black; height: 100%; width: 100%; margin: 50px;">
+                <h3 class="text-center">Bài tập 1: Tạo trang web đầu tiên</h3>
+                <p class="assignment-description">Mô tả: Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed non risus.</p>
+            </div>
+            <form action="/submit_assignment" method="post" enctype="multipart/form-data" class="assignment-form ">
+                <div class="upload-form ">
+                    <label for="file-upload" class="file-label">Bài tập của bạn:</label>
+                    <div class="file-input-wrapper">
+                        <input id="file-upload" type="file" name="assignment_file" accept=".pdf" class="file-input">
+                    </div>
+                    <button type="submit" class="btn btn-primary" style="margin-top: 10px; width: 100%;">Nộp bài</button>
+                </div>
+            </form>
+        </div>
+
+
+        <div class="assignment" style="height: 30vh;">
+            <div class="assignment-content" style="border-right: 1px solid black; height: 100%; width: 100%; margin: 50px;">
+                <h3 class="text-center">Bài tập 1: Tạo trang web đầu tiên</h3>
+                <p class="assignment-description">Mô tả: Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed non risus.</p>
+            </div>
+            <form action="/submit_assignment" method="post" enctype="multipart/form-data" class="assignment-form ">
+                <div class="upload-form ">
+                    <label for="file-upload" class="file-label">Bài tập của bạn:</label>
+                    <div class="file-input-wrapper">
+                        <input id="file-upload" type="file" name="assignment_file" accept=".pdf" class="file-input">
+                    </div>
+                    <button type="submit" class="btn btn-primary" style="margin-top: 10px; width: 100%;">Nộp bài</button>
+                </div>
+            </form>
+        </div>
+
+
+        <div class="assignment" style="height: 30vh;">
+            <div class="assignment-content" style="border-right: 1px solid black; height: 100%; width: 100%; margin: 50px;">
+                <h3 class="text-center">Bài tập 1: Tạo trang web đầu tiên</h3>
+                <p class="assignment-description">Mô tả: Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed non risus.</p>
+            </div>
+            <form action="/submit_assignment" method="post" enctype="multipart/form-data" class="assignment-form ">
+                <div class="upload-form ">
+                    <label for="file-upload" class="file-label">Bài tập của bạn:</label>
+                    <div class="file-input-wrapper">
+                        <input id="file-upload" type="file" name="assignment_file" accept=".pdf" class="file-input">
+                    </div>
+                    <button type="submit" class="btn btn-primary" style="margin-top: 10px; width: 100%;">Nộp bài</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+<div id="discussion" class="tabcontent">
+    <div class="discussion">
+        <div class="chat-container">
+            <div id="chat-messages" class="chat-messages"></div>
+            <div class="message-form-container">
+                <form id="message-form" class="message-form">
+                    <input type="text" id="message-input" class="message-input"
+                           placeholder="Nhập tin nhắn của bạn...">
+                    <button type="submit" class="send-button">Gửi</button>
+                </form>
+            </div>
+        </div>
+
+    </div>
+</div>
+<script>
+    function openTab(evt, tabName) {
+        var i, tabcontent, tablinks;
+        tabcontent = document.getElementsByClassName("tabcontent");
+        for (i = 0; i < tabcontent.length; i++) {
+            tabcontent[i].style.display = "none";
+        }
+        tablinks = document.getElementsByClassName("tab");
+        for (i = 0; i < tablinks.length; i++) {
+            tablinks[i].classList.remove("active");
+        }
+        document.getElementById(tabName).style.display = "block";
+        evt.currentTarget.classList.add("active");
+    }
+</script>
