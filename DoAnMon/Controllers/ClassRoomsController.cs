@@ -7,29 +7,79 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using DoAnMon.Data;
 using DoAnMon.Models;
+using DoAnMon.IdentityCudtomUser;
+using Microsoft.AspNetCore.Identity;
+using static DoAnMon.Models.ClassroomViewModel;
 
 namespace DoAnMon.Controllers
 {
     public class ClassRoomsController : Controller
     {
         private readonly ApplicationDbContext _context;
+		private readonly UserManager<CustomUser> _userManager;
 
-        public ClassRoomsController(ApplicationDbContext context)
+		public ClassRoomsController(ApplicationDbContext context, UserManager<CustomUser> userManager)
         {
             _context = context;
+            _userManager = userManager;
         }
 
         // GET: ClassRooms
         public async Task<IActionResult> Index()
         {
-			// Lấy thông báo từ TempData
-			var statusMessage = TempData["StatusMessage"] as string;
+            var currentUser = await _userManager.GetUserAsync(User);
+            List<ClassRoomViewModel> classRoomViewModels = new List<ClassRoomViewModel>();
+            List<ClassRoom> userClasses = null;
 
-			// Truyền thông báo vào viewbag để hiển thị trong view
-			ViewBag.StatusMessage = statusMessage;
+            if (currentUser != null)
+            {
+                // Kiểm tra xem người dùng có trong bảng class hay không
+                var isTeacher = await _context.classRooms.AnyAsync(p => p.UserId == currentUser.Id);
 
-			return View(await _context.classRooms.ToListAsync());
+                if (isTeacher)
+                {
+                    // Lấy danh sách lớp học mà người dùng là chủ sở hữu từ bảng classRooms
+                    userClasses = await _context.classRooms.Where(p => p.UserId == currentUser.Id).ToListAsync();
+                }
+                else
+                {
+                    // Lấy danh sách lớp học mà người dùng có ID trong bảng ClassroomDetail
+                    var classDetailClasses = await _context.classroomDetail
+                        .Where(p => p.UserId == currentUser.Id)
+                        .Select(p => p.ClassId)
+                        .ToListAsync();
+
+                    userClasses = await _context.classRooms
+                        .Where(p => classDetailClasses.Contains(p.Id))
+                        .ToListAsync();
+                }
+
+                foreach (var classRoom in userClasses)
+                {
+                    var owner = await _context.Users.FirstOrDefaultAsync(u => u.Id == classRoom.UserId);
+
+                    // Kiểm tra null cho owner trước khi thêm vào classRoomViewModels
+                    if (owner != null)
+                    {
+                        classRoomViewModels.Add(new ClassRoomViewModel
+                        {
+                            ClassRoom = classRoom,
+                            Owner = owner
+                        });
+                    }
+                    else
+                    {
+                        // Xử lý trường hợp không có chủ sở hữu (nếu cần)
+                        classRoomViewModels.Add(new ClassRoomViewModel { ClassRoom = classRoom, Owner = new CustomUser { UserName = "Unknown" } });
+                    }
+                }
+            }
+
+            // Truyền danh sách lớp học của người dùng vào View
+            return View(classRoomViewModels);
         }
+
+
 
         // GET: ClassRooms/Details/5
         public async Task<IActionResult> Details(string id)
@@ -60,14 +110,19 @@ namespace DoAnMon.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Name,Description,RoomOnline")] ClassRoom classRoom)
+        public async Task<IActionResult> Create(ClassRoom classRoom)
         {
             if (ModelState.IsValid)
             {
-                _context.Add(classRoom);
-                await _context.SaveChangesAsync();
+				var currentUser = await _userManager.GetUserAsync(User);
+				if (currentUser != null)
+				{
+                    classRoom.UserId = currentUser.Id;
+                    _context.Add(classRoom);
+                    await _context.SaveChangesAsync();
 
-                return RedirectToAction(nameof(Index));
+                    return RedirectToAction(nameof(Index));
+				}				
             }
             return View(classRoom);
         }
@@ -86,79 +141,6 @@ namespace DoAnMon.Controllers
                 return NotFound();
             }
             return View(classRoom);
-        }
-
-        // POST: ClassRooms/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(string id, [Bind("Id,Name,Description,RoomOnline")] ClassRoom classRoom)
-        {
-            if (id != classRoom.Id)
-            {
-                return NotFound();
-            }
-
-            if (ModelState.IsValid)
-            {
-                try
-                {
-                    _context.Update(classRoom);
-                    await _context.SaveChangesAsync();
-                }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!ClassRoomExists(classRoom.Id))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
-                }
-                return RedirectToAction(nameof(Index));
-            }
-            return View(classRoom);
-        }
-
-        // GET: ClassRooms/Delete/5
-        public async Task<IActionResult> Delete(string id)
-        {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
-            var classRoom = await _context.classRooms
-                .FirstOrDefaultAsync(m => m.Id == id);
-            if (classRoom == null)
-            {
-                return NotFound();
-            }
-
-            return View(classRoom);
-        }
-
-        // POST: ClassRooms/Delete/5
-        [HttpPost, ActionName("Delete")]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(string id)
-        {
-            var classRoom = await _context.classRooms.FindAsync(id);
-            if (classRoom != null)
-            {
-                _context.classRooms.Remove(classRoom);
-            }
-
-            await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
-        }
-
-        private bool ClassRoomExists(string id)
-        {
-            return _context.classRooms.Any(e => e.Id == id);
         }
     }
 }

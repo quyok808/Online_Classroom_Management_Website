@@ -1,4 +1,5 @@
-﻿@model IEnumerable<DoAnMon.Models.ClassRoom>
+﻿@using static DoAnMon.Models.ClassroomViewModel
+@model List<ClassRoomViewModel>
 
 @{
     ViewData["Title"] = "Index";
@@ -7,16 +8,16 @@
 
 <div class="content">
     @{
-        foreach(var room in Model)
+        foreach (var viewModel in Model)
         {
             <div class="classroom">
                 <div class="card-top" style="background-image: url(/Images/footer_bg.png);">
-                    <h2>@room.Name</h2>
-                    <div class="meta">@room.Description</div>
-                    <p style="padding-top: 3%;">Nguyễn Công Quý</p>
+                    <h2>@viewModel.ClassRoom.Name</h2>
+                    <div class="meta">@viewModel.ClassRoom.Description</div>
+                    <p style="padding-top: 3%;">@viewModel.Owner.Name</p>
                 </div>
                 <div class="card-bottom">
-                    <img class="PNzAWd" aria-hidden="true" src="/Images/Thiết kế chưa có tên.png">
+                    <img class="PNzAWd" aria-hidden="true" src="/Imgs_avtUser/@viewModel.Owner.UrlAvt">
                     <a href="https://lop.com" class="btn btn-primary btn-info btn-custom" target="_blank">Giảng đường</a>
                     <a href="https://lop.com" class="btn btn-primary btn-info btn-custom" target="_blank" style="margin-top: 10px;">Lớp học</a>
                 </div>
