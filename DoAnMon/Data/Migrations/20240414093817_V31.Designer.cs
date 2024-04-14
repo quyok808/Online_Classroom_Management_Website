@@ -4,6 +4,7 @@ using DoAnMon.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DoAnMon.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240414093817_V31")]
+    partial class V31
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -109,6 +112,9 @@ namespace DoAnMon.Data.Migrations
 
                     b.Property<string>("ClassId")
                         .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("ClassRoomId")
                         .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("Name")
@@ -119,9 +125,9 @@ namespace DoAnMon.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("ClassId");
+                    b.HasIndex("ClassRoomId");
 
-                    b.ToTable("baiGiang");
+                    b.ToTable("baiGiangs");
                 });
 
             modelBuilder.Entity("DoAnMon.Models.BaiTap", b =>
@@ -370,10 +376,8 @@ namespace DoAnMon.Data.Migrations
             modelBuilder.Entity("DoAnMon.Models.BaiGiang", b =>
                 {
                     b.HasOne("DoAnMon.Models.ClassRoom", "ClassRoom")
-                        .WithMany("BaiGiangs")
-                        .HasForeignKey("ClassId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .WithMany("baiGiangs")
+                        .HasForeignKey("ClassRoomId");
 
                     b.Navigation("ClassRoom");
                 });
@@ -494,11 +498,11 @@ namespace DoAnMon.Data.Migrations
 
             modelBuilder.Entity("DoAnMon.Models.ClassRoom", b =>
                 {
-                    b.Navigation("BaiGiangs");
-
                     b.Navigation("BaiTapDetails");
 
                     b.Navigation("ClassroomDetails");
+
+                    b.Navigation("baiGiangs");
                 });
 
             modelBuilder.Entity("DoAnMon.IdentityCudtomUser.CustomRole", b =>
