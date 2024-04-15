@@ -1,4 +1,7 @@
-﻿@using static DoAnMon.Models.ClassroomViewModel
+﻿@using DoAnMon.IdentityCudtomUser
+@using Microsoft.AspNetCore.Identity
+@inject UserManager<CustomUser> _userManager
+@using static DoAnMon.Models.ClassroomViewModel
 @model ClassRoomViewModel
 
 @{
@@ -405,17 +408,30 @@
 </div>
 <div id="discussion" class="tabcontent">
 	<div class="discussion">
-		<div class="chat-container">
-			<div id="chat-messages" class="chat-messages"></div>
-			<div class="message-form-container">
-				<form id="message-form" class="message-form">
-					<input type="text" id="message-input" class="message-input"
-						   placeholder="Nhập tin nhắn của bạn...">
-					<button type="submit" class="send-button">Gửi</button>
-				</form>
+		<div class="container">
+			<div class="row p-1" hidden>
+				<div class="col-5"><input type="text" id="userInput" class="form-control" /></div>
+			</div>
+			<div class="row p-1">
+				<div class="col-1">Message</div>
+				<div class="col-5"><input type="text" class="form-control" id="messageInput" /></div>
+			</div>
+			<div class="row p-1">
+				<div class="col-6 text-end">
+					<button id="sendButton" class="btn btn-primary">Send Message</button>
+				</div>
+			</div>
+			<div class="row p-1">
+				<div class="col-6">
+					<hr />
+				</div>
+			</div>
+			<div class="row p-1">
+				<div class="col-6">
+					<ul id="messagesList" class="list-group"></ul>
+				</div>
 			</div>
 		</div>
-
 	</div>
 </div>
 <script>
@@ -432,7 +448,7 @@
 		document.getElementById(tabName).style.display = "block";
 		evt.currentTarget.classList.add("active");
 	}
-</script>
+</script> @* Chuyển tab trên trang *@
 <script>
 	function showUploadForm() {
 		var lectureName = prompt("Nhập tên bài giảng:");
@@ -454,8 +470,12 @@
 			if (!file) {
 				alert("Vui lòng chọn một tệp PDF.");
 				return;
-			}
-
+			} else
+				// Kiểm tra phần mở rộng của tệp
+				if (file.type !== 'application/pdf') {
+					alert("Vui lòng chỉ chọn tệp PDF.");
+					return;
+				}
 			// Submit form để gửi dữ liệu lên server
 			document.getElementById('uploadForm').submit();
 		};
@@ -464,4 +484,20 @@
 		pdfFileInput.click();
 	}
 
+</script> @* Tạo bài giảng mới *@
+<script src="~/js/signalr/dist/browser/signalr.js"></script>
+<script src="~/js/chat.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/he@1.2.0/he.min.js"></script>
+<script>
+	document.addEventListener("DOMContentLoaded", async function () {
+		try {
+			var encodedName = "@((await _userManager.GetUserAsync(User)).Name)";
+			var decodedName = he.decode(encodedName);
+			document.getElementById("userInput").value = (@User.Identity.Name + "_" + decodedName);
+		} catch (error) {
+			console.error("Error decoding user name:", error);
+		}
+	});
+
 </script>
+
