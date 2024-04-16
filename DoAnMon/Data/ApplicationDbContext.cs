@@ -18,6 +18,7 @@ namespace DoAnMon.Data
         public DbSet<ClassRoom> classRooms { get; set; }
         public DbSet<ClassroomDetail> classroomDetail { get; set; }
         public DbSet<BaiGiang> BaiGiang { get; set; }
+        public DbSet<Message> Messages { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

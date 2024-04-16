@@ -409,8 +409,11 @@
 <div id="discussion" class="tabcontent">
 	<div class="discussion">
 		<div class="container">
-			<div class="row p-1" hidden>
+			<div class="row p-1" >
 				<div class="col-5"><input type="text" id="userInput" class="form-control" /></div>
+				<div class="col-5">
+					<input type="text" id="classId" class="form-control" value="@Model.ClassRoom.Id" />
+				</div>
 			</div>
 			<div class="row p-1">
 				<div class="col-1">Message</div>
@@ -498,6 +501,40 @@
 			console.error("Error decoding user name:", error);
 		}
 	});
+
+	connection.on("ReceiveMessage", function (user, message) {
+		var li = document.createElement("li");
+		document.getElementById("messagesList").appendChild(li);
+		// We can assign user-supplied strings to an element's textContent because it
+		// is not interpreted as markup. If you're assigning in any other way, you
+		// should be aware of possible script injection concerns.
+		const currentTime = new Date();
+		const year = currentTime.getFullYear(); // Năm (ví dụ: 2024)
+		const month = currentTime.getMonth() + 1; // Tháng (từ 0 - 11, cần cộng thêm 1)
+		const day = currentTime.getDate(); // Ngày trong tháng
+		const hours = currentTime.getHours(); // Giờ (24-giờ)
+		const minutes = currentTime.getMinutes(); // Phút
+		const seconds = currentTime.getSeconds(); // Giây
+		const formatTime = `${hours}:${minutes}:${seconds} - ${day}/${month}/${year}`;
+		li.textContent = `${user} (${formatTime}) says ${message}`;
+		var classId = document.getElementById("classId").value;
+		$.ajax({
+			type: "POST",
+			url: "/ClassRooms/SendMessageToDatabase",
+			data: {
+				message: message,
+				classId: classId,
+				time: formatTime
+			},
+			success: function () {
+				$('#messageInput').val('').focus();
+			},
+			error: function (error) {
+				console.error(error);
+			}
+		});
+	});
+
 
 </script>
 
