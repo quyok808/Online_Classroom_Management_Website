@@ -1,6 +1,7 @@
 ﻿@using DoAnMon.IdentityCudtomUser
 @using Microsoft.AspNetCore.Identity
 @inject UserManager<CustomUser> _userManager
+@inject IUserStore<CustomUser> _userStore
 @using static DoAnMon.Models.ClassroomViewModel
 @model ClassRoomViewModel
 
@@ -27,17 +28,53 @@
 
 	.class-info {
 		padding: 20px;
+		text-align: center;
 	}
 
 		.class-info h1 {
-			font-size: 24px;
+			font-size: 30px;
 			margin-bottom: 10px;
+			font-weight: bold;
+			text-transform: uppercase;
 		}
 
 		.class-info p {
 			font-size: 16px;
 			margin-bottom: 15px;
 		}
+
+	/* Menu dropdown Thêm thành viên */
+	.dropdown {
+		position: relative;
+		display: inline-block;
+	}
+
+	.dropdown-content {
+		display: none;
+		position: absolute;
+		background-color: #f9f9f9;
+		min-width: 160px;
+		box-shadow: 0 8px 16px 0 rgba(0, 0, 0, 0.2);
+		z-index: 1;
+		text-align: start;
+	}
+
+		.dropdown-content a, p {
+			color: black;
+			padding: 12px 16px;
+			text-decoration: none;
+			display: block;
+		}
+
+			.dropdown-content a:hover {
+				background-color: #f1f1f1;
+			}
+
+	.dropdown:hover .dropdown-content {
+		display: block;
+	}
+
+	/* ================================= */
 
 	.tabs {
 		overflow: hidden;
@@ -254,7 +291,7 @@
 
 	.btn {
 		padding: 10px 20px;
-		background-color: #007bff;
+		/* background-color: #007bff; */
 		color: #fff;
 		border: none;
 		border-radius: 5px;
@@ -305,12 +342,37 @@
 </style>
 
 <div>
-	<img class="img-fluid" src="~/Images/banner_google.png" alt="No Images" />
+	<img class="img-fluid" src="/Images/banner_google.png" alt="No Images" />
 </div>
 <div class="class-info">
-	<h1>@Model.ClassRoom.Name</h1>
-	<p>Mô tả lớp học: @Model.ClassRoom.Description</p>
-	<a href="http://" class="btn btn-primary">Tham gia phòng học</a>
+	<h1>Tên lớp học</h1>
+	<p>Mô tả lớp học: Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed non risus.</p>
+	<div class="container">
+		<div class="row">
+			<div class="col-md-6" style="margin-bottom: 10px;">
+				<div class="d-flex justify-content-start">
+					<!-- Sử dụng justify-content-start để căn trái -->
+					<a href="http://" class="btn btn-primary" id="join-btn">Tham gia phòng học</a>
+				</div>
+			</div>
+			<div class="col-md-6">
+				<div class="d-flex justify-content-end">
+					<!-- Sử dụng justify-content-end để căn phải -->
+					<div class="more-options" style="display: inline;">
+						<div class="dropdown">
+							<button class="btn btn-secondary">
+								<i>Thêm Thành Viên</i>
+							</button>
+							<div class="dropdown-content">
+								<a href="#">Thêm danh sách sinh viên</a>
+								<p>Mã lớp: @Model.ClassRoom.Id</p>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
 </div>
 <div class="tabs">
 	<div class="tab" onclick="openTab(event, 'teacher')">Thông tin giáo viên</div>
@@ -409,21 +471,20 @@
 <div id="discussion" class="tabcontent">
 	<div class="discussion">
 		<div class="container">
-			<div class="row p-1" >
+			<div class="row p-1" hidden>
 				<div class="col-5"><input type="text" id="userInput" class="form-control" /></div>
 				<div class="col-5">
 					<input type="text" id="classId" class="form-control" value="@Model.ClassRoom.Id" />
 				</div>
 			</div>
 			<div class="row p-1">
-				<div class="col-1">Message</div>
+				<div class="col-1">Tin nhắn: </div>
 				<div class="col-5"><input type="text" class="form-control" id="messageInput" /></div>
-			</div>
-			<div class="row p-1">
-				<div class="col-6 text-end">
-					<button id="sendButton" class="btn btn-primary">Send Message</button>
+				<div class="col-6 text-end" style="margin-top: 10px;">
+					<button id="sendButton" class="btn btn-primary">Gửi</button>
 				</div>
 			</div>
+
 			<div class="row p-1">
 				<div class="col-6">
 					<hr />
@@ -431,7 +492,9 @@
 			</div>
 			<div class="row p-1">
 				<div class="col-6">
-					<ul id="messagesList" class="list-group"></ul>
+					<ul id="messagesList" class="list-group" style="text-decoration: none; overflow: auto; max-height: 500px;">
+						<partial name="_MessagePartial" model="Model.Message" />
+					</ul>
 				</div>
 			</div>
 		</div>
@@ -496,27 +559,33 @@
 		try {
 			var encodedName = "@((await _userManager.GetUserAsync(User)).Name)";
 			var decodedName = he.decode(encodedName);
-			document.getElementById("userInput").value = (@User.Identity.Name + "_" + decodedName);
+			document.getElementById("userInput").value = (@User.Identity.Name + " _ " + decodedName);
 		} catch (error) {
 			console.error("Error decoding user name:", error);
 		}
 	});
-
+	function reloadMessages() {
+		$.ajax({
+			type: "GET",
+			url: "/ClassRooms/GetMessages", // Địa chỉ URL để lấy tin nhắn từ máy chủ
+			success: function (response) {
+				// Thay đổi nội dung của phần tin nhắn với dữ liệu mới
+				$("#messagesList").html(response);
+			},
+			error: function (error) {
+				console.error(error);
+			}
+		});
+	}
 	connection.on("ReceiveMessage", function (user, message) {
-		var li = document.createElement("li");
-		document.getElementById("messagesList").appendChild(li);
-		// We can assign user-supplied strings to an element's textContent because it
-		// is not interpreted as markup. If you're assigning in any other way, you
-		// should be aware of possible script injection concerns.
 		const currentTime = new Date();
-		const year = currentTime.getFullYear(); // Năm (ví dụ: 2024)
-		const month = currentTime.getMonth() + 1; // Tháng (từ 0 - 11, cần cộng thêm 1)
-		const day = currentTime.getDate(); // Ngày trong tháng
-		const hours = currentTime.getHours(); // Giờ (24-giờ)
-		const minutes = currentTime.getMinutes(); // Phút
-		const seconds = currentTime.getSeconds(); // Giây
+		const year = currentTime.getFullYear();
+		const month = currentTime.getMonth() + 1;
+		const day = currentTime.getDate();
+		const hours = currentTime.getHours();
+		const minutes = currentTime.getMinutes();
+		const seconds = currentTime.getSeconds();
 		const formatTime = `${hours}:${minutes}:${seconds} - ${day}/${month}/${year}`;
-		li.textContent = `${user} (${formatTime}) says ${message}`;
 		var classId = document.getElementById("classId").value;
 		$.ajax({
 			type: "POST",
@@ -527,6 +596,7 @@
 				time: formatTime
 			},
 			success: function () {
+				reloadMessages();
 				$('#messageInput').val('').focus();
 			},
 			error: function (error) {
@@ -534,7 +604,6 @@
 			}
 		});
 	});
-
 
 </script>
 

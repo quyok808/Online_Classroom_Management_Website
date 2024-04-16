@@ -103,6 +103,7 @@ namespace DoAnMon.Controllers
 			var currentUser = await _userManager.GetUserAsync(User);
 			var owner = await _context.Users.FirstOrDefaultAsync(u => u.Id == classRoom.UserId);
             var Lecture = await _context.BaiGiang.Where(p => p.ClassId == classRoom.Id).ToListAsync();
+            var chatHistory = await _context.Messages.Where(p => p.ClassRoomId == classRoom.Id).ToListAsync();
             if (owner == null)
             {
                 return NotFound();
@@ -132,6 +133,8 @@ namespace DoAnMon.Controllers
             {
 				viewModel.isOwner = false;
 			}
+            
+            viewModel.Message = chatHistory;
 
             return View(viewModel);
         }
@@ -199,7 +202,7 @@ namespace DoAnMon.Controllers
             _context.BaiGiang.Add(newLecture);
             await _context.SaveChangesAsync();
 
-            return RedirectToAction("Details", "ClassRoom", new { id = ClassId, tab = "posts" });
+            return RedirectToAction("Details", "ClassRoom", new { id = ClassId});
         }
 
 		[HttpPost]
@@ -216,6 +219,14 @@ namespace DoAnMon.Controllers
 			await _context.SaveChangesAsync();
 
 			return Ok();
+		}
+
+		[HttpGet]
+		public PartialViewResult GetMessages()
+		{
+			List<Message> messages = _context.Messages.ToList(); // Lấy danh sách tin nhắn từ cơ sở dữ liệu
+
+			return PartialView("_MessagePartial", messages); // Trả về PartialView chứa danh sách tin nhắn
 		}
 
 	}

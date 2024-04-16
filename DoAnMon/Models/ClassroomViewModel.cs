@@ -13,6 +13,8 @@ namespace DoAnMon.Models
 
 			public List<BaiTap>? Homework { get; set; }
 			public bool isOwner { get; set; }
+
+			public List<Message>? Message { get; set; }
 		}
 
 	}
