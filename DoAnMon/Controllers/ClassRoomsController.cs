@@ -201,6 +201,22 @@ namespace DoAnMon.Controllers
 
             return RedirectToAction("Details", "ClassRoom", new { id = ClassId, tab = "posts" });
         }
-    }
 
+		[HttpPost]
+		public async Task<IActionResult> SendMessageToDatabase(string message, string classId, string time)
+		{
+			var currentUser = await _userManager.GetUserAsync(User);
+			var newMessage = new Message();
+            newMessage.UserId = currentUser.Id;
+            newMessage.Noidung = message;
+            newMessage.Time = time;
+            newMessage.ClassRoomId = classId;
+
+			_context.Messages.Add(newMessage);
+			await _context.SaveChangesAsync();
+
+			return Ok();
+		}
+
+	}
 }

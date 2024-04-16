@@ -31,18 +31,22 @@ connection.start().then(function () {
 document.getElementById("sendButton").addEventListener("click", function (event) {
     var user = document.getElementById("userInput").value;
     var message = document.getElementById("messageInput").value;
+    var classId = document.getElementById("classId").value;
+
     connection.invoke("SendMessage", user, message).catch(function (err) {
         return console.error(err.toString());
     });
+
     event.preventDefault();
 
-    document.getElementById("messageInput").value = "";
-    document.getElementById("messageInput").focus;
+    // Clear và focus vào trường tin nhắn
+    //document.getElementById("messageInput").value = "";
+    //document.getElementById("messageInput").focus();
 });
 
 document.getElementById("messageInput").addEventListener("keydown", function (event) {
     if (event.key == 'Enter' && !event.shiftKey) {
-        console.log(event.key)
+        // Bắn sự kiện click cho nút gửi khi người dùng nhấn Enter
         document.getElementById("sendButton").click();
         event.preventDefault();
     }

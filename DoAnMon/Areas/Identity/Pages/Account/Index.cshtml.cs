@@ -143,6 +143,7 @@ namespace DoAnMon.Areas.Identity.Pages.Account
                     var user = CreateUser();
                     user.Mssv = Input.Mssv;
                     user.Name = Input.Name;
+                    user.UrlAvt = "avatar.jpg";
                     await _userStore.SetUserNameAsync((CustomUser)user, Input.Mssv, CancellationToken.None);
                     await _emailStore.SetEmailAsync((CustomUser)user, Input.Email, CancellationToken.None);
                     var result = await _userManager.CreateAsync((CustomUser)user, Input.Password);
