@@ -1,5 +1,6 @@
 using DoAnMon.Data;
 using DoAnMon.IdentityCudtomUser;
+using DoAnMon.Models;
 using DoAnMon.SignalR;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -16,6 +17,7 @@ builder.Services.AddDefaultIdentity<CustomUser>(options => options.SignIn.Requir
     .AddEntityFrameworkStores<ApplicationDbContext>();
 builder.Services.AddControllersWithViews();
 
+builder.Services.AddSingleton<ClassroomViewModel>();
 builder.Services.AddSignalR();
 var app = builder.Build();
 

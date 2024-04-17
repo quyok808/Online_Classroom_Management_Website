@@ -3,6 +3,11 @@
 @inject SignInManager<CustomUser> SignInManager
 @inject UserManager<CustomUser> UserManager
 
+@{
+	var user = await UserManager.GetUserAsync(User);
+	var fullname = user?.Name;
+}
+
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
@@ -26,13 +31,10 @@
 
 </head>
 <body>
-	@{
-		var user = await UserManager.GetUserAsync(User);
-		var fullname = user?.Name;
-	}
+
 	<div id="wrapper" style="background-color: white;">
 		<img class="img-fluid banner-img" src="/Images/banner_google.png" alt="Banner No Image">
-		<nav class="navbar navbar-default navbar-cls-top " role="navigation" style="margin-bottom: 0; padding-bottom: 10px">
+		<nav class="navbar navbar-default navbar-cls-top " role="navigation" style="margin-bottom: 0;">
 			<div class="navbar-header">
 				<button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".sidebar-collapse">
 					<span class="sr-only">Toggle navigation</span>
@@ -40,8 +42,10 @@
 					<span class="icon-bar"></span>
 					<span class="icon-bar"></span>
 				</button>
+				<div class="navbar-brand" style="background-color: transparent!important;">
+					<a href="/ClassRooms/Index" style="text-decoration: none; color: aliceblue;"><h2>Trang chủ</h2></a>
+				</div>
 			</div>
-
 			<div class="header-right" style="text-align: center;">
 				<div style="display: inline-block;">
 					<a href="/ClassRooms/Create" class="btn btn-info" title="Create Classroom">
@@ -49,9 +53,9 @@
 					</a>
 				</div>
 				<div style="display: inline-block;">
-					<a href="message-task.html" class="btn btn-primary" title="RUD Classroom">
-						<b>Quản lý(xóa sửa) </b><i class="fa fa-bars fa-2x"></i>
-					</a>
+					<button class="btn btn-primary" onclick="joinRoom(event)">
+						<b>Tham gia lớp học</b><i class="fa fa-bars fa-2x"></i>
+					</button>
 				</div>
 				<div style="display: inline-block;">
 					<form class="form-inline dropdown-item" asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Action("Index", "Home", new { area = "" })">
@@ -68,21 +72,18 @@
 					<li>
 						<a href="/Identity/Account/Manage/Index" style="padding: 0; margin-bottom: -1px;">
 							<div class="user-img-div" style="padding: 10px 15px 0 0;">
-								<div class="col-md-6" style="margin-bottom: 10px">
-									@if (user.UrlAvt == null)
+								@{
+									if (user != null)
 									{
-										<img src="/Images/avatar.jpg" class="img-thumbnail img-fluid" style="width: 122.5px; height: auto; height: 160.13px;" />
+										<div class="col-md-6" style="margin-bottom: 10px">
+											<img src="~/Imgs_avtUser/@user.UrlAvt" class="img-thumbnail img-fluid" style="width: 122.5px; height: auto; height: 160.13px;" onerror="this.onerror=null; this.src='/Images/avatar.jpg';" />
+										</div>
+										<div class="col-md-6" style="margin-left: 0; padding-left: 0; align-items: center; padding-top: 15px;">
+											<p style="line-height: 30px; font-weight: bold; font-size: 20px; padding-bottom: 30px;">@fullname</p>
+											<p style="font-weight: bold; font-size: 20px;">@user.Mssv</p>
+										</div>
 									}
-									else
-									{
-										<img src="/Imgs_avtUser/@user.UrlAvt" class="img-thumbnail img-fluid" style="width: 122.5px; height: auto; height: 160.13px;" onerror="this.onerror=null; this.src='/Images/avatar.jpg';" />
-
-									}
-								</div>
-								<div class="col-md-6" style="margin-left: 0; padding-left: 0; align-items: center; padding-top: 15px;">
-									<p style="line-height: 30px; font-weight: bold; font-size: 20px; padding-bottom: 30px;">@fullname</p>
-									<p style="font-weight: bold; font-size: 20px;">@user.Mssv</p>
-								</div>
+								}
 							</div>
 						</a>
 					</li>
@@ -140,6 +141,32 @@
 	<script src="/assets/js/jquery.metisMenu.js"></script>
 	<!-- CUSTOM SCRIPTS -->
 	<script src="/assets/js/custom.js"></script>
+	<script>
+		function saveUserIdToDatabase(roomid) {
+			$.ajax({
+				type: "POST",
+				url: "/ClassRooms/joinClass",
+				data: {
+					roomid: roomid
+				},
+				success: function () {
+					alert("Bạn đã tham gia vào phòng học có mã " + roomid);
+				},
+				error: function (error) {
+					console.error(error);
+				}
+			});
+		}
+
+		function joinRoom() {
+			var roomid = prompt("Nhập mã phòng:");
+			if (roomid !== null && roomid.trim() !== "") {
+				saveUserIdToDatabase(roomid);
+			} else {
+				alert("Vui lòng nhập mã phòng để tham gia lớp học.");
+			}
+		}
+	</script>
 
 	@RenderSection("Scripts", required: false)
 </body>

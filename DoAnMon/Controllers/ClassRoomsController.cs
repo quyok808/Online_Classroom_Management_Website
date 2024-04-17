@@ -141,9 +141,58 @@ namespace DoAnMon.Controllers
 
 
         // GET: ClassRooms/Create
-        public IActionResult Create()
+        public async  Task<IActionResult> Create()
         {
-            return View();
+            var currentUser = await _userManager.GetUserAsync(User);
+            List<ClassRoomViewModel> classRoomViewModels = new List<ClassRoomViewModel>();
+            List<ClassRoom> userClasses = null;
+
+            if (currentUser != null)
+            {
+                // Kiểm tra xem người dùng có trong bảng class hay không
+                var isTeacher = await _context.classRooms.AnyAsync(p => p.UserId == currentUser.Id);
+
+                if (isTeacher)
+                {
+                    // Lấy danh sách lớp học mà người dùng là chủ sở hữu từ bảng classRooms
+                    userClasses = await _context.classRooms.Where(p => p.UserId == currentUser.Id).ToListAsync();
+                }
+                else
+                {
+                    // Lấy danh sách lớp học mà người dùng có ID trong bảng ClassroomDetail
+                    var classDetailClasses = await _context.classroomDetail
+                        .Where(p => p.UserId == currentUser.Id)
+                        .Select(p => p.ClassId)
+                        .ToListAsync();
+
+                    userClasses = await _context.classRooms
+                        .Where(p => classDetailClasses.Contains(p.Id))
+                        .ToListAsync();
+                }
+
+                foreach (var classRoom in userClasses)
+                {
+                    var owner = await _context.Users.FirstOrDefaultAsync(u => u.Id == classRoom.UserId);
+
+                    // Kiểm tra null cho owner trước khi thêm vào classRoomViewModels
+                    if (owner != null)
+                    {
+                        classRoomViewModels.Add(new ClassRoomViewModel
+                        {
+                            ClassRoom = classRoom,
+                            Owner = owner
+                        });
+                    }
+                    else
+                    {
+                        // Xử lý trường hợp không có chủ sở hữu (nếu cần)
+                        classRoomViewModels.Add(new ClassRoomViewModel { ClassRoom = classRoom, Owner = new CustomUser { UserName = "Unknown" } });
+                    }
+                }
+            }
+
+            // Truyền danh sách lớp học của người dùng vào View
+            return View(classRoomViewModels);
         }
 
         // POST: ClassRooms/Create
@@ -228,6 +277,22 @@ namespace DoAnMon.Controllers
 
 			return PartialView("_MessagePartial", messages); // Trả về PartialView chứa danh sách tin nhắn
 		}
+
+        [HttpPost]
+        public async Task<IActionResult> joinClass(string roomid)
+        {
+            if (ModelState.IsValid)
+            {
+				CustomUser? currentUser = await _userManager.GetUserAsync(User);
+				var newStudent = new ClassroomDetail();
+				newStudent.UserId = currentUser.Id;
+				newStudent.ClassId = roomid;
+				newStudent.RoleId = "Student";
+				_context.classroomDetail.Add(newStudent);
+				await _context.SaveChangesAsync();
+            }
+            return View("Index");
+        }
 
 	}
 }

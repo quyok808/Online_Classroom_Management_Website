@@ -31,17 +31,17 @@
 		text-align: center;
 	}
 
-		.class-info h1 {
-			font-size: 30px;
-			margin-bottom: 10px;
-			font-weight: bold;
-			text-transform: uppercase;
-		}
+	.class-info h1 {
+		font-size: 30px;
+		margin-bottom: 10px;
+		font-weight: bold;
+		text-transform: uppercase;
+	}
 
-		.class-info p {
-			font-size: 16px;
-			margin-bottom: 15px;
-		}
+	.class-info p {
+		font-size: 16px;
+		margin-bottom: 15px;
+	}
 
 	/* Menu dropdown Thêm thành viên */
 	.dropdown {
@@ -59,16 +59,16 @@
 		text-align: start;
 	}
 
-		.dropdown-content a, p {
-			color: black;
-			padding: 12px 16px;
-			text-decoration: none;
-			display: block;
-		}
+	.dropdown-content a, .dropdown-content p {
+		color: black;
+		padding: 12px 16px;
+		text-decoration: none;
+		display: block;
+	}
 
-			.dropdown-content a:hover {
-				background-color: #f1f1f1;
-			}
+	.dropdown-content a:hover {
+		background-color: #f1f1f1;
+	}
 
 	.dropdown:hover .dropdown-content {
 		display: block;
@@ -291,24 +291,27 @@
 
 	.btn {
 		padding: 10px 20px;
-		/* background-color: #007bff; */
 		color: #fff;
 		border: none;
 		border-radius: 5px;
 		cursor: pointer;
-		transition: background-color 0.3s; /* Thêm hiệu ứng khi di chuột qua */
+		transition: background-color 0.3s;
 	}
 
-		.btn:hover {
-			background-color: #0056b3;
-		}
+	.custom-button{
+		background-color: #007bff;
+	}
+
+	.btn:hover {
+		background-color: #0056b3;
+	}
 
 	/* UPLOAD BAITAP */
 	.upload-form {
 		display: flex;
 		flex-direction: column;
 		align-items: center;
-		margin-bottom: 20px; /* Thêm khoảng cách dưới cùng */
+		margin-bottom: 20px;
 	}
 
 	.file-label {
@@ -351,16 +354,14 @@
 		<div class="row">
 			<div class="col-md-6" style="margin-bottom: 10px;">
 				<div class="d-flex justify-content-start">
-					<!-- Sử dụng justify-content-start để căn trái -->
-					<a href="http://" class="btn btn-primary" id="join-btn">Tham gia phòng học</a>
+					<a href="http://" class="btn btn-primary custom-button" id="join-btn">Tham gia phòng học</a>
 				</div>
 			</div>
 			<div class="col-md-6">
 				<div class="d-flex justify-content-end">
-					<!-- Sử dụng justify-content-end để căn phải -->
 					<div class="more-options" style="display: inline;">
 						<div class="dropdown">
-							<button class="btn btn-secondary">
+							<button class="btn btn-secondary custom-button">
 								<i>Thêm Thành Viên</i>
 							</button>
 							<div class="dropdown-content">
