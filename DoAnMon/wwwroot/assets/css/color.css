@@ -1,0 +1,102 @@
+﻿.classroom {
+    background-color: #F6F5F2;
+}
+
+body {
+    background-color: #f2f2f2;
+}
+
+.btn-action {
+    margin-right: 5px;
+}
+
+.room-description {
+    margin-top: 10px;
+    background-color: #b0f7b5;
+    padding: 10px;
+    border-radius: 5px;
+    display: none;
+}
+
+.page-title {
+    color: #6A5ACD;
+}
+
+.card {
+    background-color: #cef6d1;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+thead th {
+    white-space: nowrap; /* Ngăn chữ trong thẻ th bị ngắt dòng */
+}
+
+<!--css table -->
+td.teacher-name {
+    width: auto; /* Độ rộng tự động điều chỉnh theo nội dung */
+}
+
+
+.table td.description {
+    max-width: 350px; /* Độ rộng tối đa của ô mô tả */
+    white-space: nowrap; /* Ngăn chữ trong ô bị ngắt dòng */
+    overflow: hidden; /* Ẩn nội dung vượt ra ngoài ô */
+    text-overflow: ellipsis; /* Hiển thị dấu chấm cuối cùng khi nội dung quá dài */
+}
+
+
+
+
+
+table th,
+table td {
+    padding: 4px; /* Điều chỉnh khoảng cách giữa chữ và đường viền của ô */
+    text-align: left; /* Căn trái nội dung của các ô */
+    border: 1px solid #ddd; /* Đường viền của các ô */
+}
+
+
+.card-body h2 {
+    border-bottom: 2px solid #00CA79;
+}
+
+.table thead th {
+    border-top: 2px solid #00CA79;
+    border-bottom: 2px solid #00CA79;
+}
+
+.table tbody tr {
+    border-bottom: 2px solid #00CA79;
+}
+.table th,
+.table td {
+    border-right: 2px solid #00CA79; /* Đường viền đứng */
+}
+
+    .table th:last-child,
+    .table td:last-child {
+        border-right: none; /* Loại bỏ đường viền ở cột cuối cùng */
+    }
+
+.page-title {
+    font-weight: bold;
+    font-size: 45px;
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.control-label {
+    font-weight: bold;
+}
+
+#btnAddRoom {
+    font-size: 22px;
+}
+
+
