@@ -297,5 +297,82 @@ namespace DoAnMon.Controllers
 			}
 			return Content("Lỗi");
 		}
+
+		[HttpPost]
+		public async Task<IActionResult> CreateBaitap(IFormFile? FileUpLoad, string Content, string Title, string ClassId, string FileFormat)
+		{
+			ModelState.Remove("FileUpLoad");
+			if (ModelState.IsValid)
+			{
+				BaiTap baitap = new BaiTap();
+				if (FileUpLoad != null && FileUpLoad.Length > 0)
+				{
+					var uploadsFolder = Path.Combine(_environment.WebRootPath, "BAITAP");
+					// Kiểm tra xem thư mục tồn tại hay không
+					if (!Directory.Exists(uploadsFolder))
+					{
+						// Nếu thư mục không tồn tại, tạo thư mục mới
+						Directory.CreateDirectory(uploadsFolder);
+					}
+					var filePath = Path.Combine(uploadsFolder, FileUpLoad.FileName);
+					using (var stream = new FileStream(filePath, FileMode.Create))
+					{
+						await FileUpLoad.CopyToAsync(stream);
+					}
+					baitap.attractUrl = FileUpLoad.FileName;
+				}
+				else
+				{
+					baitap.attractUrl = null;
+				}
+				
+				baitap.Title = Title;
+				baitap.Content = Content;
+				baitap.Id = Guid.NewGuid().ToString();
+				baitap.ClassRoomId = ClassId;
+				baitap.FileFormat = FileFormat;
+
+				_context.Add(baitap);
+				await _context.SaveChangesAsync();
+
+				return RedirectToAction("Details", "ClassRooms", new { id = ClassId });
+			}
+			return Redirect("https://hutech.edu.vn");
+		}
+		[HttpPost]
+		public async Task<IActionResult> Nopbai(IFormFile FileNopbai, string ClassId, string BaitapId, DateTime SubmittedAt)
+		{
+			//ModelState.Remove("FileNopbai");
+			if (ModelState.IsValid)
+			{
+				if (FileNopbai != null && FileNopbai.Length > 0)
+				{
+					var uploadsFolder = Path.Combine(_environment.WebRootPath, "BAINOP");
+					// Kiểm tra xem thư mục tồn tại hay không
+					if (!Directory.Exists(uploadsFolder))
+					{
+						// Nếu thư mục không tồn tại, tạo thư mục mới
+						Directory.CreateDirectory(uploadsFolder);
+					}
+					var filePath = Path.Combine(uploadsFolder, FileNopbai.FileName);
+					using (var stream = new FileStream(filePath, FileMode.Create))
+					{
+						await FileNopbai.CopyToAsync(stream);
+					}
+				}
+				var currentuser = await _userManager.GetUserAsync(User);
+				BaiNop baiNop = new BaiNop();
+				baiNop.ClassId = ClassId;
+				baiNop.BaiTapId = BaitapId;
+				baiNop.UserId = currentuser.Id;
+				baiNop.SubmittedAt = DateTime.Now;
+				baiNop.Urlbainop = FileNopbai.FileName;
+
+				_context.Add(baiNop);
+				await _context.SaveChangesAsync();
+				return RedirectToAction("Details", "ClassRooms", new { id = ClassId });
+			}
+			return Redirect("https://hutech.edu.vn");
+		}
 	}
 }

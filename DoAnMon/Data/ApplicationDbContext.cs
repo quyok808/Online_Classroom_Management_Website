@@ -19,8 +19,9 @@ namespace DoAnMon.Data
         public DbSet<ClassroomDetail> classroomDetail { get; set; }
         public DbSet<BaiGiang> BaiGiang { get; set; }
         public DbSet<Message> Messages { get; set; }
+		public DbSet<BaiNop> BaiNop { get; set; }
 
-        protected override void OnModelCreating(ModelBuilder modelBuilder)
+		protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<BaiTapDetail>()
                 .HasKey(b => new { b.ClassId, b.BaiTapId });

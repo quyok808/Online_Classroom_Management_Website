@@ -388,7 +388,7 @@
 			<img src="/Imgs_avtUser/@Model.Owner.UrlAvt" alt="Ảnh giáo viên" class="teacher-image">
 			<div class="teacher-text">
 				<p><strong>Mã giảng viên:</strong> @Model.Owner.Mssv</p>
-				<p><strong>Tên:</strong>@Model.Owner.Name</p>
+				<p><strong>Tên:</strong> @Model.Owner.Name</p>
 				<p><strong>Email:</strong> @Model.Owner.Email</p>
 			</div>
 		</div>
@@ -434,39 +434,68 @@
 	</div>
 </div>
 <div id="assignments" class="tabcontent">
+	@{
+		if (Model.isOwner)
+		{
+			<button id="uploadButton" onclick="Showtaobaitap()">Tạo bài tập</button>
+			<form id="uploadbaitap" action="/ClassRooms/CreateBaitap" method="POST" enctype="multipart/form-data" style="display: none;">
+				<div class="form-section">
+					<!-- Phần nhập tiêu đề -->
+					<input type="text" name="Title" id="titleInput" class="form-control" placeholder="Nhập tiêu đề">
+					<!-- Gạch ngang -->
+					<hr>
+					<!-- Phần nhập mô tả -->
+					<textarea name="Content" id="descriptionInput" class="form-control" placeholder="Nhập mô tả"></textarea>
+					<label for="fileFormatSelect">Chọn định dạng bài tập:</label>
+					<select name="FileFormat" id="fileFormatSelect">
+						<option value="pdf">pdf</option>
+						<option value="docx">docx</option>
+						<option value="xls">xls</option>
+						<option value="zip">zip</option>
+					</select>
+				</div>
+				<input type="hidden" name="ClassId" id="classIdInput" value="@Model.ClassRoom.Id">
+				<input type="file" name="FileUpLoad" id="FileInput" /> <!-- Ẩn input file -->
+				<input type="submit" value="CreateBaitap" class="btn btn-primary"></input> <!-- Nút giao bài -->
+				@*<button type="button" onclick="openFileDialog()">Tải lên</button> <!-- Nút tải lên -->*@
+			</form>
+		}
+	}
 	<div class="assignments">
-		<h2>Danh sách bài tập</h2>
-		<div class="assignment" style="height: 30vh;">
-			<div class="assignment-content" style="border-right: 1px solid black; height: 100%; width: 100%; margin: 50px;">
-				<h3 class="text-center">Bài tập 1: Tạo trang web đầu tiên</h3>
-				<p class="assignment-description">Mô tả: Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed non risus.</p>
-			</div>
-			<form action="/submit_assignment" method="post" enctype="multipart/form-data" class="assignment-form ">
-				<div class="upload-form ">
-					<label for="file-upload" class="file-label">Bài tập của bạn:</label>
-					<div class="file-input-wrapper">
-						<input id="file-upload" type="file" name="assignment_file" accept=".pdf" class="file-input">
+		@{
+			if (Model.Homework != null)
+			{
+				<h2>Danh sách bài tập</h2>
+				foreach (var assignment in Model.Homework.ToList())
+				{
+					<div class="assignment" style="height: 30vh;">
+						<div class="assignment-content" style="border-right: 1px solid black; height: 100%; width: 100%; margin: 50px;">
+							<h3 class="text-center">@assignment.Title</h3>
+							<p class="assignment-description">@assignment.Content</p>
+							<!-- Hiển thị loại định dạng đã chọn -->
+							<p class="assignment-file-format">Yêu cầu nộp file: @assignment.FileFormat</p>
+						</div>
+						<form id="submitForm_@assignment.Id" action="/ClassRooms/Nopbai" method="post" enctype="multipart/form-data" class="assignment-form" onsubmit="return validateAndSubmit('@assignment.FileFormat', '@assignment.Id')">
+							<div class="upload-form ">
+								<label for="file-upload" class="file-label">Bài tập của bạn:</label>
+								<div class="file-input-wrapper">
+									<input id="FileInput_@assignment.Id" type="file" name="FileNopbai">
+									<input type="hidden" name="ClassId" id="classIdInput" value="@Model.ClassRoom.Id">
+									<input type="hidden" name="BaitapId" id="baitapinput" value="@assignment.Id">
+								</div>
+								<div id="previewContainer_@assignment.Id"></div>
+								<button type="button" onclick="previewFile('@assignment.Id')">Xem trước</button>
+								<button type="submit">Nộp bài</button>
+							</div>
+						</form>
 					</div>
-					<button type="submit" class="btn btn-primary" style="margin-top: 10px; width: 100%;">Nộp bài</button>
-				</div>
-			</form>
-		</div>
-		<!-- Thêm các bài tập khác tương tự -->
-		<div class="assignment" style="height: 30vh;">
-			<div class="assignment-content" style="border-right: 1px solid black; height: 100%; width: 100%; margin: 50px;">
-				<h3 class="text-center">Bài tập 1: Tạo trang web đầu tiên</h3>
-				<p class="assignment-description">Mô tả: Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed non risus.</p>
-			</div>
-			<form action="/submit_assignment" method="post" enctype="multipart/form-data" class="assignment-form ">
-				<div class="upload-form ">
-					<label for="file-upload" class="file-label">Bài tập của bạn:</label>
-					<div class="file-input-wrapper">
-						<input id="file-upload" type="file" name="assignment_file" accept=".pdf" class="file-input">
-					</div>
-					<button type="submit" class="btn btn-primary" style="margin-top: 10px; width: 100%;">Nộp bài</button>
-				</div>
-			</form>
-		</div>
+				}
+			}
+			else
+			{
+				<h3> Giảng viên chưa có giao bài tập ☻☻☻</h3>
+			}
+		}
 	</div>
 </div>
 <div id="discussion" class="tabcontent">
@@ -641,4 +670,59 @@
 	});
 
 </script> @* Gửi tin nhắn *@
+<script src="https://apis.google.com/js/api.js"></script>
+<script>
+	function validateAndSubmit(requiredFormat, assignmentId) {
+		var fileInput = document.getElementById("FileInput_" + assignmentId);
+		var fileName = fileInput.value;
+		var fileExtension = fileName.split('.').pop().toLowerCase();
 
+		// Kiểm tra xem định dạng file có phù hợp không
+		if (fileExtension === requiredFormat.toLowerCase()) {
+			// Nếu đúng định dạng, tiến hành nộp bài
+			return true; // Form sẽ được gửi đi
+		} else {
+			// Nếu không đúng định dạng, hiển thị thông báo lỗi
+			alert("Định dạng file không đúng. Vui lòng chọn file có định dạng " + requiredFormat);
+			return false; // Ngăn form được gửi đi
+		}
+	}
+	function previewFile(assignmentId) {
+		var fileInput = document.getElementById('FileInput_' + assignmentId);
+		var file = fileInput.files[0];
+
+		//Tạo một URL và mở nó trong một tab mới để tải xuống
+		var fileURL = URL.createObjectURL(file);
+		window.open(fileURL, '_blank');
+	}
+</script> @* Upload File *@
+<script>
+	function Showtaobaitap() {
+		var uploadButton = document.getElementById("uploadButton");
+		uploadButton.style.display = "none"; // Ẩn button khi form được hiển thị
+
+		var uploadForm = document.getElementById("uploadbaitap");
+		uploadForm.style.display = "block"; // Hiển thị form khi nút được nhấn
+
+		// Hiển thị phần nhập tiêu đề
+		var titleInput = document.getElementById("titleInput");
+		titleInput.style.display = "block";
+
+		// Hiển thị phần nhập mô tả
+		var descriptionInput = document.getElementById("descriptionInput");
+		descriptionInput.style.display = "block";
+
+		var attachmentForm = document.getElementById("attachmentForm");
+		attachmentForm.style.display = "block"; // Hiển thị form đính kèm
+	}
+	function openFileDialog() {
+		var fileInput = document.getElementById("FileInput");
+		fileInput.click(); // Kích hoạt sự kiện click cho input file
+	}
+
+	// function submitAssignment() {
+	// 	// Thực hiện xử lý khi nút "Giao bài" được nhấn
+	// 	// Ví dụ: Kiểm tra dữ liệu, gửi request đến server, ...
+	// }
+
+</script> @* Tạo Bài tập *@
