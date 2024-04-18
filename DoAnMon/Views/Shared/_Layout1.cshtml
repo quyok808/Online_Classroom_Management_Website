@@ -53,9 +53,42 @@
 					</a>
 				</div>
 				<div style="display: inline-block;">
-					<button class="btn btn-primary" onclick="joinRoom(event)">
+					<button id="btnAddRoom" class="btn btn-primary">
 						<b>Tham gia lớp học</b><i class="fa fa-bars fa-2x"></i>
 					</button>
+					@* ================ *@
+					<div id="addRoomModal" class="modal" tabindex="-1">
+						<div class="modal-dialog">
+							<div class="modal-content">
+								<div class="modal-header">
+									<h5 class="modal-title" style="font-size:30px;font-weight:bold; color: #FA7070">THAM GIA PHÒNG HỌC</h5>
+									<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+										<span aria-hidden="true">&times;</span>
+									</button>
+								</div>
+
+								<form id="createRoomForm" action="/ClassRooms/JoinClassV1" method="post">
+									<div class="modal-body">
+										<div class="col-md-12" style="width: 100%">
+											<div asp-validation-summary="ModelOnly" class="text-danger"></div>
+											<div class="form-group">
+												<label for="ClassRoomId" class="control-label">Tên lớp:</label>
+												<input name="ClassRoomId" id="Name" class="form-control custom-input-width" required />
+												<span id="NameError" class="text-danger"></span>
+											</div>
+										</div>
+									</div>
+									<div class="modal-footer">
+										<button type="button" class="btn btn-secondary" data-dismiss="modal">Đóng</button>
+										<input type="submit" value="Tham Gia" class="btn btn-primary" />
+									</div>
+								</form>
+
+
+							</div>
+						</div>
+					</div>
+					@* ====================== *@
 				</div>
 				<div style="display: inline-block;">
 					<form class="form-inline dropdown-item" asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Action("Index", "Home", new { area = "" })">
@@ -90,25 +123,12 @@
 
 
 					<li>
-						<a class="active-menu" href="index.html"><i class="fa fa-dashboard "></i>Danh sách lớp học</a>
-					</li>
-					<li>
-						<a href="#"><i class="fa fa-desktop "></i>Quản lí người dùng<span class="fa arrow"></span></a>
-						<ul class="nav nav-second-level">
-							<li>
-								<a href="#"><i class="fa fa-toggle-on"></i>Giáo viên</a>
-							</li>
-							<li>
-								<a href="#"><i class="fa fa-bell "></i>Sinh viên</a>
-							</li>
-							<li>
-								<a href="#"><i class="fa fa-circle-o "></i>Tất cả người dùng</a>
-							</li>
-						</ul>
+						<a class="active-menu" href="/ClassRooms/Index"><i class="fa fa-dashboard "></i>Danh sách lớp học</a>
 					</li>
 					<li>
 						<a href="#"><i class="fa fa-square-o "></i>Bài Tập</a>
 					</li>
+					
 				</ul>
 
 			</div>
@@ -141,32 +161,23 @@
 	<script src="/assets/js/jquery.metisMenu.js"></script>
 	<!-- CUSTOM SCRIPTS -->
 	<script src="/assets/js/custom.js"></script>
-	<script>
-		function saveUserIdToDatabase(roomid) {
-			$.ajax({
-				type: "POST",
-				url: "/ClassRooms/joinClass",
-				data: {
-					roomid: roomid
-				},
-				success: function () {
-					alert("Bạn đã tham gia vào phòng học có mã " + roomid);
-				},
-				error: function (error) {
-					console.error(error);
-				}
-			});
-		}
+	<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+	<script src="https://cdn.jsdelivr.net/npm/popperjs/core@1.16.1/dist/umd/popper.min.js"></script>
+	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 
-		function joinRoom() {
-			var roomid = prompt("Nhập mã phòng:");
-			if (roomid !== null && roomid.trim() !== "") {
-				saveUserIdToDatabase(roomid);
-			} else {
-				alert("Vui lòng nhập mã phòng để tham gia lớp học.");
-			}
-		}
+	<script>
+		$(document).ready(function () {
+			$("#btnAddRoom").click(function () {
+				$("#addRoomModal").modal('show');
+			});
+
+
+			$(".btn-info").click(function () {
+				$(this).closest("tr").find(".room-description").toggle();
+			});
+		});
 	</script>
+
 
 	@RenderSection("Scripts", required: false)
 </body>

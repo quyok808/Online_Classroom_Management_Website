@@ -26,7 +26,7 @@ namespace DoAnMon.Data
                 .HasKey(b => new { b.ClassId, b.BaiTapId });
 
             modelBuilder.Entity<ClassroomDetail>()
-                .HasKey(b => new { b.ClassId, b.UserId });
+                .HasKey(b => new { b.ClassRoomId, b.UserId });
 
             base.OnModelCreating(modelBuilder);
 
@@ -35,18 +35,14 @@ namespace DoAnMon.Data
                 entity.HasKey(e => new { e.LoginProvider, e.ProviderKey });
             });
 
-            modelBuilder.Entity<ClassroomDetail>()
-                .HasOne(cd => cd.Role)
-                .WithMany()
-                .HasForeignKey(cd => cd.RoleId)
-                .IsRequired(false);
-
 			modelBuilder.Entity<ClassRoom>()
 				.HasMany(c => c.BaiGiangs)
 				.WithOne(bg => bg.ClassRoom)
 				.HasForeignKey(bg => bg.ClassId);
 
+			
+
 		}
 
-    }
+	}
 }

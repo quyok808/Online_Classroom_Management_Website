@@ -399,15 +399,15 @@
 	@{
 		if (Model.isOwner)
 		{
-			<div>
-				<button onclick="showUploadForm()">Nhập tên và Upload</button>
-				<form id="uploadForm" action="/ClassRooms/Upload" method="POST" enctype="multipart/form-data" style="display: none;">
-					<input type="hidden" name="lectureName" id="lectureNameInput">
-					<input type="hidden" name="ClassId" id="classIdInput" value="@Model.ClassRoom.Id">
-					<input type="file" name="pdfFile" id="pdfFileInput" accept=".pdf">
-				</form>
+				<div>
+					<button onclick="showUploadForm()">Nhập tên và Upload</button>
+					<form id="uploadForm" action="/ClassRooms/Upload" method="POST" enctype="multipart/form-data" style="display: none;">
+						<input type="hidden" name="lectureName" id="lectureNameInput">
+						<input type="hidden" name="ClassId" id="classIdInput" value="@Model.ClassRoom.Id">
+						<input type="file" name="pdfFile" id="pdfFileInput" accept=".pdf">
+					</form>
 
-			</div>
+				</div>
 		}
 	}
 	<div class="posts">
@@ -416,19 +416,19 @@
 			{
 				foreach (var item in Model.Unit.ToList())
 				{
-					<div class="post">
-						<h2>@item.UrlBaiGiang.Substring(0, @item.UrlBaiGiang.IndexOf("_"))</h2>
-						<div class="pdf-container">
-							<object data="/BAIGIANG/@item.UrlBaiGiang" type="application/pdf" width="100%" height="600px">
-								<embed src="/BAIGIANG/@item.UrlBaiGiang" type="application/pdf" />
-							</object>
+						<div class="post">
+							<h2>@item.UrlBaiGiang.Substring(0, @item.UrlBaiGiang.IndexOf("_"))</h2>
+							<div class="pdf-container">
+								<object data="/BAIGIANG/@item.UrlBaiGiang" type="application/pdf" width="100%" height="600px">
+									<embed src="/BAIGIANG/@item.UrlBaiGiang" type="application/pdf" />
+								</object>
+							</div>
 						</div>
-					</div>
 				}
 			}
 			else
 			{
-				<h2>Chưa có bài nào được đăng lên</h2>
+					<h2>Chưa có bài nào được đăng lên</h2>
 			}
 		}
 	</div>
