@@ -12,6 +12,7 @@ using Microsoft.AspNetCore.Identity;
 using static DoAnMon.Models.ClassroomViewModel;
 using Microsoft.Extensions.Hosting;
 using System.Text;
+using Microsoft.AspNetCore.SignalR;
 
 namespace DoAnMon.Controllers
 {
@@ -238,25 +239,21 @@ namespace DoAnMon.Controllers
 		[HttpPost]
 		public async Task<IActionResult> Upload(IFormFile pdfFile, string lectureName, string ClassId)
 		{
-			// Kiểm tra xem tệp đã được tải lên có tồn tại không và có rỗng không
 			if (pdfFile == null || pdfFile.Length == 0)
 			{
 				return BadRequest("Không có tệp được chọn hoặc tệp trống.");
 			}
 
-			// Kiểm tra xem tệp có phải là tệp PDF không
 			if (Path.GetExtension(pdfFile.FileName).ToLower() != ".pdf")
 			{
 				return BadRequest("Vui lòng chỉ tải lên tệp PDF.");
 			}
 
-			// Đặt vị trí lưu trữ trên máy chủ cho tệp PDF
 			var uploadsFolder = Path.Combine(_environment.WebRootPath, "BAIGIANG");
 
 			var fileName = $"{lectureName}_{DateTime.Now:yyyyMMddHHmmss}.pdf";
 			var filePath = Path.Combine(uploadsFolder, fileName);
 
-			// Lưu trữ tệp PDF lên đường dẫn đã chỉ định
 			using (var stream = new FileStream(filePath, FileMode.Create))
 			{
 				await pdfFile.CopyToAsync(stream);
@@ -269,31 +266,16 @@ namespace DoAnMon.Controllers
 			_context.BaiGiang.Add(newLecture);
 			await _context.SaveChangesAsync();
 
-			return RedirectToAction("Details", "ClassRoom", new { id = ClassId });
+			return RedirectToAction("Details", "ClassRooms", new { id = ClassId });
 		}
 
-		[HttpPost]
-		public async Task<IActionResult> SendMessageToDatabase(string message, string classId, string time)
-		{
-			var currentUser = await _userManager.GetUserAsync(User);
-			var newMessage = new Message();
-			newMessage.UserId = currentUser.Id;
-			newMessage.Noidung = message;
-			newMessage.Time = time;
-			newMessage.ClassRoomId = classId;
-
-			_context.Messages.Add(newMessage);
-			await _context.SaveChangesAsync();
-
-			return Ok();
-		}
 
 		[HttpGet]
 		public PartialViewResult GetMessages()
 		{
-			List<Message> messages = _context.Messages.ToList(); // Lấy danh sách tin nhắn từ cơ sở dữ liệu
+			List<Message> messages = _context.Messages.ToList();
 
-			return PartialView("_MessagePartial", messages); // Trả về PartialView chứa danh sách tin nhắn
+			return PartialView("_MessagePartial", messages);
 		}
 		[HttpPost]
 		public async Task<IActionResult> JoinClassV1(ClassroomDetail classroom)

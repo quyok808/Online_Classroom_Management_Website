@@ -31,17 +31,17 @@
 		text-align: center;
 	}
 
-	.class-info h1 {
-		font-size: 30px;
-		margin-bottom: 10px;
-		font-weight: bold;
-		text-transform: uppercase;
-	}
+		.class-info h1 {
+			font-size: 30px;
+			margin-bottom: 10px;
+			font-weight: bold;
+			text-transform: uppercase;
+		}
 
-	.class-info p {
-		font-size: 16px;
-		margin-bottom: 15px;
-	}
+		.class-info p {
+			font-size: 16px;
+			margin-bottom: 15px;
+		}
 
 	/* Menu dropdown Thêm thành viên */
 	.dropdown {
@@ -59,16 +59,16 @@
 		text-align: start;
 	}
 
-	.dropdown-content a, .dropdown-content p {
-		color: black;
-		padding: 12px 16px;
-		text-decoration: none;
-		display: block;
-	}
+		.dropdown-content a, .dropdown-content p {
+			color: black;
+			padding: 12px 16px;
+			text-decoration: none;
+			display: block;
+		}
 
-	.dropdown-content a:hover {
-		background-color: #f1f1f1;
-	}
+			.dropdown-content a:hover {
+				background-color: #f1f1f1;
+			}
 
 	.dropdown:hover .dropdown-content {
 		display: block;
@@ -298,7 +298,7 @@
 		transition: background-color 0.3s;
 	}
 
-	.custom-button{
+	.custom-button {
 		background-color: #007bff;
 	}
 
@@ -399,15 +399,15 @@
 	@{
 		if (Model.isOwner)
 		{
-				<div>
-					<button onclick="showUploadForm()">Nhập tên và Upload</button>
-					<form id="uploadForm" action="/ClassRooms/Upload" method="POST" enctype="multipart/form-data" style="display: none;">
-						<input type="hidden" name="lectureName" id="lectureNameInput">
-						<input type="hidden" name="ClassId" id="classIdInput" value="@Model.ClassRoom.Id">
-						<input type="file" name="pdfFile" id="pdfFileInput" accept=".pdf">
-					</form>
+			<div>
+				<button onclick="showUploadForm()">Nhập tên và Upload</button>
+				<form id="uploadForm" action="/ClassRooms/Upload" method="POST" enctype="multipart/form-data" style="display: none;">
+					<input type="hidden" name="lectureName" id="lectureNameInput">
+					<input type="hidden" name="ClassId" id="classIdInput" value="@Model.ClassRoom.Id">
+					<input type="file" name="pdfFile" id="pdfFileInput" accept=".pdf">
+				</form>
 
-				</div>
+			</div>
 		}
 	}
 	<div class="posts">
@@ -416,19 +416,19 @@
 			{
 				foreach (var item in Model.Unit.ToList())
 				{
-						<div class="post">
-							<h2>@item.UrlBaiGiang.Substring(0, @item.UrlBaiGiang.IndexOf("_"))</h2>
-							<div class="pdf-container">
-								<object data="/BAIGIANG/@item.UrlBaiGiang" type="application/pdf" width="100%" height="600px">
-									<embed src="/BAIGIANG/@item.UrlBaiGiang" type="application/pdf" />
-								</object>
-							</div>
+					<div class="post">
+						<h2>@item.UrlBaiGiang.Substring(0, @item.UrlBaiGiang.IndexOf("_"))</h2>
+						<div class="pdf-container">
+							<object data="/BAIGIANG/@item.UrlBaiGiang" type="application/pdf" width="100%" height="600px">
+								<embed src="/BAIGIANG/@item.UrlBaiGiang" type="application/pdf" />
+							</object>
 						</div>
+					</div>
 				}
 			}
 			else
 			{
-					<h2>Chưa có bài nào được đăng lên</h2>
+				<h2>Chưa có bài nào được đăng lên</h2>
 			}
 		}
 	</div>
@@ -482,7 +482,7 @@
 				<div class="col-1">Tin nhắn: </div>
 				<div class="col-5"><input type="text" class="form-control" id="messageInput" /></div>
 				<div class="col-6 text-end" style="margin-top: 10px;">
-					<button id="sendButton" class="btn btn-primary">Gửi</button>
+					<input type="button" id="sendButton" class="btn btn-primary" value="Gửi" />
 				</div>
 			</div>
 
@@ -495,6 +495,7 @@
 				<div class="col-6">
 					<ul id="messagesList" class="list-group" style="text-decoration: none; overflow: auto; max-height: 500px;">
 						<partial name="_MessagePartial" model="Model.Message" />
+
 					</ul>
 				</div>
 			</div>
@@ -565,20 +566,10 @@
 			console.error("Error decoding user name:", error);
 		}
 	});
-	function reloadMessages() {
-		$.ajax({
-			type: "GET",
-			url: "/ClassRooms/GetMessages", // Địa chỉ URL để lấy tin nhắn từ máy chủ
-			success: function (response) {
-				// Thay đổi nội dung của phần tin nhắn với dữ liệu mới
-				$("#messagesList").html(response);
-			},
-			error: function (error) {
-				console.error(error);
-			}
-		});
-	}
+
 	connection.on("ReceiveMessage", function (user, message) {
+		var li = document.createElement("li");
+		document.getElementById("messagesList").appendChild(li);
 		const currentTime = new Date();
 		const year = currentTime.getFullYear();
 		const month = currentTime.getMonth() + 1;
@@ -588,23 +579,66 @@
 		const seconds = currentTime.getSeconds();
 		const formatTime = `${hours}:${minutes}:${seconds} - ${day}/${month}/${year}`;
 		var classId = document.getElementById("classId").value;
-		$.ajax({
-			type: "POST",
-			url: "/ClassRooms/SendMessageToDatabase",
-			data: {
-				message: message,
-				classId: classId,
-				time: formatTime
-			},
-			success: function () {
-				reloadMessages();
-				$('#messageInput').val('').focus();
-			},
-			error: function (error) {
-				console.error(error);
-			}
-		});
+
+		var message = `<strong>${user} (${formatTime}):</strong> ${message}`;
+		li.innerHTML = message;
+
+		var messagesList = document.getElementById("messagesList");
+		if (messagesList.firstChild) {
+			messagesList.insertBefore(li, messagesList.firstChild); // Thêm tin nhắn mới vào đầu danh sách
+		} else {
+			messagesList.appendChild(li); // Nếu danh sách trống, thêm tin nhắn vào cuối danh sách
+		}
+
 	});
 
-</script>
+	document.getElementById("sendButton").addEventListener("click", function (event) {
+		var user = document.getElementById("userInput").value;
+		var message = document.getElementById("messageInput").value;
+
+		const currentTime = new Date();
+		const year = currentTime.getFullYear();
+		const month = currentTime.getMonth() + 1;
+		const day = currentTime.getDate();
+		const hours = currentTime.getHours();
+		const minutes = currentTime.getMinutes();
+		const seconds = currentTime.getSeconds();
+		const formatTime = `${hours}:${minutes}:${seconds} - ${day}/${month}/${year}`;
+		var classId = document.getElementById("classId").value;
+
+		connection.invoke("SendMessage", user, message, formatTime, classId).catch(function (err) {
+			return console.error(err.toString());
+		});
+
+		document.getElementById("messageInput").value = '';
+		document.getElementById("messageInput").focus();
+
+	});
+
+	document.getElementById("messageInput").addEventListener("keydown", function (event) {
+		if (event.key == 'Enter' && !event.shiftKey) {
+			event.preventDefault();
+			var user = document.getElementById("userInput").value;
+			var message = document.getElementById("messageInput").value;
+
+			const currentTime = new Date();
+			const year = currentTime.getFullYear();
+			const month = currentTime.getMonth() + 1;
+			const day = currentTime.getDate();
+			const hours = currentTime.getHours();
+			const minutes = currentTime.getMinutes();
+			const seconds = currentTime.getSeconds();
+			const formatTime = `${hours}:${minutes}:${seconds} - ${day}/${month}/${year}`;
+			var classId = document.getElementById("classId").value;
+
+			connection.invoke("SendMessage", user, message, formatTime, classId).catch(function (err) {
+				return console.error(err.toString());
+			});
+
+			document.getElementById("messageInput").value = '';
+			document.getElementById("messageInput").focus();
+		}
+	});
+
+</script> @* Gửi tin nhắn *@
 
