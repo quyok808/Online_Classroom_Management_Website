@@ -6,6 +6,7 @@
 @{
 	var user = await UserManager.GetUserAsync(User);
 	var fullname = user?.Name;
+	var LISTROOM = ViewBag.ListRoom as List<ClassRoom>;
 }
 
 <!DOCTYPE html>
@@ -128,7 +129,25 @@
 					<li>
 						<a href="#"><i class="fa fa-square-o "></i>Bài Tập</a>
 					</li>
-					
+					@{
+						foreach(var item in LISTROOM)
+						{
+							<li>
+								<div style="background-color: white!important; width: 320px; height:55.89px; display:grid; place-items: center;padding: 0;">
+									<a asp-action="Details" asp-controller="ClassRooms" asp-route-id="@item.Id"
+									   style="
+											background-color: pink;
+											border-radius: 10px;
+											width: 95%;
+											height: 80%;
+											display: grid;
+											place-items: center;
+											font-size: 20px;"
+									>@item.Name</a>
+								</div>
+							</li>
+						}
+					}
 				</ul>
 
 			</div>
