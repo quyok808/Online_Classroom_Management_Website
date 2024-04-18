@@ -28,19 +28,16 @@ namespace DoAnMon.Controllers
 			_userManager = userManager;
 			_environment = environment;
 		}
-
+		static List<ClassRoom> userClasses;
 		// GET: ClassRooms
 		public async Task<IActionResult> Index()
 		{
 			var currentUser = await _userManager.GetUserAsync(User);
 			List<ClassRoomViewModel> classRoomViewModels = new List<ClassRoomViewModel>();
-			List<ClassRoom> userClasses = null;
+			
 
 			if (currentUser != null)
 			{
-
-
-
 				// Lấy danh sách lớp học mà người dùng là chủ sở hữu từ bảng classRooms
 				userClasses = await _context.classRooms.Where(p => p.UserId == currentUser.Id).ToListAsync();
 				// Lấy danh sách lớp học mà người dùng có ID trong bảng ClassroomDetail
@@ -81,7 +78,7 @@ namespace DoAnMon.Controllers
 					}
 				}
 			}
-
+			ViewBag.ListRoom = userClasses;
 			// Truyền danh sách lớp học của người dùng vào View
 			return View(classRoomViewModels);
 		}
@@ -91,6 +88,7 @@ namespace DoAnMon.Controllers
 		// GET: ClassRooms/Details/5
 		public async Task<IActionResult> Details(string id)
 		{
+			ViewBag.ListRoom = userClasses;
 			if (id == null)
 			{
 				return NotFound();
@@ -139,6 +137,7 @@ namespace DoAnMon.Controllers
 			}
 
 			viewModel.Message = chatHistory;
+			ViewBag.ListRoom = userClasses;
 
 			return View(viewModel);
 		}
@@ -239,6 +238,7 @@ namespace DoAnMon.Controllers
 		[HttpPost]
 		public async Task<IActionResult> Upload(IFormFile pdfFile, string lectureName, string ClassId)
 		{
+			
 			if (pdfFile == null || pdfFile.Length == 0)
 			{
 				return BadRequest("Không có tệp được chọn hoặc tệp trống.");
