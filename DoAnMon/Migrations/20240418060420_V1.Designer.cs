@@ -9,11 +9,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
 
-namespace DoAnMon.Data.Migrations
+namespace DoAnMon.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20240414064819_V29")]
-    partial class V29
+    [Migration("20240418060420_V1")]
+    partial class V1
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -102,6 +102,31 @@ namespace DoAnMon.Data.Migrations
                     b.ToTable("AspNetUsers", (string)null);
                 });
 
+            modelBuilder.Entity("DoAnMon.Models.BaiGiang", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("ClassId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("Name")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("UrlBaiGiang")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ClassId");
+
+                    b.ToTable("BaiGiang");
+                });
+
             modelBuilder.Entity("DoAnMon.Models.BaiTap", b =>
                 {
                     b.Property<string>("Id")
@@ -164,32 +189,56 @@ namespace DoAnMon.Data.Migrations
 
             modelBuilder.Entity("DoAnMon.Models.ClassroomDetail", b =>
                 {
-                    b.Property<string>("ClassId")
-                        .HasColumnType("nvarchar(450)");
+                    b.Property<string>("ClassRoomId")
+                        .HasColumnType("nvarchar(450)")
+                        .HasColumnOrder(1);
 
                     b.Property<string>("UserId")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<string>("ClassRoomId")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<string>("CustomRoleId")
-                        .HasColumnType("nvarchar(450)");
+                        .HasColumnType("nvarchar(450)")
+                        .HasColumnOrder(0);
 
                     b.Property<string>("RoleId")
-                        .HasColumnType("nvarchar(450)");
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
-                    b.HasKey("ClassId", "UserId");
-
-                    b.HasIndex("ClassRoomId");
-
-                    b.HasIndex("CustomRoleId");
-
-                    b.HasIndex("RoleId");
+                    b.HasKey("ClassRoomId", "UserId");
 
                     b.HasIndex("UserId");
 
                     b.ToTable("classroomDetail");
+                });
+
+            modelBuilder.Entity("DoAnMon.Models.Message", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("ClassRoomId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("Noidung")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Time")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("UserId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ClassRoomId");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("Messages");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
@@ -200,11 +249,6 @@ namespace DoAnMon.Data.Migrations
                     b.Property<string>("ConcurrencyStamp")
                         .IsConcurrencyToken()
                         .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Discriminator")
-                        .IsRequired()
-                        .HasMaxLength(13)
-                        .HasColumnType("nvarchar(13)");
 
                     b.Property<string>("Name")
                         .HasMaxLength(256)
@@ -222,10 +266,6 @@ namespace DoAnMon.Data.Migrations
                         .HasFilter("[NormalizedName] IS NOT NULL");
 
                     b.ToTable("AspNetRoles", (string)null);
-
-                    b.HasDiscriminator<string>("Discriminator").HasValue("IdentityRole");
-
-                    b.UseTphMappingStrategy();
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -338,11 +378,15 @@ namespace DoAnMon.Data.Migrations
                     b.ToTable("AspNetUserTokens", (string)null);
                 });
 
-            modelBuilder.Entity("DoAnMon.IdentityCudtomUser.CustomRole", b =>
+            modelBuilder.Entity("DoAnMon.Models.BaiGiang", b =>
                 {
-                    b.HasBaseType("Microsoft.AspNetCore.Identity.IdentityRole");
+                    b.HasOne("DoAnMon.Models.ClassRoom", "ClassRoom")
+                        .WithMany("BaiGiangs")
+                        .HasForeignKey("ClassId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
-                    b.HasDiscriminator().HasValue("CustomRole");
+                    b.Navigation("ClassRoom");
                 });
 
             modelBuilder.Entity("DoAnMon.Models.BaiTapDetail", b =>
@@ -375,15 +419,9 @@ namespace DoAnMon.Data.Migrations
                 {
                     b.HasOne("DoAnMon.Models.ClassRoom", "ClassRoom")
                         .WithMany("ClassroomDetails")
-                        .HasForeignKey("ClassRoomId");
-
-                    b.HasOne("DoAnMon.IdentityCudtomUser.CustomRole", null)
-                        .WithMany("ClassroomDetails")
-                        .HasForeignKey("CustomRoleId");
-
-                    b.HasOne("DoAnMon.IdentityCudtomUser.CustomRole", "Role")
-                        .WithMany()
-                        .HasForeignKey("RoleId");
+                        .HasForeignKey("ClassRoomId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.HasOne("DoAnMon.IdentityCudtomUser.CustomUser", "User")
                         .WithMany("ClassroomDetails")
@@ -393,7 +431,24 @@ namespace DoAnMon.Data.Migrations
 
                     b.Navigation("ClassRoom");
 
-                    b.Navigation("Role");
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("DoAnMon.Models.Message", b =>
+                {
+                    b.HasOne("DoAnMon.Models.ClassRoom", "ClassRoom")
+                        .WithMany()
+                        .HasForeignKey("ClassRoomId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("DoAnMon.IdentityCudtomUser.CustomUser", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("ClassRoom");
 
                     b.Navigation("User");
                 });
@@ -461,13 +516,10 @@ namespace DoAnMon.Data.Migrations
 
             modelBuilder.Entity("DoAnMon.Models.ClassRoom", b =>
                 {
+                    b.Navigation("BaiGiangs");
+
                     b.Navigation("BaiTapDetails");
 
-                    b.Navigation("ClassroomDetails");
-                });
-
-            modelBuilder.Entity("DoAnMon.IdentityCudtomUser.CustomRole", b =>
-                {
                     b.Navigation("ClassroomDetails");
                 });
 #pragma warning restore 612, 618

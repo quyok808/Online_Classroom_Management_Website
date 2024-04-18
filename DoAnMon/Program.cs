@@ -1,4 +1,4 @@
-using DoAnMon.Data;
+﻿using DoAnMon.Data;
 using DoAnMon.IdentityCudtomUser;
 using DoAnMon.Models;
 using DoAnMon.SignalR;
@@ -19,6 +19,7 @@ builder.Services.AddControllersWithViews();
 
 builder.Services.AddSingleton<ClassroomViewModel>();
 builder.Services.AddSignalR();
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
