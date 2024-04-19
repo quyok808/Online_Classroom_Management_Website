@@ -3,6 +3,10 @@
 @inject SignInManager<CustomUser> SignInManager
 @inject UserManager<CustomUser> UserManager
 
+@using Microsoft.AspNetCore.Authorization
+
+@inject IAuthorizationService AuthorizationService
+
 @{
 	var user = await UserManager.GetUserAsync(User);
 	var fullname = user?.Name;
@@ -28,13 +32,53 @@
 	<!-- GOOGLE FONTS-->
 	<link href='https://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet' type='text/css' />
 
-	<link rel="icon" href="/pics/exam.ico" type="image/x-icon">
+	<!-- Bootstrap Icons -->
+	<link rel='stylesheet' href='https://cdn-uicons.flaticon.com/2.3.0/uicons-bold-straight/css/uicons-bold-straight.css'>
+	<link rel='stylesheet' href='https://cdn-uicons.flaticon.com/2.3.0/uicons-regular-straight/css/uicons-regular-straight.css'>
+	<link rel='stylesheet' href='https://cdn-uicons.flaticon.com/2.3.0/uicons-bold-rounded/css/uicons-bold-rounded.css'>
+	<link rel='stylesheet' href='https://cdn-uicons.flaticon.com/2.3.0/uicons-regular-rounded/css/uicons-regular-rounded.css'>
 
+	<link rel="icon" href="/pics/exam.ico" type="image/x-icon">
+	<style>
+		.carousel-indicators li {
+			background-color: #6c6c6c;
+		}
+
+		.carousel-indicators .active {
+			background-color: #0e8b00;
+		}
+	</style>
 </head>
 <body>
 
 	<div id="wrapper" style="background-color: white;">
-		<img class="img-fluid banner-img" src="/Images/banner_google.png" alt="Banner No Image">
+		<div class="container">
+			<div id="myCarousel" class="carousel slide" data-ride="carousel">
+				<!-- Indicators -->
+				<ol class="carousel-indicators">
+					<li data-target="#myCarousel" data-slide-to="0" class="active"></li>
+					<li data-target="#myCarousel" data-slide-to="1"></li>
+					<li data-target="#myCarousel" data-slide-to="2"></li>
+				</ol>
+
+				<!-- Wrapper for slides -->
+				<div class="carousel-inner">
+
+					<div class="item active">
+						<img src="/Images/banner_google.png" alt="Los Angeles" style="width: 100%; height: 233px;">
+					</div>
+
+					<div class="item">
+						<img src="/Images/LOGO.png" alt="Los Angeles" style="width: 100%; height: 233px;">
+					</div>
+
+					<div class="item">
+						<img src="/Images/banner_google.png" alt="Los Angeles" style="width: 100%; height: 233px;">
+					</div>
+
+				</div>
+			</div>
+		</div>
 		<nav class="navbar navbar-default navbar-cls-top " role="navigation" style="margin-bottom: 0;">
 			<div class="navbar-header">
 				<button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".sidebar-collapse">
@@ -44,52 +88,56 @@
 					<span class="icon-bar"></span>
 				</button>
 				<div class="navbar-brand" style="background-color: transparent!important;">
-					<a href="/ClassRooms/Index" style="text-decoration: none; color: aliceblue;"><h2>Trang chủ</h2></a>
+					<a href="/" style="text-decoration: none; color: aliceblue;"><h2>Trang chủ</h2></a>
 				</div>
 			</div>
 			<div class="header-right" style="text-align: center;">
+				@{
+					if (User.IsInRole("Teacher"))
+					{
+						<div style="display: inline-block;">
+							<a href="/ClassRooms/Create" class="btn btn-info" title="Create Classroom">
+								<b>Tạo lớp </b><i class="fa fa-envelope-o fa-2x"></i>
+							</a>
+						</div>
+					}
+				}
 				<div style="display: inline-block;">
-					<a href="/ClassRooms/Create" class="btn btn-info" title="Create Classroom">
-						<b>Tạo lớp </b><i class="fa fa-envelope-o fa-2x"></i>
-					</a>
-				</div>
-				<div style="display: inline-block;">
-					<button id="btnAddRoom" class="btn btn-primary">
-						<b>Tham gia lớp học</b><i class="fa fa-bars fa-2x"></i>
-					</button>
-					@* ================ *@
-					<div id="addRoomModal" class="modal" tabindex="-1">
+					<div>
+						<button id="btnAddRoom" class="btn btn-primary" data-toggle="modal" data-target="#joinRoomModal" style="font-size: 18px; font-weight: bold;">
+							Tham gia<i class="fi fi-rs-e-learning" style="vertical-align: middle; margin-left: 3px;"></i>
+						</button>
+
+					</div>
+
+					<div id="joinRoomModal" class="modal" tabindex="-1">
 						<div class="modal-dialog">
 							<div class="modal-content">
-								<div class="modal-header">
-									<h5 class="modal-title" style="font-size:30px;font-weight:bold; color: #FA7070">THAM GIA PHÒNG HỌC</h5>
+								<div class="modal-header" style="margin-bottom: 10px; border-bottom: none">
 									<button type="button" class="close" data-dismiss="modal" aria-label="Close">
 										<span aria-hidden="true">&times;</span>
 									</button>
+									<h5 class="modal-title" style="font-size:30px;font-weight:bold; color: #FA7070">THAM GIA PHÒNG HỌC</h5>
 								</div>
 
-								<form id="createRoomForm" action="/ClassRooms/JoinClassV1" method="post">
-									<div class="modal-body">
-										<div class="col-md-12" style="width: 100%">
-											<div asp-validation-summary="ModelOnly" class="text-danger"></div>
-											<div class="form-group">
-												<label for="ClassRoomId" class="control-label">Tên lớp:</label>
-												<input name="ClassRoomId" id="Name" class="form-control custom-input-width" required />
-												<span id="NameError" class="text-danger"></span>
-											</div>
+
+								<form id="joinRoomForm" action="/ClassRooms/JoinClassV1" method="post">
+									<div class="col-md-12" style="width: 100%">
+										<div asp-validation-summary="ModelOnly" class="text-danger"></div>
+										<div class="form-group">
+											<label for="ClassRoomId" class="control-label" style="color: black; text-align: left; display: block; margin:10px 0">Mã phòng học:</label>
+											<input name="ClassRoomId" id="ClassRoomId" class="form-control custom-input-width" required />
+											<span id="ClassRoomIdError" class="text-danger"></span>
 										</div>
 									</div>
-									<div class="modal-footer">
-										<button type="button" class="btn btn-secondary" data-dismiss="modal">Đóng</button>
-										<input type="submit" value="Tham Gia" class="btn btn-primary" />
+									<div class="modal-footer" style="border-top: 1px solid #e5e5e5; padding-top: 10px">
+										<button type="button" class="btn btn-secondary" data-dismiss="modal" style="font-weight:bold; background-color: grey; font-size: 16px">Đóng</button>
+										<input style="font-size: 16px; font-weight:bold" type="submit" value="Tham gia" class="btn btn-primary" />
 									</div>
 								</form>
-
-
 							</div>
 						</div>
 					</div>
-					@* ====================== *@
 				</div>
 				<div style="display: inline-block;">
 					<form class="form-inline dropdown-item" asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Action("Index", "Home", new { area = "" })">
@@ -124,10 +172,10 @@
 
 
 					<li>
-						<a class="active-menu" href="/ClassRooms/Index"><i class="fa fa-dashboard "></i>Danh sách lớp học</a>
+						<a class="active-menu" href="/ClassRooms/Index"></i>Danh sách lớp học</a>
 					</li>
 					<li>
-						<a href="#"><i class="fa fa-square-o "></i>Bài Tập</a>
+						<a class="getallhw" href="/ClassRooms/GetAllHomeWork">Bài Tập</a>
 					</li>
 					@{
 						foreach(var item in LISTROOM)

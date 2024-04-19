@@ -1,0 +1,88 @@
+﻿@model IEnumerable<DoAnMon.Models.BaiTap>
+
+@{
+    ViewData["Title"] = "GetAllHomeWork";
+    Layout = "~/Views/Shared/_Layout1.cshtml";
+}
+
+<style>
+    .button {
+        display: inline-block;
+        padding: 10px 20px;
+        background-color: #007bff;
+        color: #fff;
+        text-decoration: none;
+        border-radius: 5px;
+        font-size: 16px;
+        border: none;
+        cursor: pointer;
+        text-align: center;
+    }
+
+        .button:hover {
+            background-color: #0056b3;
+            color: white;
+        }
+
+    .assignment {
+        background-color: #f9f9f9;
+        padding: 20px;
+        border-radius: 5px;
+        margin-bottom: 20px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        border: 1px solid #ccc;
+        /* Thêm viền */
+    }
+
+    .assignment-content {
+        flex-grow: 1;
+        margin-right: 20px;
+    }
+
+    .assignment h3 {
+        margin-top: 0;
+        margin-bottom: 10px;
+    }
+
+    .assignment-description {
+        margin-bottom: 20px;
+    }
+
+    .active-menu{
+        background-color: black!important;
+        color: white!important;
+    }
+
+    .getallhw{
+        background-color: #00CA79 !important;
+        color: white!important;
+    }
+</style>
+
+@{
+    foreach (var item in Model)
+    {
+        <div class="assignment" style="height: 30vh;">
+            <div class="assignment-content"
+                 style="border-right: 1px solid black; height: 100%; width: 100%; margin: 50px;">
+                <h3 class="text-center">@item.Title</h3>
+                <p class="assignment-description">
+                    @item.Content
+                </p>
+            </div>
+            @{
+                if (User.IsInRole("Teacher"))
+                {
+                    <a href="/ClassRooms/GetAllBTStu" class="button">Xem Bài tập</a>
+                }
+                else
+                {
+                    <a href="/ClassRooms/GetOwnBT" class="button">Xem Bài tập</a>
+                }
+            }
+            
+        </div>
+    }
+}
