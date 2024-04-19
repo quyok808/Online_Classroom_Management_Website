@@ -39,11 +39,15 @@ button.accept-policy {
 
 
 .container {
-    display: flex;
+    height: 80vh; /* Chiều cao là 80% của viewport */
+    background-size: cover; /* Kích thước hình nền sẽ được điều chỉnh để phủ toàn bộ phần tử */
+    background-position: center; /* Hình nền được căn giữa phần tử */
+    /*margin-left: 0;*/ /* Loại bỏ margin bên trái */
+    /*margin-right: 0;*/ /* Loại bỏ margin bên phải */
+ /*   display: flex;
     justify-content: center;
-    align-items: center;
-    background-size: cover;
-    background-position: center;
-
+    align-items: center;*/
 }
+
+
 

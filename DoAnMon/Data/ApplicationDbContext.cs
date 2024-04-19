@@ -17,14 +17,17 @@ namespace DoAnMon.Data
         public DbSet<BaiTapDetail> baiTapsDetail { get; set; }
         public DbSet<ClassRoom> classRooms { get; set; }
         public DbSet<ClassroomDetail> classroomDetail { get; set; }
+        public DbSet<BaiGiang> BaiGiang { get; set; }
+        public DbSet<Message> Messages { get; set; }
+		public DbSet<BaiNop> BaiNop { get; set; }
 
-        protected override void OnModelCreating(ModelBuilder modelBuilder)
+		protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<BaiTapDetail>()
                 .HasKey(b => new { b.ClassId, b.BaiTapId });
 
             modelBuilder.Entity<ClassroomDetail>()
-                .HasKey(b => new { b.ClassId, b.UserId });
+                .HasKey(b => new { b.ClassRoomId, b.UserId });
 
             base.OnModelCreating(modelBuilder);
 
@@ -33,13 +36,14 @@ namespace DoAnMon.Data
                 entity.HasKey(e => new { e.LoginProvider, e.ProviderKey });
             });
 
-            modelBuilder.Entity<ClassroomDetail>()
-                .HasOne(cd => cd.Role)
-                .WithMany()
-                .HasForeignKey(cd => cd.RoleId)
-                .IsRequired(false);
+			modelBuilder.Entity<ClassRoom>()
+				.HasMany(c => c.BaiGiangs)
+				.WithOne(bg => bg.ClassRoom)
+				.HasForeignKey(bg => bg.ClassId);
 
-        }
+			
 
-    }
+		}
+
+	}
 }
