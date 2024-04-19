@@ -348,13 +348,13 @@
 	<img class="img-fluid" src="/Images/banner_google.png" alt="No Images" />
 </div>
 <div class="class-info">
-	<h1>Tên lớp học</h1>
-	<p>Mô tả lớp học: Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed non risus.</p>
+	<h1>@Model.ClassRoom.Name</h1>
+	<p>@Model.ClassRoom.Description</p>
 	<div class="container">
 		<div class="row">
 			<div class="col-md-6" style="margin-bottom: 10px;">
 				<div class="d-flex justify-content-start">
-					<a href="http://" class="btn btn-primary custom-button" id="join-btn">Tham gia phòng học</a>
+					<a href="@Model.ClassRoom.RoomOnline" class="btn btn-primary custom-button" id="join-btn">Tham gia phòng học</a>
 				</div>
 			</div>
 			<div class="col-md-6">

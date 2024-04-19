@@ -4,6 +4,7 @@ using DoAnMon.Models;
 using DoAnMon.SignalR;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using OfficeOpenXml;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -21,6 +22,7 @@ builder.Services.AddControllersWithViews();
 builder.Services.AddSingleton<ClassroomViewModel>();
 builder.Services.AddSignalR();
 
+ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
