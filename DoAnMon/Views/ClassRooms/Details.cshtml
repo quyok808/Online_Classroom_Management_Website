@@ -474,7 +474,8 @@
 					<select name="FileFormat" id="fileFormatSelect">
 						<option value="pdf">pdf</option>
 						<option value="docx">docx</option>
-						<option value="xls">xls</option>
+						<option value="xlsx">xls</option>
+						<option value="allfile">all file</option>
 						<!-- Thêm các loại định dạng khác nếu cần -->
 					</select>
 
@@ -491,36 +492,48 @@
 		@foreach (var assignment in Model.Homework.ToList())
 		{
 			<div class="assignment" style="height: 30vh;">
-				<div class="assignment-content" style="border-right: 1px solid black; height: 100%; width: 100%; margin: 50px;">
+				<div class="assignment-content" style="border-right: 1px solid black; height: 100%; width: 100%; margin: 50px; ">
 					<h3 class="text-center">@assignment.Title</h3>
 					<p class="assignment-description">@assignment.Content</p>
+
 					<!-- Hiển thị loại định dạng đã chọn -->
 					<p class="assignment-file-format">Yêu cầu nộp file: @assignment.FileFormat</p>
+					<!-- Hiển thị tệp đính kèm -->
+					@if (!string.IsNullOrEmpty(assignment.attractUrl))
+					{
+						if (assignment.attractUrl.EndsWith(".jpg") || assignment.attractUrl.EndsWith(".jpeg") || assignment.attractUrl.EndsWith(".png") || assignment.attractUrl.EndsWith(".gif"))
+						{
+							<img src="/BAITAP/@assignment.attractUrl" alt="Hình ảnh" style="max-width: 150px; height: 100px;" />
+						}
+						else
+						{
+							<a href="/BAITAP/@assignment.attractUrl" target="_blank">@assignment.attractUrl</a>
+						}
+					}
 				</div>
 				<form id="submitForm_@assignment.Id" action="/ClassRooms/Nopbai" method="post" enctype="multipart/form-data" class="assignment-form" onsubmit="return validateAndSubmit('@assignment.FileFormat', '@assignment.Id')">
 					<div class="upload-form ">
 						<label for="file-upload" class="file-label">Bài tập của bạn:</label>
 						<div class="file-input-wrapper">
-							@* @if (assignment.HasSubmittedFile)
-						// {
-						// 	<p>Đã nộp bài</p>
-						// }
-						// else
-						// {
-						// 	<p>Thiếu</p>
-						// 	<input id="FileInput_@assignment.Id" type="file" name="FileNopbai">
-						// 	<input type="hidden" name="ClassId" id="classIdInput" value="@Model.ClassRoom.Id">
-						// 	<input type="hidden" name="BaitapId" id="baitapinput" value="@assignment.Id">
-						// }
-						*@
+							@if (assignment.HasSubmittedFile)
+							{
+								<p>Đã nộp bài</p>
+							}
+							else
+							{
+								<p>Thiếu</p>
+								<input id="FileInput_@assignment.Id" type="file" name="FileNopbai">
+								<input type="hidden" name="ClassId" id="classIdInput" value="@Model.ClassRoom.Id">
+								<input type="hidden" name="BaitapId" id="baitapinput" value="@assignment.Id">
+							}
 						</div>
 						<div id="previewContainer_@assignment.Id"></div>
-						<button type="button" onclick="previewFile('@assignment.Id')">Xem trước</button>
-						@*if (!assignment.HasSubmittedFile)
-					{*@
-						<button type="submit">Nộp bài</button>
-						<button type="button" onclick="previewFile('@assignment.Id')">Xem trước</button>
-						@*}*@
+
+						@if (!assignment.HasSubmittedFile)
+						{
+							<button type="submit">Nộp bài</button>
+							<button type="button" onclick="previewFile('@assignment.Id')">Xem trước</button>
+						}
 
 					</div>
 				</form>
@@ -528,6 +541,66 @@
 		}
 	</div>
 </div>
+<script src="https://apis.google.com/js/api.js"></script>
+
+<script>
+	function validateAndSubmit(requiredFormat, assignmentId) {
+		var fileInput = document.getElementById("FileInput_" + assignmentId);
+		var fileName = fileInput.value;
+
+		// Nếu tùy chọn "allfile" được chọn, không cần kiểm tra định dạng file
+		if (requiredFormat.toLowerCase() === 'allfile') {
+			if (fileName === '') {
+				// Nếu không chọn file, hiển thị thông báo lỗi
+				alert("Vui lòng chọn một file để nộp.");
+				return false; // Ngăn form được gửi đi
+			}
+			// Nếu đã chọn file, cho phép form được gửi đi
+			return true; // Cho phép form được gửi đi
+		}
+
+		// Kiểm tra định dạng file khi không phải tùy chọn "allfile"
+		var fileExtension = fileName.split('.').pop().toLowerCase();
+		if (fileExtension !== requiredFormat.toLowerCase()) {
+			// Nếu không đúng định dạng, hiển thị thông báo lỗi
+			alert("Định dạng file không đúng. Vui lòng chọn file có định dạng " + requiredFormat);
+			return false; // Ngăn form được gửi đi
+		}
+
+		// Nếu định dạng đúng, cho phép form được gửi đi
+		return true; // Form sẽ được gửi đi
+	}
+
+	function previewFile(assignmentId) {
+		var fileInput = document.getElementById('FileInput_' + assignmentId);
+		var file = fileInput.files[0];
+		var fileURL = URL.createObjectURL(file);
+		window.open(fileURL, '_blank');
+	}
+</script>
+
+
+<script>
+	function Showtaobaitap() {
+		var uploadButton = document.getElementById("uploadButton");
+		uploadButton.style.display = "none"; // Ẩn button khi form được hiển thị
+
+		var uploadForm = document.getElementById("uploadbaitap");
+		uploadForm.style.display = "block"; // Hiển thị form khi nút được nhấn
+
+		// Hiển thị phần nhập tiêu đề
+		var titleInput = document.getElementById("titleInput");
+		titleInput.style.display = "block";
+
+		// Hiển thị phần nhập mô tả
+		var descriptionInput = document.getElementById("descriptionInput");
+		descriptionInput.style.display = "block";
+
+		var attachmentForm = document.getElementById("attachmentForm");
+		attachmentForm.style.display = "block"; // Hiển thị form đính kèm
+	}
+
+</script>
 <div id="discussion" class="tabcontent">
 	<div class="discussion">
 		<div class="container">
