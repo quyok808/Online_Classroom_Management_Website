@@ -9,6 +9,7 @@ namespace DoAnMon.Models
 		public string? Title { get; set; }
 		public string? attractUrl { get; set; }
 		public string FileFormat { get; set; }
+		public bool HasSubmittedFile { get; set; }
 		public string? ClassRoomId { get; set; }
 		[ValidateNever]
 		public ICollection<ClassRoom> ClassRooms { get; set; }
