@@ -35,7 +35,7 @@ namespace DoAnMon.Controllers
 		{
 			var currentUser = await _userManager.GetUserAsync(User);
 			List<ClassRoomViewModel> classRoomViewModels = new List<ClassRoomViewModel>();
-			
+
 
 			if (currentUser != null)
 			{
@@ -84,7 +84,7 @@ namespace DoAnMon.Controllers
 			return View(classRoomViewModels);
 		}
 
-		
+
 
 		// GET: ClassRooms/Details/5
 		public async Task<IActionResult> Details(string id)
@@ -241,7 +241,7 @@ namespace DoAnMon.Controllers
 		[HttpPost]
 		public async Task<IActionResult> Upload(IFormFile pdfFile, string lectureName, string ClassId)
 		{
-			
+
 			if (pdfFile == null || pdfFile.Length == 0)
 			{
 				return BadRequest("Không có tệp được chọn hoặc tệp trống.");
@@ -351,86 +351,93 @@ namespace DoAnMon.Controllers
 		}
 
 		[HttpPost]
-		public async Task<IActionResult> CreateBaitap(IFormFile? FileUpLoad, string Content, string Title, string ClassId, string FileFormat)
+		public async Task<IActionResult> CreateBaitap(IFormFile FileUpLoad, string Content, string Title, string ClassId, string FileFormat)
 		{
-			ModelState.Remove("FileUpLoad");
-			if (ModelState.IsValid)
+
+			if (FileUpLoad != null && FileUpLoad.Length > 0)
 			{
-				BaiTap baitap = new BaiTap();
-				if (FileUpLoad != null && FileUpLoad.Length > 0)
+				var uploadsFolder = Path.Combine(_environment.WebRootPath, "BAITAP");
+				// Kiểm tra xem thư mục tồn tại hay không
+				if (!Directory.Exists(uploadsFolder))
 				{
-					var uploadsFolder = Path.Combine(_environment.WebRootPath, "BAITAP");
-					// Kiểm tra xem thư mục tồn tại hay không
-					if (!Directory.Exists(uploadsFolder))
-					{
-						// Nếu thư mục không tồn tại, tạo thư mục mới
-						Directory.CreateDirectory(uploadsFolder);
-					}
-					var filePath = Path.Combine(uploadsFolder, FileUpLoad.FileName);
-					using (var stream = new FileStream(filePath, FileMode.Create))
-					{
-						await FileUpLoad.CopyToAsync(stream);
-					}
-					baitap.attractUrl = FileUpLoad.FileName;
+					// Nếu thư mục không tồn tại, tạo thư mục mới
+					Directory.CreateDirectory(uploadsFolder);
 				}
-				else
+				var filePath = Path.Combine(uploadsFolder, FileUpLoad.FileName);
+				using (var stream = new FileStream(filePath, FileMode.Create))
 				{
-					baitap.attractUrl = null;
+					await FileUpLoad.CopyToAsync(stream);
 				}
-				
-				baitap.Title = Title;
-				baitap.Content = Content;
-				baitap.Id = Guid.NewGuid().ToString();
-				baitap.ClassRoomId = ClassId;
-				baitap.FileFormat = FileFormat;
-
-				_context.Add(baitap);
-				await _context.SaveChangesAsync();
-
-				return RedirectToAction("Details", "ClassRooms", new { id = ClassId });
 			}
-			return Redirect("https://hutech.edu.vn");
+			BaiTap baitap = new BaiTap();
+			baitap.Title = Title;
+			baitap.Content = Content;
+			baitap.Id = Guid.NewGuid().ToString();
+			baitap.attractUrl = (FileUpLoad != null && FileUpLoad.Length > 0) ? FileUpLoad.FileName : null; ;
+			baitap.ClassRoomId = ClassId;
+			baitap.FileFormat = FileFormat;
+
+			_context.Add(baitap);
+			await _context.SaveChangesAsync();
+
+			return RedirectToAction("Details", "ClassRooms", new { id = ClassId });
 		}
 		[HttpPost]
 		public async Task<IActionResult> Nopbai(IFormFile FileNopbai, string ClassId, string BaitapId, DateTime SubmittedAt)
 		{
+
 			//ModelState.Remove("FileNopbai");
 			if (ModelState.IsValid)
 			{
-				if (FileNopbai != null && FileNopbai.Length > 0)
+				var currentuser = await _userManager.GetUserAsync(User);
+				var MSSV = currentuser.UserName;
+				var Name = currentuser.Name;
+				var homework = _context.baiTaps.FirstOrDefault(h => h.Id == BaitapId);
+				var Tenbai = homework.Title;
+				var filename = $"{MSSV}_{Name}_{Tenbai}{Path.GetExtension(FileNopbai.FileName)}";
+				var uploadsFolder = Path.Combine(_environment.WebRootPath, "BAINOP");
+				if (FileNopbai != null || FileNopbai.Length > 0)
 				{
-					var uploadsFolder = Path.Combine(_environment.WebRootPath, "BAINOP");
+
 					// Kiểm tra xem thư mục tồn tại hay không
 					if (!Directory.Exists(uploadsFolder))
 					{
 						// Nếu thư mục không tồn tại, tạo thư mục mới
 						Directory.CreateDirectory(uploadsFolder);
 					}
-					var filePath = Path.Combine(uploadsFolder, FileNopbai.FileName);
+
+					var filePath = Path.Combine(uploadsFolder, filename);
 					using (var stream = new FileStream(filePath, FileMode.Create))
 					{
 						await FileNopbai.CopyToAsync(stream);
 					}
 				}
-				var currentuser = await _userManager.GetUserAsync(User);
+
+				if (homework != null)
+				{
+					homework.HasSubmittedFile = true;
+					_context.Update(homework);
+					await _context.SaveChangesAsync();
+				}
+				//var currentuser = await _userManager.GetUserAsync(User);
 				BaiNop baiNop = new BaiNop();
 				baiNop.ClassId = ClassId;
 				baiNop.BaiTapId = BaitapId;
 				baiNop.UserId = currentuser.Id;
 				baiNop.SubmittedAt = DateTime.Now;
-				baiNop.Urlbainop = FileNopbai.FileName;
+				baiNop.Urlbainop = filename;
 
 				_context.Add(baiNop);
 				await _context.SaveChangesAsync();
 				return RedirectToAction("Details", "ClassRooms", new { id = ClassId });
 			}
-			return Redirect("https://hutech.edu.vn");
+			return Redirect("/ClassRooms");
 		}
 
 		public async Task<IActionResult> GetAllHomeWork()
 		{
-            ViewBag.ListRoom = userClasses;
-            var lop = userClasses.Select(p => p.Id).ToList();
+			ViewBag.ListRoom = userClasses;
+			var lop = userClasses.Select(p => p.Id).ToList();
 
 			var HW = await _context.baiTaps.Where(p => lop.Contains(p.ClassRoomId)).ToListAsync();
 			return View(HW);
@@ -449,6 +456,21 @@ namespace DoAnMon.Controllers
 			if (classRoom == null)
 			{
 				return NotFound();
+			}
+			var lectures = await _context.BaiGiang.Where(p => p.ClassId == id).ToListAsync();
+			foreach(var item in lectures)
+			{
+				_context.BaiGiang.Remove(item);
+			}
+			var homeworks = await _context.baiTaps.Where(p => p.ClassRoomId == id).ToListAsync();
+			foreach (var item in homeworks)
+			{
+				_context.baiTaps.Remove(item);
+			}
+			var bainops = await _context.BaiNop.Where(p => p.ClassId == id).ToListAsync();
+			foreach (var item in bainops)
+			{
+				_context.BaiNop.Remove(item);
 			}
 			_context.classRooms.Remove(classRoom);
 			await _context.SaveChangesAsync();
@@ -477,8 +499,8 @@ namespace DoAnMon.Controllers
 		[ValidateAntiForgeryToken]
 		public async Task<IActionResult> Edit(string id, ClassRoom classRoom)
 		{
-            
-            if (id == null || classRoom == null || classRoom.Id != id)
+
+			if (id == null || classRoom == null || classRoom.Id != id)
 			{
 				return NotFound();
 			}
