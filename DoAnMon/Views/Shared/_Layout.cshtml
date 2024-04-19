@@ -1,98 +1,103 @@
 ﻿<!DOCTYPE html>
 <html lang="en">
-    
+
 <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>@ViewData["Title"] - DoAnMon</title>
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;700&display=swap">
-    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
-    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
-    <link rel="stylesheet" href="~/DoAnMon.styles.css" asp-append-version="true" />
-    <link rel="icon" href="/pics/exam.ico" type="image/x-icon">
+	<meta charset="utf-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+	<title>@ViewData["Title"] - DoAnMon</title>
+	<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;700&display=swap">
+	<link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+	<link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+	<link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+	<link rel="stylesheet" href="~/DoAnMon.styles.css" asp-append-version="true" />
+	<link rel="icon" href="/pics/exam.ico" type="image/x-icon">
 </head>
 <body>
-    <header>
-        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
-            <div class="container-fluid">
+	<header>
+		<nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow ">
+			<div class="container-fluid">
 
-                @if (User.Identity.IsAuthenticated)
-                {
-                    <a class="navbar-brand" asp-area="" asp-controller="ClassRooms" asp-action="Index" style="font-family: 'Poppins', sans-serif">
-                        <img src="/images/School.png" alt="Logo" width="35" height="auto">
-                        ONLYA
-                    </a>
-                }
-                else
-                {
-                    <a class="navbar-brand" asp-area="Identity" asp-page="/Account/Index" style="font-family: 'Poppins', sans-serif">
-                        <img src="/images/School.png" alt="Logo" width="35" height="auto">
-                        ONLYA
-                    </a>
-                }
-
-
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
-                        aria-expanded="false" aria-label="Toggle navigation">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
-                <div class="navbar-collapse collapse d-sm-inline-flex justify-content-end">
-                    <partial name="_LoginPartial" />
-                </div>
-            </div>
-        </nav>
-    </header>
-    <div class="container d-flex justify-content-center align-items-center" style="height: 80vh; background-image: url('images/BG.jpg');">
-        <main role="main">
-            @RenderBody()
-        </main>
-    </div>
-
-    
-    <script>
-        function updateDateTime() {
-            var currentDateTime = new Date();
-            var hours = currentDateTime.getHours();
-            var minutes = currentDateTime.getMinutes();
-            var seconds = currentDateTime.getSeconds();
-            var day = currentDateTime.getDate();
-            var month = currentDateTime.getMonth() + 1; // Tháng bắt đầu từ 0
-            var year = currentDateTime.getFullYear();
-            var weekday = currentDateTime.getDay();
-
-            hours = (hours < 10) ? "0" + hours : hours;
-            minutes = (minutes < 10) ? "0" + minutes : minutes;
-            seconds = (seconds < 10) ? "0" + seconds : seconds;
-
-            day = (day < 10) ? "0" + day : day;
-            month = (month < 10) ? "0" + month : month;
-
-            var weekdays = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
-            var weekdayName = weekdays[weekday];
-
-            // Định dạng thời gian
-            var formattedDateTime = weekdayName + " • " + day + "/" + month + "/" + year + " " + hours + ":" + minutes + ":" + seconds;
-
-            // Hiển thị thời gian
-            document.getElementById("currentDateTime").innerText =formattedDateTime;
-        }
-
-        // Cập nhật thời gian mỗi giây
-        setInterval(updateDateTime, 1000);
-
-        // Gọi hàm updateDateTime lần đầu tiên để hiển thị thời gian ngay từ khi trang được tải
-        updateDateTime();
-    </script>
+				@if (User.Identity.IsAuthenticated)
+				{
+					<a class="navbar-brand" asp-area="" asp-controller="ClassRooms" asp-action="Index" style="font-family: 'Poppins', sans-serif">
+						<img src="/images/School.png" alt="Logo" width="35" height="auto">
+						ONLYA
+					</a>
+				}
+				else
+				{
+					<a class="navbar-brand" asp-area="Identity" asp-page="/Account/Index" style="font-family: 'Poppins', sans-serif">
+						<img src="/images/School.png" alt="Logo" width="35" height="auto">
+						ONLYA
+					</a>
+				}
 
 
-    <script src="~/lib/jquery/dist/jquery.min.js"></script>
-    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="~/js/site.js" asp-append-version="true"></script>
+				<button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
+						aria-expanded="false" aria-label="Toggle navigation">
+					<span class="navbar-toggler-icon"></span>
+				</button>
+				<div class="navbar-collapse collapse d-sm-inline-flex justify-content-end">
+					<partial name="_LoginPartial" />
+				</div>
+			</div>
+		</nav>
+	</header>
+	<div class="container-fluid d-flex justify-content-center align-items-center " style="
+                                                                                            background-image: url(/images/hinhnen.jpg);
+                                                                                            background-repeat: no-repeat;
+                                                                                            background-size: cover;
+                                                                                            height: 91vh;
+																						">
+		<main role="main">
+			@RenderBody()
+		</main>
+	</div>
 
-    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
-    @await RenderSectionAsync("Scripts", required: false)
+
+	<script>
+		function updateDateTime() {
+			var currentDateTime = new Date();
+			var hours = currentDateTime.getHours();
+			var minutes = currentDateTime.getMinutes();
+			var seconds = currentDateTime.getSeconds();
+			var day = currentDateTime.getDate();
+			var month = currentDateTime.getMonth() + 1; // Tháng bắt đầu từ 0
+			var year = currentDateTime.getFullYear();
+			var weekday = currentDateTime.getDay();
+
+			hours = (hours < 10) ? "0" + hours : hours;
+			minutes = (minutes < 10) ? "0" + minutes : minutes;
+			seconds = (seconds < 10) ? "0" + seconds : seconds;
+
+			day = (day < 10) ? "0" + day : day;
+			month = (month < 10) ? "0" + month : month;
+
+			var weekdays = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
+			var weekdayName = weekdays[weekday];
+
+			// Định dạng thời gian
+			var formattedDateTime = weekdayName + " • " + day + "/" + month + "/" + year + " " + hours + ":" + minutes + ":" + seconds;
+
+			// Hiển thị thời gian
+			document.getElementById("currentDateTime").innerText = formattedDateTime;
+		}
+
+		// Cập nhật thời gian mỗi giây
+		setInterval(updateDateTime, 1000);
+
+		// Gọi hàm updateDateTime lần đầu tiên để hiển thị thời gian ngay từ khi trang được tải
+		updateDateTime();
+	</script>
+
+
+	<script src="~/lib/jquery/dist/jquery.min.js"></script>
+	<script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+	<script src="~/js/site.js" asp-append-version="true"></script>
+
+	<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+	<script src="https://cdn.jsdelivr.net/npm/popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
+	<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+	@await RenderSectionAsync("Scripts", required: false)
 </body>
 </html>

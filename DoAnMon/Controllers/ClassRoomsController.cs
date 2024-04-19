@@ -83,7 +83,7 @@ namespace DoAnMon.Controllers
 			return View(classRoomViewModels);
 		}
 
-
+		
 
 		// GET: ClassRooms/Details/5
 		public async Task<IActionResult> Details(string id)
@@ -106,6 +106,7 @@ namespace DoAnMon.Controllers
 			var owner = await _context.Users.FirstOrDefaultAsync(u => u.Id == classRoom.UserId);
 			var Lecture = await _context.BaiGiang.Where(p => p.ClassId == classRoom.Id).ToListAsync();
 			var chatHistory = await _context.Messages.Where(p => p.ClassRoomId == classRoom.Id).ToListAsync();
+			var homework = await _context.baiTaps.Where(p => p.ClassRoomId == classRoom.Id).ToListAsync();
 			if (owner == null)
 			{
 				return NotFound();
@@ -135,7 +136,7 @@ namespace DoAnMon.Controllers
 			{
 				viewModel.isOwner = false;
 			}
-
+			viewModel.Homework = homework;
 			viewModel.Message = chatHistory;
 			ViewBag.ListRoom = userClasses;
 
@@ -266,7 +267,16 @@ namespace DoAnMon.Controllers
 			_context.BaiGiang.Add(newLecture);
 			await _context.SaveChangesAsync();
 
-			return RedirectToAction("Details", "ClassRooms", new { id = ClassId });
+			return Ok();
+		}
+
+		[HttpGet]
+		public PartialViewResult GetLecture(string ClassId)
+		{
+			// Lấy danh sách bài giảng dựa trên ClassId từ cơ sở dữ liệu
+			List<BaiGiang> lectures = _context.BaiGiang.Where(l => l.ClassId == ClassId).ToList();
+
+			return PartialView("_lecturePartial", lectures);
 		}
 
 
@@ -373,6 +383,15 @@ namespace DoAnMon.Controllers
 				return RedirectToAction("Details", "ClassRooms", new { id = ClassId });
 			}
 			return Redirect("https://hutech.edu.vn");
+		}
+
+		public async Task<IActionResult> GetAllHomeWork()
+		{
+            ViewBag.ListRoom = userClasses;
+            var lop = userClasses.Select(p => p.Id).ToList();
+
+			var HW = await _context.baiTaps.Where(p => lop.Contains(p.ClassRoomId)).ToListAsync();
+			return View(HW);
 		}
 	}
 }

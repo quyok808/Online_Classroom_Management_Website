@@ -410,28 +410,10 @@
 			</div>
 		}
 	}
-	<div class="posts">
-		@{
-			if (Model.Unit != null)
-			{
-				foreach (var item in Model.Unit.ToList())
-				{
-					<div class="post">
-						<h2>@item.UrlBaiGiang.Substring(0, @item.UrlBaiGiang.IndexOf("_"))</h2>
-						<div class="pdf-container">
-							<object data="/BAIGIANG/@item.UrlBaiGiang" type="application/pdf" width="100%" height="600px">
-								<embed src="/BAIGIANG/@item.UrlBaiGiang" type="application/pdf" />
-							</object>
-						</div>
-					</div>
-				}
-			}
-			else
-			{
-				<h2>Chưa có bài nào được đăng lên</h2>
-			}
-		}
+	<div class="posts" id="lectureContainer">
+		<partial name="_lecturePartial" model="Model.Unit" />
 	</div>
+
 </div>
 <div id="assignments" class="tabcontent">
 	@{
@@ -451,8 +433,9 @@
 						<option value="pdf">pdf</option>
 						<option value="docx">docx</option>
 						<option value="xls">xls</option>
-						<option value="zip">zip</option>
+						<!-- Thêm các loại định dạng khác nếu cần -->
 					</select>
+
 				</div>
 				<input type="hidden" name="ClassId" id="classIdInput" value="@Model.ClassRoom.Id">
 				<input type="file" name="FileUpLoad" id="FileInput" /> <!-- Ẩn input file -->
@@ -462,39 +445,44 @@
 		}
 	}
 	<div class="assignments">
-		@{
-			if (Model.Homework != null)
-			{
-				<h2>Danh sách bài tập</h2>
-				foreach (var assignment in Model.Homework.ToList())
-				{
-					<div class="assignment" style="height: 30vh;">
-						<div class="assignment-content" style="border-right: 1px solid black; height: 100%; width: 100%; margin: 50px;">
-							<h3 class="text-center">@assignment.Title</h3>
-							<p class="assignment-description">@assignment.Content</p>
-							<!-- Hiển thị loại định dạng đã chọn -->
-							<p class="assignment-file-format">Yêu cầu nộp file: @assignment.FileFormat</p>
+		<h2>Danh sách bài tập</h2>
+		@foreach (var assignment in Model.Homework.ToList())
+		{
+			<div class="assignment" style="height: 30vh;">
+				<div class="assignment-content" style="border-right: 1px solid black; height: 100%; width: 100%; margin: 50px;">
+					<h3 class="text-center">@assignment.Title</h3>
+					<p class="assignment-description">@assignment.Content</p>
+					<!-- Hiển thị loại định dạng đã chọn -->
+					<p class="assignment-file-format">Yêu cầu nộp file: @assignment.FileFormat</p>
+				</div>
+				<form id="submitForm_@assignment.Id" action="/ClassRooms/Nopbai" method="post" enctype="multipart/form-data" class="assignment-form" onsubmit="return validateAndSubmit('@assignment.FileFormat', '@assignment.Id')">
+					<div class="upload-form ">
+						<label for="file-upload" class="file-label">Bài tập của bạn:</label>
+						<div class="file-input-wrapper">
+							@* @if (assignment.HasSubmittedFile)
+						// {
+						// 	<p>Đã nộp bài</p>
+						// }
+						// else
+						// {
+						// 	<p>Thiếu</p>
+						// 	<input id="FileInput_@assignment.Id" type="file" name="FileNopbai">
+						// 	<input type="hidden" name="ClassId" id="classIdInput" value="@Model.ClassRoom.Id">
+						// 	<input type="hidden" name="BaitapId" id="baitapinput" value="@assignment.Id">
+						// }
+						*@
 						</div>
-						<form id="submitForm_@assignment.Id" action="/ClassRooms/Nopbai" method="post" enctype="multipart/form-data" class="assignment-form" onsubmit="return validateAndSubmit('@assignment.FileFormat', '@assignment.Id')">
-							<div class="upload-form ">
-								<label for="file-upload" class="file-label">Bài tập của bạn:</label>
-								<div class="file-input-wrapper">
-									<input id="FileInput_@assignment.Id" type="file" name="FileNopbai">
-									<input type="hidden" name="ClassId" id="classIdInput" value="@Model.ClassRoom.Id">
-									<input type="hidden" name="BaitapId" id="baitapinput" value="@assignment.Id">
-								</div>
-								<div id="previewContainer_@assignment.Id"></div>
-								<button type="button" onclick="previewFile('@assignment.Id')">Xem trước</button>
-								<button type="submit">Nộp bài</button>
-							</div>
-						</form>
+						<div id="previewContainer_@assignment.Id"></div>
+						<button type="button" onclick="previewFile('@assignment.Id')">Xem trước</button>
+						@*if (!assignment.HasSubmittedFile)
+					{*@
+						<button type="submit">Nộp bài</button>
+						<button type="button" onclick="previewFile('@assignment.Id')">Xem trước</button>
+						@*}*@
+
 					</div>
-				}
-			}
-			else
-			{
-				<h3> Giảng viên chưa có giao bài tập ☻☻☻</h3>
-			}
+				</form>
+			</div>
 		}
 	</div>
 </div>
@@ -547,6 +535,26 @@
 	}
 </script> @* Chuyển tab trên trang *@
 <script>
+	function reloadLecture() {
+		var xhr = new XMLHttpRequest();
+		xhr.open('GET', '/ClassRooms/GetLecture?ClassId=' + encodeURIComponent(document.getElementById('classIdInput').value), true);
+		xhr.onload = function () {
+			if (xhr.status === 200) {
+				// Lấy dữ liệu mới từ phản hồi AJAX
+				var newData = xhr.responseText;
+
+				// Cập nhật nội dung của phần tử trên trang web
+				document.getElementById('lectureContainer').innerHTML = newData;
+			} else {
+				// Xử lý lỗi
+				console.error('Error:', xhr.statusText);
+			}
+		};
+		xhr.send();
+	}
+
+
+
 	function showUploadForm() {
 		var lectureName = prompt("Nhập tên bài giảng:");
 
@@ -573,13 +581,31 @@
 					alert("Vui lòng chỉ chọn tệp PDF.");
 					return;
 				}
-			// Submit form để gửi dữ liệu lên server
-			document.getElementById('uploadForm').submit();
+			var classid = document.getElementById('classIdInput').value;
+			var formData = new FormData();
+			formData.append('pdfFile', file);
+			formData.append('lectureName', lectureName);
+			formData.append('ClassId', classid);
+
+			// Gửi yêu cầu AJAX để tải lên tệp
+			var xhr = new XMLHttpRequest();
+			xhr.open('POST', '/ClassRooms/Upload', true); // Điều chỉnh URL tương ứng với endpoint backend của bạn
+			xhr.onload = function () {
+				if (xhr.status === 200) {
+					// Nếu tải lên thành công, thực hiện làm mới dữ liệu
+					reloadLecture();
+				} else {
+					// Xử lý lỗi
+					alert('Đã xảy ra lỗi khi tải lên tệp.' + xhr.status);
+				}
+			};
+			xhr.send(formData);
 		};
 
 		// Kích hoạt sự kiện click để mở hộp thoại chọn tệp
 		pdfFileInput.click();
 	}
+
 
 </script> @* Tạo bài giảng mới *@
 <script src="~/js/signalr/dist/browser/signalr.js"></script>
