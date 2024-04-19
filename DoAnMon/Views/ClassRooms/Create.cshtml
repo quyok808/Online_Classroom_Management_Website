@@ -1,79 +1,137 @@
-﻿@model DoAnMon.Models.ClassRoom
-
-@{
-    ViewData["Title"] = "Create";
-    Layout = "~/Views/Shared/_Layout.cshtml";
+﻿@{
+    Layout = null;
 }
+@using static DoAnMon.Models.ClassroomViewModel
 
-<style>
-    /* Thiết lập chiều rộng của label */
-    label {
-        display: inline-block;
-        width: 100px; /* Điều chỉnh chiều rộng của label tại đây */
-    }
+@model List<ClassRoomViewModel>
 
-    /* Thiết lập chiều rộng của input */
-    input[type="text"] {
-        width: calc(100% - 120px); /* Điều chỉnh chiều rộng của input tại đây */
-        max-width: 500px; /* Điều chỉnh chiều rộng tối đa của input tại đây */
-        min-width: 250px;
-    }
 
-    /* Thiết lập padding và margin cho form */
-    form {
-        padding: 20px;
-        margin: 0 auto;
-        max-width: 600px; /* Điều chỉnh chiều rộng tối đa của form tại đây */
-        min-width: 300px;
-    }
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+<!--Color-->
+<!-- Font -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Oswald:wght@200..700&family=Roboto+Slab:wght@100..900&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300..800;1,300..800&family=Roboto+Slab:wght@100..900&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&family=Open+Sans:ital,wght@0,300..800;1,300..800&family=Roboto+Slab:wght@100..900&family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap" rel="stylesheet">
+<link href="/assets/css/color.css" rel="stylesheet" />
 
-    /* Thiết lập padding cho button */
-    input[type="submit"] {
-        padding: 10px 20px;
-    }
-</style>
 
-<h1>Create</h1>
+<body>
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-dark " style="background-color: #00CA79;">
+        <a asp-controller="ClassRooms" asp-action="Index" class="navbar-brand" style="font-family: 'Roboto Slab', sans-serif;">Admin</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav mr-auto">
+            </ul>
+        </div>
+    </nav>
+    <div class="container-fluid mt-5" style="font-family: 'Montserrat', sans-serif">
+        <h2 class="page-title" style="font-family: 'Roboto Slab', sans-serif;">Quản lý phòng học</h2>
+        <div class="card">
+            <div class="card-body">
+                <div class="row mt-4">
+                    <div class="col-12" style="text-align: center;">
+                        <button id="btnAddRoom" class="btn btn-primary">Thêm phòng học</button>
+                    </div>
+                </div>
 
-<h4>ClassRoom</h4>
-<hr />
-<div class="row">
-    <div class="col-md-6">
-        <form asp-action="Create">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <div class="form-group">
-                <label asp-for="Id" class="control-label"></label>
-                <input asp-for="Id" class="form-control" />
-                <span asp-validation-for="Id" class="text-danger"></span>
+                <div id="addRoomModal" class="modal" tabindex="-1">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" style="font-size:30px;font-weight:bold; color: #FA7070">THÊM PHÒNG HỌC</h5>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+
+                            <form id="createRoomForm" method="post" asp-action="Create">
+                                <div class="modal-body">
+                                    <div class="col-md-12" style="width: 100%">
+                                            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                                            <div class="form-group">
+                                                <label for="Name" class="control-label">Tên lớp:</label>
+                                                <input name="Name" id="Name" class="form-control custom-input-width" required />
+                                                <span id="NameError" class="text-danger"></span>
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="Description" class="control-label">Mô tả lớp:</label>
+                                                <input name="Description" id="Description" class="form-control custom-input-width" required />
+                                                <span id="DescriptionError" class="text-danger"></span>
+                                            </div>
+                                        </div>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Đóng</button>
+                                    <input type="submit" value="Tạo phòng" class="btn btn-primary" />
+                                </div>
+                            </form>
+
+
+                        </div>
+                    </div>
+                </div>
+
+
+                <div class="row mt-4">
+                    <div class="col-md-12">
+                        <h4>Danh sách phòng học</h4>
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th>Mã phòng</th>
+                                    <th>Tên phòng</th>
+                                    <th>Mô tả</th>
+                                    <th>Giảng viên</th>
+                                    <th>ClassRoom Link</th>
+                                    <th>Chức năng</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var item in Model)
+                                {
+                                    <tr>
+                                        <td>@item.ClassRoom.Id</td>
+                                        <td>@item.ClassRoom.Name</td>
+                                        <td class="description">@item.ClassRoom.Description</td>
+                                        <td class="teacher-name">@item.ClassRoom.User.Name</td>
+                                        <td>@item.ClassRoom.RoomOnline</td>
+                                        <td style=" display: flex;justify-content: space-evenly;">
+                                            <a asp-action="Edit" asp-route-id="@item.ClassRoom.Id" class="btn btn-sm btn-info btn-action" style="height: 30.6px;">Edit</a>
+                                            <form asp-action="Delete" method="post">
+                                                <input type="hidden" name="Id" value="@item.ClassRoom.Id" />
+                                                <button type="submit" class="btn btn-sm btn-danger btn-action">Xóa</button>
+                                            </form>
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
             </div>
-            <div class="form-group">
-                <label asp-for="Name" class="control-label"></label>
-                <input asp-for="Name" class="form-control" />
-                <span asp-validation-for="Name" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Description" class="control-label"></label>
-                <input asp-for="Description" class="form-control" />
-                <span asp-validation-for="Description" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="RoomOnline" class="control-label"></label>
-                <input asp-for="RoomOnline" class="form-control" />
-                <span asp-validation-for="RoomOnline" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <input type="submit" value="Create" class="btn btn-primary" />
-            </div>
-        </form>
+        </div>
     </div>
-</div>
 
-<div>
-    <a asp-action="Index">Back to List</a>
-</div>
+    <!-- Bootstrap JS and jQuery -->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popperjs/core@1.16.1/dist/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 
-@section Scripts {
-    @{
-        await Html.RenderPartialAsync("_ValidationScriptsPartial");
-    }
-}
+    <script>
+        $(document).ready(function () {
+            $("#btnAddRoom").click(function () {
+                $("#addRoomModal").modal('show');
+            });
+
+
+            $(".btn-info").click(function () {
+                $(this).closest("tr").find(".room-description").toggle();
+            });
+        });
+    </script>
+</body>

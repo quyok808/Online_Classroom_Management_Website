@@ -23,6 +23,7 @@ namespace DoAnMon.Areas.Identity.Pages.Account
         private readonly IUserEmailStore<CustomUser> _emailStore;
         private readonly ILogger<RegisterModel> _logger;
         private readonly IEmailSender _emailSender;
+        private readonly RoleManager<IdentityRole> _roleManager;
         private Mail mail = new Mail();
 
         public IndexModel(
@@ -30,7 +31,8 @@ namespace DoAnMon.Areas.Identity.Pages.Account
             IUserStore<CustomUser> userStore,
             SignInManager<CustomUser> signInManager,
             ILogger<RegisterModel> logger,
-            IEmailSender emailSender)
+            IEmailSender emailSender,
+            RoleManager<IdentityRole> roleManager)
         {
             _userManager = userManager;
             _userStore = userStore;
@@ -38,6 +40,7 @@ namespace DoAnMon.Areas.Identity.Pages.Account
             _signInManager = signInManager;
             _logger = logger;
             _emailSender = emailSender;
+            _roleManager = roleManager;
         }
 
         /// <summary>
@@ -143,12 +146,22 @@ namespace DoAnMon.Areas.Identity.Pages.Account
                     var user = CreateUser();
                     user.Mssv = Input.Mssv;
                     user.Name = Input.Name;
+                    user.UrlAvt = "avatar.jpg";
                     await _userStore.SetUserNameAsync((CustomUser)user, Input.Mssv, CancellationToken.None);
                     await _emailStore.SetEmailAsync((CustomUser)user, Input.Email, CancellationToken.None);
                     var result = await _userManager.CreateAsync((CustomUser)user, Input.Password);
 
                     if (result.Succeeded)
                     {
+                        // Kiểm tra và tạo mới vai trò "Student" nếu nó không tồn tại
+                        var roleExists = await _roleManager.RoleExistsAsync("Student");
+                        if (!roleExists)
+                        {
+                            await _roleManager.CreateAsync(new IdentityRole("Student"));
+                        }
+
+                        // Gán vai trò "Student" cho người dùng
+                        await _userManager.AddToRoleAsync((CustomUser)user, "Student");
                         _logger.LogInformation("User created a new account with password.");
 
                         var userId = await _userManager.GetUserIdAsync((CustomUser)user);

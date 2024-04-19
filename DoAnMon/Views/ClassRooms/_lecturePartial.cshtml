@@ -1,0 +1,27 @@
+﻿@model IEnumerable<DoAnMon.Models.BaiGiang>
+
+@{
+    var lectures = Model != null ? Model.ToList() : new List<BaiGiang>();
+    var totalCount = lectures.Count;
+}
+
+@if (totalCount > 0)
+{
+    for (int i = totalCount - 1; i >= 0; i--)
+    {
+        var item = lectures[i];
+        <div class="post">
+            <h2>@item.UrlBaiGiang.Substring(0, @item.UrlBaiGiang.IndexOf("_"))</h2>
+            <div class="pdf-container">
+                <object data="/BAIGIANG/@item.UrlBaiGiang" type="application/pdf" width="100%" height="600px">
+                    <embed src="/BAIGIANG/@item.UrlBaiGiang" type="application/pdf" />
+                </object>
+            </div>
+        </div>
+    }
+}
+else
+{
+    <h2>Chưa có bài nào được đăng lên</h2>
+}
+
