@@ -75,7 +75,7 @@
             @{
                 if (User.IsInRole("Teacher"))
                 {
-                    <a href="/ClassRooms/GetAllBTStu" class="button">Xem Bài tập</a>
+                    <a asp-action="GetAllBTStu" asp-controller="ClassRooms" asp-route-classid = "@item.ClassRoomId" asp-route-baitapID="@item.Id" class="button">Xem Bài tập</a>
                 }
                 else
                 {
