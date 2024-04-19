@@ -1,0 +1,51 @@
+﻿@using DoAnMon.Areas.Admin.Models
+@model IEnumerable<UserViewModel>
+@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Areas/Admin/Views/Shared/_LayoutAdmin.cshtml";
+}
+
+
+<h1>Manage Users</h1>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>User ID</th>
+            <th>User Name</th>
+            <th>Name</th>
+            <th>Email</th>
+            <th>Roles</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var user in Model)
+        {
+            <tr>
+                <td>@user.UserId</td>
+                <td>@user.UserName</td>
+                <td>@user.Name</td>
+                <td>@user.Email</td>
+                <td>
+                    <form method="post" href="/Admin/Users/UpdateUserRole">
+                        <select name="roleName" class="form-control">
+                            <!-- Option to select current role -->
+                            <option value="No Role" @(user.CurrentRole == "No Role" ? "selected" : "")>No Role</option>
+                            <!-- Options for other roles -->
+                            @foreach (var role in user.AllRoles)
+                            {
+                                <option value="@role" @(role == user.CurrentRole ? "selected" : "")>@role</option>
+                            }
+                        </select>
+                        <!-- Hidden field to send user ID to controller -->
+                        <input type="hidden" name="userId" value="@user.UserId" />
+                        <!-- Button to submit form -->
+                        <button type="submit" class="btn btn-primary">Save</button>
+                    </form>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
