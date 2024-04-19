@@ -1,0 +1,63 @@
+﻿@using DoAnMon.IdentityCudtomUser
+@using Microsoft.AspNetCore.Identity
+@using System.Text
+@inject UserManager<CustomUser> _userManager
+@model IEnumerable<DoAnMon.Models.BaiNop>
+
+@{
+	ViewData["Title"] = "GetAllStu";
+	Layout = "~/Views/Shared/_Layout1.cshtml";
+}
+
+<h2>Bài nộp của sinh viên</h2>
+@{
+	// Chuyển danh sách List<BaiNop> sang chuỗi JSON và mã hóa nó
+	string baiNopJson = Newtonsoft.Json.JsonConvert.SerializeObject(Model);
+	string baiNopBase64 = Convert.ToBase64String(Encoding.UTF8.GetBytes(baiNopJson));
+}
+
+<a asp-controller="ClassRooms" asp-action="DownloadFiles" asp-route-baiNop="@baiNopBase64">Download Files</a>
+
+
+<table class="table">
+	<thead>
+		<tr>
+			<th>
+				@Html.DisplayNameFor(model => model.ClassId)
+			</th>
+			<th>
+				@Html.DisplayNameFor(model => model.SubmittedAt)
+			</th>
+			<th>
+				@Html.DisplayNameFor(model => model.UserId)
+			</th>
+			<th>
+				@Html.DisplayNameFor(model => model.Urlbainop)
+			</th>
+		</tr>
+	</thead>
+	<tbody>
+		@foreach (var item in Model)
+		{
+			<tr>
+				<td>
+					@Html.DisplayFor(modelItem => item.ClassId)
+				</td>
+				<td>
+					@Html.DisplayFor(modelItem => item.SubmittedAt)
+				</td>
+				<td>
+					@{
+						var user = await _userManager.FindByIdAsync(@item.UserId);
+					}
+					@Html.DisplayFor(modelItem => user.Name)
+
+				</td>
+				<td>
+					<a href="/BAINOP/@item.Urlbainop" download>@item.Urlbainop</a>
+
+				</td>
+			</tr>
+		}
+	</tbody>
+</table>

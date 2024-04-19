@@ -15,6 +15,8 @@ using System.Text;
 using Microsoft.AspNetCore.SignalR;
 using OfficeOpenXml;
 using Microsoft.AspNetCore.Hosting;
+using System.IO.Compression;
+using Newtonsoft.Json;
 
 namespace DoAnMon.Controllers
 {
@@ -613,5 +615,51 @@ namespace DoAnMon.Controllers
             ViewBag.Message = "File uploaded and data imported successfully.";
             return RedirectToAction("Details", "ClassRooms", new { id = classID });
         }
-    }
+
+		public IActionResult GetAllBTStu(string classid, string baitapID)
+		{
+            ViewBag.ListRoom = userClasses;
+            var listbainop = _context.BaiNop.Where(p => p.BaiTapId == baitapID && p.ClassId == classid).ToList();
+			return View(listbainop);
+		}
+
+		public IActionResult DownloadFiles(string baiNop)
+		{
+			// Giải mã chuỗi base64
+			string baiNopJson = Encoding.UTF8.GetString(Convert.FromBase64String(baiNop));
+
+			// Chuyển chuỗi JSON thành danh sách List<BaiNop>
+			List<BaiNop> lbn = JsonConvert.DeserializeObject<List<BaiNop>>(baiNopJson);
+
+			// Danh sách đường dẫn tập tin muốn tải xuống
+
+			var fileNames = new List<string>();
+			foreach (var item in lbn)
+			{
+				fileNames.Add(("BAINOP/" + item.Urlbainop));
+			}
+			string name = lbn[0].ClassId +"_"+ lbn[0].BaiTapId;
+			// Tạo tên tập tin nén
+			string zipFileName = name +".zip";
+			// Đường dẫn lưu tập tin nén trên máy chủ
+			string zipFilePath = Path.Combine(_environment.WebRootPath, zipFileName);
+			if (System.IO.File.Exists(zipFilePath))
+			{
+				// Xử lý trường hợp tập tin đã tồn tại (ví dụ: xóa tập tin cũ)
+				System.IO.File.Delete(zipFilePath);
+			}
+			// Nén các tập tin thành tập tin nén
+			using (var zipArchive = ZipFile.Open(zipFilePath, ZipArchiveMode.Create))
+			{
+				foreach (var fileName in fileNames)
+				{
+					// Thêm tập tin vào tập tin nén
+					zipArchive.CreateEntryFromFile(Path.Combine(_environment.WebRootPath, fileName), Path.GetFileName(fileName));
+				}
+			}
+
+			// Trả về tập tin nén để người dùng tải xuống
+			return PhysicalFile(zipFilePath, "application/zip", zipFileName);
+		}
+	}
 }
