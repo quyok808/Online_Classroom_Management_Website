@@ -21,7 +21,7 @@ builder.Services.AddControllersWithViews();
 
 builder.Services.AddSingleton<ClassroomViewModel>();
 builder.Services.AddSignalR();
-
+builder.Services.AddScoped<ICheckNop, CheckNop>();
 ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
 var app = builder.Build();
 
