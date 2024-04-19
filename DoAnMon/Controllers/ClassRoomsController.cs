@@ -393,5 +393,98 @@ namespace DoAnMon.Controllers
 			var HW = await _context.baiTaps.Where(p => lop.Contains(p.ClassRoomId)).ToListAsync();
 			return View(HW);
 		}
+
+		[HttpPost]
+		[ValidateAntiForgeryToken]
+		public async Task<IActionResult> Delete(string id)
+		{
+			if (id == null)
+			{
+				return NotFound();
+			}
+
+			var classRoom = await _context.classRooms.FindAsync(id);
+			if (classRoom == null)
+			{
+				return NotFound();
+			}
+			_context.classRooms.Remove(classRoom);
+			await _context.SaveChangesAsync();
+
+			return RedirectToAction(nameof(Index));
+		}
+		// GET: ClassRooms/Edit/5
+		public async Task<IActionResult> Edit(string id)
+		{
+			ViewBag.ListRoom = userClasses;
+			if (id == null)
+			{
+				return NotFound();
+			}
+
+			var classRoom = await _context.classRooms.FindAsync(id);
+			if (classRoom == null)
+			{
+				return NotFound();
+			}
+
+			return View(classRoom);
+		}
+
+		[HttpPost]
+		[ValidateAntiForgeryToken]
+		public async Task<IActionResult> Edit(string id, ClassRoom classRoom)
+		{
+            
+            if (id == null || classRoom == null || classRoom.Id != id)
+			{
+				return NotFound();
+			}
+
+			if (ModelState.IsValid)
+			{
+				try
+				{
+					// Lấy thông tin classRoom hiện tại từ cơ sở dữ liệu
+					var existingClassRoom = await _context.classRooms.FindAsync(id);
+
+					if (existingClassRoom == null)
+					{
+						return NotFound();
+					}
+
+					// Lấy thông tin chủ sở hữu (owner) của classRoom hiện tại
+					var owner = await _context.Users.FirstOrDefaultAsync(u => u.Id == existingClassRoom.UserId);
+
+					// Cập nhật thông tin từ classRoom được gửi từ view
+					existingClassRoom.Name = classRoom.Name;
+					existingClassRoom.Description = classRoom.Description;
+
+					// Gán lại giá trị UserId
+					existingClassRoom.UserId = existingClassRoom.UserId; // Giữ nguyên giá trị UserId
+
+					_context.Update(existingClassRoom);
+					await _context.SaveChangesAsync();
+					return RedirectToAction(nameof(Index));
+				}
+				catch (DbUpdateConcurrencyException)
+				{
+					if (!ClassRoomExists(classRoom.Id))
+					{
+						return NotFound();
+					}
+					else
+					{
+						throw;
+					}
+				}
+			}
+			return View(classRoom);
+		}
+
+		private bool ClassRoomExists(string id)
+		{
+			return _context.classRooms.Any(e => e.Id == id);
+		}
 	}
 }

@@ -26,10 +26,6 @@
         </button>
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
             <ul class="navbar-nav mr-auto">
-                <!-- <li class="nav-item">
-                    <a class="nav-link" href="index_class.html">Quản lý phòng học</a>
-                </li> -->
-
             </ul>
         </div>
     </nav>
@@ -57,11 +53,6 @@
                                 <div class="modal-body">
                                     <div class="col-md-12" style="width: 100%">
                                             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-                                            @* <div class="form-group" >
-                                                <label for="Id" class="control-label">Mã lớp:</label>
-                                                <input name="Id" id="Id" class="form-control custom-input-width" required />
-                                                <span id="IdError" class="text-danger"></span>
-                                            </div> *@
                                             <div class="form-group">
                                                 <label for="Name" class="control-label">Tên lớp:</label>
                                                 <input name="Name" id="Name" class="form-control custom-input-width" required />
@@ -101,7 +92,7 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                @foreach(var item in Model)
+                                @foreach (var item in Model)
                                 {
                                     <tr>
                                         <td>@item.ClassRoom.Id</td>
@@ -109,16 +100,15 @@
                                         <td class="description">@item.ClassRoom.Description</td>
                                         <td class="teacher-name">@item.ClassRoom.User.Name</td>
                                         <td>@item.ClassRoom.RoomOnline</td>
-                                        <td>
-                                            <button class="btn btn-sm btn-info btn-action">Chi tiết</button>
-                                            <button class="btn btn-sm btn-primary btn-action">Sửa</button>
-                                            <button class="btn btn-sm btn-danger btn-action">Xóa</button>
+                                        <td style=" display: flex;justify-content: space-evenly;">
+                                            <a asp-action="Edit" asp-route-id="@item.ClassRoom.Id" class="btn btn-sm btn-info btn-action" style="height: 30.6px;">Edit</a>
+                                            <form asp-action="Delete" method="post">
+                                                <input type="hidden" name="Id" value="@item.ClassRoom.Id" />
+                                                <button type="submit" class="btn btn-sm btn-danger btn-action">Xóa</button>
+                                            </form>
                                         </td>
                                     </tr>
                                 }
-
-                               
-                               
                             </tbody>
                         </table>
                     </div>
