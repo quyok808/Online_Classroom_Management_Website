@@ -342,31 +342,49 @@
 		max-width: 200px; /* Đảm bảo nút không quá rộng */
 	}
 
+	<link rel="preconnect" href="https://fonts.googleapis.com" >
+	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin >
+	<link href="https://fonts.googleapis.com/css2?family=Merriweather:ital,wght@0,300;0,400;0,700;0,900;1,300;1,400;1,700;1,900&display=swap" rel="stylesheet" >
+	<link href="https://fonts.googleapis.com/css2?family=Merriweather:ital,wght@0,300;0,400;0,700;0,900;1,300;1,400;1,700;1,900&family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap" rel="stylesheet" >
+	<link href="https://fonts.googleapis.com/css2?family=Merriweather:ital,wght@0,300;0,400;0,700;0,900;1,300;1,400;1,700;1,900&family=Oswald:wght@200..700&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap" rel="stylesheet" >
+
 </style>
 
 <div>
 	<img class="img-fluid" src="/Images/banner_google.png" alt="No Images" />
 </div>
 <div class="class-info">
-	<h1>@Model.ClassRoom.Name</h1>
-	<p>@Model.ClassRoom.Description</p>
+	<h1 style="font-family: Poppins, sans-serif;font-size: 28px;">@Model.ClassRoom.Name</h1>
+	<p style="font-family: Poppins, sans-serif;font-size: 18px;">@Model.ClassRoom.Description</p>
 	<div class="container">
 		<div class="row">
 			<div class="col-md-6" style="margin-bottom: 10px;">
 				<div class="d-flex justify-content-start">
-					<a href="@Model.ClassRoom.RoomOnline" class="btn btn-primary custom-button" id="join-btn">Tham gia phòng học</a>
+					<a href="@Model.ClassRoom.RoomOnline" class="btn btn-primary custom-button" id="join-btn" 
+					style="
+							font-family: Poppins, sans-serif;
+							background-color: #2dac66;
+							font-size: 15px;
+							font-weight: bold;"
+							>Tham gia phòng học</a>
 				</div>
 			</div>
 			<div class="col-md-6">
 				<div class="d-flex justify-content-end">
 					<div class="more-options" style="display: inline;">
 						<div class="dropdown">
-							<button class="btn btn-secondary custom-button">
-								<i>Thêm Thành Viên</i>
+							<button class="btn btn-secondary custom-button"
+								style="
+										background-color: #0365a7">
+								<i style="
+									font-family: Poppins, sans-serif;
+									font-size: 15px;
+									font-weight: bold;"
+								>Thêm Thành Viên</i>
 							</button>
 							<div class="dropdown-content">
-								<a href="#">Thêm danh sách sinh viên</a>
-								<p>Mã lớp: @Model.ClassRoom.Id</p>
+								<a href="#" style="font-family: Poppins, sans-serif;">Thêm danh sách sinh viên</a>
+								<p style="font-family: Poppins, sans-serif;">Mã lớp: @Model.ClassRoom.Id</p>
 							</div>
 						</div>
 					</div>
@@ -376,20 +394,20 @@
 	</div>
 </div>
 <div class="tabs">
-	<div class="tab" onclick="openTab(event, 'teacher')">Thông tin giáo viên</div>
-	<div class="tab" onclick="openTab(event, 'posts')">Bài Giảng</div>
-	<div class="tab" onclick="openTab(event, 'assignments')">Bài tập</div>
-	<div class="tab" onclick="openTab(event, 'discussion')">Thảo luận</div>
+	<div class="tab" onclick="openTab(event, 'teacher')" style="font-family: Poppins, sans-serif;font-weight: 600">Thông tin giáo viên</div>
+	<div class="tab" onclick="openTab(event, 'posts')" style="font-family: Poppins, sans-serif;font-weight: 600">Bài Giảng</div>
+	<div class="tab" onclick="openTab(event, 'assignments')" style="font-family: Poppins, sans-serif;font-weight: 600">Bài tập</div>
+	<div class="tab" onclick="openTab(event, 'discussion')" style="font-family: Poppins, sans-serif;font-weight: 600">Thảo luận</div>
 </div>
 <div id="teacher" class="tabcontent" style="display: none;">
-	<div class="teacher-info">
-		<h2>Thông tin giáo viên</h2>
+	<div class="teacher-info" style="background-color: #fdffe0">
+		<h2 style="font-family: Poppins, sans-serif;">Thông tin giáo viên</h2>
 		<div class="teacher-details">
 			<img src="/Imgs_avtUser/@Model.Owner.UrlAvt" alt="Ảnh giáo viên" class="teacher-image">
 			<div class="teacher-text">
-				<p><strong>Mã giảng viên:</strong> @Model.Owner.Mssv</p>
-				<p><strong>Tên:</strong> @Model.Owner.Name</p>
-				<p><strong>Email:</strong> @Model.Owner.Email</p>
+				<p style="font-family: Poppins, sans-serif;"><strong>Mã giảng viên:</strong> @Model.Owner.Mssv</p>
+				<p style="font-family: Poppins, sans-serif;"><strong>Tên:</strong> @Model.Owner.Name</p>
+				<p style="font-family: Poppins, sans-serif;"><strong>Email:</strong> @Model.Owner.Email</p>
 			</div>
 		</div>
 	</div>
@@ -400,7 +418,19 @@
 		if (Model.isOwner)
 		{
 			<div>
-				<button onclick="showUploadForm()">Nhập tên và Upload</button>
+				<button onclick="showUploadForm()" 
+					style="
+							background-color: #3498db;
+							font-family: Poppins, sans-serif;
+							color: #ffffff;
+							padding: 10px 20px;
+							border: none;
+							border-radius: 5px;
+							cursor: pointer;
+							transition: background-color 0.3s;
+							font-size: 15px;
+							font-weight: bold;"
+				>Nhập tên và Upload</button>
 				<form id="uploadForm" action="/ClassRooms/Upload" method="POST" enctype="multipart/form-data" style="display: none;">
 					<input type="hidden" name="lectureName" id="lectureNameInput">
 					<input type="hidden" name="ClassId" id="classIdInput" value="@Model.ClassRoom.Id">
@@ -419,7 +449,19 @@
 	@{
 		if (Model.isOwner)
 		{
-			<button id="uploadButton" onclick="Showtaobaitap()">Tạo bài tập</button>
+			<button id="uploadButton" onclick="Showtaobaitap()" 
+				style="
+						background-color: #3498db;
+						font-family: Poppins, sans-serif;
+						color: #ffffff;
+						padding: 10px 20px;
+						border: none;
+						border-radius: 5px;
+						cursor: pointer;
+						transition: background-color 0.3s;
+						font-size: 15px;
+						font-weight: bold;"
+			>Tạo bài tập</button>
 			<form id="uploadbaitap" action="/ClassRooms/CreateBaitap" method="POST" enctype="multipart/form-data" style="display: none;">
 				<div class="form-section">
 					<!-- Phần nhập tiêu đề -->
@@ -445,7 +487,7 @@
 		}
 	}
 	<div class="assignments">
-		<h2>Danh sách bài tập</h2>
+		<h2  style="font-family: Poppins, sans-serif;">Danh sách bài tập</h2>
 		@foreach (var assignment in Model.Homework.ToList())
 		{
 			<div class="assignment" style="height: 30vh;">
@@ -496,10 +538,14 @@
 				</div>
 			</div>
 			<div class="row p-1">
-				<div class="col-1">Tin nhắn: </div>
-				<div class="col-5"><input type="text" class="form-control" id="messageInput" /></div>
+				<div class="col-1" style="font-family: Poppins, sans-serif; font-weight: 500;font-size: 16px;">Tin nhắn: </div>
+				<div class="col-5"><input style="font-family: Poppins, sans-serif;" type="text" class="form-control" id="messageInput" /></div>
 				<div class="col-6 text-end" style="margin-top: 10px;">
-					<input type="button" id="sendButton" class="btn btn-primary" value="Gửi" />
+					<input style="
+								font-family: Poppins, sans-serif;
+								font-size: 16px;
+								font-weight: 700;" 
+					type="button" id="sendButton" class="btn btn-primary" value="Gửi" />
 				</div>
 			</div>
 
@@ -512,7 +558,6 @@
 				<div class="col-6">
 					<ul id="messagesList" class="list-group" style="text-decoration: none; overflow: auto; max-height: 500px;">
 						<partial name="_MessagePartial" model="Model.Message" />
-
 					</ul>
 				</div>
 			</div>
