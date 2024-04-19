@@ -13,6 +13,7 @@ using static DoAnMon.Models.ClassroomViewModel;
 using Microsoft.Extensions.Hosting;
 using System.Text;
 using Microsoft.AspNetCore.SignalR;
+using OfficeOpenXml;
 
 namespace DoAnMon.Controllers
 {
@@ -227,6 +228,7 @@ namespace DoAnMon.Controllers
 				{
 					classRoom.Id = GenerateUniqueRandomString(6);
 					classRoom.UserId = currentUser.Id;
+					classRoom.RoomOnline = GetLink();
 					_context.Add(classRoom);
 					await _context.SaveChangesAsync();
 
@@ -306,6 +308,46 @@ namespace DoAnMon.Controllers
 				}
 			}
 			return Content("Lỗi");
+		}
+
+		private string GetLink()
+		{
+			// Đường dẫn đến tập tin Excel
+			string filePath = Path.Combine(_environment.WebRootPath, "Link meeting.xlsx");
+
+
+			// Mở tập tin Excel bằng thư viện EPPlus
+			using (ExcelPackage package = new ExcelPackage(new FileInfo(filePath)))
+			{
+				// Lấy sheet đầu tiên từ tập tin Excel
+				ExcelWorksheet worksheet = package.Workbook.Worksheets[0];
+
+				// Số hàng có dữ liệu trong sheet
+				int rowCount = worksheet.Dimension.Rows;
+
+				// List để lưu trữ dữ liệu của mỗi dòng
+				List<string> rows = new List<string>();
+
+				// Đọc dữ liệu từ sheet và lưu vào list rows
+				for (int row = 1; row <= rowCount; row++)
+				{
+					string rowData = "";
+					for (int col = 1; col <= worksheet.Dimension.Columns; col++)
+					{
+						if (worksheet.Cells[row, col].Value != null)
+						{
+							rowData += worksheet.Cells[row, col].Value.ToString() + ",";
+						}
+					}
+					rows.Add(rowData.TrimEnd(','));
+				}
+
+				// Lấy ngẫu nhiên một dòng từ list rows
+				Random random = new Random();
+				int randomIndex = random.Next(0, rows.Count);
+				string randomRow = rows[randomIndex];
+				return randomRow;
+			}
 		}
 
 		[HttpPost]
