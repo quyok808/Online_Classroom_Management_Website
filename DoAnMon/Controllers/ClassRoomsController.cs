@@ -17,6 +17,7 @@ using OfficeOpenXml;
 using Microsoft.AspNetCore.Hosting;
 using System.IO.Compression;
 using Newtonsoft.Json;
+using SQLitePCL;
 
 namespace DoAnMon.Controllers
 {
@@ -461,7 +462,7 @@ namespace DoAnMon.Controllers
 				return NotFound();
 			}
 			var lectures = await _context.BaiGiang.Where(p => p.ClassId == id).ToListAsync();
-			foreach(var item in lectures)
+			foreach (var item in lectures)
 			{
 				_context.BaiGiang.Remove(item);
 			}
@@ -557,41 +558,41 @@ namespace DoAnMon.Controllers
 		private static string classID;
 		public IActionResult AddListSV(string id)
 		{
-            ViewBag.ListRoom = userClasses;
-            classID = id;
+			ViewBag.ListRoom = userClasses;
+			classID = id;
 
-            return View();
+			return View();
 		}
 
-        [HttpPost]
-        public async Task<IActionResult> ImportDataFromExcel(IFormFile excelFile)
-        {
-            if (excelFile == null || excelFile.Length <= 0)
-            {
-                ViewBag.Message = "Please select a file to upload.";
-                return View("Upload");
-            }
+		[HttpPost]
+		public async Task<IActionResult> ImportDataFromExcel(IFormFile excelFile)
+		{
+			if (excelFile == null || excelFile.Length <= 0)
+			{
+				ViewBag.Message = "Please select a file to upload.";
+				return View("Upload");
+			}
 
-            string uploadsFolder = Path.Combine(_environment.WebRootPath, "EXCEL");
-            if (!Directory.Exists(uploadsFolder))
-            {
-                Directory.CreateDirectory(uploadsFolder);
-            }
+			string uploadsFolder = Path.Combine(_environment.WebRootPath, "EXCEL");
+			if (!Directory.Exists(uploadsFolder))
+			{
+				Directory.CreateDirectory(uploadsFolder);
+			}
 
-            string filePath = Path.Combine(uploadsFolder, excelFile.FileName);
-            using (FileStream stream = new FileStream(filePath, FileMode.Create))
-            {
-                excelFile.CopyTo(stream);
-            }
+			string filePath = Path.Combine(uploadsFolder, excelFile.FileName);
+			using (FileStream stream = new FileStream(filePath, FileMode.Create))
+			{
+				excelFile.CopyTo(stream);
+			}
 
-            using (ExcelPackage package = new ExcelPackage(new FileInfo(filePath)))
-            {
-                ExcelWorksheet worksheet = package.Workbook.Worksheets.First();
+			using (ExcelPackage package = new ExcelPackage(new FileInfo(filePath)))
+			{
+				ExcelWorksheet worksheet = package.Workbook.Worksheets.First();
 
-                int rowCount = worksheet.Dimension.Rows;
+				int rowCount = worksheet.Dimension.Rows;
 
-                for (int row = 2; row <= rowCount; row++)
-                {
+				for (int row = 2; row <= rowCount; row++)
+				{
 					var username = worksheet.Cells[row, 1].Value.ToString();
 					var user = await _userManager.FindByNameAsync(username);
 					if (user != null)
@@ -606,20 +607,20 @@ namespace DoAnMon.Controllers
 						// Thêm đối tượng Employee vào cơ sở dữ liệu
 						_context.classroomDetail.Add(student);
 					}
-                }
+				}
 
-                // Lưu thay đổi vào cơ sở dữ liệu
-                _context.SaveChanges();
-            }
+				// Lưu thay đổi vào cơ sở dữ liệu
+				_context.SaveChanges();
+			}
 
-            ViewBag.Message = "File uploaded and data imported successfully.";
-            return RedirectToAction("Details", "ClassRooms", new { id = classID });
-        }
+			ViewBag.Message = "File uploaded and data imported successfully.";
+			return RedirectToAction("Details", "ClassRooms", new { id = classID });
+		}
 
 		public IActionResult GetAllBTStu(string classid, string baitapID)
 		{
-            ViewBag.ListRoom = userClasses;
-            var listbainop = _context.BaiNop.Where(p => p.BaiTapId == baitapID && p.ClassId == classid).ToList();
+			ViewBag.ListRoom = userClasses;
+			var listbainop = _context.BaiNop.Where(p => p.BaiTapId == baitapID && p.ClassId == classid).ToList();
 			return View(listbainop);
 		}
 
@@ -638,9 +639,9 @@ namespace DoAnMon.Controllers
 			{
 				fileNames.Add(("BAINOP/" + item.Urlbainop));
 			}
-			string name = lbn[0].ClassId +"_"+ lbn[0].BaiTapId;
+			string name = lbn[0].ClassId + "_" + lbn[0].BaiTapId;
 			// Tạo tên tập tin nén
-			string zipFileName = name +".zip";
+			string zipFileName = name + ".zip";
 			// Đường dẫn lưu tập tin nén trên máy chủ
 			string zipFilePath = Path.Combine(_environment.WebRootPath, zipFileName);
 			if (System.IO.File.Exists(zipFilePath))
@@ -661,5 +662,15 @@ namespace DoAnMon.Controllers
 			// Trả về tập tin nén để người dùng tải xuống
 			return PhysicalFile(zipFilePath, "application/zip", zipFileName);
 		}
+
+		public async Task<IActionResult> GetOwnBTAsync(string classid, string baitapID)
+		{
+			ViewBag.ListRoom = userClasses;
+			var currentUser = await _userManager.GetUserAsync(User);
+			var listbainop = _context.BaiNop.Where(p => p.BaiTapId == baitapID && p.ClassId == classid && p.UserId == currentUser.Id).ToList();
+			return View("GetAllBTStu", listbainop);
+		}
 	}
 }
+
+

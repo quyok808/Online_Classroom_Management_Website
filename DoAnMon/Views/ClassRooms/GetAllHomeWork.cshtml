@@ -79,7 +79,7 @@
                 }
                 else
                 {
-                    <a href="/ClassRooms/GetOwnBT" class="button">Xem Bài tập</a>
+                    <a asp-action="GetOwnBT" asp-controller="ClassRooms" asp-route-classid="@item.ClassRoomId" asp-route-baitapID="@item.Id" class="button">Xem Bài tập</a>
                 }
             }
             

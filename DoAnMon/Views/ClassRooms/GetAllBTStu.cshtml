@@ -15,9 +15,12 @@
 	string baiNopJson = Newtonsoft.Json.JsonConvert.SerializeObject(Model);
 	string baiNopBase64 = Convert.ToBase64String(Encoding.UTF8.GetBytes(baiNopJson));
 }
-
-<a asp-controller="ClassRooms" asp-action="DownloadFiles" asp-route-baiNop="@baiNopBase64">Download Files</a>
-
+@{
+	if (User.IsInRole("Teacher") || User.IsInRole("Admin"))
+	{
+		<a asp-controller="ClassRooms" asp-action="DownloadFiles" asp-route-baiNop="@baiNopBase64">Download Files</a>
+	}
+}
 
 <table class="table">
 	<thead>
