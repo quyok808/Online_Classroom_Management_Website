@@ -3,13 +3,15 @@
 @inject UserManager<CustomUser> _userManager
 @model IEnumerable<DoAnMon.Models.Message>
 
+
+
 @{
     List<Message>? listmsg = Model.ToList();
     for (int i = listmsg.Count() - 1; i >= 0; i--)
     {
         var chat = listmsg[i];
         CustomUser chattinguser = _userManager.FindByIdAsync(chat.UserId).Result;
-        <li><strong>@chattinguser.Mssv _ @chattinguser.Name (@chat.Time):</strong> @chat.Noidung</li>
+        <li style="font-size: 17px;"><strong>@chattinguser.Mssv _ @chattinguser.Name (@chat.Time):</strong> @chat.Noidung</li>
 	}
 }
 
