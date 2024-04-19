@@ -93,7 +93,7 @@
 			</div>
 			<div class="header-right" style="text-align: center;">
 				@{
-					if (User.IsInRole("Teacher"))
+					if (User.IsInRole("Teacher") || User.IsInRole("Admin"))
 					{
 						<div style="display: inline-block;">
 							<a href="/ClassRooms/Create" class="btn btn-info" title="Create Classroom">
