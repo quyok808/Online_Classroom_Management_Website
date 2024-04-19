@@ -365,7 +365,7 @@
 								<i>Thêm Thành Viên</i>
 							</button>
 							<div class="dropdown-content">
-								<a href="#">Thêm danh sách sinh viên</a>
+								<a asp-action="AddListSV" asp-route-id="@Model.ClassRoom.Id">Thêm danh sách sinh viên</a>
 								<p>Mã lớp: @Model.ClassRoom.Id</p>
 							</div>
 						</div>

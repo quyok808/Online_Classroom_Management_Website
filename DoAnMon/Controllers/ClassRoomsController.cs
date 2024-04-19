@@ -14,6 +14,7 @@ using Microsoft.Extensions.Hosting;
 using System.Text;
 using Microsoft.AspNetCore.SignalR;
 using OfficeOpenXml;
+using Microsoft.AspNetCore.Hosting;
 
 namespace DoAnMon.Controllers
 {
@@ -550,5 +551,67 @@ namespace DoAnMon.Controllers
 		{
 			return _context.classRooms.Any(e => e.Id == id);
 		}
-	}
+
+		private static string classID;
+		public IActionResult AddListSV(string id)
+		{
+            ViewBag.ListRoom = userClasses;
+            classID = id;
+
+            return View();
+		}
+
+        [HttpPost]
+        public async Task<IActionResult> ImportDataFromExcel(IFormFile excelFile)
+        {
+            if (excelFile == null || excelFile.Length <= 0)
+            {
+                ViewBag.Message = "Please select a file to upload.";
+                return View("Upload");
+            }
+
+            string uploadsFolder = Path.Combine(_environment.WebRootPath, "EXCEL");
+            if (!Directory.Exists(uploadsFolder))
+            {
+                Directory.CreateDirectory(uploadsFolder);
+            }
+
+            string filePath = Path.Combine(uploadsFolder, excelFile.FileName);
+            using (FileStream stream = new FileStream(filePath, FileMode.Create))
+            {
+                excelFile.CopyTo(stream);
+            }
+
+            using (ExcelPackage package = new ExcelPackage(new FileInfo(filePath)))
+            {
+                ExcelWorksheet worksheet = package.Workbook.Worksheets.First();
+
+                int rowCount = worksheet.Dimension.Rows;
+
+                for (int row = 2; row <= rowCount; row++)
+                {
+					var username = worksheet.Cells[row, 1].Value.ToString();
+					var user = await _userManager.FindByNameAsync(username);
+					if (user != null)
+					{
+						// Đọc dữ liệu từ mỗi hàng và tạo đối tượng Employee
+						ClassroomDetail student = new ClassroomDetail
+						{
+							UserId = user.Id,
+							ClassRoomId = classID,
+							RoleId = "Student"
+						};
+						// Thêm đối tượng Employee vào cơ sở dữ liệu
+						_context.classroomDetail.Add(student);
+					}
+                }
+
+                // Lưu thay đổi vào cơ sở dữ liệu
+                _context.SaveChanges();
+            }
+
+            ViewBag.Message = "File uploaded and data imported successfully.";
+            return RedirectToAction("Details", "ClassRooms", new { id = classID });
+        }
+    }
 }
