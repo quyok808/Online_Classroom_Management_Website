@@ -11,27 +11,69 @@
 	<link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
 	<link rel="stylesheet" href="~/DoAnMon.styles.css" asp-append-version="true" />
 	<link rel="icon" href="/pics/exam.ico" type="image/x-icon">
+	<style>
+		/* Định dạng chung cho liên kết */
+		a.admin-link {
+			display: inline-block; /* Đảm bảo liên kết sẽ có kích thước phù hợp */
+			text-decoration: none; /* Loại bỏ gạch chân mặc định */
+			color: #fff; /* Màu văn bản */
+			padding: 10px 20px; /* Khoảng cách bên trong liên kết */
+			border: 1px solid #ccc; /* Đường viền xung quanh liên kết */
+			border-radius: 5px; /* Bo tròn các góc */
+			margin: 10px; /* Khoảng cách ngoài khung */
+			background-color: #007bff; /* Màu nền xanh */
+		}
+
+			/* Định dạng khi di chuột qua liên kết */
+			a.admin-link:hover {
+				background-color: #0056b3; /* Màu nền xanh tối khi di chuột qua */
+			}
+
+			/* Định dạng khi liên kết được chọn */
+			a.admin-link:active {
+				background-color: #004080; /* Màu nền xanh đậm khi liên kết được chọn */
+			}
+
+
+
+	</style>
 </head>
 <body>
 	<header>
 		<nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow ">
 			<div class="container-fluid">
+				
 
 				@if (User.Identity.IsAuthenticated)
 				{
-					<a class="navbar-brand" asp-area="" asp-controller="ClassRooms" asp-action="Index" style="font-family: 'Poppins', sans-serif">
-						<img src="/images/School.png" alt="Logo" width="35" height="auto">
-						ONLYA
+					<a class="navbar-brand" href="/" style="font-family: 'Poppins', sans-serif; padding: 0">
+						<img src="/images/Logo_Web.png" alt="Logo" width="70" height="auto">
 					</a>
+
 				}
 				else
 				{
-					<a class="navbar-brand" asp-area="Identity" asp-page="/Account/Index" style="font-family: 'Poppins', sans-serif">
-						<img src="/images/School.png" alt="Logo" width="35" height="auto">
-						ONLYA
+					<a class="navbar-brand" asp-controller="ClassRooms" asp-action="Index" style="font-family: 'Poppins', sans-serif; padding: 0">
+						<img src="/images/Logo_Web.png" alt="Logo" width="70" height="auto">
 					</a>
+
 				}
 
+				@* @if (User.Identity.IsAuthenticated)
+				{
+					<a class="navbar-brand" asp-area="" asp-controller="ClassRooms" asp-action="Index" style="font-family: 'Poppins', sans-serif; padding: 0">
+						<img src="/images/Logo_Web.png" alt="Logo" width="70" height="auto">
+					</a>
+
+				}
+				else
+				{
+					<a class="navbar-brand" asp-area="" asp-controller="ClassRooms" asp-action="Index" style="font-family: 'Poppins', sans-serif; padding: 0">
+						<img src="/images/Logo_Web.png" alt="Logo" width="70" height="auto">
+					</a>
+
+				} *@
+				<a href="/Admin/Home/PhanQuyen" class="admin-link" style="margin-bottom:10px;">QUẢN LÝ NGƯỜI DÙNG</a>
 
 				<button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
 						aria-expanded="false" aria-label="Toggle navigation">
