@@ -102,17 +102,17 @@
 			</div>
 			<div class="header-right" style="text-align: center;">
 				@{
-					if (User.IsInRole("Admin"))
-					{
+				if (User.IsInRole("Admin"))
+{
 
-						<div style="display: inline-block;">
-							<a href="/Admin/Home/PhanQuyen" class="btn btn-info" style="background-color: #ECCA9C">
-								<b style="font-size: 18px; display: inline-block;">Admin</b>
-							</a>
-						</div>
-					}
-					if (User.IsInRole("Teacher") || User.IsInRole("Admin"))
-					{
+				<div style="display: inline-block;">
+					<a href="/Admin/Home/PhanQuyen" class="btn btn-info" style="background-color: #ECCA9C">
+						<b style="font-size: 18px; display: inline-block;">Admin</b>
+					</a>
+				</div>
+}
+if (User.IsInRole("Teacher") || User.IsInRole("Admin"))
+{
 
 						<div style="display: inline-block;">
 							<a href="/ClassRooms/Create" class="btn btn-info" title="Create Classroom" style="background-color: #7fb3d5">

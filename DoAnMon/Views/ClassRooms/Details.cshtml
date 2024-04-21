@@ -1,5 +1,7 @@
 ﻿@using DoAnMon.IdentityCudtomUser
 @using Microsoft.AspNetCore.Identity
+@inject ICheckNop CheckNop
+
 @inject UserManager<CustomUser> _userManager
 @inject IUserStore<CustomUser> _userStore
 @using static DoAnMon.Models.ClassroomViewModel
@@ -9,6 +11,7 @@
 	ViewData["Title"] = "Details";
 	Layout = "~/Views/Shared/_Layout1.cshtml";
 }
+
 
 <style>
 	body {
@@ -383,8 +386,9 @@
 								>Thêm Thành Viên</i>
 							</button>
 							<div class="dropdown-content">
-								<a href="#" style="font-family: Poppins, sans-serif;">Thêm danh sách sinh viên</a>
-								<p style="font-family: Poppins, sans-serif;">Mã lớp: @Model.ClassRoom.Id</p>
+								
+								<a asp-action="AddListSV" asp-route-id="@Model.ClassRoom.Id"style="font-family: Poppins, sans-serif;">Thêm danh sách sinh viên</a>
+<p style="font-family: Poppins, sans-serif;">Mã lớp: @Model.ClassRoom.Id</p>
 							</div>
 						</div>
 					</div>
@@ -501,21 +505,26 @@
 					<!-- Hiển thị tệp đính kèm -->
 					@if (!string.IsNullOrEmpty(assignment.attractUrl))
 					{
-						if (assignment.attractUrl.EndsWith(".jpg") || assignment.attractUrl.EndsWith(".jpeg") || assignment.attractUrl.EndsWith(".png") || assignment.attractUrl.EndsWith(".gif"))
-						{
-							<img src="/BAITAP/@assignment.attractUrl" alt="Hình ảnh" style="max-width: 150px; height: 100px;" />
-						}
-						else
-						{
-							<a href="/BAITAP/@assignment.attractUrl" target="_blank">@assignment.attractUrl</a>
-						}
+						<a href="/BAITAP/@assignment.attractUrl" target="_blank" style="text-decoration:none; color: deepskyblue!important;">@assignment.attractUrl</a>
 					}
 				</div>
+				@{
+					// Lấy userId
+					var user = await _userManager.GetUserAsync(User);
+					string userId = user != null ? user.Id : null;
+
+					// Lấy baiTapId từ assignment hoặc từ nơi khác
+					string baiTapId = assignment != null ? assignment.Id : null;
+
+					// Kiểm tra xem user đã nộp bài tập hay chưa
+					bool hasSubmitted = userId != null && baiTapId != null ? CheckNop.HasUserSubmittedBaiTap(userId, baiTapId) : false;
+				}
+				
 				<form id="submitForm_@assignment.Id" action="/ClassRooms/Nopbai" method="post" enctype="multipart/form-data" class="assignment-form" onsubmit="return validateAndSubmit('@assignment.FileFormat', '@assignment.Id')">
 					<div class="upload-form ">
 						<label for="file-upload" class="file-label">Bài tập của bạn:</label>
 						<div class="file-input-wrapper">
-							@if (assignment.HasSubmittedFile)
+							@if (hasSubmitted)
 							{
 								<p>Đã nộp bài</p>
 							}
@@ -525,15 +534,14 @@
 								<input id="FileInput_@assignment.Id" type="file" name="FileNopbai">
 								<input type="hidden" name="ClassId" id="classIdInput" value="@Model.ClassRoom.Id">
 								<input type="hidden" name="BaitapId" id="baitapinput" value="@assignment.Id">
+
+								
+								<button type="submit">Nộp bài</button>
+								<button type="button" onclick="previewFile('@assignment.Id')">Xem trước</button>
 							}
+
 						</div>
 						<div id="previewContainer_@assignment.Id"></div>
-
-						@if (!assignment.HasSubmittedFile)
-						{
-							<button type="submit">Nộp bài</button>
-							<button type="button" onclick="previewFile('@assignment.Id')">Xem trước</button>
-						}
 
 					</div>
 				</form>
