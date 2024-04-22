@@ -25,17 +25,6 @@ builder.Services.AddScoped<ICheckNop, CheckNop>();
 ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
 var app = builder.Build();
 
-// Khởi tạo dịch vụ UserManager và RoleManager
-using (var scope = app.Services.CreateScope())
-{
-	var services = scope.ServiceProvider;
-	var userManager = services.GetRequiredService<UserManager<CustomUser>>();
-	var roleManager = services.GetRequiredService<RoleManager<IdentityRole>>();
-
-	// Gọi phương thức tạo dữ liệu mặc định
-	SeedData.Initialize(userManager, roleManager).Wait();
-}
-
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
