@@ -4,6 +4,7 @@ using DoAnMon.Models;
 using DoAnMon.SignalR;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using OfficeOpenXml;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -20,8 +21,20 @@ builder.Services.AddControllersWithViews();
 
 builder.Services.AddSingleton<ClassroomViewModel>();
 builder.Services.AddSignalR();
-
+builder.Services.AddScoped<ICheckNop, CheckNop>();
+ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
 var app = builder.Build();
+
+// Khởi tạo dịch vụ UserManager và RoleManager
+using (var scope = app.Services.CreateScope())
+{
+	var services = scope.ServiceProvider;
+	var userManager = services.GetRequiredService<UserManager<CustomUser>>();
+	var roleManager = services.GetRequiredService<RoleManager<IdentityRole>>();
+
+	// Gọi phương thức tạo dữ liệu mặc định
+	SeedData.Initialize(userManager, roleManager).Wait();
+}
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
@@ -47,6 +60,12 @@ app.MapHub<ChatHub>("/chatHub");
 app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Home}/{action=Index}/{id?}");
+
+app.MapControllerRoute(
+			name: "areas",
+			pattern: "{area:exists}/{controller=Home}/{action=TrangChu}/{id?}"
+
+		  );
 app.MapRazorPages();
 
 app.Run();

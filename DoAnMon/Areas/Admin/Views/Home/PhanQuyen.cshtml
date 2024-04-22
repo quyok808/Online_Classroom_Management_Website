@@ -1,0 +1,60 @@
+﻿@using DoAnMon.Areas.Admin.Models
+@model IEnumerable<UserViewModel>
+@{
+	ViewData["Title"] = "Index";
+	Layout = "~/Areas/Admin/Views/Shared/_LayoutAdmin.cshtml";
+}
+
+
+<h1 style="color: #FA7070; padding-bottom:20px; text-align:center;">QUẢN LÝ NGƯỜI DÙNG</h1>
+
+	<table class="table" style="font-size: 20px;  border-collapse: collapse;border: 1px solid #000; border-right: none; border-right: 1px solid #000; ;">
+	<thead>
+		<tr>
+			<th>Mã người dùng</th>
+			<th>Mã số</th>
+			<th>Tên</th>
+			<th>Email</th>
+			<th>Vai trò</th>
+			<th></th>
+		</tr>
+	</thead>
+	<tbody>
+		@foreach (var user in Model)
+		{
+			<tr>
+				<td>@user.UserId</td>
+				<td>@user.UserName</td>
+				<td>@user.Name</td>
+				<td>@user.Email</td>
+				<td>
+					<form id="updateUserRoleForm" method="post" action="/Admin/Home/UpdateUserRole">
+						<select name="roleName" class="form-control">
+							<!-- Option to select current role -->
+							<option value="No Role" @(user.CurrentRole == "No Role" ? "selected" : "")>No Role</option>
+							<!-- Options for other roles -->
+							@foreach (var role in user.AllRoles)
+							{
+								<option value="@role" @(role == user.CurrentRole ? "selected" : "")>@role</option>
+							}
+						</select>
+						<!-- Hidden field to send user ID to controller -->
+						<input type="hidden" name="userId" value="@user.UserId" />
+						<!-- Button to submit form -->
+						<button type="submit" class="btn btn-primary">Save</button>
+					</form>
+				</td>
+			</tr>
+		}
+	</tbody>
+</table>
+@if (TempData["AlertMessage"] != null)
+{
+    <script>
+        var alertMessage = @Html.Raw(Json.Serialize(TempData["AlertMessage"]));
+        alert(alertMessage);
+    </script>
+}
+
+
+

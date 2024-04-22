@@ -1,0 +1,17 @@
+﻿
+@{
+    ViewData["Title"] = "AddListSV";
+    Layout = "~/Views/Shared/_Layout1.cshtml";
+}
+
+<h2>@ViewData["Title"]</h2>
+
+<form asp-action="ImportDataFromExcel" method="post" enctype="multipart/form-data">
+    <div class="form-group">
+        <label for="excelFile">Choose Excel File:</label>
+        <input type="file" class="form-control-file" id="excelFile" name="excelFile">
+    </div>
+    <button type="submit" class="btn btn-primary">Upload and Import</button>
+</form>
+
+
