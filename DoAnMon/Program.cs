@@ -55,6 +55,12 @@ app.MapControllerRoute(
 			pattern: "{area:exists}/{controller=Home}/{action=TrangChu}/{id?}"
 
 		  );
+app.MapControllerRoute(
+	name: "SaveDataAsync",
+	pattern: "/ClassRooms/SaveDataAsync",
+	defaults: new { controller = "ClassRooms", action = "SaveDataAsync" }
+);
+
 app.MapRazorPages();
 
 app.Run();
