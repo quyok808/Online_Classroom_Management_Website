@@ -576,7 +576,7 @@
 		event.preventDefault(); // Ngăn chặn hành động mặc định của sự kiện submit form
 
 		var form = event.target; // Lấy biểu mẫu từ sự kiện
-		var fileInput = form.querySelector("input[type='file']");
+		var fileInput = form.querySelector("input[type='file']");     
 		var fileName = fileInput.value;
 
 		if (requiredFormat.toLowerCase() === 'allfile') {
@@ -610,7 +610,7 @@
 		var fileURL = URL.createObjectURL(file);
 		window.open(fileURL, '_blank');
 	}
-</script>
+</script> @* Nộp bài tập theo định dạng file yêu cầu *@
 <script>
 	function Showtaobaitap() {
 		var uploadButton = document.getElementById("uploadButton");

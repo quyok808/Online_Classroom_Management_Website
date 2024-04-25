@@ -37,6 +37,9 @@
 			<th>
 				File nộp
 			</th>
+			<th>
+				Điểm
+			</th>
 		</tr>
 	</thead>
 	<tbody>
@@ -58,9 +61,32 @@
 				</td>
 				<td>
 					<a href="/BAINOP/@item.Urlbainop" download>@item.Urlbainop</a>
-
 				</td>
+				<td>
+					@if (User.IsInRole("Teacher") || User.IsInRole("Admin"))
+					{
+						<input type="number" id="diem" name="diem" value="@item.Diem" />
+						<button onclick="saveGrade('@item.IdBaiNop')">Save</button>
+					}
+					else
+					{
+						@Html.DisplayFor(modelItem => item.Diem)
+					}
+				</td>
+
 			</tr>
 		}
 	</tbody>
 </table>
+
+<script>
+	function saveGrade(baiNopId) {
+		var diem = document.getElementById("diem").value;
+		// Gửi yêu cầu AJAX để lưu điểm vào cơ sở dữ liệu
+		// Ví dụ:
+		$.post("/ClassRooms/SaveGrade", { baiNopId: baiNopId, diem: diem }, function(data) {
+		    alert("Đã lưu điểm thành công!");
+		});
+	}
+</script>
+

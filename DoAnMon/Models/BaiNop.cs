@@ -12,6 +12,7 @@ namespace DoAnMon.Models
 		public DateTime SubmittedAt { get; set; }
 		public string UserId { get; set; }
 		public string? Urlbainop { get; set; }
+		public decimal? Diem {  get; set; }
 		[ValidateNever]
 		public ICollection<ClassRoom> ClassRooms { get; set; }
 		[ValidateNever]
