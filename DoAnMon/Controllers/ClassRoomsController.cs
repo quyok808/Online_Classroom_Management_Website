@@ -670,6 +670,42 @@ namespace DoAnMon.Controllers
 			var listbainop = _context.BaiNop.Where(p => p.BaiTapId == baitapID && p.ClassId == classid && p.UserId == currentUser.Id).ToList();
 			return View("GetAllBTStu", listbainop);
 		}
+
+		[HttpPost]
+		public async Task<IActionResult> JoinClassWithQRCode(string qrData)
+		{
+			try
+			{
+				var currentUser = await _userManager.GetUserAsync(User);
+				if (currentUser == null)
+				{
+					return Json(new { success = false, error = "Người dùng không tồn tại" });
+				}
+				ClassRoom? find = _context.classRooms.FirstOrDefault(p => p.Id == qrData);
+				if (find == null)
+				{
+					return Json(new { success = false, error = " Mã phòng không tồn tại" });
+				}
+				// Lưu trữ dữ liệu vào cơ sở dữ liệu
+				var newData = new ClassroomDetail
+				{
+					UserId = currentUser.Id,
+					ClassRoomId = qrData,
+					RoleId = "Student"
+				};
+
+				_context.classroomDetail.Add(newData);
+				_context.SaveChanges();
+
+				// Trả về mã thành công 200 OK
+				return Json(new { success = true });
+			}
+			catch (Exception ex)
+			{
+				// Xử lý lỗi và trả về mã lỗi 500 Internal Server Error
+				return Json(new { success = false, error = ex.Message });
+			}
+		}
 	}
 }
 
