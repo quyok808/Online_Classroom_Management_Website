@@ -208,6 +208,7 @@
 		margin-right: 20px;
 		box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
 		/* Thêm bóng đổ */
+		object-fit: cover;
 	}
 
 	.teacher-text {
@@ -357,7 +358,7 @@
 </div>
 <div class="class-info">
 	<h1 style="font-family: Poppins, sans-serif;font-size: 28px;">@Model.ClassRoom.Name</h1>
-	<p style="font-family: Poppins, sans-serif;font-size: 18px;">@Model.ClassRoom.Description</p>
+	<p style="font-family: Poppins, sans-serif;font-size: 18px; max-width: 100%; word-wrap: break-word;overflow-wrap: break-word;">@Model.ClassRoom.Description</p>
 	<div class="container">
 		<div class="row">
 			<div class="col-md-6" style="margin-bottom: 10px;">
@@ -389,14 +390,14 @@
 
 									// Tạo mã QR từ dữ liệu
 									var writer = new ZXing.BarcodeWriterSvg
-			{
-				Format = ZXing.BarcodeFormat.QR_CODE,
-				Options = new ZXing.QrCode.QrCodeEncodingOptions
-				{
-					Width = 50,
-					Height = 50
-				}
-			};
+									{
+										Format = ZXing.BarcodeFormat.QR_CODE,
+										Options = new ZXing.QrCode.QrCodeEncodingOptions
+										{
+											Width = 50,
+											Height = 50
+										}
+									};
 									var qrCode = writer.Write(qrData);
 								}
 								<div>
@@ -538,7 +539,8 @@
 					bool hasSubmitted = userId != null && baiTapId != null ? CheckNop.HasUserSubmittedBaiTap(userId, baiTapId) : false;
 				}
 
-				<form id="submitForm_@assignment.Id" action="/ClassRooms/Nopbai" method="post" enctype="multipart/form-data" class="assignment-form" onsubmit="return validateAndSubmit('@assignment.FileFormat', '@assignment.Id')">
+				<form id="submitForm_@assignment.Id" action="/ClassRooms/Nopbai" method="post" enctype="multipart/form-data" class="assignment-form" onsubmit="return validateAndSubmit('@assignment.FileFormat', '@assignment.Id', event)">
+
 					<div class="upload-form ">
 						<label for="file-upload" class="file-label">Bài tập của bạn:</label>
 						<div class="file-input-wrapper">
@@ -570,32 +572,37 @@
 <script src="https://apis.google.com/js/api.js"></script>
 
 <script>
-	function validateAndSubmit(requiredFormat, assignmentId) {
-		var fileInput = document.getElementById("FileInput_" + assignmentId);
+	function validateAndSubmit(requiredFormat, assignmentId, event) {
+		event.preventDefault(); // Ngăn chặn hành động mặc định của sự kiện submit form
+
+		var form = event.target; // Lấy biểu mẫu từ sự kiện
+		var fileInput = form.querySelector("input[type='file']");
 		var fileName = fileInput.value;
 
-		// Nếu tùy chọn "allfile" được chọn, không cần kiểm tra định dạng file
 		if (requiredFormat.toLowerCase() === 'allfile') {
+			// Nếu tùy chọn "allfile" được chọn, không cần kiểm tra định dạng file
 			if (fileName === '') {
 				// Nếu không chọn file, hiển thị thông báo lỗi
 				alert("Vui lòng chọn một file để nộp.");
 				return false; // Ngăn form được gửi đi
 			}
 			// Nếu đã chọn file, cho phép form được gửi đi
-			return true; // Cho phép form được gửi đi
+			form.submit(); // Gửi form đi
+		} else {
+			// Kiểm tra định dạng file nếu không phải là "allfile"
+			var fileExtension = fileName.split('.').pop().toLowerCase();
+			// Kiểm tra xem định dạng file có phù hợp không
+			if (fileExtension === requiredFormat.toLowerCase()) {
+				// Nếu đúng định dạng, tiến hành nộp bài
+				form.submit(); // Gửi form đi
+			} else {
+				// Nếu không đúng định dạng, hiển thị thông báo lỗi
+				alert("Định dạng file không đúng. Vui lòng chọn file có định dạng " + requiredFormat);
+			}
 		}
-
-		// Kiểm tra định dạng file khi không phải tùy chọn "allfile"
-		var fileExtension = fileName.split('.').pop().toLowerCase();
-		if (fileExtension !== requiredFormat.toLowerCase()) {
-			// Nếu không đúng định dạng, hiển thị thông báo lỗi
-			alert("Định dạng file không đúng. Vui lòng chọn file có định dạng " + requiredFormat);
-			return false; // Ngăn form được gửi đi
-		}
-
-		// Nếu định dạng đúng, cho phép form được gửi đi
-		return true; // Form sẽ được gửi đi
 	}
+
+
 
 	function previewFile(assignmentId) {
 		var fileInput = document.getElementById('FileInput_' + assignmentId);
@@ -604,8 +611,6 @@
 		window.open(fileURL, '_blank');
 	}
 </script>
-
-
 <script>
 	function Showtaobaitap() {
 		var uploadButton = document.getElementById("uploadButton");
@@ -626,7 +631,7 @@
 		attachmentForm.style.display = "block"; // Hiển thị form đính kèm
 	}
 
-</script>
+</script> @* Tạo bài tập mới *@
 <div id="discussion" class="tabcontent">
 	<div class="discussion">
 		<div class="container">
@@ -840,59 +845,3 @@
 	});
 
 </script> @* Gửi tin nhắn *@
-<script src="https://apis.google.com/js/api.js"></script>
-<script>
-	function validateAndSubmit(requiredFormat, assignmentId) {
-		var fileInput = document.getElementById("FileInput_" + assignmentId);
-		var fileName = fileInput.value;
-		var fileExtension = fileName.split('.').pop().toLowerCase();
-
-		// Kiểm tra xem định dạng file có phù hợp không
-		if (fileExtension === requiredFormat.toLowerCase()) {
-			// Nếu đúng định dạng, tiến hành nộp bài
-			return true; // Form sẽ được gửi đi
-		} else {
-			// Nếu không đúng định dạng, hiển thị thông báo lỗi
-			alert("Định dạng file không đúng. Vui lòng chọn file có định dạng " + requiredFormat);
-			return false; // Ngăn form được gửi đi
-		}
-	}
-	function previewFile(assignmentId) {
-		var fileInput = document.getElementById('FileInput_' + assignmentId);
-		var file = fileInput.files[0];
-
-		//Tạo một URL và mở nó trong một tab mới để tải xuống
-		var fileURL = URL.createObjectURL(file);
-		window.open(fileURL, '_blank');
-	}
-</script> @* Upload File *@
-<script>
-	function Showtaobaitap() {
-		var uploadButton = document.getElementById("uploadButton");
-		uploadButton.style.display = "none"; // Ẩn button khi form được hiển thị
-
-		var uploadForm = document.getElementById("uploadbaitap");
-		uploadForm.style.display = "block"; // Hiển thị form khi nút được nhấn
-
-		// Hiển thị phần nhập tiêu đề
-		var titleInput = document.getElementById("titleInput");
-		titleInput.style.display = "block";
-
-		// Hiển thị phần nhập mô tả
-		var descriptionInput = document.getElementById("descriptionInput");
-		descriptionInput.style.display = "block";
-
-		var attachmentForm = document.getElementById("attachmentForm");
-		attachmentForm.style.display = "block"; // Hiển thị form đính kèm
-	}
-	function openFileDialog() {
-		var fileInput = document.getElementById("FileInput");
-		fileInput.click(); // Kích hoạt sự kiện click cho input file
-	}
-
-	// function submitAssignment() {
-	// 	// Thực hiện xử lý khi nút "Giao bài" được nhấn
-	// 	// Ví dụ: Kiểm tra dữ liệu, gửi request đến server, ...
-	// }
-
-</script> @* Tạo Bài tập *@
