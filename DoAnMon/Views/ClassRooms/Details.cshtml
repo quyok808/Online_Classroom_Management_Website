@@ -344,17 +344,16 @@
 		width: 100%;
 		max-width: 200px; /* Đảm bảo nút không quá rộng */
 	}
-
-	<link rel="preconnect" href="https://fonts.googleapis.com" >
-	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin >
-	<link href="https://fonts.googleapis.com/css2?family=Merriweather:ital,wght@0,300;0,400;0,700;0,900;1,300;1,400;1,700;1,900&display=swap" rel="stylesheet" >
-	<link href="https://fonts.googleapis.com/css2?family=Merriweather:ital,wght@0,300;0,400;0,700;0,900;1,300;1,400;1,700;1,900&family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap" rel="stylesheet" >
-	<link href="https://fonts.googleapis.com/css2?family=Merriweather:ital,wght@0,300;0,400;0,700;0,900;1,300;1,400;1,700;1,900&family=Oswald:wght@200..700&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap" rel="stylesheet" >
-
 </style>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Merriweather:ital,wght@0,300;0,400;0,700;0,900;1,300;1,400;1,700;1,900&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Merriweather:ital,wght@0,300;0,400;0,700;0,900;1,300;1,400;1,700;1,900&family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Merriweather:ital,wght@0,300;0,400;0,700;0,900;1,300;1,400;1,700;1,900&family=Oswald:wght@200..700&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap" rel="stylesheet">
+
 
 <div>
-	<img class="img-fluid" src="/Images/bannerlogo.jpg" alt="No Images" style="width: 100%; height: 200px;"/>
+	<img class="img-fluid" src="/Images/bannerlogo.jpg" alt="No Images" style="width: 100%; height: 200px;" />
 </div>
 <div class="class-info">
 	<h1 style="font-family: Poppins, sans-serif;font-size: 28px;">@Model.ClassRoom.Name</h1>
@@ -363,13 +362,12 @@
 		<div class="row">
 			<div class="col-md-6" style="margin-bottom: 10px;">
 				<div class="d-flex justify-content-start">
-					<a href="@Model.ClassRoom.RoomOnline" class="btn btn-primary custom-button" id="join-btn" 
-					style="
+					<a href="@Model.ClassRoom.RoomOnline" class="btn btn-primary custom-button" id="join-btn"
+					   style="
 							font-family: Poppins, sans-serif;
 							background-color: #2dac66;
 							font-size: 15px;
-							font-weight: bold;"
-							>Tham gia phòng học</a>
+							font-weight: bold;">Tham gia phòng học</a>
 				</div>
 			</div>
 			<div class="col-md-6">
@@ -377,18 +375,36 @@
 					<div class="more-options" style="display: inline;">
 						<div class="dropdown">
 							<button class="btn btn-secondary custom-button"
-								style="
+									style="
 										background-color: #0365a7">
 								<i style="
 									font-family: Poppins, sans-serif;
 									font-size: 15px;
-									font-weight: bold;"
-								>Thêm Thành Viên</i>
+									font-weight: bold;">Thêm Thành Viên</i>
 							</button>
 							<div class="dropdown-content">
-								
-								<a asp-action="AddListSV" asp-route-id="@Model.ClassRoom.Id"style="font-family: Poppins, sans-serif;">Thêm danh sách sinh viên</a>
-<p style="font-family: Poppins, sans-serif;">Mã lớp: @Model.ClassRoom.Id</p>
+								@{
+									// Tạo đường dẫn cho mã QR
+									var qrData = Model.ClassRoom.Id;
+
+									// Tạo mã QR từ dữ liệu
+									var writer = new ZXing.BarcodeWriterSvg
+			{
+				Format = ZXing.BarcodeFormat.QR_CODE,
+				Options = new ZXing.QrCode.QrCodeEncodingOptions
+				{
+					Width = 50,
+					Height = 50
+				}
+			};
+									var qrCode = writer.Write(qrData);
+								}
+								<div>
+									@Html.Raw(qrCode) <!-- Hiển thị mã QR -->
+								</div>
+
+								<a asp-action="AddListSV" asp-route-id="@Model.ClassRoom.Id" style="font-family: Poppins, sans-serif;">Thêm danh sách sinh viên</a>
+								<p style="font-family: Poppins, sans-serif;">Mã lớp: @Model.ClassRoom.Id</p>
 							</div>
 						</div>
 					</div>
@@ -422,19 +438,20 @@
 		if (Model.isOwner)
 		{
 			<div>
-				<button onclick="showUploadForm()" 
-					style="
-							background-color: #3498db;
-							font-family: Poppins, sans-serif;
-							color: #ffffff;
-							padding: 10px 20px;
-							border: none;
-							border-radius: 5px;
-							cursor: pointer;
-							transition: background-color 0.3s;
-							font-size: 15px;
-							font-weight: bold;"
-				>Nhập tên và Upload</button>
+				<button onclick="showUploadForm()"
+						style="
+										background-color: #3498db;
+										font-family: Poppins, sans-serif;
+										color: #ffffff;
+										padding: 10px 20px;
+										border: none;
+										border-radius: 5px;
+										cursor: pointer;
+										transition: background-color 0.3s;
+										font-size: 15px;
+										font-weight: bold;">
+					Nhập tên và Upload
+				</button>
 				<form id="uploadForm" action="/ClassRooms/Upload" method="POST" enctype="multipart/form-data" style="display: none;">
 					<input type="hidden" name="lectureName" id="lectureNameInput">
 					<input type="hidden" name="ClassId" id="classIdInput" value="@Model.ClassRoom.Id">
@@ -453,19 +470,20 @@
 	@{
 		if (Model.isOwner)
 		{
-			<button id="uploadButton" onclick="Showtaobaitap()" 
-				style="
-						background-color: #3498db;
-						font-family: Poppins, sans-serif;
-						color: #ffffff;
-						padding: 10px 20px;
-						border: none;
-						border-radius: 5px;
-						cursor: pointer;
-						transition: background-color 0.3s;
-						font-size: 15px;
-						font-weight: bold;"
-			>Tạo bài tập</button>
+			<button id="uploadButton" onclick="Showtaobaitap()"
+					style="
+									background-color: #3498db;
+									font-family: Poppins, sans-serif;
+									color: #ffffff;
+									padding: 10px 20px;
+									border: none;
+									border-radius: 5px;
+									cursor: pointer;
+									transition: background-color 0.3s;
+									font-size: 15px;
+									font-weight: bold;">
+				Tạo bài tập
+			</button>
 			<form id="uploadbaitap" action="/ClassRooms/CreateBaitap" method="POST" enctype="multipart/form-data" style="display: none;">
 				<div class="form-section">
 					<!-- Phần nhập tiêu đề -->
@@ -492,7 +510,7 @@
 		}
 	}
 	<div class="assignments">
-		<h2  style="font-family: Poppins, sans-serif;">Danh sách bài tập</h2>
+		<h2 style="font-family: Poppins, sans-serif;">Danh sách bài tập</h2>
 		@foreach (var assignment in Model.Homework.ToList())
 		{
 			<div class="assignment" style="height: 30vh;">
@@ -519,7 +537,7 @@
 					// Kiểm tra xem user đã nộp bài tập hay chưa
 					bool hasSubmitted = userId != null && baiTapId != null ? CheckNop.HasUserSubmittedBaiTap(userId, baiTapId) : false;
 				}
-				
+
 				<form id="submitForm_@assignment.Id" action="/ClassRooms/Nopbai" method="post" enctype="multipart/form-data" class="assignment-form" onsubmit="return validateAndSubmit('@assignment.FileFormat', '@assignment.Id')">
 					<div class="upload-form ">
 						<label for="file-upload" class="file-label">Bài tập của bạn:</label>
@@ -535,7 +553,7 @@
 								<input type="hidden" name="ClassId" id="classIdInput" value="@Model.ClassRoom.Id">
 								<input type="hidden" name="BaitapId" id="baitapinput" value="@assignment.Id">
 
-								
+
 								<button type="submit">Nộp bài</button>
 								<button type="button" onclick="previewFile('@assignment.Id')">Xem trước</button>
 							}
@@ -625,8 +643,8 @@
 					<input style="
 								font-family: Poppins, sans-serif;
 								font-size: 16px;
-								font-weight: 700;" 
-					type="button" id="sendButton" class="btn btn-primary" value="Gửi" />
+								font-weight: 700;"
+						   type="button" id="sendButton" class="btn btn-primary" value="Gửi" />
 				</div>
 			</div>
 
