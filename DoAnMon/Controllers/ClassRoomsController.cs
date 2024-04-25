@@ -706,6 +706,27 @@ namespace DoAnMon.Controllers
 				return Json(new { success = false, error = ex.Message });
 			}
 		}
+
+		[HttpPost]
+		public async Task<IActionResult> SaveGrade(string baiNopId, decimal diem)
+		{
+			try
+			{
+				var baiNop = _context.BaiNop.FirstOrDefault(b => b.IdBaiNop.ToString() == baiNopId);
+				if (baiNop == null)
+				{
+					return Json(new { success = false, error = "Không thể chấm điểm !!!"});
+					
+				}
+				baiNop.Diem = diem;
+				_context.SaveChanges();
+				return Json(new { success = true });
+			}
+			catch (Exception ex)
+			{
+				return Json(new { success = false, error = ex.Message });
+			}
+		}
 	}
 }
 
