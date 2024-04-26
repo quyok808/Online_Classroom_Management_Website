@@ -448,10 +448,10 @@ namespace DoAnMon.Controllers
 
 			int pageSize = 5;
 			IQueryable<BaiTap> BaitapsQuery = _context.baiTaps.Where(p => lop.Contains(p.ClassRoomId));
-
+			List<BaiTap> t = _context.baiTaps.Where(p => lop.Contains(p.ClassRoomId)).ToList();
 			if (!string.IsNullOrEmpty(query))
 			{
-				BaitapsQuery = BaitapsQuery.Where(p => p.Title.Contains(query));
+				BaitapsQuery = BaitapsQuery.Where(p => p.Title.Contains(query) || p.ClassRoomId.Contains(query));
 			}
 			var paginatedBaiTaps = await PaginatedList<BaiTap>.CreateAsync(BaitapsQuery, pageNumber, pageSize);
 			paginatedBaiTaps.CurrentQuery = query;
@@ -749,7 +749,7 @@ namespace DoAnMon.Controllers
 				IQueryable<BaiTap> queryableData = _context.baiTaps.Where(p => lop.Contains(p.ClassRoomId));
 				if (!string.IsNullOrEmpty(query))
 				{
-					queryableData = queryableData.Where(p => p.Title.Contains(query));
+					queryableData = queryableData.Where(p => p.Title.Contains(query) || p.ClassRoomId.Contains(query));
 				}
 
 				var paginatedList = await PaginatedList<BaiTap>.CreateAsync(queryableData, 1, pageSize);
@@ -761,6 +761,27 @@ namespace DoAnMon.Controllers
 				// Log the exception for troubleshooting
 				Console.WriteLine(ex);
 				// Optionally, return a more informative error response to the client
+				return StatusCode(500, "An error occurred while processing your request.");
+			}
+		}
+
+		[HttpGet]
+		public async Task<IActionResult> GetListSV(string classId)
+		{
+			try
+			{
+				var findClass = _context.classRooms.FirstOrDefault(p => p.Id == classId);
+                if (findClass == null)
+                {
+					return Json(new { success = false, error = "Không tìm thấy lớp học !!!"});
+				}
+                var listUser = _context.classroomDetail.Where(p => p.ClassRoomId == classId).Select(p => p.UserId).ToList();
+
+				var Users = await _context.Users.Where(p => listUser.Contains(p.Id)).ToListAsync();
+                return Json(new { success = true, students = Users });
+            }
+			catch(Exception ex)
+			{
 				return StatusCode(500, "An error occurred while processing your request.");
 			}
 		}
