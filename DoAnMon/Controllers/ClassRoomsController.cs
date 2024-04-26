@@ -18,6 +18,8 @@ using Microsoft.AspNetCore.Hosting;
 using System.IO.Compression;
 using Newtonsoft.Json;
 using SQLitePCL;
+using DoAnMon.Pagination;
+using Microsoft.CodeAnalysis.Elfie.Diagnostics;
 
 namespace DoAnMon.Controllers
 {
@@ -438,13 +440,22 @@ namespace DoAnMon.Controllers
 			return Redirect("/ClassRooms");
 		}
 
-		public async Task<IActionResult> GetAllHomeWork()
+		public async Task<IActionResult> GetAllHomeWork(string query, int pageNumber = 1)
 		{
 			ViewBag.ListRoom = userClasses;
 			var lop = userClasses.Select(p => p.Id).ToList();
 
-			var HW = await _context.baiTaps.Where(p => lop.Contains(p.ClassRoomId)).ToListAsync();
-			return View(HW);
+
+			int pageSize = 5;
+			IQueryable<BaiTap> BaitapsQuery = _context.baiTaps.Where(p => lop.Contains(p.ClassRoomId));
+
+			if (!string.IsNullOrEmpty(query))
+			{
+				BaitapsQuery = BaitapsQuery.Where(p => p.Title.Contains(query));
+			}
+			var paginatedBaiTaps = await PaginatedList<BaiTap>.CreateAsync(BaitapsQuery, pageNumber, pageSize);
+			paginatedBaiTaps.CurrentQuery = query;
+			return View(paginatedBaiTaps);
 		}
 
 		[HttpPost]
@@ -727,7 +738,33 @@ namespace DoAnMon.Controllers
 				return Json(new { success = false, error = ex.Message });
 			}
 		}
-	}
+
+		[HttpGet]
+		public async Task<IActionResult> Search(string query)
+		{
+			try
+			{
+				var lop = userClasses.Select(p => p.Id).ToList();
+				int pageSize = 5;
+				IQueryable<BaiTap> queryableData = _context.baiTaps.Where(p => lop.Contains(p.ClassRoomId));
+				if (!string.IsNullOrEmpty(query))
+				{
+					queryableData = queryableData.Where(p => p.Title.Contains(query));
+				}
+
+				var paginatedList = await PaginatedList<BaiTap>.CreateAsync(queryableData, 1, pageSize);
+
+				return PartialView(paginatedList);
+			}
+			catch (Exception ex)
+			{
+				// Log the exception for troubleshooting
+				Console.WriteLine(ex);
+				// Optionally, return a more informative error response to the client
+				return StatusCode(500, "An error occurred while processing your request.");
+			}
+		}
+    }
 }
 
 
