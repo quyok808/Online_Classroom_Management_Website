@@ -82,8 +82,6 @@
 <script>
 	function saveGrade(baiNopId) {
 		var diem = document.getElementById("diem").value;
-		// Gửi yêu cầu AJAX để lưu điểm vào cơ sở dữ liệu
-		// Ví dụ:
 		$.post("/ClassRooms/SaveGrade", { baiNopId: baiNopId, diem: diem }, function(data) {
 		    alert("Đã lưu điểm thành công!");
 		});
