@@ -421,7 +421,7 @@
 	<div class="tab" onclick="openTab(event, 'discussion')" style="font-family: Poppins, sans-serif;font-weight: 600">Thảo luận</div>
 	<div class="tab" onclick="openTab(event, 'listsv')" style="font-family: Poppins, sans-serif;font-weight: 600">Danh sách sinh viên</div>
 </div>
-<div id="teacher" class="tabcontent" style="display: none;">
+<div id="teacher" class="tabcontent">
 	<div class="teacher-info" style="background-color: #fdffe0">
 		<h2 style="font-family: Poppins, sans-serif;">Thông tin giáo viên</h2>
 		<div class="teacher-details">
@@ -616,7 +616,14 @@
 	</div>
 </div>
 <div id="listsv" class="tabcontent">
-	<button id="downloadExcelBtn">Tải Danh Sách Sinh Viên</button>
+	<div style="margin-bottom: -35px;">
+		<form asp-controller="ClassRooms" asp-action="ExportDSSV" asp-route-classID="@Model.ClassRoom.Id" method="post">
+			<button type="submit" class="btn btn-info">Export</button>
+		</form>
+	</div>
+	<div id="listsv1">
+	
+	</div>
 </div>
 
 @* ==================================SCRIPT======================================================*@
@@ -881,18 +888,30 @@
 	}
 
 	function displayStudents(students) {
-		var listHtml = '<ul style="display: flex; flex-direction: column; align-items: center;">';
+		var listHtml = '<ul style="width: 100%; display: flex; flex-direction: column; align-items: center; padding: 0;">';
 		var tongslsv = students.length;
-		listHtml += '<p>Số lượng sinh viên tham gia lớp học là : ' + tongslsv + '</p>';
-		students.forEach(function (student) {
-			listHtml += '<li style="display: flex; align-items: center; margin-bottom: 20px;">';
-			listHtml += '<img src="/Imgs_avtUser/' + student.urlAvt + '" alt="No Image" style="width: 70px; height: 70px; border-radius: 50%; margin-right: 20px; box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); object-fit: cover;"/>';
-			listHtml += '<div>' + '<p>' + student.name + '</p>' + '</div>';
+		listHtml += '<p style = "margin-left: auto; font-weight: bold;">Sĩ số : ' + tongslsv + ' sinh viên</p>';
+		listHtml += '<hr style = "width: 100%; border: 1px solid orange; margin-top: 0;">'
+
+		listHtml += '<li style="width: 100%; display: flex; justify-content: space-between; align-items: center; padding: 0;">';
+		listHtml += '<div style="width: 50%;">' + '</div>';
+		listHtml += '<ul style="width: 50%; padding: 0;">';
+		students.forEach(function (student, index) {
+			listHtml += '<li style="display: flex; align-items: center; margin-bottom: 20px; padding: 0;">';
+			listHtml += '<img src="/Imgs_avtUser/' + student.urlAvt + '" alt="No Image" style="width: 50px; height: 50px; border-radius: 50%; margin-right: 20px; box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); object-fit: cover;"/>';
+			listHtml += '<div style="flex: 1;">' + '<p style="margin: 0; min-width: 0;">' + student.mssv + '_' + student.name + '</p>' + '</div>';
 			listHtml += '</li>';
+
+			// Kiểm tra nếu không phải là thẻ li cuối cùng
+			if (index !== students.length - 1) {
+				listHtml += '<hr style="width: 80%; border: 0; border-top: 1px solid grey; margin-top: 0; margin-left: -45px;">';
+			}
 		});
 		listHtml += '</ul>';
-
-		$('#listsv').html(listHtml);
+		listHtml += '<div style="width: 25%;">' + '</div>';
+		listHtml += '</li>';
+		listHtml += '</ul>';
+		$('#listsv1').html(listHtml);
 	}
 
 
