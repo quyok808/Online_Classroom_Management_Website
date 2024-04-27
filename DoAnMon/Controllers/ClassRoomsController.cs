@@ -878,8 +878,10 @@ namespace DoAnMon.Controllers
 					MemoryStream stream = new MemoryStream();
 					package.SaveAs(stream);
 
+					_studentRepo.RemoveList();
 					// Thiết lập dữ liệu phản hồi để tải xuống tệp Excel
 					return File(stream.ToArray(), "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "DSSV_" + classID + ".xlsx");
+
 				}
 			}
 			catch (Exception ex)

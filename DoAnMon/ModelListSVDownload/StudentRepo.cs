@@ -23,5 +23,10 @@ namespace DoAnMon.ModelListSVDownload
 		{
 			return listsv;
 		}
+
+		public void RemoveList()
+		{
+			listsv.Clear();
+		}
 	}
 }
