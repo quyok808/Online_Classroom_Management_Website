@@ -360,7 +360,7 @@ namespace DoAnMon.Controllers
 		}
 
 		[HttpPost]
-		public async Task<IActionResult> CreateBaitap(IFormFile FileUpLoad, string Content, string Title, string ClassId, string FileFormat)
+		public async Task<IActionResult> CreateBaitap(IFormFile FileUpLoad, string Content, string Title, string ClassId, string FileFormat, DateTime Deadline)
 		{
 
 			if (FileUpLoad != null && FileUpLoad.Length > 0)
@@ -385,6 +385,7 @@ namespace DoAnMon.Controllers
 			baitap.attractUrl = (FileUpLoad != null && FileUpLoad.Length > 0) ? FileUpLoad.FileName : null; ;
 			baitap.ClassRoomId = ClassId;
 			baitap.FileFormat = FileFormat;
+			baitap.Deadline = Deadline;
 
 			_context.Add(baitap);
 			await _context.SaveChangesAsync();
