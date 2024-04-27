@@ -169,6 +169,9 @@ namespace DoAnMon.Migrations
                     b.Property<string>("Content")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<DateTime?>("Deadline")
+                        .HasColumnType("datetime2");
+
                     b.Property<string>("FileFormat")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");

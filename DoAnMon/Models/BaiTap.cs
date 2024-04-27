@@ -11,6 +11,8 @@ namespace DoAnMon.Models
 		public string FileFormat { get; set; }
 		public bool HasSubmittedFile { get; set; }
 		public string? ClassRoomId { get; set; }
+		
+		public DateTime? Deadline { get; set; }
 		[ValidateNever]
 		public ICollection<ClassRoom> ClassRooms { get; set; }
 

@@ -494,6 +494,9 @@
 					<hr>
 					<!-- Phần nhập mô tả -->
 					<textarea name="Content" id="descriptionInput" class="form-control" placeholder="Nhập mô tả"></textarea>
+					<label for="deadlineInput">Deadline:</label>
+					<input type="datetime-local" name="Deadline" id="deadlineInput" class="form-control">
+
 					<label for="fileFormatSelect">Chọn định dạng bài tập:</label>
 					<select name="FileFormat" id="fileFormatSelect">
 						<option value="pdf">pdf</option>
@@ -519,7 +522,17 @@
 				<div class="assignment-content" style="border-right: 1px solid black; height: 100%; width: 100%; margin: 50px; ">
 					<h3 class="text-center">@assignment.Title</h3>
 					<p class="assignment-description">@assignment.Content</p>
-
+					@{
+						if (assignment.Deadline.HasValue)
+						{
+							<p class="assignment-description">Hạn nộp: @assignment.Deadline</p>
+						}
+						else
+						{
+							<p class="assignment-description">Hạn nộp: Vô thời hạn</p>
+						}
+					}
+					
 					<!-- Hiển thị loại định dạng đã chọn -->
 					<p class="assignment-file-format">Yêu cầu nộp file: @assignment.FileFormat</p>
 					<!-- Hiển thị tệp đính kèm -->
@@ -548,22 +561,54 @@
 							{
 								<label for="file-upload" class="file-label">Bài tập của bạn:</label>
 								<div class="file-input-wrapper">
-									@if (hasSubmitted)
-									{
-										<p>Đã nộp bài</p>
+									@{
+										if (hasSubmitted)
+										{
+											<p>Đã nộp bài</p>
+										}
+										else
+										{
+
+											// Kiểm tra deadline
+											if (assignment != null && assignment.Deadline.HasValue)
+											{
+												// Lấy ngày deadline
+												DateTime deadline = assignment.Deadline.Value;
+
+												// Kiểm tra xem deadline đã qua hay chưa
+												if (DateTime.Now > deadline)
+												{
+													// Xử lý khi deadline đã qua
+													// Ví dụ: hiển thị thông báo cho người dùng
+													<p>Deadline đã qua. Không thể nộp bài tập nữa.</p>
+												}
+												else
+												{
+													// Xử lý khi deadline chưa qua
+													// Ví dụ: cho phép người dùng nộp bài tập
+													<p>Thiếu</p>
+													<input id="FileInput_@assignment.Id" type="file" name="FileNopbai">
+													<input type="hidden" name="ClassId" id="classIdInput" value="@Model.ClassRoom.Id">
+													<input type="hidden" name="BaitapId" id="baitapinput" value="@assignment.Id">
+
+													<button type="submit">Nộp bài</button>
+													<button type="button" onclick="previewFile('@assignment.Id')">Xem trước</button>
+												}
+											}
+											else
+											{
+												// Xử lý khi không có deadline được đặt
+											
+												<p>Thiếu</p>
+												<input id="FileInput_@assignment.Id" type="file" name="FileNopbai">
+												<input type="hidden" name="ClassId" id="classIdInput" value="@Model.ClassRoom.Id">
+												<input type="hidden" name="BaitapId" id="baitapinput" value="@assignment.Id">
+
+												<button type="submit">Nộp bài</button>
+												<button type="button" onclick="previewFile('@assignment.Id')">Xem trước</button>
+											}
+										}
 									}
-									else
-									{
-										<p>Thiếu</p>
-										<input id="FileInput_@assignment.Id" type="file" name="FileNopbai">
-										<input type="hidden" name="ClassId" id="classIdInput" value="@Model.ClassRoom.Id">
-										<input type="hidden" name="BaitapId" id="baitapinput" value="@assignment.Id">
-
-
-										<button type="submit">Nộp bài</button>
-										<button type="button" onclick="previewFile('@assignment.Id')">Xem trước</button>
-									}
-
 								</div>
 								<div id="previewContainer_@assignment.Id"></div>
 							}
@@ -778,6 +823,14 @@
 	}
 
 </script> @* Tạo bài tập mới *@
+<script>
+	// Lắng nghe sự kiện khi ngày deadline thay đổi
+	document.getElementById("deadlineInput").addEventListener("change", function () {
+		// Lấy giá trị của ngày deadline
+		var deadline = this.value;
+	});
+</script> @* Chọn deadline *@
+
 <script src="~/js/signalr/dist/browser/signalr.js"></script>
 <script src="~/js/chat.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/he@1.2.0/he.min.js"></script>
