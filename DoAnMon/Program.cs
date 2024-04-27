@@ -1,5 +1,6 @@
 ﻿using DoAnMon.Data;
 using DoAnMon.IdentityCudtomUser;
+using DoAnMon.ModelListSVDownload;
 using DoAnMon.Models;
 using DoAnMon.SignalR;
 using Microsoft.AspNetCore.Identity;
@@ -13,6 +14,8 @@ var connectionString = builder.Configuration.GetConnectionString("DefaultConnect
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseSqlServer(connectionString));
 builder.Services.AddDatabaseDeveloperPageExceptionFilter();
+
+builder.Services.AddScoped<IStudent, StudentRepo>();
 
 builder.Services.AddDefaultIdentity<CustomUser>(options => options.SignIn.RequireConfirmedAccount = true)
     .AddRoles<IdentityRole>()

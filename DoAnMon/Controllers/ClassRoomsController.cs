@@ -20,6 +20,7 @@ using Newtonsoft.Json;
 using SQLitePCL;
 using DoAnMon.Pagination;
 using Microsoft.CodeAnalysis.Elfie.Diagnostics;
+using DoAnMon.ModelListSVDownload;
 
 namespace DoAnMon.Controllers
 {
@@ -28,12 +29,14 @@ namespace DoAnMon.Controllers
 		private readonly ApplicationDbContext _context;
 		private readonly UserManager<CustomUser> _userManager;
 		private readonly IWebHostEnvironment _environment;
+		private readonly IStudent _studentRepo;
 
-		public ClassRoomsController(ApplicationDbContext context, UserManager<CustomUser> userManager, IWebHostEnvironment environment)
+		public ClassRoomsController(ApplicationDbContext context, UserManager<CustomUser> userManager, IWebHostEnvironment environment, IStudent studentRepo)
 		{
 			_context = context;
 			_userManager = userManager;
 			_environment = environment;
+			_studentRepo = studentRepo;
 		}
 		static List<ClassRoom> userClasses;
 		// GET: ClassRooms
@@ -778,6 +781,17 @@ namespace DoAnMon.Controllers
                 var listUser = _context.classroomDetail.Where(p => p.ClassRoomId == classId).Select(p => p.UserId).ToList();
 
 				var Users = await _context.Users.Where(p => listUser.Contains(p.Id)).ToListAsync();
+				int stt = 1;
+				foreach (var sv in Users) 
+				{
+					SV newsv = new SV();
+					newsv.STT = stt++;
+					newsv.Mssv = sv.Mssv;
+					newsv.Name = sv.Name;
+					newsv.Email = sv.Email;
+					_studentRepo.AddSV(newsv);
+				}
+				List<SV> newSVs = _studentRepo.getListSV();
                 return Json(new { success = true, students = Users });
             }
 			catch(Exception ex)
@@ -785,7 +799,95 @@ namespace DoAnMon.Controllers
 				return StatusCode(500, "An error occurred while processing your request.");
 			}
 		}
-    }
+
+		[HttpPost]
+		public async Task<IActionResult> ExportDSSV(string classID)
+		{
+			try
+			{
+				List<SV> students = _studentRepo.getListSV();
+				// Tạo một bảng tính mới
+				ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
+				using (var package = new ExcelPackage())
+				{
+					var worksheet = package.Workbook.Worksheets.Add("Students");
+
+					// Thêm dữ liệu vào bảng tính
+					
+					// Dòng 1 {
+					worksheet.Cells["A1:C1"].Merge = true;
+					worksheet.Cells["A1"].Value = "TRƯỜNG ĐẠI HỌC CÔNG NGHỆ TP.HCM";
+					// Truy cập vào Style của ô A1
+					var cellStyle_A1 = worksheet.Cells["A1"].Style;
+
+					cellStyle_A1.Font.Name = "Times New Roman"; // Tên của font chữ
+					cellStyle_A1.Font.Size = 8; // Cỡ chữ
+					cellStyle_A1.Font.Bold = true; // In đậm
+					cellStyle_A1.HorizontalAlignment = OfficeOpenXml.Style.ExcelHorizontalAlignment.Center;
+					// } Hết dòng 1
+
+					// Dòng 3 {
+					worksheet.Cells["A3:D3"].Merge = true;
+					worksheet.Cells["A3"].Value = "DANH SÁCH SINH VIÊN";
+					// Truy cập vào Style của ô A3
+					var cellStyle_A3 = worksheet.Cells["A3"].Style;
+
+					cellStyle_A3.Font.Name = "Times New Roman"; // Tên của font chữ
+					cellStyle_A3.Font.Size = 16; // Cỡ chữ
+					cellStyle_A3.Font.Bold = true; // In đậm
+					cellStyle_A3.HorizontalAlignment = OfficeOpenXml.Style.ExcelHorizontalAlignment.Center;
+					// } Hết dòng 3
+
+					// Chỉ định tên đầu mục cho mỗi cột
+					// var headerRow = worksheet.Cells[Chỉ số hàng bắt đầu (dòng 5),  Chỉ số cột bắt đầu (cột 1, tương ứng với cột A),  Chỉ số hàng kết thúc (dòng 5, vẫn là dòng 5), Chỉ số cột kết thúc (cột 4, tương ứng với cột D)];
+					List<string> headers = new List<string>
+					{
+						"STT",
+						"MSSV",
+						"Họ và tên",
+						"Email"
+					};
+
+					worksheet.Cells[5, 1].LoadFromArrays(new List<string[]> { headers.ToArray() });
+
+					var cellStyle_A5D5 = worksheet.Cells["A5:D5"].Style;
+
+					cellStyle_A5D5.Font.Bold = true;
+					cellStyle_A5D5.HorizontalAlignment = OfficeOpenXml.Style.ExcelHorizontalAlignment.Center;
+
+					worksheet.Cells[6,1].LoadFromCollection(students, false);
+
+					// Tạo đối tượng Style cho border của dữ liệu được load
+					var borderStyle = worksheet.Cells[5, 1, 5 + students.Count, 4].Style.Border;
+
+					// Thiết lập border cho các ô
+					borderStyle.Bottom.Style = borderStyle.Top.Style = borderStyle.Left.Style = borderStyle.Right.Style = OfficeOpenXml.Style.ExcelBorderStyle.Thin;
+
+					worksheet.Column(1).AutoFit();
+					worksheet.Column(2).AutoFit();
+					worksheet.Column(3).AutoFit();
+					worksheet.Column(4).AutoFit();
+
+					// Lấy chỉ số của hàng cuối cùng trong danh sách
+					int lastRowIndex = 5 + students.Count;
+
+					// Gán giá trị cho ô cuối cùng trong cột thứ 4 (cột Email)
+					worksheet.Cells[lastRowIndex + 1, 1].Value = "Tổng số sinh viên: " + students.Count;
+
+					// Lưu trữ bảng tính vào một luồng bộ nhớ tạm thời
+					MemoryStream stream = new MemoryStream();
+					package.SaveAs(stream);
+
+					// Thiết lập dữ liệu phản hồi để tải xuống tệp Excel
+					return File(stream.ToArray(), "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "DSSV_" + classID + ".xlsx");
+				}
+			}
+			catch (Exception ex)
+			{
+				return StatusCode(500, "An error occurred while processing your request.");
+			}
+		}
+	}
 }
 
 
