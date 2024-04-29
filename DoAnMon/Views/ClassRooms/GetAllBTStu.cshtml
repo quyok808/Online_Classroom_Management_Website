@@ -63,15 +63,14 @@
 					<a href="/BAINOP/@item.Urlbainop" download>@item.Urlbainop</a>
 				</td>
 				<td>
+					<span id="displayLabel">@item.Diem</span>
 					@if (User.IsInRole("Teacher") || User.IsInRole("Admin"))
 					{
-						<input type="number" id="diem" name="diem" value="@item.Diem" />
-						<button onclick="saveGrade('@item.IdBaiNop')">Save</button>
+						<input type="number" id="editInput" style="display:none;" value="@item.Diem" />
+						<button onclick="toggleEdit()" id="editButton">Edit</button>
+						<button onclick="saveGrade('@item.IdBaiNop')" id="saveButton" style="display:none;">Save</button>
 					}
-					else
-					{
-						@Html.DisplayFor(modelItem => item.Diem)
-					}
+
 				</td>
 
 			</tr>
@@ -80,11 +79,49 @@
 </table>
 
 <script>
+	function toggleEdit() {
+		var displayLabel = document.getElementById('displayLabel');
+		var editInput = document.getElementById('editInput');
+		var saveButton = document.getElementById('saveButton');
+		var editButton = document.getElementById('editButton');
+
+		if (displayLabel.style.display === 'none') {
+			displayLabel.style.display = 'inline';
+			editButton.style.display = 'inline';
+			editInput.style.display = 'none';
+			saveButton.style.display = 'none';
+		} else {
+			displayLabel.style.display = 'none';
+			editButton.style.display = 'none';
+			editInput.style.display = 'inline';
+			saveButton.style.display = 'inline';
+			editInput.value = displayLabel.textContent;
+		}
+	}
+
 	function saveGrade(baiNopId) {
-		var diem = document.getElementById("diem").value;
-		$.post("/ClassRooms/SaveGrade", { baiNopId: baiNopId, diem: diem }, function(data) {
-		    alert("Đã lưu điểm thành công!");
+		var displayLabel = document.getElementById('displayLabel');
+		var editInput = document.getElementById('editInput');
+		var saveButton = document.getElementById('saveButton');
+		var editButton = document.getElementById('editButton');
+
+		displayLabel.textContent = editInput.value;
+		displayLabel.style.display = 'inline';
+		editInput.style.display = 'none';
+		saveButton.style.display = 'none';
+		editButton.style.display = 'inline';
+
+		var diem = parseFloat(editInput.value); // Sử dụng editInput.value thay vì document.getElementById("diem").value
+		if (diem < 0 || diem > 10 || isNaN(diem)) {
+			alert("Điểm phải nằm trong khoảng từ 0 đến 10");
+			return;
+		}
+
+		$.post("/ClassRooms/SaveGrade", { baiNopId: baiNopId, diem: diem }, function (data) {
+			if (data.success) {
+				alert("Đã lưu điểm thành công!");
+			}
 		});
 	}
-</script>
 
+</script>

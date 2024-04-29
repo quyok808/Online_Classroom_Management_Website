@@ -661,11 +661,16 @@
 	</div>
 </div>
 <div id="listsv" class="tabcontent">
-	<div style="margin-bottom: -35px;">
-		<form asp-controller="ClassRooms" asp-action="ExportDSSV" asp-route-classID="@Model.ClassRoom.Id" method="post">
-			<button type="submit" class="btn btn-info">Export</button>
-		</form>
-	</div>
+	@{
+		if (Model.isOwner)
+		{
+			<div style="margin-bottom: -35px;">
+				<form asp-controller="ClassRooms" asp-action="ExportDSSV" asp-route-classID="@Model.ClassRoom.Id" method="post">
+					<button type="submit" class="btn btn-info">Export</button>
+				</form>
+			</div>
+		}
+	}
 	<div id="listsv1">
 	
 	</div>
