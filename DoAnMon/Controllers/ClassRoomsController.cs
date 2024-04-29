@@ -436,6 +436,7 @@ namespace DoAnMon.Controllers
 				baiNop.UserId = currentuser.Id;
 				baiNop.SubmittedAt = DateTime.Now;
 				baiNop.Urlbainop = filename;
+				baiNop.Diem = 0;
 
 				_context.Add(baiNop);
 				await _context.SaveChangesAsync();
@@ -732,6 +733,10 @@ namespace DoAnMon.Controllers
 				{
 					return Json(new { success = false, error = "Không thể chấm điểm !!!"});
 					
+				}
+				if (diem == baiNop.Diem)
+				{
+					return Json(new { success = false });
 				}
 				baiNop.Diem = diem;
 				_context.SaveChanges();
