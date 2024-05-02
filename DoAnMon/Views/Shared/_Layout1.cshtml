@@ -11,6 +11,10 @@
 	var user = await UserManager.GetUserAsync(User);
 	var fullname = user?.Name;
 	var LISTROOM = ViewBag.ListRoom as List<ClassRoom>;
+	if (LISTROOM == null)
+	{
+		return;
+	}
 }
 
 <!DOCTYPE html>

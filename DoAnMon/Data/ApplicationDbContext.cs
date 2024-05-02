@@ -13,7 +13,11 @@ namespace DoAnMon.Data
         {
         }
 
-        public DbSet<BaiTap> baiTaps { get; set; }
+		protected ApplicationDbContext()
+		{
+		}
+
+		public DbSet<BaiTap> baiTaps { get; set; }
         public DbSet<ClassRoom> classRooms { get; set; }
         public DbSet<ClassroomDetail> classroomDetail { get; set; }
         public DbSet<BaiGiang> BaiGiang { get; set; }
