@@ -149,7 +149,56 @@ namespace DoAnMon.Controllers
 			viewModel.Homework = homework;
 			viewModel.Message = chatHistory;
 			ViewBag.ListRoom = userClasses;
+			var listBT = await _context.baiTaps.Where(p => p.ClassRoomId == id).ToListAsync();
 
+			var Diem = new List<DiemViewModel>();
+
+			var listUser = _context.classroomDetail.Where(p => p.ClassRoomId == id).Select(p => p.UserId).ToList();
+
+			var Users = await _context.Users.Where(p => listUser.Contains(p.Id)).ToListAsync();
+			
+			foreach(var user in Users)
+			{
+				var newDiem = new DiemViewModel();
+				newDiem.MSSV = user.Mssv;
+				newDiem.HoVaTen = user.Name;
+				var dtb = _context.bangDiem.FirstOrDefault(p => p.UserId == user.Id && p.ClassRoomId == id).DTB;
+				var bt = listBT.Select(p => p.Id).ToList();
+				// Kiểm tra và khởi tạo listDiemBT nếu chưa tồn tại
+				if (newDiem.listDiemBT == null)
+				{
+					newDiem.listDiemBT = new List<decimal>();
+				}
+				foreach (var b in bt)
+				{
+					// Kiểm tra xem có bài nộp nào thỏa mãn điều kiện không
+					var baiNop = _context.BaiNop.FirstOrDefault(p => b == p.BaiTapId && p.UserId == user.Id);
+
+					if (baiNop != null)
+					{
+						// Nếu có, lấy điểm của bài nộp
+						decimal? DiemBT = baiNop.Diem;
+
+						if (DiemBT == null)
+						{
+							// Nếu điểm là null, gán giá trị mặc định
+							DiemBT = 0;
+						}
+
+						newDiem.listDiemBT.Add((decimal)DiemBT);
+					}
+					else
+					{
+						// Nếu không có bài nộp thỏa mãn điều kiện, nhưng vẫn có tồn tại bài tập đó
+						// Thêm giá trị mặc định (ví dụ: 0) vào danh sách
+						newDiem.listDiemBT.Add((decimal)0);
+					}
+				}
+				newDiem.DTB = (decimal)dtb;
+				Diem.Add(newDiem);
+			}
+			ViewBag.ListBT = listBT;
+			ViewBag.ListDiem = Diem;
 			return View(viewModel);
 		}
 
@@ -313,6 +362,14 @@ namespace DoAnMon.Controllers
 					_context.Add(classroom);
 					await _context.SaveChangesAsync();
 
+					var newDiemRecord = new BangDiem
+					{
+						UserId = currentUser.Id,
+						ClassRoomId = classroom.ClassRoomId,
+						DTB = 0
+					};
+					 _context.bangDiem.Add(newDiemRecord);
+					await _context.SaveChangesAsync();
 					return RedirectToAction(nameof(Index));
 				}
 			}
@@ -385,13 +442,53 @@ namespace DoAnMon.Controllers
 			baitap.attractUrl = (FileUpLoad != null && FileUpLoad.Length > 0) ? FileUpLoad.FileName : null; ;
 			baitap.ClassRoomId = ClassId;
 			baitap.FileFormat = FileFormat;
-			baitap.Deadline = Deadline;
+			if (Deadline.ToString() != "01/01/0001 12:00:00 AM")
+			{
+				baitap.Deadline = Deadline;
+			}
+			else
+			{
+				baitap.Deadline = null;
+			}
 
 			_context.Add(baitap);
 			await _context.SaveChangesAsync();
 
+			TinhDTB(ClassId);
 			return RedirectToAction("Details", "ClassRooms", new { id = ClassId });
 		}
+
+		private void TinhDTB(string classId)
+		{
+			// Lấy bản ghi của lớp học
+			BangDiem score = _context.bangDiem.FirstOrDefault(p => p.ClassRoomId == classId);
+
+			if (score != null)
+			{
+				// Lấy danh sách userId trong lớp học
+				var listUser = _context.bangDiem.Where(p => p.ClassRoomId == classId).Select(p => p.UserId).ToList();
+
+				// Đếm số lượng bài tập
+				int tongslBT = _context.baiTaps.Where(p => p.ClassRoomId.Trim() == classId).Count();
+
+				// Lặp qua từng người dùng và tính tổng điểm
+				foreach (var userId in listUser)
+				{
+					decimal TongDiem_User = (decimal)_context.BaiNop.Where(p => p.UserId.Trim() == userId.Trim() && p.ClassId.Trim() == classId.Trim()).Select(p => p.Diem).Sum();
+					if (tongslBT > 0)
+					{
+						score.DTB = TongDiem_User / tongslBT;
+					}
+					else
+					{
+						score.DTB = 0;
+					}
+					_context.SaveChanges(); // Lưu thay đổi cho mỗi người dùng
+				}
+			}
+		}
+
+
 		[HttpPost]
 		public async Task<IActionResult> Nopbai(IFormFile FileNopbai, string ClassId, string BaitapId, DateTime SubmittedAt)
 		{
@@ -456,7 +553,7 @@ namespace DoAnMon.Controllers
 			List<BaiTap> t = _context.baiTaps.Where(p => lop.Contains(p.ClassRoomId)).ToList();
 			if (!string.IsNullOrEmpty(query))
 			{
-				BaitapsQuery = BaitapsQuery.Where(p => p.Title.Contains(query) || p.ClassRoomId.Contains(query));
+				BaitapsQuery = BaitapsQuery.Where(p => p.Title.Contains(query) || p.ClassRoomId.Trim() == query.Trim());
 			}
 			var paginatedBaiTaps = await PaginatedList<BaiTap>.CreateAsync(BaitapsQuery, pageNumber, pageSize);
 			paginatedBaiTaps.CurrentQuery = query;
@@ -709,7 +806,13 @@ namespace DoAnMon.Controllers
 					ClassRoomId = qrData,
 					RoleId = "Student"
 				};
-
+				var newDiemRecord = new BangDiem
+				{
+					UserId = currentUser.Id,
+					ClassRoomId = qrData,
+					DTB = 0
+				};
+				_context.bangDiem.Add(newDiemRecord);
 				_context.classroomDetail.Add(newData);
 				_context.SaveChanges();
 
@@ -740,12 +843,33 @@ namespace DoAnMon.Controllers
 				}
 				baiNop.Diem = diem;
 				_context.SaveChanges();
+
+				TinhDTB(baiNop.UserId, baiNop.ClassId);
 				return Json(new { success = true });
 			}
 			catch (Exception ex)
 			{
 				return Json(new { success = false, error = ex.Message });
 			}
+		}
+
+		private void TinhDTB(string userId, string classId)
+		{
+			BangDiem score = _context.bangDiem.FirstOrDefault(p => p.UserId == userId && p.ClassRoomId == classId);
+            if (score != null)          
+			{
+                int tongslBT = _context.baiTaps.Where(p => p.ClassRoomId.Trim() == classId.Trim()).Count();
+				decimal TongDiem_User = (decimal)_context.BaiNop.Where(p => p.UserId.ToString().Trim() == userId.Trim() && p.ClassId.Trim() == classId.Trim()).Select(p => p.Diem).Sum();
+				if (tongslBT > 0)
+				{
+					score.DTB = TongDiem_User / tongslBT;
+				}
+				else
+				{
+					score.DTB = 0;
+				}
+            }
+			_context.SaveChanges();
 		}
 
 		[HttpGet]

@@ -40,6 +40,9 @@
 			<th>
 				Điểm
 			</th>
+			<th>
+				 
+			</th>
 		</tr>
 	</thead>
 	<tbody>
@@ -64,6 +67,8 @@
 				</td>
 				<td>
 					<span id="displayLabel">@item.Diem</span>
+				</td>
+				<td>
 					@if (User.IsInRole("Teacher") || User.IsInRole("Admin"))
 					{
 						<input type="number" id="editInput" style="display:none;" value="@item.Diem" />
@@ -111,7 +116,7 @@
 		saveButton.style.display = 'none';
 		editButton.style.display = 'inline';
 
-		var diem = parseFloat(editInput.value); // Sử dụng editInput.value thay vì document.getElementById("diem").value
+		var diem = parseFloat(editInput.value); 
 		if (diem < 0 || diem > 10 || isNaN(diem)) {
 			alert("Điểm phải nằm trong khoảng từ 0 đến 10");
 			return;

@@ -345,6 +345,49 @@
 		width: 100%;
 		max-width: 200px; /* Đảm bảo nút không quá rộng */
 	}
+
+	/*======================Bảng điểm======================*/
+	.container-bangdiem {
+            overflow-x: scroll;
+        }
+
+        /* Style for the first column */
+		.first-column th:first-child,
+		.first-column td:first-child {
+            width: 200px; /* Fixed width for the first column */
+            white-space: nowrap; /* Prevent wrapping content */
+        }
+
+        /* General table styling */
+        #user {
+            font-family: Arial, Helvetica, sans-serif;
+            border-collapse: collapse;
+            width: 100%;
+            overflow-x: auto; /* Horizontal scroll for small screens */
+            
+        }
+
+        #user td,
+        #user th {
+            border: 1px solid #ddd;
+            padding: 8px;
+        }
+
+        #user tr:nth-child(even) {
+            background-color: #f2f2f2;
+        }
+
+        #user tr:hover {
+            background-color: #ddd;
+        }
+
+        #user th {
+            padding-top: 12px;
+            padding-bottom: 12px;
+            text-align: left;
+            background-color: #04AA6D;
+            color: white;
+        }
 </style>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -420,6 +463,7 @@
 	<div class="tab" onclick="openTab(event, 'assignments')" style="font-family: Poppins, sans-serif;font-weight: 600">Bài tập</div>
 	<div class="tab" onclick="openTab(event, 'discussion')" style="font-family: Poppins, sans-serif;font-weight: 600">Thảo luận</div>
 	<div class="tab" onclick="openTab(event, 'listsv')" style="font-family: Poppins, sans-serif;font-weight: 600">Danh sách sinh viên</div>
+	<div class="tab" onclick="openTab(event, 'bangdiem')" style="font-family: Poppins, sans-serif;font-weight: 600">Bảng điểm</div>
 </div>
 <div id="teacher" class="tabcontent">
 	<div class="teacher-info" style="background-color: #fdffe0">
@@ -673,6 +717,42 @@
 	}
 	<div id="listsv1">
 	
+	</div>
+</div>
+<div id="bangdiem" class="tabcontent">
+	@{
+		List<BaiTap> bt = ViewBag.ListBT as List<BaiTap>;
+		List<DiemViewModel> diems = ViewBag.ListDiem as List<DiemViewModel>;
+	}
+	<div class="container-bangdiem">
+		<table id="user">
+			<thead>
+				<tr class="first-column">
+					<th style="text-align: center;" rowspan="2">Họ và tên</th>
+					<th style="text-align: center;" rowspan="2">MSSV</th>
+					<th style="text-align: center;" colspan="@bt.Count">Bài Tập</th>
+					<th style="text-align: center;" rowspan="2">ĐTB</th>
+				</tr>
+				<tr>
+					@foreach(var item in bt)
+					{
+						<th style="text-align: center;">@item.Title</th>
+					}
+				</tr>
+			</thead>	
+			<tbody>
+				@foreach(var item in diems)
+				{
+					<td>@item.HoVaTen</td>
+					<td>@item.MSSV</td>
+					@foreach(var d in item.listDiemBT)
+					{
+						<td>@d</td>
+					}
+					<td>@item.DTB</td>
+				}
+			</tbody>
+		</table>
 	</div>
 </div>
 
