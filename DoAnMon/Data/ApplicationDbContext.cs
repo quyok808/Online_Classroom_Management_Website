@@ -14,17 +14,15 @@ namespace DoAnMon.Data
         }
 
         public DbSet<BaiTap> baiTaps { get; set; }
-        public DbSet<BaiTapDetail> baiTapsDetail { get; set; }
         public DbSet<ClassRoom> classRooms { get; set; }
         public DbSet<ClassroomDetail> classroomDetail { get; set; }
         public DbSet<BaiGiang> BaiGiang { get; set; }
         public DbSet<Message> Messages { get; set; }
 		public DbSet<BaiNop> BaiNop { get; set; }
+        public DbSet<BangDiem> bangDiem { get; set; }
 
-		protected override void OnModelCreating(ModelBuilder modelBuilder)
-        {
-            modelBuilder.Entity<BaiTapDetail>()
-                .HasKey(b => new { b.ClassId, b.BaiTapId });
+		protected override void OnModelCreating(ModelBuilder modelBuilder) 
+        { 
 
             modelBuilder.Entity<ClassroomDetail>()
                 .HasKey(b => new { b.ClassRoomId, b.UserId });

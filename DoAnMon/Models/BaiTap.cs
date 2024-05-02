@@ -16,7 +16,5 @@ namespace DoAnMon.Models
 		[ValidateNever]
 		public ICollection<ClassRoom> ClassRooms { get; set; }
 
-		[ValidateNever]
-		public ICollection<BaiTapDetail> BaiTapDetails { get; set; }
 	}
 }
