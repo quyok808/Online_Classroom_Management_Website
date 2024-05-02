@@ -27,7 +27,6 @@ builder.Services.AddSignalR();
 builder.Services.AddScoped<ICheckNop, CheckNop>();
 ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
 var app = builder.Build();
-
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {

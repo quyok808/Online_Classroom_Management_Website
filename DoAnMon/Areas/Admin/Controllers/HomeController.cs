@@ -14,12 +14,13 @@ namespace DoAnMon.Areas.Admin.Controllers
 	{
 		private readonly UserManager<CustomUser> _userManager;
 		private readonly RoleManager<IdentityRole> _roleManager;
+		private readonly ApplicationDbContext _context;
 
-
-		public HomeController(UserManager<CustomUser> userManager, RoleManager<IdentityRole> roleManager)
+		public HomeController(UserManager<CustomUser> userManager, RoleManager<IdentityRole> roleManager, ApplicationDbContext context)
 		{
 			_userManager = userManager;
 			_roleManager = roleManager;
+			_context = context;
 		}
 
 		public IActionResult TrangChu()
@@ -79,23 +80,45 @@ namespace DoAnMon.Areas.Admin.Controllers
 				return BadRequest("Vai trò không tồn tại.");
 			}
 
-			// Loại bỏ tất cả các vai trò hiện tại của người dùng
-			var currentRoles = await _userManager.GetRolesAsync(user);
-			var removeResult = await _userManager.RemoveFromRolesAsync(user, currentRoles);
-			if (!removeResult.Succeeded)
+			// Sử dụng transaction để đảm bảo tính nhất quán giữa các thao tác
+			using (var transaction = _context.Database.BeginTransaction())
 			{
-				return BadRequest("Không thể loại bỏ các vai trò hiện tại của người dùng.");
+				try
+				{
+					// Loại bỏ tất cả các vai trò hiện tại của người dùng
+					var currentRoles = await _userManager.GetRolesAsync(user);
+					var removeResult = await _userManager.RemoveFromRolesAsync(user, currentRoles);
+					if (!removeResult.Succeeded)
+					{
+						// Nếu không thể loại bỏ các vai trò hiện tại, rollback transaction và trả về lỗi
+						transaction.Rollback();
+						return BadRequest("Không thể loại bỏ các vai trò hiện tại của người dùng.");
+					}
+
+					// Thêm người dùng vào vai trò mới
+					var addResult = await _userManager.AddToRoleAsync(user, roleName);
+					if (!addResult.Succeeded)
+					{
+						// Nếu không thể thêm người dùng vào vai trò mới, rollback transaction và trả về lỗi
+						transaction.Rollback();
+						return BadRequest("Không thể thêm người dùng vào vai trò mới.");
+					}
+
+					// Nếu mọi thứ đều thành công, commit transaction
+					transaction.Commit();
+				}
+				catch (Exception)
+				{
+					// Nếu có lỗi xảy ra, rollback transaction và trả về lỗi
+					transaction.Rollback();
+					return StatusCode(500, "Đã xảy ra lỗi trong quá trình xử lý.");
+				}
 			}
 
-			// Thêm người dùng vào vai trò mới
-			var addResult = await _userManager.AddToRoleAsync(user, roleName);
-			if (!addResult.Succeeded)
-			{
-				return BadRequest("Không thể thêm người dùng vào vai trò mới.");
-			}
 			TempData["AlertMessage"] = "Vai trò đã được cập nhật thành công.";
 			return Redirect("/Admin/Home/PhanQuyen");
 		}
+
 	}
 }
 
