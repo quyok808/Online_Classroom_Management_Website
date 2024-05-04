@@ -286,7 +286,7 @@ namespace DoAnMon.Controllers
 				{
 					classRoom.Id = GenerateUniqueRandomString(6);
 					classRoom.UserId = currentUser.Id;
-					classRoom.RoomOnline = GetLink();
+					classRoom.RoomOnline = "https://meeting-room-onlya.glitch.me?room="+linkRoom;
 					_context.Add(classRoom);
 					await _context.SaveChangesAsync();
 
@@ -295,8 +295,20 @@ namespace DoAnMon.Controllers
 			}
 			return View(classRoom);
 		}
+		static string linkRoom;
 
-		[HttpPost]
+        [HttpPost]
+        public ActionResult ReceiveRoomUrl(string roomUrl1)
+        {
+			// Xử lý dữ liệu roomUrl ở đây, ví dụ lưu vào cơ sở dữ liệu hoặc thực hiện các thao tác khác
+			// Ví dụ đơn giản, hiển thị dữ liệu roomUrl trong console log
+			//System.Console.WriteLine("Received roomUrl: " + roomUrl1);
+			linkRoom = roomUrl1;
+            // Trả về kết quả, có thể là JSON hoặc các loại dữ liệu khác
+            return Json(new { success = true });
+        }
+
+        [HttpPost]
 		public async Task<IActionResult> Upload(IFormFile pdfFile, string lectureName, string ClassId)
 		{
 
