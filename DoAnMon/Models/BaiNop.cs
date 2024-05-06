@@ -13,6 +13,7 @@ namespace DoAnMon.Models
 		public string UserId { get; set; }
 		public string? Urlbainop { get; set; }
 		public decimal? Diem {  get; set; }
+		public int? daChamDiem { get; set; }
 		[ValidateNever]
 		public ICollection<ClassRoom> ClassRooms { get; set; }
 		[ValidateNever]
