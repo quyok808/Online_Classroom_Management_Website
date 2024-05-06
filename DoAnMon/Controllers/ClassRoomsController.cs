@@ -546,6 +546,7 @@ namespace DoAnMon.Controllers
 				baiNop.SubmittedAt = DateTime.Now;
 				baiNop.Urlbainop = filename;
 				baiNop.Diem = 0;
+				baiNop.daChamDiem = 0;
 
 				_context.Add(baiNop);
 				await _context.SaveChangesAsync();
@@ -569,6 +570,8 @@ namespace DoAnMon.Controllers
 			}
 			var paginatedBaiTaps = await PaginatedList<BaiTap>.CreateAsync(BaitapsQuery, pageNumber, pageSize);
 			paginatedBaiTaps.CurrentQuery = query;
+			ViewBag.Bainop = _context.BaiNop.ToList();
+			ViewBag.ClassroomDetail = _context.classroomDetail.ToList();
 			return View(paginatedBaiTaps);
 		}
 
@@ -854,6 +857,7 @@ namespace DoAnMon.Controllers
 					return Json(new { success = false });
 				}
 				baiNop.Diem = diem;
+				baiNop.daChamDiem = 1;
 				_context.SaveChanges();
 
 				TinhDTB(baiNop.UserId, baiNop.ClassId);
@@ -1033,5 +1037,3 @@ namespace DoAnMon.Controllers
 		}
 	}
 }
-
-
