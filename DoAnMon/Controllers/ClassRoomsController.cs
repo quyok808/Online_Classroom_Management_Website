@@ -141,10 +141,12 @@ namespace DoAnMon.Controllers
 			if (owner.Id == currentUser.Id)
 			{
 				viewModel.isOwner = true;
+				ViewBag.Isowner = true;
 			}
 			else
 			{
 				viewModel.isOwner = false;
+				ViewBag.Isowner = false;
 			}
 			viewModel.Homework = homework;
 			viewModel.Message = chatHistory;
@@ -343,11 +345,23 @@ namespace DoAnMon.Controllers
 		}
 
 		[HttpGet]
-		public PartialViewResult GetLecture(string ClassId)
+		public async Task<PartialViewResult> GetLectureAsync(string ClassId)
 		{
+			var currentUser = await _userManager.GetUserAsync(User);
 			// Lấy danh sách bài giảng dựa trên ClassId từ cơ sở dữ liệu
 			List<BaiGiang> lectures = _context.BaiGiang.Where(l => l.ClassId == ClassId).ToList();
-
+			ClassRoom temp = _context.classRooms.FirstOrDefault(p => p.Id == ClassId);
+			if (temp != null)
+			{
+				if (currentUser.Id == temp.UserId)
+				{
+					ViewBag.Isowner = true;
+				}
+				else
+				{
+					ViewBag.Isowner = false;
+				}
+			}
 			return PartialView("_lecturePartial", lectures);
 		}
 
@@ -1035,5 +1049,40 @@ namespace DoAnMon.Controllers
 				return StatusCode(500, "An error occurred while processing your request.");
 			}
 		}
-	}
+
+		[HttpGet]
+		public IActionResult DeleteLecture(int id, string classId)
+		{
+			var temp = _context.BaiGiang.FirstOrDefault(p => p.Id == id);
+			if (temp == null)
+			{
+				return NotFound("Không có bài giảng này trong CSDL");
+			}
+			else
+			{
+				_context.BaiGiang.Remove(temp);
+			}
+			_context.SaveChanges();
+            return RedirectToAction("Details", "ClassRooms", new { id = classId });
+        }
+		
+		[HttpGet]
+		public IActionResult DeleteBT(string id, string classId)
+		{
+			var temp = _context.baiTaps.FirstOrDefault(p => p.Id == id);
+			if (temp == null)
+			{
+				return NotFound("Không có bài tập này trong CSDL");
+			}
+			var listBN = _context.BaiNop.Where(p => p.BaiTapId == id).ToList();
+            foreach (var item in listBN)
+            {
+				_context.BaiNop.Remove(item);
+			}
+            _context.baiTaps.Remove(temp);
+			_context.SaveChanges();
+			TinhDTB(classId);
+			return RedirectToAction("Details", "ClassRooms", new { id = classId });
+        }
+    }
 }
