@@ -1,33 +1,41 @@
 ﻿@model IEnumerable<DoAnMon.Models.BaiGiang>
 
 @{
-    var lectures = Model != null ? Model.ToList() : new List<BaiGiang>();
-    var totalCount = lectures.Count;
+	var lectures = Model != null ? Model.ToList() : new List<BaiGiang>();
+	var totalCount = lectures.Count;
+	bool isOwner = ViewBag.Isowner;
 }
 <style>
-    <link rel="preconnect" href="https://fonts.googleapis.com" >
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin >
-    <link href="https://fonts.googleapis.com/css2?family=Merriweather:ital,wght@0,300;0,400;0,700;0,900;1,300;1,400;1,700;1,900&display=swap" rel="stylesheet" >
-    <link href="https://fonts.googleapis.com/css2?family=Merriweather:ital,wght@0,300;0,400;0,700;0,900;1,300;1,400;1,700;1,900&family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap" rel="stylesheet" >
-    <link href="https://fonts.googleapis.com/css2?family=Merriweather:ital,wght@0,300;0,400;0,700;0,900;1,300;1,400;1,700;1,900&family=Oswald:wght@200..700&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap" rel="stylesheet" >
+	<link rel="preconnect" href="https://fonts.googleapis.com" >
+	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin >
+	<link href="https://fonts.googleapis.com/css2?family=Merriweather:ital,wght@0,300;0,400;0,700;0,900;1,300;1,400;1,700;1,900&display=swap" rel="stylesheet" >
+	<link href="https://fonts.googleapis.com/css2?family=Merriweather:ital,wght@0,300;0,400;0,700;0,900;1,300;1,400;1,700;1,900&family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap" rel="stylesheet" >
+	<link href="https://fonts.googleapis.com/css2?family=Merriweather:ital,wght@0,300;0,400;0,700;0,900;1,300;1,400;1,700;1,900&family=Oswald:wght@200..700&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap" rel="stylesheet" >
 </style>
 @if (totalCount > 0)
 {
-    for (int i = totalCount - 1; i >= 0; i--)
-    {
-        var item = lectures[i];
-        <div class="post">
-            <h2>@item.UrlBaiGiang.Substring(0, @item.UrlBaiGiang.IndexOf("_"))</h2>
-            <div class="pdf-container">
-                <object data="/BAIGIANG/@item.UrlBaiGiang" type="application/pdf" width="100%" height="600px">
-                    <embed src="/BAIGIANG/@item.UrlBaiGiang" type="application/pdf" />
-                </object>
-            </div>
-        </div>
-    }
+	for (int i = totalCount - 1; i >= 0; i--)
+	{
+		var item = lectures[i];
+		<div class="post">
+
+			<h2>@item.UrlBaiGiang.Substring(0, @item.UrlBaiGiang.IndexOf("_"))</h2>
+			@if (isOwner)
+			{
+				<a class="btn btn-info" asp-action="DeleteLecture" asp-controller="ClassRooms" asp-route-id="@item.Id" asp-route-classId="@item.ClassId" onclick="return confirm('Bạn có chắc muốn xóa không ?')">Xóa bài giảng</a>
+			}
+			
+			
+			<div class="pdf-container">
+				<object data="/BAIGIANG/@item.UrlBaiGiang" type="application/pdf" width="100%" height="600px">
+					<embed src="/BAIGIANG/@item.UrlBaiGiang" type="application/pdf" />
+				</object>
+			</div>
+		</div>
+	}
 }
 else
 {
-    <h2 style="font-family: Poppins, sans-serif;">Chưa có bài nào được đăng lên</h2>
+	<h2 style="font-family: Poppins, sans-serif;">Chưa có bài nào được đăng lên</h2>
 }
 
