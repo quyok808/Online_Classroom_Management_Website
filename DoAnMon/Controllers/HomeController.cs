@@ -17,8 +17,13 @@ namespace DoAnMon.Controllers
         {
             return View();
         }
+		public IActionResult Lophoc()
+		{
+			return View();
+		}
 
-        public IActionResult Privacy()
+
+		public IActionResult Privacy()
         {
             return View();
         }

@@ -138,7 +138,7 @@ namespace DoAnMon.Areas.Identity.Pages.Account
                             return Redirect("/Admin");
 						}
 
-						return RedirectToAction("Index", "ClassRooms");
+						return RedirectToAction("Index", "Home");
                     }
                     if (result.RequiresTwoFactor)
                     {

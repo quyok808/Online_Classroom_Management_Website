@@ -1,22 +1,10 @@
-﻿@using DoAnMon.IdentityCudtomUser
-@using Microsoft.AspNetCore.Identity
-@inject SignInManager<CustomUser> SignInManager
-@inject UserManager<CustomUser> UserManager
-@inject SignInManager<CustomUser> _signInManager
-@using static DoAnMon.Models.ClassroomViewModel
-@model List<ClassRoomViewModel>
-
+﻿
 @{
-	ViewData["Title"] = "Index";
-	Layout = "~/Views/Shared/_Layout.cshtml";
-    var user = await UserManager.GetUserAsync(User);
+    ViewData["Title"] = "Lophoc";
+    Layout = "~/Views/Shared/_Layout.cshtml";
 }
+
 <style>
-    <link rel="preconnect" href="https://fonts.googleapis.com" >
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin >
-    <link href="https://fonts.googleapis.com/css2?family=Merriweather:ital,wght@0,300;0,400;0,700;0,900;1,300;1,400;1,700;1,900&display=swap" rel="stylesheet" >
-    <link href="https://fonts.googleapis.com/css2?family=Merriweather:ital,wght@0,300;0,400;0,700;0,900;1,300;1,400;1,700;1,900&family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap" rel="stylesheet" >
-    <link href="https://fonts.googleapis.com/css2?family=Merriweather:ital,wght@0,300;0,400;0,700;0,900;1,300;1,400;1,700;1,900&family=Oswald:wght@200..700&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap" rel="stylesheet" >
     /*-------------------------------------------------*/
     .container {
         display: flex; /* Sử dụng flexbox */
@@ -29,16 +17,15 @@
         padding: 20px; /* Khoảng cách nội dung với viền của cột */
         height: 500px;
         /* Định dạng khung hình */
-        
+        .image-frame
     }
 
-    .image-frame {
+    {
         border: 1px solid #ccc; /* Viền của khung hình */
         border-radius: 50%; /* Bo tròn các góc */
         overflow: hidden; /* Ẩn bất kỳ phần nào của hình ảnh vượt ra ngoài khung */
         width: 150px;
         margin-left: 30px;
-        margin-bottom: 5px;
     }
 
     /* Định dạng hình ảnh */
@@ -53,32 +40,32 @@
         padding: 0; /* Xóa khoảng trống trong danh sách */
     }
 
-        /* Định dạng mỗi mục menu */
-        .vertical-menu li {
-            margin-bottom: 0; /* Khoảng cách giữa các mục menu */
-        }
+    /* Định dạng mỗi mục menu */
+    .vertical-menu li {
+        margin-bottom: 0; /* Khoảng cách giữa các mục menu */
+    }
 
-            /* Định dạng liên kết trong mỗi mục menu */
-            .vertical-menu li a {
-                display: block; /* Chuyển liên kết thành khối để nó chiếm toàn bộ chiều rộng của mục */
-                padding: 10px; /* Khoảng cách giữa văn bản và viền của mục */
-                text-decoration: none; /* Loại bỏ gạch chân mặc định của liên kết */
-                color: #333; /* Màu chữ */
-                background-color: #f0f0f0; /* Màu nền của mục */
-                border-bottom: 1px solid #ccc; /* Thêm dấu gạch ngang */
-            }
+    /* Định dạng liên kết trong mỗi mục menu */
+    .vertical-menu li a {
+        display: block; /* Chuyển liên kết thành khối để nó chiếm toàn bộ chiều rộng của mục */
+        padding: 10px; /* Khoảng cách giữa văn bản và viền của mục */
+        text-decoration: none; /* Loại bỏ gạch chân mặc định của liên kết */
+        color: #333; /* Màu chữ */
+        background-color: #f0f0f0; /* Màu nền của mục */
+        border-bottom: 1px solid #ccc; /* Thêm dấu gạch ngang */
+    }
 
-                /* Định dạng mục menu được chọn */
-                .vertical-menu li a:hover {
-                    background-color: #ccc; /* Màu nền khi rê chuột qua */
-                }
+    /* Định dạng mục menu được chọn */
+    .vertical-menu li a:hover {
+        background-color: #ccc; /* Màu nền khi rê chuột qua */
+    }
 
     /* chính----------------------------------------------*/
     .main-content {
         flex-grow: 1; /* Main content mở rộng để lấp đầy không gian trống */
         padding: 20px; /* Khoảng cách nội dung với viền của main content */
         background-color: #c2c0c0;
-        margin-top: 0;
+        margin-top:0;
     }
 
     .frame-container {
@@ -139,10 +126,10 @@
         }
 
     /* .plus-button:hover svg {
-            fill: #ccc; /* Màu sắc của biểu tượng khi di chuột qua
-          } */
+        fill: #ccc; /* Màu sắc của biểu tượng khi di chuột qua
+      } */
     /* .plus-button:hover::after {
-            content: attr(aria-label); /* Hiển thị nội dung của aria-label */
+        content: attr(aria-label); /* Hiển thị nội dung của aria-label */
     /* background-color: #3c7ec9; Màu nền của tooltip */
     /* color: #fff; Màu chữ của tooltip */
     /* padding: 4px 8px; Khoảng cách giữa nội dung và viền tooltip */
@@ -177,7 +164,6 @@
         top: 230px; /* Đặt vị trí của khung từ phía trên dấu cộng */
         width: 150px;
         left: 550px;
-        z-index:50;
     }
     /* Thiết lập kiểu dáng cho các lựa chọn */
     .option {
@@ -188,11 +174,11 @@
         margin-bottom: 0;
     }
 
-        .option:hover {
-            background-color: #e0e0e0;
-        }
+    .option:hover {
+        background-color: #e0e0e0;
+    }
 
-    #join-frame {
+    #join-frame{
         border: 1px solid #ccc;
         border-radius: 5px;
         padding: 20px;
@@ -203,44 +189,44 @@
         left: 700px;
     }
 
-        #join-frame form {
-            margin-top: 10px;
-        }
+    #join-frame form {
+        margin-top: 10px;
+    }
 
-        #join-frame label {
-            font-weight: bold;
-        }
+    #join-frame label {
+        font-weight: bold;
+    }
 
-        #join-frame input[type="text"],
-        #join-frame button {
-            padding: 8px;
-            border-radius: 4px;
-            border: 1px solid #ccc;
-        }
+    #join-frame input[type="text"],
+    #join-frame button {
+        padding: 8px;
+        border-radius: 4px;
+        border: 1px solid #ccc;
+    }
 
-        #join-frame input[type="text"] {
-            width: 200px;
-            margin-bottom: 10px;
-        }
+    #join-frame input[type="text"] {
+        width: 200px;
+        margin-bottom: 10px;
+    }
 
-        #join-frame button {
-            background-color: #3c7ec9;
-            color: #fff;
-            cursor: pointer;
-            margin-left: 100px;
-        }
+    #join-frame button {
+        background-color: #3c7ec9;
+        color: #fff;
+        cursor: pointer;
+        margin-left: 100px;
+    }
 </style>
 <div class="container">
     <div class="left-column">
         <!-- Nội dung cột bên trái -->
         <div class="image-frame">
-            <img src="~/Imgs_avtUser/@user.UrlAvt" alt="Hình ảnh">
+            <img src="https://png.pngtree.com/png-clipart/20190920/original/pngtree-user-flat-character-avatar-png-png-image_4651285.jpg" alt="Hình ảnh">
         </div>
         <center>
-            <p>@user.Name</p>
+            <p>Tên người dùng</p>
         </center>
         <ul class="vertical-menu">
-            <li><a href="/Identity/Account/Manage/Index">Thông tin cá nhân</a></li>
+            <li><a href="#">Thông tin cá nhân</a></li>
 
         </ul>
     </div>
@@ -249,26 +235,18 @@
         <button class="plus-button" title="Tạo hoặc tham gia lớp học" onclick="toggleOptions()">
             <svg xmlns="http://www.w3.org/2000/svg" width="35" height="35" viewBox="0 0 24 24">
                 <path d="M20 13h-7v7h-2v-7H4v-2h7V4h2v7h7v2z" />
-            </svg>
+            </svg>           
         </button>
         <div id="class-options-container" class="hidden">
             <div class="options-frame">
-                @if (User.IsInRole("Teacher") || User.IsInRole("Admin"))
-                {
-
+                <div class="option" onclick="createClass()">Tạo mới</div>
                 <div class="option">
-                    <a href="/ClassRooms/Create" title="Create Classroom" style="text-decoration:none;">
-                        <p style="font-size: 16px; padding-left: 5px; color: black; margin: 0;">Tạo mới</p>
-                    </a>
-                </div>
-                }
-                <div class="option">
-                    <button id="btnAddRoom" data-toggle="modal" data-target="#joinRoomModal" style="font-size: 16px;background-color: transparent; color:black; border-color:transparent;">Tham gia</button>
+                    <button id="btnAddRoom" data-toggle="modal" data-target="#joinRoomModal" style="font-size: 16px;background-color: transparent; color:black; border-color:transparent;">Tham gia</button>                   
                 </div>
                 <div class="option">
                     <button id="scanButton" style="font-size: 16px; border-color:transparent;background-color: transparent">Quét Mã QR</button>
                 </div>
-            </div>
+            </div>           
         </div>
         <div id="joinRoomModal" class="modal" tabindex="-1">
             <div class="modal-dialog">
@@ -298,51 +276,54 @@
                 </div>
             </div>
         </div>
-        <div id="cameraModal" class="modal">
+        <div id="cameraModal" class="modal" >
             <div class="modal-content" style="align-items: center;justify-content: center;">
                 <span class="close">&times;</span>
                 <video id="qrScanner" width="400" height="400" autoplay style="align-items: center;justify-content: center;"></video>
             </div>
         </div>
-        
-        <div class="content" style="margin-top: 50px;">
-            @{
-                if (Model != null)
-                {
-                    foreach (var viewModel in Model)
-                    {
-                        <div class="classroom">
-                            <div class="card-top" style="background-image: url(/Images/anhclass.png);background-size: cover; background-position:center;color: white;">
-                                <h2 style="font-family: Poppins, sans-serif; font-size: 20px">@viewModel.ClassRoom.Name</h2>
-                                <div class="meta" style="font-family: Poppins, sans-serif; font-size: 12px;font-weight:300;color: white;">@viewModel.ClassRoom.Description</div>
-                                <p style="padding-top: 4%; font-family: Poppins, sans-serif; font-size: 15px; font-weight:500">@viewModel.Owner.Name</p>
-                            </div>
-                            <div class="card-bottom">
-                                <img class="PNzAWd" aria-hidden="true" src="/Imgs_avtUser/@viewModel.Owner.UrlAvt">
-                                <a href="@viewModel.ClassRoom.RoomOnline" class="btn btn-primary btn-info btn-custom" target="_blank" style="font-family: Poppins, sans-serif; font-size: 14px;font-weight: 600;">Giảng đường</a>
-                                <a asp-action="Details" asp-route-id="@viewModel.ClassRoom.Id" class="btn btn-primary btn-info btn-custom" style="margin-top: 10px; font-family: Poppins, sans-serif; font-size: 14px;font-weight:600;">Lớp học</a>
-                            </div>
-                        </div>
-                    }
-                }
-            }
+        <div class="frame-container">
+            <div class="frame">
+                <!-- Khung 1 -->
+                <div class="frame-header">
+                    <h2>TÊN MÔN HỌC</h2>
+                    <h3>LỚP</h3>
+                    <h3>Tên giảng viên</h3>
+                </div>
+                <div class="frame-body">
+                    <!-- <p>Nội dung khung 1</p> -->
+                </div>
+            </div>
+
+            <div class="frame">
+                <!-- Khung 2 -->
+                <div class="frame-header">
+                    <h2>Tiêu đề khung 2</h2>
+                </div>
+                <div class="frame-body">
+                    <p>Nội dung khung 2</p>
+                </div>
+            </div>
+
+            <div class="frame">
+                <!-- Khung 3 -->
+                <div class="frame-header">
+                    <h2>Tiêu đề khung 3</h2>
+                </div>
+                <div class="frame-body">
+                    <p>Nội dung khung 3</p>
+                </div>
+            </div>
         </div>
-        
     </div>
 </div>
-
-
-
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/popperjs/core@1.16.1/dist/umd/popper.min.js"></script>
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
 
-@if (!string.IsNullOrEmpty(ViewBag.StatusMessage))
-{
-    <script>alert('@ViewBag.StatusMessage');</script>
-}
+
 <script>
     document.addEventListener("DOMContentLoaded", function () {
         // Lấy địa chỉ URL hiện tại
@@ -360,7 +341,7 @@
             }
         });
     });
-
+  
 
     function toggleOptions() {
         var plusButton = document.getElementById("plus-button");

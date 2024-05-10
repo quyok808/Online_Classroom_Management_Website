@@ -301,7 +301,7 @@ CUSTOM CLASSROOM CARD
   margin-bottom: 5px;
   line-height: 15px;
   width: 100%;
-  margin-top: 10px;
+  margin-top: 1px;
   padding-right: 70px;
   text-overflow: ellipsis;
   overflow: hidden;
@@ -319,13 +319,13 @@ CUSTOM CLASSROOM CARD
   border-radius: 50%;
   float: right;
   position: relative;
-  margin-top: -6rem;
+  margin-top: -4.5rem;
   overflow: clip;
 
-  height: 8rem; /* hoặc bất kỳ giá trị % nào phù hợp */
-  width: 8rem; /* hoặc bất kỳ giá trị % nào phù hợp */
-  max-height: 8rem; /* giới hạn kích thước tối đa */
-  max-width: 8rem; /* giới hạn kích thước tối đa */
+  height: 6rem; /* hoặc bất kỳ giá trị % nào phù hợp */
+  width: 6rem; /* hoặc bất kỳ giá trị % nào phù hợp */
+  max-height: 6rem; /* giới hạn kích thước tối đa */
+  max-width: 6rem; /* giới hạn kích thước tối đa */
 }
 
 .card-bottom{
