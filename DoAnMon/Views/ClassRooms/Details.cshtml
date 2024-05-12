@@ -565,6 +565,12 @@
 		{
 			<div class="assignment" style="height: 30vh;">
 				<div class="assignment-content" style="border-right: 1px solid black; height: 100%; width: 100%; margin: 50px; ">
+					@{
+						if (Model.isOwner)
+						{
+							<a class="btn btn-info" style="float: left; max-width: 50px; padding: 5px;" asp-action="DeleteBT" asp-controller="ClassRooms" asp-route-id="@assignment.Id" asp-route-classId="@assignment.ClassRoomId" onclick="return confirm('Bạn có chắc muốn xóa không ?')">Xóa</a>
+						}
+					}
 					<h3 class="text-center">@assignment.Title</h3>
 					<p class="assignment-description">@assignment.Content</p>
 					@{
@@ -602,7 +608,7 @@
 
 					<div class="upload-form ">
 						@{
-							if (User.IsInRole("Student"))
+							if (!Model.isOwner)
 							{
 								<label for="file-upload" class="file-label">Bài tập của bạn:</label>
 								<div class="file-input-wrapper">
@@ -742,15 +748,23 @@
 				</tr>
 			</thead>	
 			<tbody>
-				@foreach(var item in diems)
+				@foreach (var item in diems)
 				{
-					<td>@item.HoVaTen</td>
-					<td>@item.MSSV</td>
-					@foreach(var d in item.listDiemBT)
+				<td>@item.HoVaTen</td>
+				<td>@item.MSSV</td>
+
+					@if (bt.Count <= 0)
 					{
-						<td>@d</td>
+					<td> </td>
 					}
-					<td>@item.DTB</td>
+					else
+					{
+						@foreach (var d in @item.listDiemBT)
+						{
+						<td style="text-align: center;">@d</td>
+						}
+					}
+				<td>@item.DTB</td>
 				}
 			</tbody>
 		</table>

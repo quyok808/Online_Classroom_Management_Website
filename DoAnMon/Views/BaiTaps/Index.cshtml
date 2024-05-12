@@ -8,7 +8,7 @@
 
 
 
-<form id="Search-form" method="get">
+<form id="Search-form" method="get" style="margin-top: 10px;">
 	<input type="text" id="query" name="query" placeholder="Nhập tên bài tập hoặc mã lớp" class="search-input" value="@Model.CurrentQuery" style="width: 70%;" />
 	<input id="searchButton" type="submit" value="Search" />
 </form>
@@ -78,6 +78,7 @@
 			<div class="assignment" style="height: 30vh;">
 				<div class="assignment-content"
 					 style="border-right: 1px solid black; height: 100%; width: 100%; margin: 50px;">
+					
 					<h3 class="text-center">@item.Title</h3>
 					<p class="assignment-description">
 						@item.Content

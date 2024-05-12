@@ -124,31 +124,33 @@ namespace DoAnMon.Controllers
 				return NotFound();
 			}
 			var viewModel = new ClassRoomViewModel();
-			// Kiểm tra null cho owner trước khi thêm vào classRoomViewModels
-			if (owner != null)
-			{
-				viewModel.ClassRoom = classRoom;
-				viewModel.Owner = owner;
-			}
-			else
-			{
-				// Xử lý trường hợp không có chủ sở hữu (nếu cần)
-				viewModel.ClassRoom = classRoom;
-				viewModel.Owner = new CustomUser { UserName = "Unknown" };
-			}
-			foreach (var item in Lecture)
+            // Kiểm tra null cho owner trước khi thêm vào classRoomViewModels
+            if (owner != null)
+            {
+                viewModel.ClassRoom = classRoom;
+                viewModel.Owner = owner;
+            }
+            else
+            {
+                // Xử lý trường hợp không có chủ sở hữu (nếu cần)
+                viewModel.ClassRoom = classRoom;
+                viewModel.Owner = new CustomUser { UserName = "Unknown" };
+            }
+            foreach (var item in Lecture)
 			{
 				viewModel.Unit = Lecture;
 			}
-			if (owner.Id == currentUser.Id)
-			{
-				viewModel.isOwner = true;
-			}
-			else
-			{
-				viewModel.isOwner = false;
-			}
-			viewModel.Homework = homework;
+            if (owner.Id == currentUser.Id)
+            {
+                viewModel.isOwner = true;
+                ViewBag.Isowner = true;
+            }
+            else
+            {
+                viewModel.isOwner = false;
+                ViewBag.Isowner = false;
+            }
+            viewModel.Homework = homework;
 			viewModel.Message = chatHistory;
 			ViewBag.ListRoom = userClasses;
 			var listBT = await _context.baiTaps.Where(p => p.ClassRoomId == id).ToListAsync();
@@ -344,17 +346,30 @@ namespace DoAnMon.Controllers
 			return Ok();
 		}
 
-		[HttpGet]
-		public PartialViewResult GetLecture(string ClassId)
-		{
-			// Lấy danh sách bài giảng dựa trên ClassId từ cơ sở dữ liệu
-			List<BaiGiang> lectures = _context.BaiGiang.Where(l => l.ClassId == ClassId).ToList();
+        [HttpGet]
+        public async Task<PartialViewResult> GetLectureAsync(string ClassId)
+        {
+            var currentUser = await _userManager.GetUserAsync(User);
+            // Lấy danh sách bài giảng dựa trên ClassId từ cơ sở dữ liệu
+            List<BaiGiang> lectures = _context.BaiGiang.Where(l => l.ClassId == ClassId).ToList();
+            ClassRoom temp = _context.classRooms.FirstOrDefault(p => p.Id == ClassId);
+            if (temp != null)
+            {
+                if (currentUser.Id == temp.UserId)
+                {
+                    ViewBag.Isowner = true;
+                }
+                else
+                {
+                    ViewBag.Isowner = false;
+                }
+            }
+            return PartialView("_lecturePartial", lectures);
+        }
 
-			return PartialView("_lecturePartial", lectures);
-		}
 
 
-		[HttpGet]
+        [HttpGet]
 		public PartialViewResult GetMessages()
 		{
 			List<Message> messages = _context.Messages.ToList();
@@ -944,96 +959,131 @@ namespace DoAnMon.Controllers
 			}
 		}
 
-		[HttpPost]
-		public async Task<IActionResult> ExportDSSV(string classID)
-		{
-			try
-			{
-				List<SV> students = _studentRepo.getListSV();
-				// Tạo một bảng tính mới
-				ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
-				using (var package = new ExcelPackage())
-				{
-					var worksheet = package.Workbook.Worksheets.Add("Students");
+        [HttpPost]
+        public async Task<IActionResult> ExportDSSV(string classID)
+        {
+            try
+            {
+                List<SV> students = _studentRepo.getListSV();
+                // Tạo một bảng tính mới
+                ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
+                using (var package = new ExcelPackage())
+                {
+                    var worksheet = package.Workbook.Worksheets.Add("Students");
 
-					// Thêm dữ liệu vào bảng tính
-					
-					// Dòng 1 {
-					worksheet.Cells["A1:C1"].Merge = true;
-					worksheet.Cells["A1"].Value = "TRƯỜNG ĐẠI HỌC CÔNG NGHỆ TP.HCM";
-					// Truy cập vào Style của ô A1
-					var cellStyle_A1 = worksheet.Cells["A1"].Style;
+                    // Thêm dữ liệu vào bảng tính
 
-					cellStyle_A1.Font.Name = "Times New Roman"; // Tên của font chữ
-					cellStyle_A1.Font.Size = 8; // Cỡ chữ
-					cellStyle_A1.Font.Bold = true; // In đậm
-					cellStyle_A1.HorizontalAlignment = OfficeOpenXml.Style.ExcelHorizontalAlignment.Center;
-					// } Hết dòng 1
+                    // Dòng 1 {
+                    worksheet.Cells["A1:C1"].Merge = true;
+                    worksheet.Cells["A1"].Value = "TRƯỜNG ĐẠI HỌC CÔNG NGHỆ TP.HCM";
+                    // Truy cập vào Style của ô A1
+                    var cellStyle_A1 = worksheet.Cells["A1"].Style;
 
-					// Dòng 3 {
-					worksheet.Cells["A3:D3"].Merge = true;
-					worksheet.Cells["A3"].Value = "DANH SÁCH SINH VIÊN";
-					// Truy cập vào Style của ô A3
-					var cellStyle_A3 = worksheet.Cells["A3"].Style;
+                    cellStyle_A1.Font.Name = "Times New Roman"; // Tên của font chữ
+                    cellStyle_A1.Font.Size = 8; // Cỡ chữ
+                    cellStyle_A1.Font.Bold = true; // In đậm
+                    cellStyle_A1.HorizontalAlignment = OfficeOpenXml.Style.ExcelHorizontalAlignment.Center;
+                    // } Hết dòng 1
 
-					cellStyle_A3.Font.Name = "Times New Roman"; // Tên của font chữ
-					cellStyle_A3.Font.Size = 16; // Cỡ chữ
-					cellStyle_A3.Font.Bold = true; // In đậm
-					cellStyle_A3.HorizontalAlignment = OfficeOpenXml.Style.ExcelHorizontalAlignment.Center;
-					// } Hết dòng 3
+                    // Dòng 3 {
+                    worksheet.Cells["A3:D3"].Merge = true;
+                    worksheet.Cells["A3"].Value = "DANH SÁCH SINH VIÊN";
+                    // Truy cập vào Style của ô A3
+                    var cellStyle_A3 = worksheet.Cells["A3"].Style;
 
-					// Chỉ định tên đầu mục cho mỗi cột
-					// var headerRow = worksheet.Cells[Chỉ số hàng bắt đầu (dòng 5),  Chỉ số cột bắt đầu (cột 1, tương ứng với cột A),  Chỉ số hàng kết thúc (dòng 5, vẫn là dòng 5), Chỉ số cột kết thúc (cột 4, tương ứng với cột D)];
-					List<string> headers = new List<string>
-					{
-						"STT",
-						"MSSV",
-						"Họ và tên",
-						"Email"
-					};
+                    cellStyle_A3.Font.Name = "Times New Roman"; // Tên của font chữ
+                    cellStyle_A3.Font.Size = 16; // Cỡ chữ
+                    cellStyle_A3.Font.Bold = true; // In đậm
+                    cellStyle_A3.HorizontalAlignment = OfficeOpenXml.Style.ExcelHorizontalAlignment.Center;
+                    // } Hết dòng 3
 
-					worksheet.Cells[5, 1].LoadFromArrays(new List<string[]> { headers.ToArray() });
+                    // Chỉ định tên đầu mục cho mỗi cột
+                    // var headerRow = worksheet.Cells[Chỉ số hàng bắt đầu (dòng 5),  Chỉ số cột bắt đầu (cột 1, tương ứng với cột A),  Chỉ số hàng kết thúc (dòng 5, vẫn là dòng 5), Chỉ số cột kết thúc (cột 4, tương ứng với cột D)];
+                    List<string> headers = new List<string>
+                    {
+                        "STT",
+                        "MSSV",
+                        "Họ và tên",
+                        "Email"
+                    };
 
-					var cellStyle_A5D5 = worksheet.Cells["A5:D5"].Style;
+                    worksheet.Cells[5, 1].LoadFromArrays(new List<string[]> { headers.ToArray() });
 
-					cellStyle_A5D5.Font.Bold = true;
-					cellStyle_A5D5.HorizontalAlignment = OfficeOpenXml.Style.ExcelHorizontalAlignment.Center;
+                    var cellStyle_A5D5 = worksheet.Cells["A5:D5"].Style;
 
-					worksheet.Cells[6,1].LoadFromCollection(students, false);
+                    cellStyle_A5D5.Font.Bold = true;
+                    cellStyle_A5D5.HorizontalAlignment = OfficeOpenXml.Style.ExcelHorizontalAlignment.Center;
 
-					// Tạo đối tượng Style cho border của dữ liệu được load
-					var borderStyle = worksheet.Cells[5, 1, 5 + students.Count, 4].Style.Border;
+                    worksheet.Cells[6, 1].LoadFromCollection(students, false);
 
-					// Thiết lập border cho các ô
-					borderStyle.Bottom.Style = borderStyle.Top.Style = borderStyle.Left.Style = borderStyle.Right.Style = OfficeOpenXml.Style.ExcelBorderStyle.Thin;
+                    // Tạo đối tượng Style cho border của dữ liệu được load
+                    var borderStyle = worksheet.Cells[5, 1, 5 + students.Count, 4].Style.Border;
 
-					worksheet.Column(1).AutoFit();
-					worksheet.Column(2).AutoFit();
-					worksheet.Column(3).AutoFit();
-					worksheet.Column(4).AutoFit();
+                    // Thiết lập border cho các ô
+                    borderStyle.Bottom.Style = borderStyle.Top.Style = borderStyle.Left.Style = borderStyle.Right.Style = OfficeOpenXml.Style.ExcelBorderStyle.Thin;
 
-					// Lấy chỉ số của hàng cuối cùng trong danh sách
-					int lastRowIndex = 5 + students.Count;
+                    worksheet.Column(1).AutoFit();
+                    worksheet.Column(2).AutoFit();
+                    worksheet.Column(3).AutoFit();
+                    worksheet.Column(4).AutoFit();
 
-					// Gán giá trị cho ô cuối cùng trong cột thứ 4 (cột Email)
-					worksheet.Cells[lastRowIndex + 1, 1].Value = "Tổng số sinh viên: " + students.Count;
+                    // Lấy chỉ số của hàng cuối cùng trong danh sách
+                    int lastRowIndex = 5 + students.Count;
 
-					// Lưu trữ bảng tính vào một luồng bộ nhớ tạm thời
-					MemoryStream stream = new MemoryStream();
-					package.SaveAs(stream);
+                    // Gán giá trị cho ô cuối cùng trong cột thứ 4 (cột Email)
+                    worksheet.Cells[lastRowIndex + 1, 1].Value = "Tổng số sinh viên: " + students.Count;
 
-					_studentRepo.RemoveList();
-					// Thiết lập dữ liệu phản hồi để tải xuống tệp Excel
-					return File(stream.ToArray(), "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "DSSV_" + classID + ".xlsx");
+                    // Lưu trữ bảng tính vào một luồng bộ nhớ tạm thời
+                    MemoryStream stream = new MemoryStream();
+                    package.SaveAs(stream);
 
-				}
-			}
-			catch (Exception ex)
-			{
-				return StatusCode(500, "An error occurred while processing your request.");
-			}
-		}
-	}
+                    _studentRepo.RemoveList();
+                    // Thiết lập dữ liệu phản hồi để tải xuống tệp Excel
+                    return File(stream.ToArray(), "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "DSSV_" + classID + ".xlsx");
+
+                }
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, "An error occurred while processing your request.");
+            }
+        }
+
+        [HttpGet]
+        public IActionResult DeleteLecture(int id, string classId)
+        {
+            var temp = _context.BaiGiang.FirstOrDefault(p => p.Id == id);
+            if (temp == null)
+            {
+                return NotFound("Không có bài giảng này trong CSDL");
+            }
+            else
+            {
+                _context.BaiGiang.Remove(temp);
+            }
+            _context.SaveChanges();
+            return RedirectToAction("Details", "ClassRooms", new { id = classId });
+        }
+
+        [HttpGet]
+        public IActionResult DeleteBT(string id, string classId)
+        {
+            var temp = _context.baiTaps.FirstOrDefault(p => p.Id == id);
+            if (temp == null)
+            {
+                return NotFound("Không có bài tập này trong CSDL");
+            }
+            var listBN = _context.BaiNop.Where(p => p.BaiTapId == id).ToList();
+            foreach (var item in listBN)
+            {
+                _context.BaiNop.Remove(item);
+            }
+            _context.baiTaps.Remove(temp);
+            _context.SaveChanges();
+            TinhDTB(classId);
+            return RedirectToAction("Details", "ClassRooms", new { id = classId });
+        }
+    }
 }
 
 

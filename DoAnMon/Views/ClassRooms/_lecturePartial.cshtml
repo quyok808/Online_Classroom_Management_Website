@@ -3,6 +3,7 @@
 @{
     var lectures = Model != null ? Model.ToList() : new List<BaiGiang>();
     var totalCount = lectures.Count;
+    bool isOwner = ViewBag.Isowner;
 }
 <style>
     <link rel="preconnect" href="https://fonts.googleapis.com" >
@@ -18,6 +19,11 @@
         var item = lectures[i];
         <div class="post">
             <h2>@item.UrlBaiGiang.Substring(0, @item.UrlBaiGiang.IndexOf("_"))</h2>
+            @if (isOwner)
+            {
+                <a class="btn btn-info" asp-action="DeleteLecture" asp-controller="ClassRooms" asp-route-id="@item.Id" asp-route-classId="@item.ClassId" onclick="return confirm('Bạn có chắc muốn xóa không ?')">Xóa bài giảng</a>
+            }
+
             <div class="pdf-container">
                 <object data="/BAIGIANG/@item.UrlBaiGiang" type="application/pdf" width="100%" height="600px">
                     <embed src="/BAIGIANG/@item.UrlBaiGiang" type="application/pdf" />
