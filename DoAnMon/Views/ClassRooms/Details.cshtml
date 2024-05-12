@@ -457,13 +457,14 @@
 		</div>
 	</div>
 </div>
-<div class="tabs">
+<div class="tabs" style="display: flex; justify-content: center;">
 	<div class="tab" onclick="openTab(event, 'teacher')" style="font-family: Poppins, sans-serif;font-weight: 600">Thông tin giáo viên</div>
 	<div class="tab" onclick="openTab(event, 'posts')" style="font-family: Poppins, sans-serif;font-weight: 600">Bài Giảng</div>
 	<div class="tab" onclick="openTab(event, 'assignments')" style="font-family: Poppins, sans-serif;font-weight: 600">Bài tập</div>
 	<div class="tab" onclick="openTab(event, 'discussion')" style="font-family: Poppins, sans-serif;font-weight: 600">Thảo luận</div>
 	<div class="tab" onclick="openTab(event, 'listsv')" style="font-family: Poppins, sans-serif;font-weight: 600">Danh sách sinh viên</div>
 	<div class="tab" onclick="openTab(event, 'bangdiem')" style="font-family: Poppins, sans-serif;font-weight: 600">Bảng điểm</div>
+	<div class="tab" onclick="openTab(event, 'mainload')" style="font-family: Poppins, sans-serif;font-weight: 600" hidden>MainLoad</div>
 </div>
 <div id="teacher" class="tabcontent">
 	<div class="teacher-info" style="background-color: #fdffe0">
@@ -670,7 +671,7 @@
 </div>
 <div id="discussion" class="tabcontent">
 	<div class="discussion">
-		<div class="container">
+		<div class="container-fluid">
 			<div class="row p-1" hidden>
 				<div class="col-5"><input type="text" id="userInput" class="form-control" /></div>
 				<div class="col-5">
@@ -755,6 +756,12 @@
 		</table>
 	</div>
 </div>
+<div id="mainload" class="tabcontent">
+	<div class="text-center">
+		<h1 class="display-4" style="font-family: 'Poppins', sans-serif">Let's Study With Us</h1>
+		<p id="currentDateTime" style="font-family: 'Poppins', sans-serif"></p>
+	</div>
+</div>
 
 @* ==================================SCRIPT======================================================*@
 <script>
@@ -771,6 +778,10 @@
 		document.getElementById(tabName).style.display = "block";
 		evt.currentTarget.classList.add("active");
 	}
+
+	document.addEventListener("DOMContentLoaded", function () {
+		openTab(event, 'mainload');
+	});
 </script> @* Chuyển tab trên trang *@
 <script>
 	function reloadLecture() {
@@ -1057,3 +1068,37 @@
 		getListStudents();
 	});
 </script> @* Lấy dssv trong lớp và hiển thị lên *@
+<script>
+	function updateDateTime() {
+		var currentDateTime = new Date();
+		var hours = currentDateTime.getHours();
+		var minutes = currentDateTime.getMinutes();
+		var seconds = currentDateTime.getSeconds();
+		var day = currentDateTime.getDate();
+		var month = currentDateTime.getMonth() + 1; // Tháng bắt đầu từ 0
+		var year = currentDateTime.getFullYear();
+		var weekday = currentDateTime.getDay();
+
+		hours = (hours < 10) ? "0" + hours : hours;
+		minutes = (minutes < 10) ? "0" + minutes : minutes;
+		seconds = (seconds < 10) ? "0" + seconds : seconds;
+
+		day = (day < 10) ? "0" + day : day;
+		month = (month < 10) ? "0" + month : month;
+
+		var weekdays = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
+		var weekdayName = weekdays[weekday];
+
+		// Định dạng thời gian
+		var formattedDateTime = weekdayName + " • " + day + "/" + month + "/" + year + " " + hours + ":" + minutes + ":" + seconds;
+
+		// Hiển thị thời gian
+		document.getElementById("currentDateTime").innerText = formattedDateTime;
+	}
+
+	// Cập nhật thời gian mỗi giây
+	setInterval(updateDateTime, 1000);
+
+	// Gọi hàm updateDateTime lần đầu tiên để hiển thị thời gian ngay từ khi trang được tải
+	updateDateTime();
+</script> @* Tạo đồng hồ *@

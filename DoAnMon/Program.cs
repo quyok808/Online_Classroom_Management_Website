@@ -26,6 +26,15 @@ builder.Services.AddSingleton<ClassroomViewModel>();
 builder.Services.AddSignalR();
 builder.Services.AddScoped<ICheckNop, CheckNop>();
 ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
+
+builder.Services.ConfigureApplicationCookie(options =>
+{
+	// Cấu hình các tùy chọn cookie ở đây
+
+	// Đặt đường dẫn đến trang Access Denied
+	options.LoginPath = "/Identity/Account/Index";
+});
+
 var app = builder.Build();
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())

@@ -21,9 +21,11 @@ using SQLitePCL;
 using DoAnMon.Pagination;
 using Microsoft.CodeAnalysis.Elfie.Diagnostics;
 using DoAnMon.ModelListSVDownload;
+using Microsoft.AspNetCore.Authorization;
 
 namespace DoAnMon.Controllers
 {
+	[Authorize(Roles ="Admin, Teacher, Student")]
 	public class ClassRoomsController : Controller
 	{
 		private readonly ApplicationDbContext _context;
@@ -38,7 +40,7 @@ namespace DoAnMon.Controllers
 			_environment = environment;
 			_studentRepo = studentRepo;
 		}
-		static List<ClassRoom> userClasses;
+		public static List<ClassRoom>? userClasses;
 		// GET: ClassRooms
 		public async Task<IActionResult> Index()
 		{
