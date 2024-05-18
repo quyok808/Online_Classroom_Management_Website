@@ -13,7 +13,7 @@
         z-index: 1000;
         display: none;
         float: left;
-        min-width: 10rem; /* Đảm bảo chiều rộng tối thiểu */
+        min-width: 250px; /* Đảm bảo chiều rộng tối thiểu */
         padding: 0.5rem 0;
         margin: 0.125rem 0 0;
         font-size: 1rem;
@@ -46,7 +46,7 @@
     }
 
     .custom-padding{
-        padding-bottom: 15px;
+        padding-bottom: 10px;
         font-size: 12px;
     }
 
@@ -66,11 +66,21 @@
             <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
                 <p class="dropdown-item custom-padding">MSSV: @user.Mssv</p>
                 <p class="dropdown-item custom-padding">Email: @user.Email</p>
-                <a class="text-dark dropdown-item nav-link" asp-area="Identity" asp-page="/Account/Manage/ChangePassword" title="Manage" style="font-size: 12px;margin-left: -49px;color: black;margin-top: -10px;">Đổi mật khẩu</a>
-                <form class="form-inline dropdown-item" asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Action("Index", "Home", new { area = "" })" style="margin-top: -5px;">
+                <a class="text-dark dropdown-item nav-link" asp-area="Identity" asp-page="/Account/Manage/ChangePassword" title="Manage" style="font-size: 12px;text-align:left;padding:10px;color: black;">Đổi mật khẩu</a>
+                <form class="form-inline dropdown-item" asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Action("Index", "Home", new { area = "" })" >
                     <button type="submit" class="btn btn-link text-dark" style="padding: 0; text-decoration: none; width: 100%; margin-bottom: 0; text-align:left;color: black;font-size:12px;">Logout</button>
                 </form>
+                @if(User.IsInRole("Admin"))
+                {
+                    <a class="nav-link text-dark dropdown-toggle" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="font-size: 12px;text-align:left;padding:10px;color: black;">Quản lí</a>
+                    <div class="dropdown-menu dropdown-menu-right"  style="border-radius:5px" aria-labelledby="navbarDropdown">
+                        <a class="dropdown-item" href="/Admin/Home/PhanQuyen" style="font-size: 12px;text-align:left;padding:10px;color: black;">Quản lí người dùng</a>
+                        <a class="dropdown-item" href="/Admin/Home/baipost" style="font-size: 12px;text-align:left;padding:10px;color: black;">Bài post</a>
+                    </div>
+                }
+                
             </div>
+
         </li>
 }
 else
@@ -80,3 +90,20 @@ else
     </li>
 }
 </ul>
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        var dropdowns = document.querySelectorAll('.dropdown-toggle');
+        dropdowns.forEach(function (dropdown) {
+            dropdown.addEventListener('click', function (event) {
+                event.preventDefault();
+                event.stopPropagation();
+                var menu = this.nextElementSibling;
+                if (menu.style.display === 'block') {
+                    menu.style.display = 'none';
+                } else {
+                    menu.style.display = 'block';
+                }
+            });
+        });
+    });
+</script>

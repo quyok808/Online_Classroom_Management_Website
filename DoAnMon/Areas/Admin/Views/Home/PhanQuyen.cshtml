@@ -8,10 +8,10 @@
 
 <h1 style="color: #FA7070; padding-bottom:20px; text-align:center;">QUẢN LÝ NGƯỜI DÙNG</h1>
 
-	<table class="table" style="font-size: 20px;  border-collapse: collapse;border: 1px solid #000; border-right: none; border-right: 1px solid #000; ;">
+	 <table class="table" @* style="font-size: 20px;  border-collapse: collapse;border: 1px solid #000; border-right: none; border-right: 1px solid #000; ;" *@>
 	<thead>
 		<tr>
-			<th>Mã người dùng</th>
+			@* <th>Mã người dùng</th> *@
 			<th>Mã số</th>
 			<th>Tên</th>
 			<th>Email</th>
@@ -23,13 +23,13 @@
 		@foreach (var user in Model)
 		{
 			<tr>
-				<td>@user.UserId</td>
+				@* <td>@user.UserId</td> *@
 				<td>@user.UserName</td>
 				<td>@user.Name</td>
 				<td>@user.Email</td>
 				<td>
-					<form id="updateUserRoleForm" method="post" action="/Admin/Home/UpdateUserRole">
-						<select name="roleName" class="form-control">
+					<form id="updateUserRoleForm" method="post" action="/Admin/Home/UpdateUserRole" style="display:flex; width:160px">
+						<select name="roleName" class="form-control" style="margin-right:20px">
 							<!-- Option to select current role -->
 							<option value="No Role" @(user.CurrentRole == "No Role" ? "selected" : "")>No Role</option>
 							<!-- Options for other roles -->
@@ -47,7 +47,7 @@
 			</tr>
 		}
 	</tbody>
-</table>
+</table> 
 @if (TempData["AlertMessage"] != null)
 {
     <script>

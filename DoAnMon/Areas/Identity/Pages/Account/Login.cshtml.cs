@@ -133,10 +133,10 @@ namespace DoAnMon.Areas.Identity.Pages.Account
                     if (result.Succeeded)
                     {
                         _logger.LogInformation("User logged in.");
-						if (await _signInManager.UserManager.IsInRoleAsync(user, "Admin"))
-						{
-                            return Redirect("/Admin");
-						}
+						//if (await _signInManager.UserManager.IsInRoleAsync(user, "Admin"))
+						//{
+      //                      return Redirect("/Admin");
+						//}
 
 						return RedirectToAction("Index", "Home");
                     }

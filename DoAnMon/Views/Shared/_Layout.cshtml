@@ -1,4 +1,5 @@
-﻿<!DOCTYPE html>
+﻿
+<!DOCTYPE html>
 <html lang="en">
 
 <head>
@@ -113,7 +114,7 @@
         /* PHẦN NỘI DUNG BÊN TRÁI*/
         .sidebar {
             width: 200px; /* Độ rộng của cột chủ đề */
-            background-color: #ccc;
+            background-color: #E3E1D9;
             margin-top: 20px;
             right: 0;
         }
@@ -129,6 +130,7 @@
                     border-bottom: 1px solid #949191;
                     width: 100%;
                     display: block;
+                    
                 }
 
                     .sidebar ul li:last-child {
@@ -143,30 +145,30 @@
                         /* display: block; */
                         text-align: left;
                         overflow: hidden;
-                        white-space: nowrap;
+                        white-space: wrap;
                         text-overflow: ellipsis;
                     }
 
                         .sidebar ul li a:hover {
                             text-decoration: underline;
-                            color: #333;
-                            background-color: #fff;
+                            color: #333;              
                             font-size: 15px;
                             outline: none;
                         }
 
             .sidebar h2 {
-                margin-top: 30px; /* Loại bỏ khoảng cách trên đầu tiêu đề */
+                margin-top: 10px; /* Loại bỏ khoảng cách trên đầu tiêu đề */
                 margin-bottom: 10px; /* Tạo khoảng cách dưới tiêu đề */
+                text-align: center;
             }
         /*PHẦN NỘI DUNG CHÍNH*/
         .main-content {
             flex-grow: 1;
-            background-color: #fff;
+            background-color: #F6F5F2;
             /*Khoảng cách giữa cột chủ đề và cột nội dung bên phải */
             width: 650px;
-            background-color: antiquewhite;
             margin-top: 20px;
+            /* border: 1px solid #949191; */
         }
 
             .main-content .post-content {
@@ -176,28 +178,38 @@
                 -webkit-line-clamp: initial;
                 -webkit-box-orient: initial;
             }
+
+            .main-content img{
+                max-height:300px;
+                max-width:500px;
+            }
+
+            
         /*PHẦN NỘI DUNG BÊN PHẢI*/
         .sidebar-right {
             width: 250px; /* Độ rộng của cột nội dung bên phải */
-            background-color: #f0f0f0;
+            background-color: #E3E1D9;
             margin-top: 20px;
             height: 800px;
             overflow-y: auto;
         }
 
         .post {
+            background-color: #fff;
             border: 1px solid #ccc; /* Đường viền khung bài viết */
-            padding: 0; /*Khoảng cách giữa đường viền và nội dung */
+            padding: 10px; /*Khoảng cách giữa đường viền và nội dung */
+            border-radius: 5px;
             margin-bottom: 20px; /* Khoảng cách giữa các bài viết */
             /* overflow: hidden;
                     text-overflow: ellipsis; */
             width: 100%;
-            /* height: 300px; */
+            height: 250px;
         }
 
             .post img {
                 margin-bottom: 5px; /* Khoảng cách giữa hình ảnh và nội dung */
                 width: 100%; /* Đảm bảo hình ảnh không quá rộng */
+                height:120px;
             }
 
         .post-content {
@@ -211,6 +223,7 @@
         .post h3 {
             margin-top: 0; /* Loại bỏ khoảng cách trên cùng của tiêu đề */
             font-size: 14px;
+            text-align:center;
         }
 
         .post a {
@@ -229,7 +242,7 @@
             .wrapper {
                 display: flex;
                 flex-direction: column;
-                min-height: 150vh;
+                min-height: 200vh;
             }
 
             main{
@@ -241,6 +254,7 @@
                 color: white;
                 padding: 20px;
             }
+        
     </style>
 
 
@@ -250,22 +264,22 @@
 
 </head>
 <body>
-    <main class="wrapper">
+    <div class="wrapper">
         <header>
             <div class="banner">
                 <h1>LEARN WITH ONLY A</h1>
             </div>
-            <nav" style="display: flex;">
-                <ul class="menu" style="margin-right: 30vh; margin-left:500px;">
+          
+            <nav style="display: flex";>
+                <ul class="menu" style="margin-right: 30vh; margin-left: 500px;">
                     <li><a href="/Home/Index">Trang chủ</a></li>
                     <li><a href="/ClassRooms">Lớp học</a></li>
-                    <li><a href="/BaiTaps">Bài tập</a></li>
-                    <!-- <li><a href="thoikhoabieu.html" >Thời khóa biểu</a></li>  -->
+                    <li><a href="/BaiTaps">Bài tập</a></li>                               
                 </ul>
                 <div class="menu" style="margin-left: auto;">
                     <partial name="_LoginPartial" />
                 </div>
-                </nav>
+            </nav>
 
         </header>
         <main>
@@ -276,5 +290,6 @@
         </footer>
     </div>
     @await RenderSectionAsync("Scripts", required: false)
+    
 </body>
 </html>

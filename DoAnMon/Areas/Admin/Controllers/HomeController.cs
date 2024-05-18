@@ -28,7 +28,8 @@ namespace DoAnMon.Areas.Admin.Controllers
 			return View();
 		}
 
-		public async Task<IActionResult> PhanQuyen()
+        
+        public async Task<IActionResult> PhanQuyen()
 		{
 			var users = await _userManager.Users.ToListAsync();
 			var roles = await _roleManager.Roles.Select(r => r.Name).ToListAsync();
@@ -117,6 +118,10 @@ namespace DoAnMon.Areas.Admin.Controllers
 
 			TempData["AlertMessage"] = "Vai trò đã được cập nhật thành công.";
 			return Redirect("/Admin/Home/PhanQuyen");
+		}
+		public IActionResult baipost()
+		{
+			return View();
 		}
 
 	}

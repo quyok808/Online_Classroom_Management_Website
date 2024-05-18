@@ -39,7 +39,7 @@
 	</style>
 </head>
 <body>
-	<header>
+	@* <header>
 		<nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow ">
 			<div class="container-fluid">
 				
@@ -73,29 +73,29 @@
 					</a>
 
 				} *@
-				<a href="/Admin/Home/PhanQuyen" class="admin-link" style="margin-bottom:10px;">QUẢN LÝ NGƯỜI DÙNG</a>
-
+				@* <a href="/Admin/Home/PhanQuyen" class="admin-link" style="margin-bottom:10px;">QUẢN LÝ NGƯỜI DÙNG</a>
+				<a href="/Admin/Home/baipost" class="admin-link" style="margin-bottom:10px;">QUẢN LÝ BÀI POST</a>
 				<button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
 						aria-expanded="false" aria-label="Toggle navigation">
 					<span class="navbar-toggler-icon"></span>
 				</button>
 				<div class="navbar-collapse collapse d-sm-inline-flex justify-content-end">
 					<partial name="_LoginPartial" />
-				</div>
+				</div> 
 			</div>
 		</nav>
 	</header>
-	<div class="container-fluid d-flex justify-content-center align-items-center " style="
+	@* <div class="container-fluid d-flex justify-content-center align-items-center " style="
                                                                                             /* background-image: url(/images/hinhnen.jpg); */
                                                                                             background-repeat: no-repeat;
                                                                                             background-size: cover;
                                                                                             height: 91vh;
 																							background-color: whitesmoke;
-																						">
+																						"> *@
 		<main role="main">
 			@RenderBody()
 		</main>
-	</div>
+	  @*  </div> *@  
 
 
 	<script>
