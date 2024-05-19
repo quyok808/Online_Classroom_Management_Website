@@ -348,46 +348,45 @@
 
 	/*======================Bảng điểm======================*/
 	.container-bangdiem {
-            overflow-x: scroll;
-        }
+		overflow-x: scroll;
+	}
 
-        /* Style for the first column */
-		.first-column th:first-child,
-		.first-column td:first-child {
-            width: 200px; /* Fixed width for the first column */
-            white-space: nowrap; /* Prevent wrapping content */
-        }
+	/* Style for the first column */
+	.first-column th:first-child,
+	.first-column td:first-child {
+		width: 200px; /* Fixed width for the first column */
+		white-space: nowrap; /* Prevent wrapping content */
+	}
 
-        /* General table styling */
-        #user {
-            font-family: Arial, Helvetica, sans-serif;
-            border-collapse: collapse;
-            width: 100%;
-            overflow-x: auto; /* Horizontal scroll for small screens */
-            
-        }
+	/* General table styling */
+	#user {
+		font-family: Arial, Helvetica, sans-serif;
+		border-collapse: collapse;
+		width: 100%;
+		overflow-x: auto; /* Horizontal scroll for small screens */
+	}
 
-        #user td,
-        #user th {
-            border: 1px solid #ddd;
-            padding: 8px;
-        }
+		#user td,
+		#user th {
+			border: 1px solid #ddd;
+			padding: 8px;
+		}
 
-        #user tr:nth-child(even) {
-            background-color: #f2f2f2;
-        }
+		#user tr:nth-child(even) {
+			background-color: #f2f2f2;
+		}
 
-        #user tr:hover {
-            background-color: #ddd;
-        }
+		#user tr:hover {
+			background-color: #ddd;
+		}
 
-        #user th {
-            padding-top: 12px;
-            padding-bottom: 12px;
-            text-align: left;
-            background-color: #04AA6D;
-            color: white;
-        }
+		#user th {
+			padding-top: 12px;
+			padding-bottom: 12px;
+			text-align: left;
+			background-color: #04AA6D;
+			color: white;
+		}
 </style>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -433,14 +432,14 @@
 
 									// Tạo mã QR từ dữ liệu
 									var writer = new ZXing.BarcodeWriterSvg
-									{
-										Format = ZXing.BarcodeFormat.QR_CODE,
-										Options = new ZXing.QrCode.QrCodeEncodingOptions
-										{
-											Width = 50,
-											Height = 50
-										}
-									};
+			{
+				Format = ZXing.BarcodeFormat.QR_CODE,
+				Options = new ZXing.QrCode.QrCodeEncodingOptions
+				{
+					Width = 50,
+					Height = 50
+				}
+			};
 									var qrCode = writer.Write(qrData);
 								}
 								<div>
@@ -487,16 +486,16 @@
 			<div>
 				<button onclick="showUploadForm()"
 						style="
-														background-color: #3498db;
-														font-family: Poppins, sans-serif;
-														color: #ffffff;
-														padding: 10px 20px;
-														border: none;
-														border-radius: 5px;
-														cursor: pointer;
-														transition: background-color 0.3s;
-														font-size: 15px;
-														font-weight: bold;">
+															background-color: #3498db;
+															font-family: Poppins, sans-serif;
+															color: #ffffff;
+															padding: 10px 20px;
+															border: none;
+															border-radius: 5px;
+															cursor: pointer;
+															transition: background-color 0.3s;
+															font-size: 15px;
+															font-weight: bold;">
 					Nhập tên và Upload
 				</button>
 				<form id="uploadForm" action="/ClassRooms/Upload" method="POST" enctype="multipart/form-data" style="display: none;">
@@ -519,16 +518,16 @@
 		{
 			<button id="uploadButton" onclick="Showtaobaitap()"
 					style="
-													background-color: #3498db;
-													font-family: Poppins, sans-serif;
-													color: #ffffff;
-													padding: 10px 20px;
-													border: none;
-													border-radius: 5px;
-													cursor: pointer;
-													transition: background-color 0.3s;
-													font-size: 15px;
-													font-weight: bold;">
+														background-color: #3498db;
+														font-family: Poppins, sans-serif;
+														color: #ffffff;
+														padding: 10px 20px;
+														border: none;
+														border-radius: 5px;
+														cursor: pointer;
+														transition: background-color 0.3s;
+														font-size: 15px;
+														font-weight: bold;">
 				Tạo bài tập
 			</button>
 			<form id="uploadbaitap" action="/ClassRooms/CreateBaitap" method="POST" enctype="multipart/form-data" style="display: none;">
@@ -583,7 +582,7 @@
 							<p class="assignment-description">Hạn nộp: Vô thời hạn</p>
 						}
 					}
-					
+
 					<!-- Hiển thị loại định dạng đã chọn -->
 					<p class="assignment-file-format">Yêu cầu nộp file: @assignment.FileFormat</p>
 					<!-- Hiển thị tệp đính kèm -->
@@ -649,7 +648,7 @@
 											else
 											{
 												// Xử lý khi không có deadline được đặt
-											
+
 												<p>Thiếu</p>
 												<input id="FileInput_@assignment.Id" type="file" name="FileNopbai">
 												<input type="hidden" name="ClassId" id="classIdInput" value="@Model.ClassRoom.Id">
@@ -723,7 +722,6 @@
 		}
 	}
 	<div id="listsv1">
-	
 	</div>
 </div>
 <div id="bangdiem" class="tabcontent">
@@ -741,30 +739,32 @@
 					<th style="text-align: center;" rowspan="2">ĐTB</th>
 				</tr>
 				<tr>
-					@foreach(var item in bt)
+					@foreach (var item in bt)
 					{
 						<th style="text-align: center;">@item.Title</th>
 					}
 				</tr>
-			</thead>	
+			</thead>
 			<tbody>
 				@foreach (var item in diems)
 				{
-				<td>@item.HoVaTen</td>
-				<td>@item.MSSV</td>
+					<tr>
+						<td>@item.HoVaTen</td>
+						<td>@item.MSSV</td>
 
-					@if (bt.Count <= 0)
-					{
-					<td> </td>
-					}
-					else
-					{
-						@foreach (var d in @item.listDiemBT)
+						@if (bt.Count <= 0)
 						{
-						<td style="text-align: center;">@d</td>
+							<td> </td>
 						}
-					}
-				<td>@item.DTB</td>
+						else
+						{
+							@foreach (var d in @item.listDiemBT)
+							{
+								<td style="text-align: center;">@d</td>
+							}
+						}
+						<td>@item.DTB</td>
+					</tr>
 				}
 			</tbody>
 		</table>

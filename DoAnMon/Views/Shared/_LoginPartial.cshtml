@@ -50,6 +50,29 @@
         font-size: 12px;
     }
 
+    @@media (max-width: 576px) {
+        .dropdown-menu {
+            position: static;
+            float: none;
+            width: 100%;
+            min-width: 100%;
+            box-shadow: none;
+            border-radius: 0;
+        }
+
+        .dropdown-menu-right {
+            right: auto;
+            left: 0;
+        }
+
+        .nav-item {
+            width: 100%;
+        }
+
+        .dropdown-toggle::after {
+            display: none;
+        }
+    }
 </style>
 @{
     var user = await UserManager.GetUserAsync(User);

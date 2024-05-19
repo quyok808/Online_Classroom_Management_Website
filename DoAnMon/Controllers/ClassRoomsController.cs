@@ -930,8 +930,13 @@ namespace DoAnMon.Controllers
 		[HttpGet]
 		public async Task<IActionResult> GetListSV(string classId)
 		{
+
 			try
 			{
+				if (_studentRepo.getListSV() != null)
+				{
+					_studentRepo.RemoveList();
+				}
 				var findClass = _context.classRooms.FirstOrDefault(p => p.Id == classId);
                 if (findClass == null)
                 {
@@ -964,7 +969,7 @@ namespace DoAnMon.Controllers
         {
             try
             {
-                List<SV> students = _studentRepo.getListSV();
+				List<SV> students = null; 
                 // Tạo một bảng tính mới
                 ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
                 using (var package = new ExcelPackage())
@@ -1013,8 +1018,8 @@ namespace DoAnMon.Controllers
 
                     cellStyle_A5D5.Font.Bold = true;
                     cellStyle_A5D5.HorizontalAlignment = OfficeOpenXml.Style.ExcelHorizontalAlignment.Center;
-
-                    worksheet.Cells[6, 1].LoadFromCollection(students, false);
+					students = _studentRepo.getListSV();
+					worksheet.Cells[6, 1].LoadFromCollection(students, false);
 
                     // Tạo đối tượng Style cho border của dữ liệu được load
                     var borderStyle = worksheet.Cells[5, 1, 5 + students.Count, 4].Style.Border;
