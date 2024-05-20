@@ -569,7 +569,9 @@
 						{
 							<a class="btn btn-info" style="float: left; max-width: 50px; padding: 5px;" asp-action="DeleteBT" asp-controller="ClassRooms" asp-route-id="@assignment.Id" asp-route-classId="@assignment.ClassRoomId" onclick="return confirm('Bạn có chắc muốn xóa không ?')">Xóa</a>
 						}
+
 					}
+
 					<h3 class="text-center">@assignment.Title</h3>
 					<p class="assignment-description">@assignment.Content</p>
 					@{
@@ -748,6 +750,7 @@
 			<tbody>
 				@foreach (var item in diems)
 				{
+
 					<tr>
 						<td>@item.HoVaTen</td>
 						<td>@item.MSSV</td>

@@ -140,17 +140,19 @@ namespace DoAnMon.Controllers
 			{
 				viewModel.Unit = Lecture;
 			}
-            if (owner.Id == currentUser.Id)
-            {
-                viewModel.isOwner = true;
-                ViewBag.Isowner = true;
-            }
-            else
-            {
-                viewModel.isOwner = false;
-                ViewBag.Isowner = false;
-            }
-            viewModel.Homework = homework;
+
+			if (owner.Id == currentUser.Id)
+			{
+				viewModel.isOwner = true;
+				ViewBag.Isowner = true;
+			}
+			else
+			{
+				viewModel.isOwner = false;
+				ViewBag.Isowner = false;
+			}
+			viewModel.Homework = homework;
+
 			viewModel.Message = chatHistory;
 			ViewBag.ListRoom = userClasses;
 			var listBT = await _context.baiTaps.Where(p => p.ClassRoomId == id).ToListAsync();
@@ -345,6 +347,7 @@ namespace DoAnMon.Controllers
 
 			return Ok();
 		}
+
 
         [HttpGet]
         public async Task<PartialViewResult> GetLectureAsync(string ClassId)
@@ -563,6 +566,7 @@ namespace DoAnMon.Controllers
 				baiNop.SubmittedAt = DateTime.Now;
 				baiNop.Urlbainop = filename;
 				baiNop.Diem = 0;
+				baiNop.daChamDiem = 0;
 
 				_context.Add(baiNop);
 				await _context.SaveChangesAsync();
@@ -586,6 +590,8 @@ namespace DoAnMon.Controllers
 			}
 			var paginatedBaiTaps = await PaginatedList<BaiTap>.CreateAsync(BaitapsQuery, pageNumber, pageSize);
 			paginatedBaiTaps.CurrentQuery = query;
+			ViewBag.Bainop = _context.BaiNop.ToList();
+			ViewBag.ClassroomDetail = _context.classroomDetail.ToList();
 			return View(paginatedBaiTaps);
 		}
 
@@ -871,6 +877,7 @@ namespace DoAnMon.Controllers
 					return Json(new { success = false });
 				}
 				baiNop.Diem = diem;
+				baiNop.daChamDiem = 1;
 				_context.SaveChanges();
 
 				TinhDTB(baiNop.UserId, baiNop.ClassId);
@@ -1070,6 +1077,7 @@ namespace DoAnMon.Controllers
             return RedirectToAction("Details", "ClassRooms", new { id = classId });
         }
 
+
         [HttpGet]
         public IActionResult DeleteBT(string id, string classId)
         {
@@ -1091,4 +1099,39 @@ namespace DoAnMon.Controllers
     }
 }
 
-
+		[HttpGet]
+		public IActionResult DeleteLecture(int id, string classId)
+		{
+			var temp = _context.BaiGiang.FirstOrDefault(p => p.Id == id);
+			if (temp == null)
+			{
+				return NotFound("Không có bài giảng này trong CSDL");
+			}
+			else
+			{
+				_context.BaiGiang.Remove(temp);
+			}
+			_context.SaveChanges();
+            return RedirectToAction("Details", "ClassRooms", new { id = classId });
+        }
+		
+		[HttpGet]
+		public IActionResult DeleteBT(string id, string classId)
+		{
+			var temp = _context.baiTaps.FirstOrDefault(p => p.Id == id);
+			if (temp == null)
+			{
+				return NotFound("Không có bài tập này trong CSDL");
+			}
+			var listBN = _context.BaiNop.Where(p => p.BaiTapId == id).ToList();
+            foreach (var item in listBN)
+            {
+				_context.BaiNop.Remove(item);
+			}
+            _context.baiTaps.Remove(temp);
+			_context.SaveChanges();
+			TinhDTB(classId);
+			return RedirectToAction("Details", "ClassRooms", new { id = classId });
+        }
+    }
+}
