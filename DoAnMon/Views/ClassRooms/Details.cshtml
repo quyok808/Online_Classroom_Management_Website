@@ -56,7 +56,7 @@
 		display: none;
 		position: absolute;
 		background-color: #f9f9f9;
-		min-width: 160px;
+		min-width: 190px;
 		box-shadow: 0 8px 16px 0 rgba(0, 0, 0, 0.2);
 		z-index: 1;
 		text-align: start;
@@ -387,6 +387,18 @@
 			background-color: #04AA6D;
 			color: white;
 		}
+
+		/* Tạo icon copy */
+
+	
+	
+</style>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@16,400,0,0" />
+<style>
+	.material-symbols-outlined {
+		font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 16
+	}
 </style>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -432,14 +444,14 @@
 
 									// Tạo mã QR từ dữ liệu
 									var writer = new ZXing.BarcodeWriterSvg
-			{
-				Format = ZXing.BarcodeFormat.QR_CODE,
-				Options = new ZXing.QrCode.QrCodeEncodingOptions
-				{
-					Width = 50,
-					Height = 50
-				}
-			};
+									{
+										Format = ZXing.BarcodeFormat.QR_CODE,
+										Options = new ZXing.QrCode.QrCodeEncodingOptions
+										{
+											Width = 50,
+											Height = 50
+										}
+									};
 									var qrCode = writer.Write(qrData);
 								}
 								<div>
@@ -447,7 +459,14 @@
 								</div>
 
 								<a asp-action="AddListSV" asp-route-id="@Model.ClassRoom.Id" style="font-family: Poppins, sans-serif;">Thêm danh sách sinh viên</a>
-								<p style="font-family: Poppins, sans-serif;">Mã lớp: @Model.ClassRoom.Id</p>
+								<p style="font-family: Poppins, sans-serif; font-size: 14px;">
+									Mã lớp: <input type="text" id="contentcopy" value="@Model.ClassRoom.Id" readonly style="border: none; background: transparent; font-size: 14px; width: 60px;" disabled />
+									<button style="border: none; background-color: transparent;" id="btnCopy">
+										<p style="font-size: 20px; display: contents;" class="material-symbols-outlined">
+											content_copy
+										</p>
+									</button>
+								</p>
 							</div>
 						</div>
 					</div>
@@ -483,28 +502,28 @@
 	@{
 		if (Model.isOwner)
 		{
-			<div>
-				<button onclick="showUploadForm()"
-						style="
-															background-color: #3498db;
-															font-family: Poppins, sans-serif;
-															color: #ffffff;
-															padding: 10px 20px;
-															border: none;
-															border-radius: 5px;
-															cursor: pointer;
-															transition: background-color 0.3s;
-															font-size: 15px;
-															font-weight: bold;">
-					Nhập tên và Upload
-				</button>
-				<form id="uploadForm" action="/ClassRooms/Upload" method="POST" enctype="multipart/form-data" style="display: none;">
-					<input type="hidden" name="lectureName" id="lectureNameInput">
-					<input type="hidden" name="ClassId" id="classIdInput" value="@Model.ClassRoom.Id">
-					<input type="file" name="pdfFile" id="pdfFileInput" accept=".pdf">
-				</form>
+					<div>
+						<button onclick="showUploadForm()"
+								style="
+																	background-color: #3498db;
+																	font-family: Poppins, sans-serif;
+																	color: #ffffff;
+																	padding: 10px 20px;
+																	border: none;
+																	border-radius: 5px;
+																	cursor: pointer;
+																	transition: background-color 0.3s;
+																	font-size: 15px;
+																	font-weight: bold;">
+							Nhập tên và Upload
+						</button>
+						<form id="uploadForm" action="/ClassRooms/Upload" method="POST" enctype="multipart/form-data" style="display: none;">
+							<input type="hidden" name="lectureName" id="lectureNameInput">
+							<input type="hidden" name="ClassId" id="classIdInput" value="@Model.ClassRoom.Id">
+							<input type="file" name="pdfFile" id="pdfFileInput" accept=".pdf">
+						</form>
 
-			</div>
+					</div>
 		}
 	}
 	<div class="posts" id="lectureContainer">
@@ -516,46 +535,46 @@
 	@{
 		if (Model.isOwner)
 		{
-			<button id="uploadButton" onclick="Showtaobaitap()"
-					style="
-														background-color: #3498db;
-														font-family: Poppins, sans-serif;
-														color: #ffffff;
-														padding: 10px 20px;
-														border: none;
-														border-radius: 5px;
-														cursor: pointer;
-														transition: background-color 0.3s;
-														font-size: 15px;
-														font-weight: bold;">
-				Tạo bài tập
-			</button>
-			<form id="uploadbaitap" action="/ClassRooms/CreateBaitap" method="POST" enctype="multipart/form-data" style="display: none;">
-				<div class="form-section">
-					<!-- Phần nhập tiêu đề -->
-					<input type="text" name="Title" id="titleInput" class="form-control" placeholder="Nhập tiêu đề">
-					<!-- Gạch ngang -->
-					<hr>
-					<!-- Phần nhập mô tả -->
-					<textarea name="Content" id="descriptionInput" class="form-control" placeholder="Nhập mô tả"></textarea>
-					<label for="deadlineInput">Deadline:</label>
-					<input type="datetime-local" name="Deadline" id="deadlineInput" class="form-control">
+					<button id="uploadButton" onclick="Showtaobaitap()"
+							style="
+																background-color: #3498db;
+																font-family: Poppins, sans-serif;
+																color: #ffffff;
+																padding: 10px 20px;
+																border: none;
+																border-radius: 5px;
+																cursor: pointer;
+																transition: background-color 0.3s;
+																font-size: 15px;
+																font-weight: bold;">
+						Tạo bài tập
+					</button>
+					<form id="uploadbaitap" action="/ClassRooms/CreateBaitap" method="POST" enctype="multipart/form-data" style="display: none;">
+						<div class="form-section">
+							<!-- Phần nhập tiêu đề -->
+							<input type="text" name="Title" id="titleInput" class="form-control" placeholder="Nhập tiêu đề">
+							<!-- Gạch ngang -->
+							<hr>
+							<!-- Phần nhập mô tả -->
+							<textarea name="Content" id="descriptionInput" class="form-control" placeholder="Nhập mô tả"></textarea>
+							<label for="deadlineInput">Deadline:</label>
+							<input type="datetime-local" name="Deadline" id="deadlineInput" class="form-control">
 
-					<label for="fileFormatSelect">Chọn định dạng bài tập:</label>
-					<select name="FileFormat" id="fileFormatSelect">
-						<option value="pdf">pdf</option>
-						<option value="docx">docx</option>
-						<option value="xlsx">xls</option>
-						<option value="allfile">all file</option>
-						<!-- Thêm các loại định dạng khác nếu cần -->
-					</select>
+							<label for="fileFormatSelect">Chọn định dạng bài tập:</label>
+							<select name="FileFormat" id="fileFormatSelect">
+								<option value="pdf">pdf</option>
+								<option value="docx">docx</option>
+								<option value="xlsx">xls</option>
+								<option value="allfile">all file</option>
+								<!-- Thêm các loại định dạng khác nếu cần -->
+							</select>
 
-				</div>
-				<input type="hidden" name="ClassId" id="classIdInput" value="@Model.ClassRoom.Id">
-				<input type="file" name="FileUpLoad" id="FileInput" /> <!-- Ẩn input file -->
-				<input type="submit" value="CreateBaitap" class="btn btn-primary"></input> <!-- Nút giao bài -->
-				@*<button type="button" onclick="openFileDialog()">Tải lên</button> <!-- Nút tải lên -->*@
-			</form>
+						</div>
+						<input type="hidden" name="ClassId" id="classIdInput" value="@Model.ClassRoom.Id">
+						<input type="file" name="FileUpLoad" id="FileInput" /> <!-- Ẩn input file -->
+						<input type="submit" value="CreateBaitap" class="btn btn-primary"></input> <!-- Nút giao bài -->
+						@*<button type="button" onclick="openFileDialog()">Tải lên</button> <!-- Nút tải lên -->*@
+					</form>
 		}
 	}
 	<div class="assignments">
@@ -567,7 +586,7 @@
 					@{
 						if (Model.isOwner)
 						{
-							<a class="btn btn-info" style="float: left; max-width: 50px; padding: 5px;" asp-action="DeleteBT" asp-controller="ClassRooms" asp-route-id="@assignment.Id" asp-route-classId="@assignment.ClassRoomId" onclick="return confirm('Bạn có chắc muốn xóa không ?')">Xóa</a>
+									<a class="btn btn-info" style="float: left; max-width: 50px; padding: 5px;" asp-action="DeleteBT" asp-controller="ClassRooms" asp-route-id="@assignment.Id" asp-route-classId="@assignment.ClassRoomId" onclick="return confirm('Bạn có chắc muốn xóa không ?')">Xóa</a>
 						}
 					}
 					<h3 class="text-center">@assignment.Title</h3>
@@ -575,11 +594,11 @@
 					@{
 						if (assignment.Deadline.HasValue)
 						{
-							<p class="assignment-description">Hạn nộp: @assignment.Deadline</p>
+									<p class="assignment-description">Hạn nộp: @assignment.Deadline</p>
 						}
 						else
 						{
-							<p class="assignment-description">Hạn nộp: Vô thời hạn</p>
+									<p class="assignment-description">Hạn nộp: Vô thời hạn</p>
 						}
 					}
 
@@ -609,12 +628,12 @@
 						@{
 							if (!Model.isOwner)
 							{
-								<label for="file-upload" class="file-label">Bài tập của bạn:</label>
-								<div class="file-input-wrapper">
-									@{
+										<label for="file-upload" class="file-label">Bài tập của bạn:</label>
+										<div class="file-input-wrapper">
+											@{
 										if (hasSubmitted)
 										{
-											<p>Đã nộp bài</p>
+															<p>Đã nộp bài</p>
 										}
 										else
 										{
@@ -630,41 +649,41 @@
 												{
 													// Xử lý khi deadline đã qua
 													// Ví dụ: hiển thị thông báo cho người dùng
-													<p>Deadline đã qua. Không thể nộp bài tập nữa.</p>
+																	<p>Deadline đã qua. Không thể nộp bài tập nữa.</p>
 												}
 												else
 												{
 													// Xử lý khi deadline chưa qua
 													// Ví dụ: cho phép người dùng nộp bài tập
-													<p>Thiếu</p>
-													<input id="FileInput_@assignment.Id" type="file" name="FileNopbai">
-													<input type="hidden" name="ClassId" id="classIdInput" value="@Model.ClassRoom.Id">
-													<input type="hidden" name="BaitapId" id="baitapinput" value="@assignment.Id">
+																	<p>Thiếu</p>
+																	<input id="FileInput_@assignment.Id" type="file" name="FileNopbai">
+																	<input type="hidden" name="ClassId" id="classIdInput" value="@Model.ClassRoom.Id">
+																	<input type="hidden" name="BaitapId" id="baitapinput" value="@assignment.Id">
 
-													<button type="submit">Nộp bài</button>
-													<button type="button" onclick="previewFile('@assignment.Id')">Xem trước</button>
+																	<button type="submit">Nộp bài</button>
+																	<button type="button" onclick="previewFile('@assignment.Id')">Xem trước</button>
 												}
 											}
 											else
 											{
 												// Xử lý khi không có deadline được đặt
 
-												<p>Thiếu</p>
-												<input id="FileInput_@assignment.Id" type="file" name="FileNopbai">
-												<input type="hidden" name="ClassId" id="classIdInput" value="@Model.ClassRoom.Id">
-												<input type="hidden" name="BaitapId" id="baitapinput" value="@assignment.Id">
+																<p>Thiếu</p>
+																<input id="FileInput_@assignment.Id" type="file" name="FileNopbai">
+																<input type="hidden" name="ClassId" id="classIdInput" value="@Model.ClassRoom.Id">
+																<input type="hidden" name="BaitapId" id="baitapinput" value="@assignment.Id">
 
-												<button type="submit">Nộp bài</button>
-												<button type="button" onclick="previewFile('@assignment.Id')">Xem trước</button>
+																<button type="submit">Nộp bài</button>
+																<button type="button" onclick="previewFile('@assignment.Id')">Xem trước</button>
 											}
 										}
-									}
-								</div>
-								<div id="previewContainer_@assignment.Id"></div>
+											}
+										</div>
+										<div id="previewContainer_@assignment.Id"></div>
 							}
 							else
 							{
-								<a asp-action="GetAllBTStu" asp-controller="ClassRooms" asp-route-classid="@Model.ClassRoom.Id" asp-route-baitapID="@assignment.Id" class="btn btn-info ">Xem Bài tập</a>
+										<a asp-action="GetAllBTStu" asp-controller="ClassRooms" asp-route-classid="@Model.ClassRoom.Id" asp-route-baitapID="@assignment.Id" class="btn btn-info ">Xem Bài tập</a>
 							}
 						}
 
@@ -714,11 +733,11 @@
 	@{
 		if (Model.isOwner)
 		{
-			<div style="margin-bottom: -35px;">
-				<form asp-controller="ClassRooms" asp-action="ExportDSSV" asp-route-classID="@Model.ClassRoom.Id" method="post">
-					<button type="submit" class="btn btn-info">Export</button>
-				</form>
-			</div>
+					<div style="margin-bottom: -35px;">
+						<form asp-controller="ClassRooms" asp-action="ExportDSSV" asp-route-classID="@Model.ClassRoom.Id" method="post">
+							<button type="submit" class="btn btn-info">Export</button>
+						</form>
+					</div>
 		}
 	}
 	<div id="listsv1">
@@ -1116,3 +1135,20 @@
 	// Gọi hàm updateDateTime lần đầu tiên để hiển thị thời gian ngay từ khi trang được tải
 	updateDateTime();
 </script> @* Tạo đồng hồ *@
+<script>
+	const btnCopy = document.getElementById("btnCopy");
+	const input = document.getElementById("contentcopy");
+
+	btnCopy.addEventListener('click', async () => {
+		if (!input.value) {
+			return;
+		}
+
+		try {
+			await navigator.clipboard.writeText(input.value);
+			console.log('Text copied to clipboard');
+		} catch (err) {
+			console.error('Failed to copy text: ', err);
+		}
+	});
+</script>
