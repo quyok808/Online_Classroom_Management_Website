@@ -460,11 +460,9 @@
 
 								<a asp-action="AddListSV" asp-route-id="@Model.ClassRoom.Id" style="font-family: Poppins, sans-serif;">Thêm danh sách sinh viên</a>
 								<p style="font-family: Poppins, sans-serif; font-size: 14px;">
-									Mã lớp: <input type="text" id="contentcopy" value="@Model.ClassRoom.Id" readonly style="border: none; background: transparent; font-size: 14px; width: 60px;" disabled />
+									Mã lớp: <input type="text" id="contentcopy" value="@Model.ClassRoom.Id" readonly style="border: none; background: transparent; font-size: 14px; width: 60px;" />
 									<button style="border: none; background-color: transparent;" id="btnCopy">
-										<p style="font-size: 20px; display: contents;" class="material-symbols-outlined">
-											content_copy
-										</p>
+										<span id="icon" style="font-size: 20px;" class="material-symbols-outlined">content_copy</span>
 									</button>
 								</p>
 							</div>
@@ -1138,6 +1136,7 @@
 <script>
 	const btnCopy = document.getElementById("btnCopy");
 	const input = document.getElementById("contentcopy");
+	const icon = document.getElementById("icon");
 
 	btnCopy.addEventListener('click', async () => {
 		if (!input.value) {
@@ -1147,6 +1146,10 @@
 		try {
 			await navigator.clipboard.writeText(input.value);
 			console.log('Text copied to clipboard');
+			icon.textContent = 'check_circle';  // Change icon to check mark
+			setTimeout(() => {
+				icon.textContent = 'content_copy';  // Revert back to copy icon after 2 seconds
+			}, 2000);
 		} catch (err) {
 			console.error('Failed to copy text: ', err);
 		}
