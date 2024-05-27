@@ -34,70 +34,12 @@
 				background-color: #004080; /* Màu nền xanh đậm khi liên kết được chọn */
 			}
 
-
-
 	</style>
 </head>
 <body>
-	@* <header>
-		<nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow ">
-			<div class="container-fluid">
-				
-
-				@if (User.Identity.IsAuthenticated)
-				{
-					<a class="navbar-brand" href="/" style="font-family: 'Poppins', sans-serif; padding: 0">
-						<img src="/images/Logo_Web.png" alt="Logo" width="70" height="auto">
-					</a>
-
-				}
-				else
-				{
-					<a class="navbar-brand" asp-controller="ClassRooms" asp-action="Index" style="font-family: 'Poppins', sans-serif; padding: 0">
-						<img src="/images/Logo_Web.png" alt="Logo" width="70" height="auto">
-					</a>
-
-				}
-
-				@* @if (User.Identity.IsAuthenticated)
-				{
-					<a class="navbar-brand" asp-area="" asp-controller="ClassRooms" asp-action="Index" style="font-family: 'Poppins', sans-serif; padding: 0">
-						<img src="/images/Logo_Web.png" alt="Logo" width="70" height="auto">
-					</a>
-
-				}
-				else
-				{
-					<a class="navbar-brand" asp-area="" asp-controller="ClassRooms" asp-action="Index" style="font-family: 'Poppins', sans-serif; padding: 0">
-						<img src="/images/Logo_Web.png" alt="Logo" width="70" height="auto">
-					</a>
-
-				} *@
-				@* <a href="/Admin/Home/PhanQuyen" class="admin-link" style="margin-bottom:10px;">QUẢN LÝ NGƯỜI DÙNG</a>
-				<a href="/Admin/Home/baipost" class="admin-link" style="margin-bottom:10px;">QUẢN LÝ BÀI POST</a>
-				<button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
-						aria-expanded="false" aria-label="Toggle navigation">
-					<span class="navbar-toggler-icon"></span>
-				</button>
-				<div class="navbar-collapse collapse d-sm-inline-flex justify-content-end">
-					<partial name="_LoginPartial" />
-				</div> 
-			</div>
-		</nav>
-	</header>
-	@* <div class="container-fluid d-flex justify-content-center align-items-center " style="
-                                                                                            /* background-image: url(/images/hinhnen.jpg); */
-                                                                                            background-repeat: no-repeat;
-                                                                                            background-size: cover;
-                                                                                            height: 91vh;
-																							background-color: whitesmoke;
-																						"> *@
-		<main role="main">
-			@RenderBody()
-		</main>
-	  @*  </div> *@  
-
-
+	<main role="main">
+		@RenderBody()
+	</main>
 	<script>
 		function updateDateTime() {
 			var currentDateTime = new Date();

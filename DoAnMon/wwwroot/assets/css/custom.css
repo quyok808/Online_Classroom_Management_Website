@@ -358,9 +358,9 @@ CUSTOM BTN VÀO PHÒNG
 RESPONSIVE CLASSROOM
 ======================================================*/
 @media (max-width: 768px) {
-  .content .classroom{
-    width: calc(50% - 20px);;
-  }
+    .content .classroom {
+        width: 100%;
+    }
 
   .user-img-div{
     display: flex;

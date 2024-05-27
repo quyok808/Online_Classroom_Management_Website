@@ -1,13 +1,6 @@
 ﻿@{
     ViewData["Title"] = "OnlyA";
 }
-<style>
-    .image_banner{
-        width: 1100px;
-        height: 300px;
-    }
-}
-</style>
 <div class="container">
     <div id="myCarousel" class="carousel slide" data-ride="carousel">
         <!-- Indicators -->
@@ -20,13 +13,13 @@
         <!-- Wrapper for slides -->
         <div class="carousel-inner">
             <div class="item active">
-                <img src="https://file1.hutech.edu.vn/file/slider/f4bc1b922ec864d0cfe84cf9382fa359.jpg" alt="Slide 1" class="image_banner">
+                <img src="https://file1.hutech.edu.vn/file/slider/f4bc1b922ec864d0cfe84cf9382fa359.jpg" alt="Slide 1" style="width: 1100px; height: 300px;">
             </div>
             <div class="item">
-                <img src="https://file1.hutech.edu.vn/file/slider/38ce9cac8573fd8219ae19a0a0565176.png" alt="Slide 2" class="image_banner">
+                <img src="https://file1.hutech.edu.vn/file/slider/38ce9cac8573fd8219ae19a0a0565176.png" alt="Slide 2" style="width: 1100px; height: 300px;">
             </div>
             <div class="item">
-                <img src="https://file1.hutech.edu.vn/file/slider/b8c36131bc826fd5776e1c3ea07a0128.jpg" alt="Slide 3" class="image_banner">
+                <img src="https://file1.hutech.edu.vn/file/slider/b8c36131bc826fd5776e1c3ea07a0128.jpg" alt="Slide 3" style="width: 1100px; height: 300px;">
             </div>
         </div>
     </div>
@@ -36,21 +29,22 @@
         <h2>Chủ đề</h2>
         <!-- Nội dung của cột chủ đề -->
         <ul>
-            <li><a href="https://sinhvien.hutech.edu.vn">Sinh viên Hutech</a></li>
-            <li><a href="https://daotao.hutech.edu.vn/">Cổng Thông Tin Đào Tạo</a></li>
-            <li><a href="https://apps.lms.hutech.edu.vn/home">E-Learning Hutech</a></li>
+            <li><a href="https://sinhvien.hutech.edu.vn/#/sinhvien/login/login">Sinh viên Hutech</a></li>
+            <li><a href="https://daotao.hutech.edu.vn/>">Cổng Thông Tin Đào Tạo</a></li>
+            <li><a href="https://e-graduate.hutech.edu.vn/">E-Learning Hutech</a></li>
             <!-- Thêm các mục chủ đề khác cần thiết -->
         </ul>
     </div>
-    <div class="main-content">
-        <!-- Nội dung của trang chính -->
 
+    <div class="main-content">
+
+        <!-- Nội dung của trang chính -->
     </div>
-    <div class="sidebar-right" style="height: 916px;">
+    <div class="sidebar-right">
         <div id="posts_container">
             <!-- Danh sách bài viết sẽ được hiển thị ở đây -->
         </div>
-       
+
     </div>
 </div>
 <script>
@@ -95,7 +89,7 @@
             posts.forEach(post => {
                 const postElement = $(`
                         <div class="post">
-                            <center><h3 style="margin-top: 10px">${post.title}</h3></center>
+                            <center><h3 style="margin-top: 10px; font-size: 20px">${post.title}</h3></center>
                                ${post.image ? `<img src="${post.image}" alt="Hình ảnh bài viết">` : ''}
                             <div class="post-content">
                                 ${post.contents_}
@@ -129,4 +123,21 @@
 
         fetchPosts();
     });
+</script>
+<script>
+    document.addEventListener('DOMContentLoaded', (event) => {
+        const dropbtn = document.querySelector('.btnchude');
+        const dropdownContent = document.querySelector('.chude-content');
+
+        dropbtn.addEventListener('click', () => {
+            dropdownContent.style.display = dropdownContent.style.display === 'block' ? 'none' : 'block';
+        });
+
+        window.addEventListener('click', (event) => {
+            if (!event.target.matches('.btnchude')) {
+                dropdownContent.style.display = 'none';
+            }
+        });
+    });
+
 </script>

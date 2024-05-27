@@ -124,6 +124,12 @@ namespace DoAnMon.Areas.Admin.Controllers
 			return View();
 		}
 
+		public IActionResult DSbaipost()
+		{
+			return View();
+		}
+
+
 	}
 }
 
