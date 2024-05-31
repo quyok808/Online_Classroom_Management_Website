@@ -7,7 +7,7 @@
 @model List<ClassRoomViewModel>
 
 @{
-	ViewData["Title"] = "Index";
+	ViewData["Title"] = "Classrooms";
 	Layout = "~/Views/Shared/_Layout.cshtml";
     var user = await UserManager.GetUserAsync(User);
 }
@@ -39,7 +39,7 @@
         overflow: hidden; /* Ẩn bất kỳ phần nào của hình ảnh vượt ra ngoài khung */
         width: 150px;
         margin-left: 30px;
-        margin-bottom: 5px;
+        margin-bottom: 15px;
     }
 
     /* Định dạng hình ảnh */
@@ -239,7 +239,7 @@
             <img src="~/Imgs_avtUser/@user.UrlAvt" alt="Hình ảnh">
         </div>
         <center>
-            <p>@user.Name</p>
+            <p style="font-weight: bold; font-size: 20px;">@user.Name</p>
         </center>
         <ul class="vertical-menu1">
             <li><a href="/Identity/Account/Manage/Index">Thông tin cá nhân</a></li>

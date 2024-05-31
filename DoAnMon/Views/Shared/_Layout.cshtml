@@ -3,7 +3,9 @@
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>@ViewData["Title"] - QUẢN LÝ PHÒNG HỌC TRỰC TUYẾN</title>
+    <title>@ViewData["Title"] - Only A</title>
+    <link rel="icon" type="image/x-icon" href="/images/Logo_Web.png" />
+
     <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css" rel="stylesheet">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
@@ -21,6 +23,8 @@
     <!-- GOOGLE FONTS-->
     <link href='https://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet' type='text/css' />
     <style>
+        @@import url('https://fonts.googleapis.com/css2?family=Lobster&display=swap');
+        @@import url('https://fonts.googleapis.com/css2?family=Great+Vibes&family=Platypi:ital,wght@0,300..800;1,300..800&display=swap');
         /*PHẦN BANNER*/
         .banner {
             background-color: #f2f2f2; /* Màu nền của khung banner */
@@ -233,7 +237,7 @@
             width: 250px; /* Độ rộng của cột nội dung bên phải */
             background-color: #E3E1D9;
             margin-top: 20px;
-            height: 800px;
+            height: 900px;
             overflow-y: auto;
         }
 
@@ -525,6 +529,133 @@
                 margin-left: 100px;
             }
 
+        footer {
+            background-color: #333;
+            color: white;
+            text-align: center;
+            padding: 20px 0;
+        }
+
+        .footer-icons {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            /* position: relative; Parent container for absolute positioning */
+        }
+
+            .footer-icons a {
+                color: white;
+                text-decoration: none;
+                font-size: 24px;
+                position: relative;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                width: 40px; /* Adjust the size as needed */
+                height: 40px; /* Adjust the size as needed */
+                transition: margin 0.3s; /* Add transition for smooth animation */
+            }
+
+                .footer-icons a .info {
+                    font-size: 18px;
+                    display: none;
+                    position: absolute;
+                    top: 50%;
+                    left: 50%;
+                    transform: translate(-50%, -50%);
+                    background-color: white;
+                    color: black;
+                    padding: 5px 10px;
+                    border-radius: 5px;
+                    white-space: nowrap;
+                    z-index: 1;
+                    box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+                }
+
+
+
+                .footer-icons a:hover i {
+                    display: none;
+                }
+
+                .footer-icons a:hover .info {
+                    display: block;
+                }
+
+                .footer-icons a:hover {
+                    color: #ddd;
+                    margin-left: 50px; /* Adjust the margin to push icons to the left */
+                    margin-right: 50px; /* Adjust the margin to push icons to the right */
+                }
+
+        .last-info {
+            margin-left: 150px; /* Đẩy bảng cuối cùng ra xa các icon bên trái */
+        }
+
+        .sidebar,
+.main-content,
+.sidebar-right {
+    padding: 20px;
+}
+/* PHẦN NỘI DUNG BÊN TRÁI*/
+.sidebar {
+    width: 200px; /* Độ rộng của cột chủ đề */
+    background-color: #ccc;
+    margin-top: 20px;
+    right: 0;
+    padding-left: 10px;
+}
+
+.sidebar ul {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+    display: block;
+}
+
+.sidebar ul li {
+    border-bottom: 1px solid #949191;   
+    width: 100%;
+    display: block;
+    margin: 10px 0;
+    text-align: center;
+}
+.sidebar ul li:last-child {
+    border-bottom: none; /* Loại bỏ đường viền ở mục cuối cùng */
+}
+
+.sidebar ul li a {
+    /* text-decoration: none; */
+    color: #333;
+    font-size: 17px;
+    padding: 5px;
+    padding-left: 0;
+    display: inline-block;
+    text-align: center;
+    overflow: hidden;
+    white-space: wrap;
+    text-overflow: ellipsis;
+    font-family: "Platypi", serif;
+    font-optical-sizing: auto;
+    font-style: normal;
+    width: 100%;
+}
+
+.sidebar ul li a:hover {
+    text-decoration: none;
+    color: #333;
+    background-color: #fff;
+}
+
+.sidebar h2 {
+    margin-top: 0px; /* Loại bỏ khoảng cách trên đầu tiêu đề */
+    margin-bottom: 30px; /* Tạo khoảng cách dưới tiêu đề */
+    text-align: center;
+    font-weight: bold;
+    font-size: 50px;
+    font-family: "Lobster", sans-serif;
+}
+
         @@media screen and (max-width: 768px) {
             .left-column {
                 display: none;
@@ -538,6 +669,7 @@
             }
         }
     </style>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <script src="https://cdn.jsdelivr.net/npm/jsqr/dist/jsQR.js"></script>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
@@ -578,7 +710,33 @@
             @RenderBody()
         </main>
         <footer>
-            <p class="text-center"> Bản quyền thuộc về ONLY A - 2024</p>
+            <div class="footer-icons">
+                <a href="https://www.facebook.com/profile.php?id=61560499766790" target="_blank">
+                    <i class="fab fa-facebook-f"></i>
+                    <div class="info">Only A Classroom</div>
+                </a>
+                <a href="https://www.instagram.com" target="_blank">
+                    <i class="fab fa-instagram"></i>
+                    <div class="info">Only A</div>
+                </a>
+                <a href="https://github.com/quyok808/DAMH_QLClassroom" target="_blank">
+                    <i class="fab fa-github"></i>
+                    <div class="info">OnlyA Classroom</div>
+                </a>
+                <a href="https://www.linkedin.com" target="_blank">
+                    <i class="fab fa-linkedin-in"></i>
+                    <div class="info">Only A</div>
+                </a>
+                <a href="mailto:quyok8080@gmail.com" target="_blank">
+                    <i class="fas fa-envelope"></i>
+                    <div class="info" style="margin-left: 30px;">quyok8080@gmail.com</div>
+                </a>
+            </div>
+            <p>
+                © 2024
+                <a href="https://zalo.me/0358361511" target="_blank" rel="noopener noreferrer">Only A</a>.
+                All rights reserved.
+            </p>
         </footer>
     </div>
     @await RenderSectionAsync("Scripts", required: false)
