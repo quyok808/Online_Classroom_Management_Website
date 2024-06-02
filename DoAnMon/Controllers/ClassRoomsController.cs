@@ -1081,6 +1081,7 @@ namespace DoAnMon.Controllers
             var listBN = _context.BaiNop.Where(p => p.BaiTapId == id).ToList();
             foreach (var item in listBN)
             {
+				item.Diem = 0;
                 _context.BaiNop.Remove(item);
             }
             _context.baiTaps.Remove(temp);

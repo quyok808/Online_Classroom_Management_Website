@@ -22,7 +22,7 @@
             <h2>@item.UrlBaiGiang.Substring(0, @item.UrlBaiGiang.IndexOf("_"))</h2>
             @if (isOwner)
             {
-                <a class="btn btn-info" asp-action="DeleteLecture" asp-controller="ClassRooms" asp-route-id="@item.Id" asp-route-classId="@item.ClassId" onclick="return confirm('Bạn có chắc muốn xóa không ?')">Xóa bài giảng</a>
+                <a class="btn btn-info" style="background-color: #5bc0de;" asp-action="DeleteLecture" asp-controller="ClassRooms" asp-route-id="@item.Id" asp-route-classId="@item.ClassId" onclick="return confirm('Bạn có chắc muốn xóa không ?')">Xóa bài giảng</a>
             }
 
             <div class="pdf-container">
@@ -37,4 +37,5 @@ else
 {
     <h2 style="font-family: Poppins, sans-serif;">Chưa có bài nào được đăng lên</h2>
 }
+
 

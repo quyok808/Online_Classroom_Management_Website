@@ -525,7 +525,7 @@
 					</div>
 		}
 	}
-	<div class="posts" id="lectureContainer" style="height: 600px;">
+	<div class="posts" id="lectureContainer">
 		<partial name="_lecturePartial" model="Model.Unit" />
 	</div>
 
@@ -623,16 +623,16 @@
 
 				<form id="submitForm_@assignment.Id" action="/ClassRooms/Nopbai" method="post" enctype="multipart/form-data" class="assignment-form" onsubmit="return validateAndSubmit('@assignment.FileFormat', '@assignment.Id', event)">
 
-					<div class="upload-form ">
+					<div class="upload-form " style="margin-right: 30px;">
 						@{
 							if (!Model.isOwner)
 							{
-										<label for="file-upload" class="file-label">Bài tập của bạn:</label>
+										<label for="file-upload" class="file-label" style="white-space: nowrap;">Bài tập của bạn</label>
 										<div class="file-input-wrapper">
 											@{
 										if (hasSubmitted)
 										{
-															<p>Đã nộp bài</p>
+											<p style="text-align: center; margin-left: 15px;">Đã nộp bài</p>
 										}
 										else
 										{

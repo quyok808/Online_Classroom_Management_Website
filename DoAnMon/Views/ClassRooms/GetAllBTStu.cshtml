@@ -9,7 +9,7 @@
 	Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h2>Bài nộp của sinh viên</h2>
+<h2>Danh sách bài tập đã nộp</h2>
 @{
 	// Chuyển danh sách List<BaiNop> sang chuỗi JSON và mã hóa nó
 	string baiNopJson = Newtonsoft.Json.JsonConvert.SerializeObject(Model);
@@ -18,12 +18,12 @@
 @{
 	if (User.IsInRole("Teacher") || User.IsInRole("Admin"))
 	{
-		<a asp-controller="ClassRooms" asp-action="DownloadFiles" asp-route-baiNop="@baiNopBase64">Download Files</a>
+		<a class="btn btn-info" style="margin: 10px 0;" asp-controller="ClassRooms" asp-action="DownloadFiles" asp-route-baiNop="@baiNopBase64">Download Files</a>
 	}
 }
 
-<table class="table">
-	<thead>
+<table class="table table-hover table-bordered">
+	<thead class="thead-dark" style="background-color: #41444B;color: white;">
 		<tr>
 			<th>
 				Mã lớp
@@ -41,7 +41,7 @@
 				Điểm
 			</th>
 			<th>
-				 
+				 Thao tác
 			</th>
 		</tr>
 	</thead>
@@ -72,8 +72,8 @@
 					@if (User.IsInRole("Teacher") || User.IsInRole("Admin"))
 					{
 						<input type="number" id="editInput" style="display:none;" value="@item.Diem" />
-						<button onclick="toggleEdit()" id="editButton">Edit</button>
-						<button onclick="saveGrade('@item.IdBaiNop')" id="saveButton" style="display:none;">Save</button>
+						<button class="btn btn-warning btn-sm" onclick="toggleEdit()" id="editButton">Edit</button>
+						<button class="btn btn-success btn-sm d-none" onclick="saveGrade('@item.IdBaiNop')" id="saveButton" style="display:none;">Save</button>
 					}
 
 				</td>

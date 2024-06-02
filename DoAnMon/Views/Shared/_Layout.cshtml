@@ -298,22 +298,6 @@
                 background-color: #e0e0e0; /* Màu nền khi di chuột vào nút */
             }
 
-        .wrapper {
-            display: flex;
-            flex-direction: column;
-            min-height: 200vh;
-        }
-
-        main {
-            flex: 1;
-        }
-
-        footer {
-            background-color: black;
-            color: white;
-            padding: 20px;
-        }
-
         /* Responsive styles */
         @@media screen and (max-width: 768px) {
 
@@ -534,6 +518,7 @@
             color: white;
             text-align: center;
             padding: 20px 0;
+            margin-top:auto;
         }
 
         .footer-icons {
@@ -668,11 +653,28 @@
                 width: 150px; /* Thay đổi kích thước khung nếu cần */
             }
         }
+
+        .wrapper {
+                    display: flex;
+                    flex-direction: column;
+                    min-height: 200vh;
+                }
+
+        main {
+            flex:1;
+        }
+
+        footer {
+                    background-color: black;
+                    color: white;
+                    padding: 20px;
+                } 
     </style>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <script src="https://cdn.jsdelivr.net/npm/jsqr/dist/jsQR.js"></script>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    
 </head>
 <body>
     <div class="wrapper">
@@ -727,10 +729,11 @@
                     <i class="fab fa-linkedin-in"></i>
                     <div class="info">Only A</div>
                 </a>
-                <a href="mailto:quyok8080@gmail.com" target="_blank">
+                <a href="https://mail.google.com/mail/?view=cm&fs=1&to=quyok8080@gmail.com" target="_blank">
                     <i class="fas fa-envelope"></i>
                     <div class="info" style="margin-left: 30px;">quyok8080@gmail.com</div>
                 </a>
+
             </div>
             <p>
                 © 2024

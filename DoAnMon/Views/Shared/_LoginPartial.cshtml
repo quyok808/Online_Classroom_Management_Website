@@ -64,7 +64,7 @@
                 <p class="dropdown-item custom-padding" style="margin: 0;">Email: @user.Email</p>
                 <a class="text-dark dropdown-item nav-link" asp-area="Identity" asp-page="/Account/Manage/ChangePassword" title="Manage" style="font-size: 12px; text-align:left; padding:10px; color: black;">Đổi mật khẩu</a>
                 <form class="form-inline dropdown-item" asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Action("Index", "Home", new { area = "" })">
-                    <button type="submit" class="btn btn-link text-dark" style="padding: 0; text-decoration: none; width: 100%; margin-bottom: 0; text-align:left; color: black; font-size:12px;">Logout</button>
+                    <button type="submit" class="btn btn-link text-dark" style="padding: 0; text-decoration: none; width: 100%; margin-bottom: 0; text-align:left; color: black; font-size:12px;background-color: transparent;">Logout</button>
                 </form>
                 @if (User.IsInRole("Admin"))
                 {
