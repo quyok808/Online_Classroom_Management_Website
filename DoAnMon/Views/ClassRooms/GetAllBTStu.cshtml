@@ -72,8 +72,8 @@
 					@if (User.IsInRole("Teacher") || User.IsInRole("Admin"))
 					{
 						<input type="number" id="editInput" style="display:none;" value="@item.Diem" />
-						<button class="btn btn-warning btn-sm" onclick="toggleEdit()" id="editButton">Edit</button>
-						<button class="btn btn-success btn-sm d-none" onclick="saveGrade('@item.IdBaiNop')" id="saveButton" style="display:none;">Save</button>
+						<button class="btn btn-warning btn-sm" onclick="toggleEdit()" id="editButton">Chấm điểm</button>
+						<button class="btn btn-success btn-sm d-none" onclick="saveGrade('@item.IdBaiNop')" id="saveButton" style="display:none;">Lưu</button>
 					}
 
 				</td>

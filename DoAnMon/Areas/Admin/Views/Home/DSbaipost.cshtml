@@ -73,6 +73,114 @@
             border-radius: 5px;
         }
 </style>
+<style>
+    #loading {
+        font-size: 20px;
+        color: #000;
+        text-align: center;
+        padding: 20px;
+    }
+
+    .sidebar-right {
+        position: relative;
+    }
+
+    #loading {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+    }
+
+    .typing-indicator {
+        width: 60px;
+        height: 30px;
+        position: relative;
+        z-index: 4;
+    }
+
+    .typing-circle {
+        width: 8px;
+        height: 8px;
+        position: absolute;
+        border-radius: 50%;
+        background-color: #000;
+        left: 15%;
+        transform-origin: 50%;
+        animation: typing-circle7124 0.5s alternate infinite ease;
+    }
+
+    @@keyframes typing-circle7124 {
+        0% {
+            top: 20px;
+            height: 5px;
+            border-radius: 50px 50px 25px 25px;
+            transform: scaleX(1.7);
+        }
+
+        40% {
+            height: 8px;
+            border-radius: 50%;
+            transform: scaleX(1);
+        }
+
+        100% {
+            top: 0%;
+        }
+    }
+
+    .typing-circle:nth-child(2) {
+        left: 45%;
+        animation-delay: 0.2s;
+    }
+
+    .typing-circle:nth-child(3) {
+        left: auto;
+        right: 15%;
+        animation-delay: 0.3s;
+    }
+
+    .typing-shadow {
+        width: 5px;
+        height: 4px;
+        border-radius: 50%;
+        background-color: rgba(0, 0, 0, 0.2);
+        position: absolute;
+        top: 30px;
+        transform-origin: 50%;
+        z-index: 3;
+        left: 15%;
+        filter: blur(1px);
+        animation: typing-shadow046 0.5s alternate infinite ease;
+    }
+
+    @@keyframes typing-shadow046 {
+        0% {
+            transform: scaleX(1.5);
+        }
+
+        40% {
+            transform: scaleX(1);
+            opacity: 0.7;
+        }
+
+        100% {
+            transform: scaleX(0.2);
+            opacity: 0.4;
+        }
+    }
+
+    .typing-shadow:nth-child(4) {
+        left: 45%;
+        animation-delay: 0.2s;
+    }
+
+    .typing-shadow:nth-child(5) {
+        left: auto;
+        right: 15%;
+        animation-delay: 0.3s;
+    }
+</style>
 <header>
     <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow ">
         <div class="container-fluid">
@@ -92,22 +200,7 @@
                 </a>
 
             }
-
-            @*  @if (User.Identity.IsAuthenticated)
-            {
-            <a class="navbar-brand" asp-area="" asp-controller="ClassRooms" asp-action="Index" style="font-family: 'Poppins', sans-serif; padding: 0">
-            <img src="/images/Logo_Web.png" alt="Logo" width="70" height="auto">
-            </a>
-
-            }
-            else
-            {
-            <a class="navbar-brand" asp-area="" asp-controller="ClassRooms" asp-action="Index" style="font-family: 'Poppins', sans-serif; padding: 0">
-            <img src="/images/Logo_Web.png" alt="Logo" width="70" height="auto">
-            </a>
-
-            } *@
-            @* <a href="/Admin/Home/PhanQuyen" class="admin-link" style="margin-bottom:10px;">QUẢN LÝ NGƯỜI DÙNG</a> *@
+            <a href="/Admin/Home/PhanQuyen" class="admin-link" style="margin-bottom:10px;">QUẢN LÍ NGƯỜI DÙNG</a>
             <a href="/Admin/Home/baipost" class="admin-link" style="margin-bottom:10px;">TẠO BÀI POST</a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
                     aria-expanded="false" aria-label="Toggle navigation">
@@ -121,21 +214,40 @@
 </header>
 <div id="posts_container">
     <!-- Danh sách bài viết sẽ được hiển thị ở đây -->
+    <div id="loading" style="display: none;">
+        <div class="typing-indicator">
+            <div class="typing-circle"></div>
+            <div class="typing-circle"></div>
+            <div class="typing-circle"></div>
+            <div class="typing-shadow"></div>
+            <div class="typing-shadow"></div>
+            <div class="typing-shadow"></div>
+        </div>
+    </div>
 </div>
 <script>
     document.addEventListener("DOMContentLoaded", function () {
         const postsContainer = document.getElementById("posts_container");
 
         async function fetchPosts() {
+            $('#loading').show();
             try {
                 const response = await fetch("https://script.google.com/macros/s/AKfycbyf_E0bAmFqn9i1m_efPwvYXPfUYMBJc9KQ_J1jKOwlBwFBFIGxLQ7kpEuK3lQJml7r/exec");
                 if (!response.ok) {
                     throw new Error('Network response was not ok');
                 }
                 const data = await response.json();
-                displayPosts(data);
+                if (data && data.length > 0) {
+                    displayPosts(data);
+                    startAutoRotation();
+                } else {
+                    postsContainer.html('<p>No posts available at the moment.</p>');
+                }
             } catch (error) {
                 console.error('Error fetching posts:', error);
+                postsContainer.html('<p>Failed to load posts. Please try again later.</p>');
+            } finally {
+                $('#loading').hide();
             }
         }
 
@@ -152,13 +264,6 @@
                             ${post.contents_}
                         </div>
                     `;
-                // const buttonsContainer = document.createElement('div');
-                // buttonsContainer.className = 'buttons';
-                // buttonsContainer.innerHTML = `
-                //     <button class="edit-button" style="margin-right:20px" data-id="${post.id}">Sửa</button>
-                //     <button class="delete-button" data-id="${post.id}">Xóa</button>
-                // `;
-                // postElement.appendChild(buttonsContainer);
                 postsContainer.appendChild(postElement);
             });
         }
