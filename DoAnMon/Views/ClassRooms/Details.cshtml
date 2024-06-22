@@ -8,8 +8,9 @@
 @model ClassRoomViewModel
 
 @{
-	ViewData["Title"] = "Details";
-	Layout = "~/Views/Shared/_Layout1.cshtml";
+	string tenlop = Model.ClassRoom.Name;
+	ViewData["Title"] = tenlop;
+	Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
 
@@ -56,7 +57,7 @@
 		display: none;
 		position: absolute;
 		background-color: #f9f9f9;
-		min-width: 160px;
+		min-width: 190px;
 		box-shadow: 0 8px 16px 0 rgba(0, 0, 0, 0.2);
 		z-index: 1;
 		text-align: start;
@@ -208,6 +209,7 @@
 		margin-right: 20px;
 		box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
 		/* Thêm bóng đổ */
+		object-fit: cover;
 	}
 
 	.teacher-text {
@@ -344,6 +346,60 @@
 		width: 100%;
 		max-width: 200px; /* Đảm bảo nút không quá rộng */
 	}
+
+	/*======================Bảng điểm======================*/
+	.container-bangdiem {
+		overflow-x: scroll;
+	}
+
+	/* Style for the first column */
+	.first-column th:first-child,
+	.first-column td:first-child {
+		width: 200px; /* Fixed width for the first column */
+		white-space: nowrap; /* Prevent wrapping content */
+	}
+
+	/* General table styling */
+	#user {
+		font-family: Arial, Helvetica, sans-serif;
+		border-collapse: collapse;
+		width: 100%;
+		overflow-x: auto; /* Horizontal scroll for small screens */
+	}
+
+		#user td,
+		#user th {
+			border: 1px solid #ddd;
+			padding: 8px;
+		}
+
+		#user tr:nth-child(even) {
+			background-color: #f2f2f2;
+		}
+
+		#user tr:hover {
+			background-color: #ddd;
+		}
+
+		#user th {
+			padding-top: 12px;
+			padding-bottom: 12px;
+			text-align: left;
+			background-color: #04AA6D;
+			color: white;
+		}
+
+		/* Tạo icon copy */
+
+	
+	
+</style>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@16,400,0,0" />
+<style>
+	.material-symbols-outlined {
+		font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 16
+	}
 </style>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -357,12 +413,12 @@
 </div>
 <div class="class-info">
 	<h1 style="font-family: Poppins, sans-serif;font-size: 28px;">@Model.ClassRoom.Name</h1>
-	<p style="font-family: Poppins, sans-serif;font-size: 18px;">@Model.ClassRoom.Description</p>
+	<p style="font-family: Poppins, sans-serif;font-size: 18px; max-width: 100%; word-wrap: break-word;overflow-wrap: break-word;">@Model.ClassRoom.Description</p>
 	<div class="container">
 		<div class="row">
 			<div class="col-md-6" style="margin-bottom: 10px;">
 				<div class="d-flex justify-content-start">
-					<a href="@Model.ClassRoom.RoomOnline" class="btn btn-primary custom-button" id="join-btn"
+					<a href="@Model.ClassRoom.RoomOnline" id="diemDanhBtn" class="btn btn-primary custom-button" id="join-btn"
 					   style="
 							font-family: Poppins, sans-serif;
 							background-color: #2dac66;
@@ -389,14 +445,14 @@
 
 									// Tạo mã QR từ dữ liệu
 									var writer = new ZXing.BarcodeWriterSvg
-			{
-				Format = ZXing.BarcodeFormat.QR_CODE,
-				Options = new ZXing.QrCode.QrCodeEncodingOptions
-				{
-					Width = 50,
-					Height = 50
-				}
-			};
+									{
+										Format = ZXing.BarcodeFormat.QR_CODE,
+										Options = new ZXing.QrCode.QrCodeEncodingOptions
+										{
+											Width = 50,
+											Height = 50
+										}
+									};
 									var qrCode = writer.Write(qrData);
 								}
 								<div>
@@ -404,7 +460,12 @@
 								</div>
 
 								<a asp-action="AddListSV" asp-route-id="@Model.ClassRoom.Id" style="font-family: Poppins, sans-serif;">Thêm danh sách sinh viên</a>
-								<p style="font-family: Poppins, sans-serif;">Mã lớp: @Model.ClassRoom.Id</p>
+								<p style="font-family: Poppins, sans-serif; font-size: 14px;">
+									Mã lớp: <input type="text" id="contentcopy" value="@Model.ClassRoom.Id" readonly style="border: none; background: transparent; font-size: 14px; width: 60px;" />
+									<button style="border: none; background-color: transparent;" id="btnCopy">
+										<span id="icon" style="font-size: 20px;" class="material-symbols-outlined">content_copy</span>
+									</button>
+								</p>
 							</div>
 						</div>
 					</div>
@@ -413,13 +474,16 @@
 		</div>
 	</div>
 </div>
-<div class="tabs">
+<div class="tabs" style="display: flex; justify-content: center;">
 	<div class="tab" onclick="openTab(event, 'teacher')" style="font-family: Poppins, sans-serif;font-weight: 600">Thông tin giáo viên</div>
 	<div class="tab" onclick="openTab(event, 'posts')" style="font-family: Poppins, sans-serif;font-weight: 600">Bài Giảng</div>
 	<div class="tab" onclick="openTab(event, 'assignments')" style="font-family: Poppins, sans-serif;font-weight: 600">Bài tập</div>
 	<div class="tab" onclick="openTab(event, 'discussion')" style="font-family: Poppins, sans-serif;font-weight: 600">Thảo luận</div>
+	<div class="tab" onclick="openTab(event, 'listsv')" style="font-family: Poppins, sans-serif;font-weight: 600">Danh sách sinh viên</div>
+	<div class="tab" onclick="openTab(event, 'bangdiem')" style="font-family: Poppins, sans-serif;font-weight: 600">Bảng điểm</div>
+	<div class="tab" onclick="openTab(event, 'mainload')" style="font-family: Poppins, sans-serif;font-weight: 600" hidden>MainLoad</div>
 </div>
-<div id="teacher" class="tabcontent" style="display: none;">
+<div id="teacher" class="tabcontent">
 	<div class="teacher-info" style="background-color: #fdffe0">
 		<h2 style="font-family: Poppins, sans-serif;">Thông tin giáo viên</h2>
 		<div class="teacher-details">
@@ -437,28 +501,28 @@
 	@{
 		if (Model.isOwner)
 		{
-			<div>
-				<button onclick="showUploadForm()"
-						style="
-										background-color: #3498db;
-										font-family: Poppins, sans-serif;
-										color: #ffffff;
-										padding: 10px 20px;
-										border: none;
-										border-radius: 5px;
-										cursor: pointer;
-										transition: background-color 0.3s;
-										font-size: 15px;
-										font-weight: bold;">
-					Nhập tên và Upload
-				</button>
-				<form id="uploadForm" action="/ClassRooms/Upload" method="POST" enctype="multipart/form-data" style="display: none;">
-					<input type="hidden" name="lectureName" id="lectureNameInput">
-					<input type="hidden" name="ClassId" id="classIdInput" value="@Model.ClassRoom.Id">
-					<input type="file" name="pdfFile" id="pdfFileInput" accept=".pdf">
-				</form>
+								<div>
+									<button onclick="showUploadForm()"
+											style="
+																				background-color: #3498db;
+																				font-family: Poppins, sans-serif;
+																				color: #ffffff;
+																				padding: 10px 20px;
+																				border: none;
+																				border-radius: 5px;
+																				cursor: pointer;
+																				transition: background-color 0.3s;
+																				font-size: 15px;
+																				font-weight: bold;">
+										Nhập tên và Upload
+									</button>
+									<form id="uploadForm" action="/ClassRooms/Upload" method="POST" enctype="multipart/form-data" style="display: none;">
+										<input type="hidden" name="lectureName" id="lectureNameInput">
+										<input type="hidden" name="ClassId" id="classIdInput" value="@Model.ClassRoom.Id">
+										<input type="file" name="pdfFile" id="pdfFileInput" accept=".pdf">
+									</form>
 
-			</div>
+								</div>
 		}
 	}
 	<div class="posts" id="lectureContainer">
@@ -470,43 +534,47 @@
 	@{
 		if (Model.isOwner)
 		{
-			<button id="uploadButton" onclick="Showtaobaitap()"
-					style="
-									background-color: #3498db;
-									font-family: Poppins, sans-serif;
-									color: #ffffff;
-									padding: 10px 20px;
-									border: none;
-									border-radius: 5px;
-									cursor: pointer;
-									transition: background-color 0.3s;
-									font-size: 15px;
-									font-weight: bold;">
-				Tạo bài tập
-			</button>
-			<form id="uploadbaitap" action="/ClassRooms/CreateBaitap" method="POST" enctype="multipart/form-data" style="display: none;">
-				<div class="form-section">
-					<!-- Phần nhập tiêu đề -->
-					<input type="text" name="Title" id="titleInput" class="form-control" placeholder="Nhập tiêu đề">
-					<!-- Gạch ngang -->
-					<hr>
-					<!-- Phần nhập mô tả -->
-					<textarea name="Content" id="descriptionInput" class="form-control" placeholder="Nhập mô tả"></textarea>
-					<label for="fileFormatSelect">Chọn định dạng bài tập:</label>
-					<select name="FileFormat" id="fileFormatSelect">
-						<option value="pdf">pdf</option>
-						<option value="docx">docx</option>
-						<option value="xlsx">xls</option>
-						<option value="allfile">all file</option>
-						<!-- Thêm các loại định dạng khác nếu cần -->
-					</select>
+								<button id="uploadButton" onclick="Showtaobaitap()"
+										style="
+																			background-color: #3498db;
+																			font-family: Poppins, sans-serif;
+																			color: #ffffff;
+																			padding: 10px 20px;
+																			border: none;
+																			border-radius: 5px;
+																			cursor: pointer;
+																			transition: background-color 0.3s;
+																			font-size: 15px;
+																			font-weight: bold;">
+									Tạo bài tập
+								</button>
+								<form id="uploadbaitap" action="/ClassRooms/CreateBaitap" method="POST" enctype="multipart/form-data" style="display: none;">
+									<div class="form-section">
+										<!-- Phần nhập tiêu đề -->
+										<input type="text" name="Title" id="titleInput" class="form-control" placeholder="Nhập tiêu đề">
+										<!-- Gạch ngang -->
+										<hr>
+										<!-- Phần nhập mô tả -->
+										<textarea name="Content" id="descriptionInput" class="form-control" placeholder="Nhập mô tả"></textarea>
+										<label for="deadlineInput">Deadline:</label>
+										<input type="datetime-local" name="Deadline" id="deadlineInput" class="form-control">
 
-				</div>
-				<input type="hidden" name="ClassId" id="classIdInput" value="@Model.ClassRoom.Id">
-				<input type="file" name="FileUpLoad" id="FileInput" /> <!-- Ẩn input file -->
-				<input type="submit" value="CreateBaitap" class="btn btn-primary"></input> <!-- Nút giao bài -->
-				@*<button type="button" onclick="openFileDialog()">Tải lên</button> <!-- Nút tải lên -->*@
-			</form>
+										<label for="fileFormatSelect">Chọn định dạng bài tập:</label>
+										<select name="FileFormat" id="fileFormatSelect">
+											<option value="pdf">pdf</option>
+											<option value="docx">docx</option>
+											<option value="xlsx">xls</option>
+											<option value="allfile">all file</option>
+											<!-- Thêm các loại định dạng khác nếu cần -->
+										</select>
+
+									</div>
+									<input type="hidden" name="ClassId" id="classIdInput" value="@Model.ClassRoom.Id">
+				<label for="FileInput">File hướng dẫn (Nếu có):</label>
+									<input type="file" name="FileUpLoad" id="FileInput" /> <!-- Ẩn input file -->
+									<input type="submit" value="Giao bài" class="btn btn-primary"></input> <!-- Nút giao bài -->
+									@*<button type="button" onclick="openFileDialog()">Tải lên</button> <!-- Nút tải lên -->*@
+								</form>
 		}
 	}
 	<div class="assignments">
@@ -515,8 +583,24 @@
 		{
 			<div class="assignment" style="height: 30vh;">
 				<div class="assignment-content" style="border-right: 1px solid black; height: 100%; width: 100%; margin: 50px; ">
+					@{
+						if (Model.isOwner)
+						{
+												<a class="btn btn-info" style="float: left; max-width: 50px; padding: 5px;" asp-action="DeleteBT" asp-controller="ClassRooms" asp-route-id="@assignment.Id" asp-route-classId="@assignment.ClassRoomId" onclick="return confirm('Bạn có chắc muốn xóa không ?')">Xóa</a>
+						}
+					}
 					<h3 class="text-center">@assignment.Title</h3>
 					<p class="assignment-description">@assignment.Content</p>
+					@{
+						if (assignment.Deadline.HasValue)
+						{
+												<p class="assignment-description">Hạn nộp: @assignment.Deadline</p>
+						}
+						else
+						{
+												<p class="assignment-description">Hạn nộp: Vô thời hạn</p>
+						}
+					}
 
 					<!-- Hiển thị loại định dạng đã chọn -->
 					<p class="assignment-file-format">Yêu cầu nộp file: @assignment.FileFormat</p>
@@ -538,28 +622,70 @@
 					bool hasSubmitted = userId != null && baiTapId != null ? CheckNop.HasUserSubmittedBaiTap(userId, baiTapId) : false;
 				}
 
-				<form id="submitForm_@assignment.Id" action="/ClassRooms/Nopbai" method="post" enctype="multipart/form-data" class="assignment-form" onsubmit="return validateAndSubmit('@assignment.FileFormat', '@assignment.Id')">
-					<div class="upload-form ">
-						<label for="file-upload" class="file-label">Bài tập của bạn:</label>
-						<div class="file-input-wrapper">
-							@if (hasSubmitted)
+				<form id="submitForm_@assignment.Id" action="/ClassRooms/Nopbai" method="post" enctype="multipart/form-data" class="assignment-form" onsubmit="return validateAndSubmit('@assignment.FileFormat', '@assignment.Id', event)">
+
+					<div class="upload-form " style="margin-right: 30px;">
+						@{
+							if (!Model.isOwner)
 							{
-								<p>Đã nộp bài</p>
+													<label for="file-upload" class="file-label" style="white-space: nowrap;">Bài tập của bạn</label>
+													<div class="file-input-wrapper">
+														@{
+										if (hasSubmitted)
+										{
+																	<p style="text-align: center; margin-left: 15px;">Đã nộp bài</p>
+										}
+										else
+										{
+
+											// Kiểm tra deadline
+											if (assignment != null && assignment.Deadline.HasValue)
+											{
+												// Lấy ngày deadline
+												DateTime deadline = assignment.Deadline.Value;
+
+												// Kiểm tra xem deadline đã qua hay chưa
+												if (DateTime.Now > deadline)
+												{
+													// Xử lý khi deadline đã qua
+													// Ví dụ: hiển thị thông báo cho người dùng
+																							<p>Deadline đã qua. Không thể nộp bài tập nữa.</p>
+												}
+												else
+												{
+													// Xử lý khi deadline chưa qua
+													// Ví dụ: cho phép người dùng nộp bài tập
+																							<p>Thiếu</p>
+																							<input id="FileInput_@assignment.Id" type="file" name="FileNopbai">
+																							<input type="hidden" name="ClassId" id="classIdInput" value="@Model.ClassRoom.Id">
+																							<input type="hidden" name="BaitapId" id="baitapinput" value="@assignment.Id">
+
+																							<button type="submit">Nộp bài</button>
+																							<button type="button" onclick="previewFile('@assignment.Id')">Xem trước</button>
+												}
+											}
+											else
+											{
+												// Xử lý khi không có deadline được đặt
+
+																						<p>Thiếu</p>
+																						<input id="FileInput_@assignment.Id" type="file" name="FileNopbai">
+																						<input type="hidden" name="ClassId" id="classIdInput" value="@Model.ClassRoom.Id">
+																						<input type="hidden" name="BaitapId" id="baitapinput" value="@assignment.Id">
+
+																						<button type="submit">Nộp bài</button>
+																						<button type="button" onclick="previewFile('@assignment.Id')">Xem trước</button>
+											}
+										}
+														}
+													</div>
+													<div id="previewContainer_@assignment.Id"></div>
 							}
 							else
 							{
-								<p>Thiếu</p>
-								<input id="FileInput_@assignment.Id" type="file" name="FileNopbai">
-								<input type="hidden" name="ClassId" id="classIdInput" value="@Model.ClassRoom.Id">
-								<input type="hidden" name="BaitapId" id="baitapinput" value="@assignment.Id">
-
-
-								<button type="submit">Nộp bài</button>
-								<button type="button" onclick="previewFile('@assignment.Id')">Xem trước</button>
+													<a asp-action="GetAllBTStu" asp-controller="ClassRooms" asp-route-classid="@Model.ClassRoom.Id" asp-route-baitapID="@assignment.Id" class="btn btn-info ">Xem Bài tập</a>
 							}
-
-						</div>
-						<div id="previewContainer_@assignment.Id"></div>
+						}
 
 					</div>
 				</form>
@@ -567,69 +693,9 @@
 		}
 	</div>
 </div>
-<script src="https://apis.google.com/js/api.js"></script>
-
-<script>
-	function validateAndSubmit(requiredFormat, assignmentId) {
-		var fileInput = document.getElementById("FileInput_" + assignmentId);
-		var fileName = fileInput.value;
-
-		// Nếu tùy chọn "allfile" được chọn, không cần kiểm tra định dạng file
-		if (requiredFormat.toLowerCase() === 'allfile') {
-			if (fileName === '') {
-				// Nếu không chọn file, hiển thị thông báo lỗi
-				alert("Vui lòng chọn một file để nộp.");
-				return false; // Ngăn form được gửi đi
-			}
-			// Nếu đã chọn file, cho phép form được gửi đi
-			return true; // Cho phép form được gửi đi
-		}
-
-		// Kiểm tra định dạng file khi không phải tùy chọn "allfile"
-		var fileExtension = fileName.split('.').pop().toLowerCase();
-		if (fileExtension !== requiredFormat.toLowerCase()) {
-			// Nếu không đúng định dạng, hiển thị thông báo lỗi
-			alert("Định dạng file không đúng. Vui lòng chọn file có định dạng " + requiredFormat);
-			return false; // Ngăn form được gửi đi
-		}
-
-		// Nếu định dạng đúng, cho phép form được gửi đi
-		return true; // Form sẽ được gửi đi
-	}
-
-	function previewFile(assignmentId) {
-		var fileInput = document.getElementById('FileInput_' + assignmentId);
-		var file = fileInput.files[0];
-		var fileURL = URL.createObjectURL(file);
-		window.open(fileURL, '_blank');
-	}
-</script>
-
-
-<script>
-	function Showtaobaitap() {
-		var uploadButton = document.getElementById("uploadButton");
-		uploadButton.style.display = "none"; // Ẩn button khi form được hiển thị
-
-		var uploadForm = document.getElementById("uploadbaitap");
-		uploadForm.style.display = "block"; // Hiển thị form khi nút được nhấn
-
-		// Hiển thị phần nhập tiêu đề
-		var titleInput = document.getElementById("titleInput");
-		titleInput.style.display = "block";
-
-		// Hiển thị phần nhập mô tả
-		var descriptionInput = document.getElementById("descriptionInput");
-		descriptionInput.style.display = "block";
-
-		var attachmentForm = document.getElementById("attachmentForm");
-		attachmentForm.style.display = "block"; // Hiển thị form đính kèm
-	}
-
-</script>
 <div id="discussion" class="tabcontent">
 	<div class="discussion">
-		<div class="container">
+		<div class="container-fluid">
 			<div class="row p-1" hidden>
 				<div class="col-5"><input type="text" id="userInput" class="form-control" /></div>
 				<div class="col-5">
@@ -663,6 +729,74 @@
 		</div>
 	</div>
 </div>
+<div id="listsv" class="tabcontent">
+	@{
+		if (Model.isOwner)
+		{
+								<div style="margin-bottom: -35px;">
+									<form asp-controller="ClassRooms" asp-action="ExportDSSV" asp-route-classID="@Model.ClassRoom.Id" method="post">
+										<button type="submit" class="btn btn-info">Export</button>
+									</form>
+								</div>
+		}
+	}
+	<div id="listsv1">
+	</div>
+</div>
+<div id="bangdiem" class="tabcontent">
+	@{
+		List<BaiTap> bt = ViewBag.ListBT as List<BaiTap>;
+		List<DiemViewModel> diems = ViewBag.ListDiem as List<DiemViewModel>;
+	}
+	<div class="container-bangdiem">
+		<table id="user">
+			<thead>
+				<tr class="first-column">
+					<th style="text-align: center;" rowspan="2">Họ và tên</th>
+					<th style="text-align: center;" rowspan="2">MSSV</th>
+					<th style="text-align: center;" colspan="@bt.Count">Bài Tập</th>
+					<th style="text-align: center;" rowspan="2">ĐTB</th>
+				</tr>
+				<tr>
+					@foreach (var item in bt)
+					{
+						<th style="text-align: center;">@item.Title</th>
+					}
+				</tr>
+			</thead>
+			<tbody>
+				@foreach (var item in diems)
+				{
+					<tr>
+						<td>@item.HoVaTen</td>
+						<td>@item.MSSV</td>
+
+						@if (bt.Count <= 0)
+						{
+							<td> </td>
+						}
+						else
+						{
+							@foreach (var d in @item.listDiemBT)
+							{
+								<td style="text-align: center;">@d</td>
+							}
+						}
+						<td>@item.DTB</td>
+					</tr>
+				}
+			</tbody>
+		</table>
+	</div>
+</div>
+<div id="mainload" class="tabcontent">
+	<div class="text-center">
+		<h1 class="display-4" style="font-family: 'Poppins', sans-serif">Let's Study With Us</h1>
+		<p id="currentDateTime" style="font-family: 'Poppins', sans-serif"></p>
+	</div>
+</div>
+
+@* ==================================SCRIPT======================================================*@
 <script>
 	function openTab(evt, tabName) {
 		var i, tabcontent, tablinks;
@@ -677,6 +811,10 @@
 		document.getElementById(tabName).style.display = "block";
 		evt.currentTarget.classList.add("active");
 	}
+
+	document.addEventListener("DOMContentLoaded", function () {
+		openTab(event, 'mainload');
+	});
 </script> @* Chuyển tab trên trang *@
 <script>
 	function reloadLecture() {
@@ -752,6 +890,76 @@
 
 
 </script> @* Tạo bài giảng mới *@
+<script src="https://apis.google.com/js/api.js"></script>
+<script>
+	function validateAndSubmit(requiredFormat, assignmentId, event) {
+		event.preventDefault(); // Ngăn chặn hành động mặc định của sự kiện submit form
+
+		var form = event.target; // Lấy biểu mẫu từ sự kiện
+		var fileInput = form.querySelector("input[type='file']");
+		var fileName = fileInput.value;
+
+		if (requiredFormat.toLowerCase() === 'allfile') {
+			// Nếu tùy chọn "allfile" được chọn, không cần kiểm tra định dạng file
+			if (fileName === '') {
+				// Nếu không chọn file, hiển thị thông báo lỗi
+				alert("Vui lòng chọn một file để nộp.");
+				return false; // Ngăn form được gửi đi
+			}
+			// Nếu đã chọn file, cho phép form được gửi đi
+			form.submit(); // Gửi form đi
+		} else {
+			// Kiểm tra định dạng file nếu không phải là "allfile"
+			var fileExtension = fileName.split('.').pop().toLowerCase();
+			// Kiểm tra xem định dạng file có phù hợp không
+			if (fileExtension === requiredFormat.toLowerCase()) {
+				// Nếu đúng định dạng, tiến hành nộp bài
+				form.submit(); // Gửi form đi
+			} else {
+				// Nếu không đúng định dạng, hiển thị thông báo lỗi
+				alert("Định dạng file không đúng. Vui lòng chọn file có định dạng " + requiredFormat);
+			}
+		}
+	}
+
+
+
+	function previewFile(assignmentId) {
+		var fileInput = document.getElementById('FileInput_' + assignmentId);
+		var file = fileInput.files[0];
+		var fileURL = URL.createObjectURL(file);
+		window.open(fileURL, '_blank');
+	}
+</script> @* Nộp bài tập theo định dạng file yêu cầu *@
+<script>
+	function Showtaobaitap() {
+		var uploadButton = document.getElementById("uploadButton");
+		uploadButton.style.display = "none"; // Ẩn button khi form được hiển thị
+
+		var uploadForm = document.getElementById("uploadbaitap");
+		uploadForm.style.display = "block"; // Hiển thị form khi nút được nhấn
+
+		// Hiển thị phần nhập tiêu đề
+		var titleInput = document.getElementById("titleInput");
+		titleInput.style.display = "block";
+
+		// Hiển thị phần nhập mô tả
+		var descriptionInput = document.getElementById("descriptionInput");
+		descriptionInput.style.display = "block";
+
+		var attachmentForm = document.getElementById("attachmentForm");
+		attachmentForm.style.display = "block"; // Hiển thị form đính kèm
+	}
+
+</script> @* Tạo bài tập mới *@
+<script>
+	// Lắng nghe sự kiện khi ngày deadline thay đổi
+	document.getElementById("deadlineInput").addEventListener("change", function () {
+		// Lấy giá trị của ngày deadline
+		var deadline = this.value;
+	});
+</script> @* Chọn deadline *@
+
 <script src="~/js/signalr/dist/browser/signalr.js"></script>
 <script src="~/js/chat.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/he@1.2.0/he.min.js"></script>
@@ -762,13 +970,18 @@
 			var decodedName = he.decode(encodedName);
 			document.getElementById("userInput").value = (@User.Identity.Name + " _ " + decodedName);
 		} catch (error) {
-			console.error("Error decoding user name:", error);
 		}
 	});
 
+	function encodeHTML(str) {
+		var div = document.createElement('div');
+		div.appendChild(document.createTextNode(str));
+		return div.innerHTML;
+	}
+
 	connection.on("ReceiveMessage", function (user, message) {
 		var li = document.createElement("li");
-		document.getElementById("messagesList").appendChild(li);
+
 		const currentTime = new Date();
 		const year = currentTime.getFullYear();
 		const month = currentTime.getMonth() + 1;
@@ -777,10 +990,14 @@
 		const minutes = currentTime.getMinutes();
 		const seconds = currentTime.getSeconds();
 		const formatTime = `${hours}:${minutes}:${seconds} - ${day}/${month}/${year}`;
+
 		var classId = document.getElementById("classId").value;
 
-		var message = `<strong>${user} (${formatTime}):</strong> ${message}`;
-		li.innerHTML = message;
+		var encodedUser = encodeHTML(user);
+		var encodedMessage = encodeHTML(message);
+
+		var formattedMessage = `<strong>${encodedUser} (${formatTime}):</strong> ${encodedMessage}`;
+		li.innerHTML = formattedMessage;
 
 		var messagesList = document.getElementById("messagesList");
 		if (messagesList.firstChild) {
@@ -788,8 +1005,8 @@
 		} else {
 			messagesList.appendChild(li); // Nếu danh sách trống, thêm tin nhắn vào cuối danh sách
 		}
-
 	});
+
 
 	document.getElementById("sendButton").addEventListener("click", function (event) {
 		var user = document.getElementById("userInput").value;
@@ -840,59 +1057,136 @@
 	});
 
 </script> @* Gửi tin nhắn *@
-<script src="https://apis.google.com/js/api.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 <script>
-	function validateAndSubmit(requiredFormat, assignmentId) {
-		var fileInput = document.getElementById("FileInput_" + assignmentId);
-		var fileName = fileInput.value;
-		var fileExtension = fileName.split('.').pop().toLowerCase();
+	function getListStudents() {
+		var classId = document.getElementById("classId").value;
+		$.ajax({
+			url: '/ClassRooms/GetListSV?classId=' + classId,
+			type: 'GET',
+			dataType: 'json',
+			success: function (response) {
+				if (response.success) {
+					displayStudents(response.students);
+				} else {
+					console.error('Error fetching student list:', response.error);
+				}
+			},
+			error: function (xhr, status, error) {
+				console.error('Error fetching student list:', error);
+			}
+		});
+	}
 
-		// Kiểm tra xem định dạng file có phù hợp không
-		if (fileExtension === requiredFormat.toLowerCase()) {
-			// Nếu đúng định dạng, tiến hành nộp bài
-			return true; // Form sẽ được gửi đi
-		} else {
-			// Nếu không đúng định dạng, hiển thị thông báo lỗi
-			alert("Định dạng file không đúng. Vui lòng chọn file có định dạng " + requiredFormat);
-			return false; // Ngăn form được gửi đi
+	function displayStudents(students) {
+		var listHtml = '<ul style="width: 100%; display: flex; flex-direction: column; align-items: center; padding: 0;">';
+		var tongslsv = students.length;
+		listHtml += '<p style = "margin-left: auto; font-weight: bold;">Sĩ số : ' + tongslsv + ' sinh viên</p>';
+		listHtml += '<hr style = "width: 100%; border: 1px solid orange; margin-top: 0;">'
+
+		listHtml += '<li style="width: 100%; display: flex; justify-content: space-between; align-items: center; padding: 0;">';
+		listHtml += '<div style="width: 50%;">' + '</div>';
+		listHtml += '<ul style="width: 50%; padding: 0;">';
+		students.forEach(function (student, index) {
+			listHtml += '<li style="display: flex; align-items: center; margin-bottom: 20px; padding: 0;">';
+			listHtml += '<img src="/Imgs_avtUser/' + student.urlAvt + '" alt="No Image" style="width: 50px; height: 50px; border-radius: 50%; margin-right: 20px; box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); object-fit: cover;"/>';
+			listHtml += '<div style="flex: 1;">' + '<p style="margin: 0; min-width: 0;">' + student.mssv + '_' + student.name + '</p>' + '</div>';
+			listHtml += '</li>';
+
+			// Kiểm tra nếu không phải là thẻ li cuối cùng
+			if (index !== students.length - 1) {
+				listHtml += '<hr style="width: 80%; border: 0; border-top: 1px solid grey; margin-top: 0; margin-left: -45px;">';
+			}
+		});
+		listHtml += '</ul>';
+		listHtml += '<div style="width: 25%;">' + '</div>';
+		listHtml += '</li>';
+		listHtml += '</ul>';
+		$('#listsv1').html(listHtml);
+	}
+
+
+	$(document).ready(function () {
+		getListStudents();
+	});
+</script> @* Lấy dssv trong lớp và hiển thị lên *@
+<script>
+	function updateDateTime() {
+		var currentDateTime = new Date();
+		var hours = currentDateTime.getHours();
+		var minutes = currentDateTime.getMinutes();
+		var seconds = currentDateTime.getSeconds();
+		var day = currentDateTime.getDate();
+		var month = currentDateTime.getMonth() + 1; // Tháng bắt đầu từ 0
+		var year = currentDateTime.getFullYear();
+		var weekday = currentDateTime.getDay();
+
+		hours = (hours < 10) ? "0" + hours : hours;
+		minutes = (minutes < 10) ? "0" + minutes : minutes;
+		seconds = (seconds < 10) ? "0" + seconds : seconds;
+
+		day = (day < 10) ? "0" + day : day;
+		month = (month < 10) ? "0" + month : month;
+
+		var weekdays = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
+		var weekdayName = weekdays[weekday];
+
+		// Định dạng thời gian
+		var formattedDateTime = weekdayName + " • " + day + "/" + month + "/" + year + " " + hours + ":" + minutes + ":" + seconds;
+
+		// Hiển thị thời gian
+		document.getElementById("currentDateTime").innerText = formattedDateTime;
+	}
+
+	// Cập nhật thời gian mỗi giây
+	setInterval(updateDateTime, 1000);
+
+	// Gọi hàm updateDateTime lần đầu tiên để hiển thị thời gian ngay từ khi trang được tải
+	updateDateTime();
+</script> @* Tạo đồng hồ *@
+<script>
+	const btnCopy = document.getElementById("btnCopy");
+	const input = document.getElementById("contentcopy");
+	const icon = document.getElementById("icon");
+
+	btnCopy.addEventListener('click', async () => {
+		if (!input.value) {
+			return;
 		}
-	}
-	function previewFile(assignmentId) {
-		var fileInput = document.getElementById('FileInput_' + assignmentId);
-		var file = fileInput.files[0];
 
-		//Tạo một URL và mở nó trong một tab mới để tải xuống
-		var fileURL = URL.createObjectURL(file);
-		window.open(fileURL, '_blank');
-	}
-</script> @* Upload File *@
+		try {
+			await navigator.clipboard.writeText(input.value);
+			console.log('Text copied to clipboard');
+			icon.textContent = 'check_circle';  // Change icon to check mark
+			setTimeout(() => {
+				icon.textContent = 'content_copy';  // Revert back to copy icon after 2 seconds
+			}, 2000);
+		} catch (err) {
+			console.error('Failed to copy text: ', err);
+		}
+	});
+</script>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script>
-	function Showtaobaitap() {
-		var uploadButton = document.getElementById("uploadButton");
-		uploadButton.style.display = "none"; // Ẩn button khi form được hiển thị
+	$(document).ready(function () {
+		$('#diemDanhBtn').on('click', function (event) {
+			event.preventDefault(); // Prevent the default link action
+			var classId = document.getElementById("classId").value;
+			var roomOnlineUrl = $(this).attr('href');
+			var ajaxUrl = '@Url.Action("DiemDanhAsync", "ClassRooms")';
 
-		var uploadForm = document.getElementById("uploadbaitap");
-		uploadForm.style.display = "block"; // Hiển thị form khi nút được nhấn
+			console.log('AJAX URL:', ajaxUrl); // Log the URL to verify it's correct
+			console.log('link URL:', roomOnlineUrl);
 
-		// Hiển thị phần nhập tiêu đề
-		var titleInput = document.getElementById("titleInput");
-		titleInput.style.display = "block";
-
-		// Hiển thị phần nhập mô tả
-		var descriptionInput = document.getElementById("descriptionInput");
-		descriptionInput.style.display = "block";
-
-		var attachmentForm = document.getElementById("attachmentForm");
-		attachmentForm.style.display = "block"; // Hiển thị form đính kèm
-	}
-	function openFileDialog() {
-		var fileInput = document.getElementById("FileInput");
-		fileInput.click(); // Kích hoạt sự kiện click cho input file
-	}
-
-	// function submitAssignment() {
-	// 	// Thực hiện xử lý khi nút "Giao bài" được nhấn
-	// 	// Ví dụ: Kiểm tra dữ liệu, gửi request đến server, ...
-	// }
-
-</script> @* Tạo Bài tập *@
+			$.post("/ClassRooms/DiemDanh", { classId: classId }, function (data) {
+				if (data.success) {
+					console.log('Điểm danh thành công');
+					window.open(roomOnlineUrl, '_blank');
+				}
+				else {
+					console.log('Điểm danh thất bại');
+				}
+			});
+		});
+	});
+</script> @* Điểm danh *@

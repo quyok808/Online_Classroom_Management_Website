@@ -6,10 +6,10 @@
 
 @{
 	ViewData["Title"] = "GetAllStu";
-	Layout = "~/Views/Shared/_Layout1.cshtml";
+	Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h2>Bài nộp của sinh viên</h2>
+<h2>Danh sách bài tập đã nộp</h2>
 @{
 	// Chuyển danh sách List<BaiNop> sang chuỗi JSON và mã hóa nó
 	string baiNopJson = Newtonsoft.Json.JsonConvert.SerializeObject(Model);
@@ -18,12 +18,12 @@
 @{
 	if (User.IsInRole("Teacher") || User.IsInRole("Admin"))
 	{
-		<a asp-controller="ClassRooms" asp-action="DownloadFiles" asp-route-baiNop="@baiNopBase64">Download Files</a>
+		<a class="btn btn-info" style="margin: 10px 0;" asp-controller="ClassRooms" asp-action="DownloadFiles" asp-route-baiNop="@baiNopBase64">Download Files</a>
 	}
 }
 
-<table class="table">
-	<thead>
+<table class="table table-hover table-bordered">
+	<thead class="thead-dark" style="background-color: #41444B;color: white;">
 		<tr>
 			<th>
 				Mã lớp
@@ -36,6 +36,12 @@
 			</th>
 			<th>
 				File nộp
+			</th>
+			<th>
+				Điểm
+			</th>
+			<th>
+				 Thao tác
 			</th>
 		</tr>
 	</thead>
@@ -58,9 +64,69 @@
 				</td>
 				<td>
 					<a href="/BAINOP/@item.Urlbainop" download>@item.Urlbainop</a>
+				</td>
+				<td>
+					<span id="displayLabel">@item.Diem</span>
+				</td>
+				<td>
+					@if (User.IsInRole("Teacher") || User.IsInRole("Admin"))
+					{
+						<input type="number" id="editInput" style="display:none;" value="@item.Diem" />
+						<button class="btn btn-warning btn-sm" onclick="toggleEdit()" id="editButton">Chấm điểm</button>
+						<button class="btn btn-success btn-sm d-none" onclick="saveGrade('@item.IdBaiNop')" id="saveButton" style="display:none;">Lưu</button>
+					}
 
 				</td>
+
 			</tr>
 		}
 	</tbody>
 </table>
+
+<script>
+	function toggleEdit() {
+		var displayLabel = document.getElementById('displayLabel');
+		var editInput = document.getElementById('editInput');
+		var saveButton = document.getElementById('saveButton');
+		var editButton = document.getElementById('editButton');
+
+		if (displayLabel.style.display === 'none') {
+			displayLabel.style.display = 'inline';
+			editButton.style.display = 'inline';
+			editInput.style.display = 'none';
+			saveButton.style.display = 'none';
+		} else {
+			displayLabel.style.display = 'none';
+			editButton.style.display = 'none';
+			editInput.style.display = 'inline';
+			saveButton.style.display = 'inline';
+			editInput.value = displayLabel.textContent;
+		}
+	}
+
+	function saveGrade(baiNopId) {
+		var displayLabel = document.getElementById('displayLabel');
+		var editInput = document.getElementById('editInput');
+		var saveButton = document.getElementById('saveButton');
+		var editButton = document.getElementById('editButton');
+
+		displayLabel.textContent = editInput.value;
+		displayLabel.style.display = 'inline';
+		editInput.style.display = 'none';
+		saveButton.style.display = 'none';
+		editButton.style.display = 'inline';
+
+		var diem = parseFloat(editInput.value); 
+		if (diem < 0 || diem > 10 || isNaN(diem)) {
+			alert("Điểm phải nằm trong khoảng từ 0 đến 10");
+			return;
+		}
+
+		$.post("/ClassRooms/SaveGrade", { baiNopId: baiNopId, diem: diem }, function (data) {
+			if (data.success) {
+				alert("Đã lưu điểm thành công!");
+			}
+		});
+	}
+
+</script>

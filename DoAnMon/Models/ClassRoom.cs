@@ -11,8 +11,6 @@ namespace DoAnMon.Models
         public string? Description { get; set; }
         public string? RoomOnline { get; set; }
         [ValidateNever]
-        public ICollection<BaiTapDetail> BaiTapDetails { get; set; }
-        [ValidateNever]
         public ICollection<ClassroomDetail> ClassroomDetails { get; set; }
         [ValidateNever]
         public CustomUser? User { get; set; }

@@ -17,7 +17,7 @@ namespace DoAnMon.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "8.0.3")
+                .HasAnnotation("ProductVersion", "8.0.4")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
@@ -138,6 +138,9 @@ namespace DoAnMon.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<decimal?>("Diem")
+                        .HasColumnType("decimal(18,2)");
+
                     b.Property<DateTime>("SubmittedAt")
                         .HasColumnType("datetime2");
 
@@ -166,6 +169,9 @@ namespace DoAnMon.Migrations
                     b.Property<string>("Content")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<DateTime?>("Deadline")
+                        .HasColumnType("datetime2");
+
                     b.Property<string>("FileFormat")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -184,27 +190,32 @@ namespace DoAnMon.Migrations
                     b.ToTable("baiTaps");
                 });
 
-            modelBuilder.Entity("DoAnMon.Models.BaiTapDetail", b =>
+            modelBuilder.Entity("DoAnMon.Models.BangDiem", b =>
                 {
-                    b.Property<string>("ClassId")
-                        .HasColumnType("nvarchar(450)");
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
 
-                    b.Property<string>("BaiTapId")
-                        .HasColumnType("nvarchar(450)");
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<string>("ClassRoomId")
+                        .IsRequired()
                         .HasColumnType("nvarchar(450)");
 
-                    b.Property<string>("Url")
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<decimal?>("DTB")
+                        .HasColumnType("decimal(18,2)");
 
-                    b.HasKey("ClassId", "BaiTapId");
+                    b.Property<string>("UserId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
 
-                    b.HasIndex("BaiTapId");
+                    b.HasKey("Id");
 
                     b.HasIndex("ClassRoomId");
 
-                    b.ToTable("baiTapsDetail");
+                    b.HasIndex("UserId");
+
+                    b.ToTable("bangDiem");
                 });
 
             modelBuilder.Entity("DoAnMon.Models.ClassRoom", b =>
@@ -260,6 +271,32 @@ namespace DoAnMon.Migrations
                     b.HasIndex("UserId");
 
                     b.ToTable("classroomDetail");
+                });
+
+            modelBuilder.Entity("DoAnMon.Models.DiemDanh", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("ClassRoomId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("UserId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<DateTime>("time")
+                        .HasColumnType("datetime2");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ClassRoomId");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("diemDanh");
                 });
 
             modelBuilder.Entity("DoAnMon.Models.Message", b =>
@@ -454,21 +491,23 @@ namespace DoAnMon.Migrations
                     b.Navigation("BaiTap");
                 });
 
-            modelBuilder.Entity("DoAnMon.Models.BaiTapDetail", b =>
+            modelBuilder.Entity("DoAnMon.Models.BangDiem", b =>
                 {
-                    b.HasOne("DoAnMon.Models.BaiTap", "BaiTap")
-                        .WithMany("BaiTapDetails")
-                        .HasForeignKey("BaiTapId")
+                    b.HasOne("DoAnMon.Models.ClassRoom", "ClassRoom")
+                        .WithMany()
+                        .HasForeignKey("ClassRoomId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("DoAnMon.Models.ClassRoom", "ClassRoom")
-                        .WithMany("BaiTapDetails")
-                        .HasForeignKey("ClassRoomId");
-
-                    b.Navigation("BaiTap");
+                    b.HasOne("DoAnMon.IdentityCudtomUser.CustomUser", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("ClassRoom");
+
+                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("DoAnMon.Models.ClassRoom", b =>
@@ -501,6 +540,21 @@ namespace DoAnMon.Migrations
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.Navigation("ClassRoom");
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("DoAnMon.Models.DiemDanh", b =>
+                {
+                    b.HasOne("DoAnMon.Models.ClassRoom", "ClassRoom")
+                        .WithMany()
+                        .HasForeignKey("ClassRoomId");
+
+                    b.HasOne("DoAnMon.IdentityCudtomUser.CustomUser", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId");
 
                     b.Navigation("ClassRoom");
 
@@ -589,16 +643,12 @@ namespace DoAnMon.Migrations
 
             modelBuilder.Entity("DoAnMon.Models.BaiTap", b =>
                 {
-                    b.Navigation("BaiTapDetails");
-
                     b.Navigation("ClassRooms");
                 });
 
             modelBuilder.Entity("DoAnMon.Models.ClassRoom", b =>
                 {
                     b.Navigation("BaiGiangs");
-
-                    b.Navigation("BaiTapDetails");
 
                     b.Navigation("ClassroomDetails");
                 });
