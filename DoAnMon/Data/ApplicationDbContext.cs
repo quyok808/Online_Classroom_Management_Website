@@ -24,6 +24,7 @@ namespace DoAnMon.Data
         public DbSet<Message> Messages { get; set; }
 		public DbSet<BaiNop> BaiNop { get; set; }
         public DbSet<BangDiem> bangDiem { get; set; }
+        public DbSet<DiemDanh> diemDanh { get; set; }
 
 		protected override void OnModelCreating(ModelBuilder modelBuilder) 
         { 

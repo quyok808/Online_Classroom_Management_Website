@@ -22,6 +22,7 @@ using DoAnMon.Pagination;
 using Microsoft.CodeAnalysis.Elfie.Diagnostics;
 using DoAnMon.ModelListSVDownload;
 using Microsoft.AspNetCore.Authorization;
+using System.Globalization;
 
 namespace DoAnMon.Controllers
 {
@@ -506,11 +507,12 @@ namespace DoAnMon.Controllers
 					decimal TongDiem_User = (decimal)_context.BaiNop.Where(p => p.UserId.Trim() == userId.Trim() && p.ClassId.Trim() == classId.Trim()).Select(p => p.Diem).Sum();
 					if (tongslBT > 0)
 					{
-						score.DTB = TongDiem_User / tongslBT;
+						score.DTB = ((TongDiem_User / tongslBT) * 0.7m) + (decimal)DiemDD(userId, classId);
+
 					}
 					else
 					{
-						score.DTB = 0;
+						score.DTB = (decimal)DiemDD(userId, classId);
 					}
 					_context.SaveChanges(); // Lưu thay đổi cho mỗi người dùng
 				}
@@ -882,6 +884,21 @@ namespace DoAnMon.Controllers
 			}
 		}
 
+		private int DiemDD(string userId, string classId)
+		{
+			int diemDD = 3;
+			List<DiemDanh> diemDanh = _context.diemDanh.Where(p => p.UserId == userId && p.ClassRoomId == classId).ToList();
+			int TongBuoi = diemDanh
+							.Select(e => DateTime.ParseExact(e.time.Split('-')[1].Trim(), "dd/MM/yyyy", CultureInfo.InvariantCulture))
+							.Select(p => p.Date)
+							.Distinct()
+							.Count();
+			int diemtru = 9 - TongBuoi;
+			diemDD = diemDD - diemtru;
+			if (diemDD <= 0) diemDD = 0;
+			return diemDD;
+		}
+
 		private void TinhDTB(string userId, string classId)
 		{
 			BangDiem score = _context.bangDiem.FirstOrDefault(p => p.UserId == userId && p.ClassRoomId == classId);
@@ -891,11 +908,12 @@ namespace DoAnMon.Controllers
 				decimal TongDiem_User = (decimal)_context.BaiNop.Where(p => p.UserId.ToString().Trim() == userId.Trim() && p.ClassId.Trim() == classId.Trim()).Select(p => p.Diem).Sum();
 				if (tongslBT > 0)
 				{
-					score.DTB = TongDiem_User / tongslBT;
+					score.DTB = ((TongDiem_User / tongslBT) * 0.7m) + (decimal)DiemDD(userId, classId);
+
 				}
 				else
 				{
-					score.DTB = 0;
+					score.DTB = (decimal)DiemDD(userId, classId);
 				}
             }
 			_context.SaveChanges();
@@ -1089,6 +1107,29 @@ namespace DoAnMon.Controllers
             TinhDTB(classId);
             return RedirectToAction("Details", "ClassRooms", new { id = classId });
         }
+
+		[HttpPost]
+		public async Task<IActionResult> DiemDanh(string classId)
+		{
+			try
+			{
+				DiemDanh dd = new DiemDanh();
+				DateTime dt = DateTime.Now;
+				var currentUser = await _userManager.GetUserAsync(User);
+				dd.time = dt.ToString("hh:mm:ss - dd/MM/yyyy");
+				dd.UserId = currentUser.Id;
+				dd.ClassRoomId = classId;
+
+				_context.diemDanh.Add(dd);
+				_context.SaveChanges();
+				TinhDTB(currentUser.Id,classId);
+				return Json(new { success = true });
+            }
+			catch (Exception ex)
+			{
+                return Json(new { success = false, error = ex.Message });
+            }
+		}
     }
 }
 

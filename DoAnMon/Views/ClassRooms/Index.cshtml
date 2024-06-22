@@ -313,6 +313,7 @@
                     foreach (var viewModel in Model)
                     {
                         <div class="classroom">
+
                             <div class="card-top" style="background-image: url(/Images/anhclass.png);background-size: cover; background-position:center;color: white;">
                                 <h2 style="font-family: Poppins, sans-serif; font-size: 20px">@viewModel.ClassRoom.Name</h2>
                                 <div class="meta" style="font-family: Poppins, sans-serif; font-size: 12px;font-weight:300;color: white;">@viewModel.ClassRoom.Description</div>
@@ -320,7 +321,7 @@
                             </div>
                             <div class="card-bottom">
                                 <img class="PNzAWd" aria-hidden="true" src="/Imgs_avtUser/@viewModel.Owner.UrlAvt">
-                                <a href="@viewModel.ClassRoom.RoomOnline" class="btn btn-primary btn-info btn-custom" target="_blank" style="font-family: Poppins, sans-serif; font-size: 14px;font-weight: 600;">Giảng đường</a>
+                                <a href="@viewModel.ClassRoom.RoomOnline" id="diemDanhBtn" data-class-id="@viewModel.ClassRoom.Id" class="btn btn-primary btn-info btn-custom" target="_blank" style="font-family: Poppins, sans-serif; font-size: 14px;font-weight: 600;">Giảng đường</a>
                                 <a asp-action="Details" asp-route-id="@viewModel.ClassRoom.Id" class="btn btn-primary btn-info btn-custom" style="margin-top: 10px; font-family: Poppins, sans-serif; font-size: 14px;font-weight:600;">Lớp học</a>
                             </div>
                         </div>
@@ -489,3 +490,46 @@
         });
     }
 </script>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+    $(document).ready(function () {
+        $('#diemDanhBtn').on('click', function (event) {
+            event.preventDefault(); // Prevent the default link action
+            var classId = $(this).data('class-id');
+            var roomOnlineUrl = $(this).attr('href');
+            var ajaxUrl = '@Url.Action("DiemDanhAsync", "ClassRooms")';
+
+            console.log('AJAX URL:', ajaxUrl); // Log the URL to verify it's correct
+            console.log('link URL:', roomOnlineUrl);
+            // $.ajax({
+            //     url: ajaxUrl,
+            //     type: 'POST',
+            //     data: { classId: classId },
+            //     success: function (response) {
+            //         if (response.success) {
+            //             console.log('Điểm danh thành công');
+            //             // Continue the default link action after successful attendance
+            //             window.open(roomOnlineUrl, '_blank');
+            //         } else {
+            //             console.log('Điểm danh thất bại');
+            //         }
+            //     },
+            //     error: function (xhr, status, error) {
+            //         console.error('Có lỗi xảy ra: ' + error);
+            //     }
+            // });
+
+            $.post("/ClassRooms/DiemDanh", { classId: classId }, function (data) {
+                if (data.success) {
+                    console.log('Điểm danh thành công');
+                    window.open(roomOnlineUrl, '_blank');
+                }
+                else {
+                    console.log('Điểm danh thất bại');
+                }
+            });
+        });
+    });
+</script>
+
+

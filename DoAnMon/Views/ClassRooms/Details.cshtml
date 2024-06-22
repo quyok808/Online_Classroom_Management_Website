@@ -418,7 +418,7 @@
 		<div class="row">
 			<div class="col-md-6" style="margin-bottom: 10px;">
 				<div class="d-flex justify-content-start">
-					<a href="@Model.ClassRoom.RoomOnline" class="btn btn-primary custom-button" id="join-btn"
+					<a href="@Model.ClassRoom.RoomOnline" id="diemDanhBtn" class="btn btn-primary custom-button" id="join-btn"
 					   style="
 							font-family: Poppins, sans-serif;
 							background-color: #2dac66;
@@ -501,28 +501,28 @@
 	@{
 		if (Model.isOwner)
 		{
-					<div>
-						<button onclick="showUploadForm()"
-								style="
-																	background-color: #3498db;
-																	font-family: Poppins, sans-serif;
-																	color: #ffffff;
-																	padding: 10px 20px;
-																	border: none;
-																	border-radius: 5px;
-																	cursor: pointer;
-																	transition: background-color 0.3s;
-																	font-size: 15px;
-																	font-weight: bold;">
-							Nhập tên và Upload
-						</button>
-						<form id="uploadForm" action="/ClassRooms/Upload" method="POST" enctype="multipart/form-data" style="display: none;">
-							<input type="hidden" name="lectureName" id="lectureNameInput">
-							<input type="hidden" name="ClassId" id="classIdInput" value="@Model.ClassRoom.Id">
-							<input type="file" name="pdfFile" id="pdfFileInput" accept=".pdf">
-						</form>
+								<div>
+									<button onclick="showUploadForm()"
+											style="
+																				background-color: #3498db;
+																				font-family: Poppins, sans-serif;
+																				color: #ffffff;
+																				padding: 10px 20px;
+																				border: none;
+																				border-radius: 5px;
+																				cursor: pointer;
+																				transition: background-color 0.3s;
+																				font-size: 15px;
+																				font-weight: bold;">
+										Nhập tên và Upload
+									</button>
+									<form id="uploadForm" action="/ClassRooms/Upload" method="POST" enctype="multipart/form-data" style="display: none;">
+										<input type="hidden" name="lectureName" id="lectureNameInput">
+										<input type="hidden" name="ClassId" id="classIdInput" value="@Model.ClassRoom.Id">
+										<input type="file" name="pdfFile" id="pdfFileInput" accept=".pdf">
+									</form>
 
-					</div>
+								</div>
 		}
 	}
 	<div class="posts" id="lectureContainer">
@@ -534,46 +534,47 @@
 	@{
 		if (Model.isOwner)
 		{
-					<button id="uploadButton" onclick="Showtaobaitap()"
-							style="
-																background-color: #3498db;
-																font-family: Poppins, sans-serif;
-																color: #ffffff;
-																padding: 10px 20px;
-																border: none;
-																border-radius: 5px;
-																cursor: pointer;
-																transition: background-color 0.3s;
-																font-size: 15px;
-																font-weight: bold;">
-						Tạo bài tập
-					</button>
-					<form id="uploadbaitap" action="/ClassRooms/CreateBaitap" method="POST" enctype="multipart/form-data" style="display: none;">
-						<div class="form-section">
-							<!-- Phần nhập tiêu đề -->
-							<input type="text" name="Title" id="titleInput" class="form-control" placeholder="Nhập tiêu đề">
-							<!-- Gạch ngang -->
-							<hr>
-							<!-- Phần nhập mô tả -->
-							<textarea name="Content" id="descriptionInput" class="form-control" placeholder="Nhập mô tả"></textarea>
-							<label for="deadlineInput">Deadline:</label>
-							<input type="datetime-local" name="Deadline" id="deadlineInput" class="form-control">
+								<button id="uploadButton" onclick="Showtaobaitap()"
+										style="
+																			background-color: #3498db;
+																			font-family: Poppins, sans-serif;
+																			color: #ffffff;
+																			padding: 10px 20px;
+																			border: none;
+																			border-radius: 5px;
+																			cursor: pointer;
+																			transition: background-color 0.3s;
+																			font-size: 15px;
+																			font-weight: bold;">
+									Tạo bài tập
+								</button>
+								<form id="uploadbaitap" action="/ClassRooms/CreateBaitap" method="POST" enctype="multipart/form-data" style="display: none;">
+									<div class="form-section">
+										<!-- Phần nhập tiêu đề -->
+										<input type="text" name="Title" id="titleInput" class="form-control" placeholder="Nhập tiêu đề">
+										<!-- Gạch ngang -->
+										<hr>
+										<!-- Phần nhập mô tả -->
+										<textarea name="Content" id="descriptionInput" class="form-control" placeholder="Nhập mô tả"></textarea>
+										<label for="deadlineInput">Deadline:</label>
+										<input type="datetime-local" name="Deadline" id="deadlineInput" class="form-control">
 
-							<label for="fileFormatSelect">Chọn định dạng bài tập:</label>
-							<select name="FileFormat" id="fileFormatSelect">
-								<option value="pdf">pdf</option>
-								<option value="docx">docx</option>
-								<option value="xlsx">xls</option>
-								<option value="allfile">all file</option>
-								<!-- Thêm các loại định dạng khác nếu cần -->
-							</select>
+										<label for="fileFormatSelect">Chọn định dạng bài tập:</label>
+										<select name="FileFormat" id="fileFormatSelect">
+											<option value="pdf">pdf</option>
+											<option value="docx">docx</option>
+											<option value="xlsx">xls</option>
+											<option value="allfile">all file</option>
+											<!-- Thêm các loại định dạng khác nếu cần -->
+										</select>
 
-						</div>
-						<input type="hidden" name="ClassId" id="classIdInput" value="@Model.ClassRoom.Id">
-						<input type="file" name="FileUpLoad" id="FileInput" /> <!-- Ẩn input file -->
-						<input type="submit" value="CreateBaitap" class="btn btn-primary"></input> <!-- Nút giao bài -->
-						@*<button type="button" onclick="openFileDialog()">Tải lên</button> <!-- Nút tải lên -->*@
-					</form>
+									</div>
+									<input type="hidden" name="ClassId" id="classIdInput" value="@Model.ClassRoom.Id">
+				<label for="FileInput">File hướng dẫn (Nếu có):</label>
+									<input type="file" name="FileUpLoad" id="FileInput" /> <!-- Ẩn input file -->
+									<input type="submit" value="Giao bài" class="btn btn-primary"></input> <!-- Nút giao bài -->
+									@*<button type="button" onclick="openFileDialog()">Tải lên</button> <!-- Nút tải lên -->*@
+								</form>
 		}
 	}
 	<div class="assignments">
@@ -585,7 +586,7 @@
 					@{
 						if (Model.isOwner)
 						{
-									<a class="btn btn-info" style="float: left; max-width: 50px; padding: 5px;" asp-action="DeleteBT" asp-controller="ClassRooms" asp-route-id="@assignment.Id" asp-route-classId="@assignment.ClassRoomId" onclick="return confirm('Bạn có chắc muốn xóa không ?')">Xóa</a>
+												<a class="btn btn-info" style="float: left; max-width: 50px; padding: 5px;" asp-action="DeleteBT" asp-controller="ClassRooms" asp-route-id="@assignment.Id" asp-route-classId="@assignment.ClassRoomId" onclick="return confirm('Bạn có chắc muốn xóa không ?')">Xóa</a>
 						}
 					}
 					<h3 class="text-center">@assignment.Title</h3>
@@ -593,11 +594,11 @@
 					@{
 						if (assignment.Deadline.HasValue)
 						{
-									<p class="assignment-description">Hạn nộp: @assignment.Deadline</p>
+												<p class="assignment-description">Hạn nộp: @assignment.Deadline</p>
 						}
 						else
 						{
-									<p class="assignment-description">Hạn nộp: Vô thời hạn</p>
+												<p class="assignment-description">Hạn nộp: Vô thời hạn</p>
 						}
 					}
 
@@ -627,12 +628,12 @@
 						@{
 							if (!Model.isOwner)
 							{
-										<label for="file-upload" class="file-label" style="white-space: nowrap;">Bài tập của bạn</label>
-										<div class="file-input-wrapper">
-											@{
+													<label for="file-upload" class="file-label" style="white-space: nowrap;">Bài tập của bạn</label>
+													<div class="file-input-wrapper">
+														@{
 										if (hasSubmitted)
 										{
-											<p style="text-align: center; margin-left: 15px;">Đã nộp bài</p>
+																	<p style="text-align: center; margin-left: 15px;">Đã nộp bài</p>
 										}
 										else
 										{
@@ -648,41 +649,41 @@
 												{
 													// Xử lý khi deadline đã qua
 													// Ví dụ: hiển thị thông báo cho người dùng
-																	<p>Deadline đã qua. Không thể nộp bài tập nữa.</p>
+																							<p>Deadline đã qua. Không thể nộp bài tập nữa.</p>
 												}
 												else
 												{
 													// Xử lý khi deadline chưa qua
 													// Ví dụ: cho phép người dùng nộp bài tập
-																	<p>Thiếu</p>
-																	<input id="FileInput_@assignment.Id" type="file" name="FileNopbai">
-																	<input type="hidden" name="ClassId" id="classIdInput" value="@Model.ClassRoom.Id">
-																	<input type="hidden" name="BaitapId" id="baitapinput" value="@assignment.Id">
+																							<p>Thiếu</p>
+																							<input id="FileInput_@assignment.Id" type="file" name="FileNopbai">
+																							<input type="hidden" name="ClassId" id="classIdInput" value="@Model.ClassRoom.Id">
+																							<input type="hidden" name="BaitapId" id="baitapinput" value="@assignment.Id">
 
-																	<button type="submit">Nộp bài</button>
-																	<button type="button" onclick="previewFile('@assignment.Id')">Xem trước</button>
+																							<button type="submit">Nộp bài</button>
+																							<button type="button" onclick="previewFile('@assignment.Id')">Xem trước</button>
 												}
 											}
 											else
 											{
 												// Xử lý khi không có deadline được đặt
 
-																<p>Thiếu</p>
-																<input id="FileInput_@assignment.Id" type="file" name="FileNopbai">
-																<input type="hidden" name="ClassId" id="classIdInput" value="@Model.ClassRoom.Id">
-																<input type="hidden" name="BaitapId" id="baitapinput" value="@assignment.Id">
+																						<p>Thiếu</p>
+																						<input id="FileInput_@assignment.Id" type="file" name="FileNopbai">
+																						<input type="hidden" name="ClassId" id="classIdInput" value="@Model.ClassRoom.Id">
+																						<input type="hidden" name="BaitapId" id="baitapinput" value="@assignment.Id">
 
-																<button type="submit">Nộp bài</button>
-																<button type="button" onclick="previewFile('@assignment.Id')">Xem trước</button>
+																						<button type="submit">Nộp bài</button>
+																						<button type="button" onclick="previewFile('@assignment.Id')">Xem trước</button>
 											}
 										}
-											}
-										</div>
-										<div id="previewContainer_@assignment.Id"></div>
+														}
+													</div>
+													<div id="previewContainer_@assignment.Id"></div>
 							}
 							else
 							{
-										<a asp-action="GetAllBTStu" asp-controller="ClassRooms" asp-route-classid="@Model.ClassRoom.Id" asp-route-baitapID="@assignment.Id" class="btn btn-info ">Xem Bài tập</a>
+													<a asp-action="GetAllBTStu" asp-controller="ClassRooms" asp-route-classid="@Model.ClassRoom.Id" asp-route-baitapID="@assignment.Id" class="btn btn-info ">Xem Bài tập</a>
 							}
 						}
 
@@ -732,11 +733,11 @@
 	@{
 		if (Model.isOwner)
 		{
-					<div style="margin-bottom: -35px;">
-						<form asp-controller="ClassRooms" asp-action="ExportDSSV" asp-route-classID="@Model.ClassRoom.Id" method="post">
-							<button type="submit" class="btn btn-info">Export</button>
-						</form>
-					</div>
+								<div style="margin-bottom: -35px;">
+									<form asp-controller="ClassRooms" asp-action="ExportDSSV" asp-route-classID="@Model.ClassRoom.Id" method="post">
+										<button type="submit" class="btn btn-info">Export</button>
+									</form>
+								</div>
 		}
 	}
 	<div id="listsv1">
@@ -969,13 +970,18 @@
 			var decodedName = he.decode(encodedName);
 			document.getElementById("userInput").value = (@User.Identity.Name + " _ " + decodedName);
 		} catch (error) {
-			console.error("Error decoding user name:", error);
 		}
 	});
 
+	function encodeHTML(str) {
+		var div = document.createElement('div');
+		div.appendChild(document.createTextNode(str));
+		return div.innerHTML;
+	}
+
 	connection.on("ReceiveMessage", function (user, message) {
 		var li = document.createElement("li");
-		document.getElementById("messagesList").appendChild(li);
+
 		const currentTime = new Date();
 		const year = currentTime.getFullYear();
 		const month = currentTime.getMonth() + 1;
@@ -984,10 +990,14 @@
 		const minutes = currentTime.getMinutes();
 		const seconds = currentTime.getSeconds();
 		const formatTime = `${hours}:${minutes}:${seconds} - ${day}/${month}/${year}`;
+
 		var classId = document.getElementById("classId").value;
 
-		var message = `<strong>${user} (${formatTime}):</strong> ${message}`;
-		li.innerHTML = message;
+		var encodedUser = encodeHTML(user);
+		var encodedMessage = encodeHTML(message);
+
+		var formattedMessage = `<strong>${encodedUser} (${formatTime}):</strong> ${encodedMessage}`;
+		li.innerHTML = formattedMessage;
 
 		var messagesList = document.getElementById("messagesList");
 		if (messagesList.firstChild) {
@@ -995,8 +1005,8 @@
 		} else {
 			messagesList.appendChild(li); // Nếu danh sách trống, thêm tin nhắn vào cuối danh sách
 		}
-
 	});
+
 
 	document.getElementById("sendButton").addEventListener("click", function (event) {
 		var user = document.getElementById("userInput").value;
@@ -1156,3 +1166,27 @@
 		}
 	});
 </script>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+	$(document).ready(function () {
+		$('#diemDanhBtn').on('click', function (event) {
+			event.preventDefault(); // Prevent the default link action
+			var classId = document.getElementById("classId").value;
+			var roomOnlineUrl = $(this).attr('href');
+			var ajaxUrl = '@Url.Action("DiemDanhAsync", "ClassRooms")';
+
+			console.log('AJAX URL:', ajaxUrl); // Log the URL to verify it's correct
+			console.log('link URL:', roomOnlineUrl);
+
+			$.post("/ClassRooms/DiemDanh", { classId: classId }, function (data) {
+				if (data.success) {
+					console.log('Điểm danh thành công');
+					window.open(roomOnlineUrl, '_blank');
+				}
+				else {
+					console.log('Điểm danh thất bại');
+				}
+			});
+		});
+	});
+</script> @* Điểm danh *@
