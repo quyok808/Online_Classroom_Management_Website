@@ -17,7 +17,7 @@ namespace DoAnMon.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "8.0.3")
+                .HasAnnotation("ProductVersion", "8.0.4")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
@@ -276,6 +276,32 @@ namespace DoAnMon.Migrations
                     b.ToTable("classroomDetail");
                 });
 
+            modelBuilder.Entity("DoAnMon.Models.DiemDanh", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("ClassRoomId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("UserId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<DateTime>("time")
+                        .HasColumnType("datetime2");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ClassRoomId");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("diemDanh");
+                });
+
             modelBuilder.Entity("DoAnMon.Models.Message", b =>
                 {
                     b.Property<int>("Id")
@@ -517,6 +543,21 @@ namespace DoAnMon.Migrations
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.Navigation("ClassRoom");
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("DoAnMon.Models.DiemDanh", b =>
+                {
+                    b.HasOne("DoAnMon.Models.ClassRoom", "ClassRoom")
+                        .WithMany()
+                        .HasForeignKey("ClassRoomId");
+
+                    b.HasOne("DoAnMon.IdentityCudtomUser.CustomUser", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId");
 
                     b.Navigation("ClassRoom");
 
