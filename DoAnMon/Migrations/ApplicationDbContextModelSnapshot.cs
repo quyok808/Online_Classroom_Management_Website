@@ -151,6 +151,9 @@ namespace DoAnMon.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<int?>("daChamDiem")
+                        .HasColumnType("int");
+
                     b.HasKey("IdBaiNop");
 
                     b.HasIndex("BaiTapId");
