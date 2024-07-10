@@ -4,6 +4,7 @@ using DoAnMon.ModelListSVDownload;
 using DoAnMon.Models;
 using DoAnMon.SignalR;
 using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Http.Features;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using OfficeOpenXml;
@@ -21,6 +22,11 @@ builder.Services.AddScoped<IStudent, StudentRepo>();
 builder.Services.AddDefaultIdentity<CustomUser>(options => options.SignIn.RequireConfirmedAccount = true)
     .AddRoles<IdentityRole>()
     .AddEntityFrameworkStores<ApplicationDbContext>();
+
+builder.Services.Configure<FormOptions>(options =>
+{
+    options.MultipartBodyLengthLimit = long.MaxValue; // 1GB
+});
 builder.Services.AddControllersWithViews();
 
 builder.Services.AddSingleton<ClassroomViewModel>();
@@ -46,6 +52,12 @@ else
     // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
     app.UseHsts();
 }
+
+app.Use(async (context, next) =>
+{
+    context.Request.EnableBuffering();
+    await next();
+});
 
 app.UseHttpsRedirection();
 app.UseStaticFiles();
