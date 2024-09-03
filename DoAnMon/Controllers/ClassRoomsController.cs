@@ -1165,5 +1165,39 @@ namespace DoAnMon.Controllers
 			return RedirectToAction("Details", "ClassRooms", new { id = classId });
 		}
 
-	}
+        [HttpPost]
+        public IActionResult UpdateOrder([FromBody] List<string> orderedIds)
+        {
+            if (orderedIds == null || !orderedIds.Any())
+            {
+                return BadRequest("The order list cannot be null or empty.");
+            }
+
+            foreach (var classroomId in orderedIds.Select((id, index) => new { id, index }))
+            {
+                var classroom = _context.classRooms.Find(classroomId.id);
+                if (classroom != null)
+                {
+                    classroom.STT = classroomId.index+1;
+                }
+                else
+                {
+                    return BadRequest($"Classroom with ID {classroomId.id} not found.");
+                }
+            }
+
+            try
+            {
+                _context.SaveChanges();
+                return Ok();
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Internal server error: {ex.Message}");
+            }
+        }
+
+
+
+    }
 }
