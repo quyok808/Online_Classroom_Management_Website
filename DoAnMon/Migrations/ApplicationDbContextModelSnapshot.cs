@@ -241,8 +241,14 @@ namespace DoAnMon.Migrations
                     b.Property<string>("RoomOnline")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<int>("STT")
+                        .HasColumnType("int");
+
                     b.Property<string>("UserId")
                         .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("backgroundUrl")
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
 
@@ -290,8 +296,9 @@ namespace DoAnMon.Migrations
                     b.Property<string>("UserId")
                         .HasColumnType("nvarchar(450)");
 
-                    b.Property<DateTime>("time")
-                        .HasColumnType("datetime2");
+                    b.Property<string>("time")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
 

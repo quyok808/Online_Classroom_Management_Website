@@ -10,12 +10,20 @@ namespace DoAnMon.Models
         public string? UserId { get; set; }
         public string? Description { get; set; }
         public string? RoomOnline { get; set; }
+        public string? backgroundUrl { get; set; }
+        public int STT { get; set; }
+
         [ValidateNever]
         public ICollection<ClassroomDetail> ClassroomDetails { get; set; }
         [ValidateNever]
         public CustomUser? User { get; set; }
         [ValidateNever]
 		public ICollection<BaiGiang> BaiGiangs { get; set; }
+
+		public int GetDisplayNumber()
+		{
+			return STT + 1;
+		}
 	}
 
 }
