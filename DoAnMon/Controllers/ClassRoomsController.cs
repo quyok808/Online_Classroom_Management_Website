@@ -23,6 +23,7 @@ using Microsoft.CodeAnalysis.Elfie.Diagnostics;
 using DoAnMon.ModelListSVDownload;
 using Microsoft.AspNetCore.Authorization;
 using System.Globalization;
+using System.Security.Cryptography;
 
 namespace DoAnMon.Controllers
 {
@@ -33,13 +34,16 @@ namespace DoAnMon.Controllers
 		private readonly UserManager<CustomUser> _userManager;
 		private readonly IWebHostEnvironment _environment;
 		private readonly IStudent _studentRepo;
+		private static readonly SemaphoreSlim _semaphore = new SemaphoreSlim(1, 1);
+		private readonly ILogger<HomeController> _logger;
 
-		public ClassRoomsController(ApplicationDbContext context, UserManager<CustomUser> userManager, IWebHostEnvironment environment, IStudent studentRepo)
+		public ClassRoomsController(ApplicationDbContext context, UserManager<CustomUser> userManager, IWebHostEnvironment environment, IStudent studentRepo, ILogger<HomeController> logger)
 		{
 			_context = context;
 			_userManager = userManager;
 			_environment = environment;
 			_studentRepo = studentRepo;
+			_logger = logger;
 		}
 		public static List<ClassRoom>? userClasses;
 		// GET: ClassRooms
@@ -454,29 +458,14 @@ namespace DoAnMon.Controllers
 		}
 
 		[HttpPost]
-		public async Task<IActionResult> CreateBaitap(IFormFile FileUpLoad, string Content, string Title, string ClassId, string FileFormat, DateTime Deadline)
+		public async Task<IActionResult> CreateBaitap(string AttactURL, string Content, string Title, string ClassId, string FileFormat, DateTime Deadline)
 		{
 
-			if (FileUpLoad != null && FileUpLoad.Length > 0)
-			{
-				var uploadsFolder = Path.Combine(_environment.WebRootPath, "BAITAP");
-				// Kiểm tra xem thư mục tồn tại hay không
-				if (!Directory.Exists(uploadsFolder))
-				{
-					// Nếu thư mục không tồn tại, tạo thư mục mới
-					Directory.CreateDirectory(uploadsFolder);
-				}
-				var filePath = Path.Combine(uploadsFolder, FileUpLoad.FileName);
-				using (var stream = new FileStream(filePath, FileMode.Create))
-				{
-					await FileUpLoad.CopyToAsync(stream);
-				}
-			}
 			BaiTap baitap = new BaiTap();
 			baitap.Title = Title;
 			baitap.Content = Content;
 			baitap.Id = Guid.NewGuid().ToString();
-			baitap.attractUrl = (FileUpLoad != null && FileUpLoad.Length > 0) ? FileUpLoad.FileName : null; ;
+			baitap.attractUrl = AttactURL;
 			baitap.ClassRoomId = ClassId;
 			baitap.FileFormat = FileFormat;
 			if (Deadline.ToString() != "01/01/0001 12:00:00 AM")
@@ -1197,7 +1186,89 @@ namespace DoAnMon.Controllers
             }
         }
 
+		[HttpPost]
+		public async Task<IActionResult> UploadChunk(IFormFile chunk, int index, string fileName, string chunkHash)
+		{
+			if (chunk == null || chunk.Length == 0)
+			{
+				_logger.LogError("Chunk is null or empty");
+				return BadRequest("Chunk is null or empty");
+			}
 
+			var uploadFolder = Path.Combine(_environment.WebRootPath, "BAITAP");
+			var tempFilePath = Path.Combine(uploadFolder, fileName);
 
-    }
+			await _semaphore.WaitAsync();
+			try
+			{
+				// Verify chunk hash
+				using (var sha256 = SHA256.Create())
+				{
+					using (var stream = chunk.OpenReadStream())
+					{
+						var computedHash = sha256.ComputeHash(stream);
+						var computedHashString = BitConverter.ToString(computedHash).Replace("-", "").ToLower();
+						if (computedHashString != chunkHash.ToLower())
+						{
+							return BadRequest("Chunk hash mismatch");
+						}
+					}
+				}
+
+				// Append chunk to temp file
+				using (var stream = new FileStream(tempFilePath, index == 0 ? FileMode.Create : FileMode.Append, FileAccess.Write, FileShare.None))
+				{
+					await chunk.CopyToAsync(stream);
+				}
+				return Ok();
+			}
+			catch (Exception ex)
+			{
+				_logger.LogError(ex, "Error uploading chunk");
+				return StatusCode(500, "Internal server error");
+			}
+			finally
+			{
+				_semaphore.Release();
+			}
+		}
+
+		[HttpPost]
+		public IActionResult CompleteUpload([FromBody] CompleteUploadRequest request)
+		{
+			try
+			{
+				var uploadFolder = Path.Combine(_environment.WebRootPath, "BAITAP");
+				var finalFilePath = Path.Combine(uploadFolder, request.FileName);
+
+				// Compute and verify hash of the final file
+				using (var sha256 = SHA256.Create())
+				{
+					using (var stream = new FileStream(finalFilePath, FileMode.Open, FileAccess.Read))
+					{
+						var finalFileHash = sha256.ComputeHash(stream);
+						var finalFileHashString = BitConverter.ToString(finalFileHash).Replace("-", "").ToLower();
+
+						// Compare with the file hash received from client
+						if (finalFileHashString != request.FileHash.ToLower())
+						{
+							return BadRequest("Final file hash mismatch");
+						}
+					}
+				}
+
+				// Optionally, move or process the completed file
+				// For example, move it to a permanent storage location
+				// File.Move(finalFilePath, Path.Combine(_permanentStorageFolder, request.FileName));
+
+				return Ok();
+			}
+			catch (Exception ex)
+			{
+				_logger.LogError(ex, "Error completing upload");
+				return StatusCode(500, "Internal server error");
+			}
+		}
+
+	}
 }
