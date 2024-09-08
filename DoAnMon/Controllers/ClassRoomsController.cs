@@ -85,7 +85,7 @@ namespace DoAnMon.Controllers
 						classRoomViewModels.Add(new ClassRoomViewModel
 						{
 							ClassRoom = classRoom,
-							Owner = owner
+							Owner = owner,
 						});
 					}
 					else
@@ -93,6 +93,8 @@ namespace DoAnMon.Controllers
 						// Xử lý trường hợp không có chủ sở hữu (nếu cần)
 						classRoomViewModels.Add(new ClassRoomViewModel { ClassRoom = classRoom, Owner = new CustomUser { UserName = "Unknown" } });
 					}
+
+					
 				}
 			}
 			ViewBag.ListRoom = userClasses;
@@ -158,6 +160,7 @@ namespace DoAnMon.Controllers
             viewModel.Homework = homework;
 			viewModel.Message = chatHistory;
 			ViewBag.ListRoom = userClasses;
+
 			var listBT = await _context.baiTaps.Where(p => p.ClassRoomId == id).ToListAsync();
 
 			var Diem = new List<DiemViewModel>();
@@ -208,6 +211,14 @@ namespace DoAnMon.Controllers
 			}
 			ViewBag.ListBT = listBT;
 			ViewBag.ListDiem = Diem;
+
+			viewModel.ClassDates = CalculateClassDates(
+										classRoom.StartDate, 
+										classRoom.EndDate, 
+										classRoom.DaysOfWeek, 
+										new TimeSpan(classRoom.StartTime.Hours, classRoom.StartTime.Minutes, 0),
+										new TimeSpan(classRoom.EndTime.Hours, classRoom.EndTime.Minutes,0)
+										);
 			return View(viewModel);
 		}
 
@@ -241,7 +252,7 @@ namespace DoAnMon.Controllers
 						.Where(p => classDetailClasses.Contains(p.Id))
 						.ToListAsync();
 				}
-
+				userClasses = userClasses.OrderBy(p => p.STT).ToList();
 				foreach (var classRoom in userClasses)
 				{
 					var owner = await _context.Users.FirstOrDefaultAsync(u => u.Id == classRoom.UserId);
@@ -285,7 +296,7 @@ namespace DoAnMon.Controllers
 		// For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
 		[HttpPost]
 		[ValidateAntiForgeryToken]
-		public async Task<IActionResult> Create(ClassRoom classRoom)
+		public async Task<IActionResult> Create(ClassRoom classRoom, string[] DaysOfWeek)
 		{
 			ModelState.Remove("Id");
 			if (ModelState.IsValid)
@@ -298,6 +309,10 @@ namespace DoAnMon.Controllers
 					classRoom.RoomOnline = "https://meeting-room-onlya.glitch.me?room="+linkRoom;
 					classRoom.backgroundUrl = "anhclass.png";
 					classRoom.STT = 0;
+
+					// Ghép các ngày học lại thành chuỗi
+					classRoom.DaysOfWeek = string.Join(",", DaysOfWeek);
+
 					_context.Add(classRoom);
 					await _context.SaveChangesAsync();
 
@@ -1268,6 +1283,25 @@ namespace DoAnMon.Controllers
 				_logger.LogError(ex, "Error completing upload");
 				return StatusCode(500, "Internal server error");
 			}
+		}
+
+		public List<(DateTime Start, DateTime End)> CalculateClassDates(DateTime startDate, DateTime endDate, string daysOfWeek, TimeSpan startTime, TimeSpan endTime)
+		{
+			var dates = new List<(DateTime Start, DateTime End)>();
+			var days = daysOfWeek.Split(',').Select(day => Enum.Parse<DayOfWeek>(day)).ToList();
+
+			for (var date = startDate; date <= endDate; date = date.AddDays(1))
+			{
+				
+				if (days.Contains(date.DayOfWeek))
+				{
+					var startDateTime = date.Date + startTime;
+					var endDateTime = date.Date + endTime;
+					dates.Add((startDateTime, endDateTime));
+				}
+			}
+
+			return dates;
 		}
 
 	}

@@ -13,7 +13,14 @@ namespace DoAnMon.Models
         public string? backgroundUrl { get; set; }
         public int STT { get; set; }
 
-        [ValidateNever]
+		// Các trường mới cho ngày học
+		public DateTime StartDate { get; set; }
+		public DateTime EndDate { get; set; }
+		public string DaysOfWeek { get; set; } // Đây sẽ là chuỗi chứa các ngày trong tuần (vd: "Monday,Wednesday")
+		public TimeSpan StartTime { get; set; }
+		public TimeSpan EndTime { get; set; }
+
+		[ValidateNever]
         public ICollection<ClassroomDetail> ClassroomDetails { get; set; }
         [ValidateNever]
         public CustomUser? User { get; set; }
