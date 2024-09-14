@@ -11,6 +11,7 @@
 	string tenlop = Model.ClassRoom.Name;
 	ViewData["Title"] = tenlop;
 	Layout = "~/Views/Shared/_Layout.cshtml";
+	var user = await _userManager.GetUserAsync(User);
 }
 <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.0.0/crypto-js.min.js"></script>
 
@@ -497,15 +498,21 @@
 
 <div style="position: relative;">
 	<img class="img-fluid" src="/images/@Model.ClassRoom.backgroundUrl" alt="No Images" style="width: 100%; height: 400px;" />
-	<form id="changeBG" action="/ClassRooms/changeBackground" method="POST" enctype="multipart/form-data" style="position: absolute; bottom: 10px; right: 10px;">
-		<input type="hidden" name="classId" value="@Model.ClassRoom.Id" />
-		<label for="file-upload" class="custom-file-upload">
-			<i class="fa-solid fa-camera"></i>
-			Thay đổi ảnh bìa
-		</label>
-		<input id="file-upload" type="file" name="image" accept="image/*" required
-			   onchange="document.getElementById('changeBG').submit();" style="display:none;"/>
-	</form>
+	@{
+		if (Model.isOwner)
+		{
+			<form id="changeBG" action="/ClassRooms/changeBackground" method="POST" enctype="multipart/form-data" style="position: absolute; bottom: 10px; right: 10px;">
+				<input type="hidden" name="classId" value="@Model.ClassRoom.Id" />
+				<label for="file-upload" class="custom-file-upload">
+					<i class="fa-solid fa-camera"></i>
+					Thay đổi ảnh bìa
+				</label>
+				<input id="file-upload" type="file" name="image" accept="image/*" required
+					   onchange="document.getElementById('changeBG').submit();" style="display:none;" />
+			</form>
+		}
+	}
+	
 </div>
 
 <div class="class-info">
@@ -515,7 +522,7 @@
 		<div class="row">
 			<div class="col-md-6" style="margin-bottom: 10px;">
 				<div class="d-flex justify-content-start">
-					<a href="@Model.ClassRoom.RoomOnline" id="diemDanhBtn" class="btn btn-primary custom-button" id="join-btn"
+					<a href="@Model.ClassRoom.RoomOnline&User=@user.Id&class=@Model.ClassRoom.Id" id="diemDanhBtn" class="btn btn-primary custom-button" id="join-btn"
 					   style="
 							font-family: Poppins, sans-serif;
 							background-color: #2dac66;
@@ -558,7 +565,7 @@
 
 								<a asp-action="AddListSV" asp-route-id="@Model.ClassRoom.Id" style="font-family: Poppins, sans-serif;">Thêm danh sách sinh viên</a>
 								<p style="font-family: Poppins, sans-serif; font-size: 14px;">
-									Mã l?p: <input type="text" id="contentcopy" value="@Model.ClassRoom.Id" readonly style="border: none; background: transparent; font-size: 14px; width: 60px;" />
+									Mã lớp: <input type="text" id="contentcopy" value="@Model.ClassRoom.Id" readonly style="border: none; background: transparent; font-size: 14px; width: 60px;" />
 									<button style="border: none; background-color: transparent;" id="btnCopy">
 										<span id="icon" style="font-size: 20px;" class="material-symbols-outlined">content_copy</span>
 									</button>
@@ -584,7 +591,8 @@
 	<div class="teacher-info" style="background-color: #fdffe0">
 		<h2 style="font-family: Poppins, sans-serif;">Thông tin giáo viên</h2>
 		<div class="teacher-details">
-			<img src="/Imgs_avtUser/@Model.Owner.UrlAvt" alt="Teacher image" class="teacher-image">
+			
+			<img src="/Imgs_avtUser/@Model.Owner.UrlAvt" alt="Teacher image" class="teacher-image" />
 			<div class="teacher-text">
 				<p style="font-family: Poppins, sans-serif;"><strong>Mã giảng viên:</strong> @Model.Owner.Mssv</p>
 				<p style="font-family: Poppins, sans-serif;"><strong>Tên giảng viên:</strong> @Model.Owner.Name</p>
@@ -592,7 +600,6 @@
 			</div>
 		</div>
 	</div>
-
 </div>
 <div id="posts" class="tabcontent">
 	@{
@@ -727,7 +734,6 @@
 				</div>
 				@{
 					// L?y userId
-					var user = await _userManager.GetUserAsync(User);
 					string userId = user != null ? user.Id : null;
 
 					// L?y baiTapId t? assignment ho?c t? noi khác
@@ -908,14 +914,6 @@
 	<div class="text-center">
 		<h1 class="display-4" style="font-family: 'Poppins', sans-serif">Let's Study With Us</h1>
 		<p id="currentDateTime" style="font-family: 'Poppins', sans-serif"></p>
-		
-		@foreach (var date in Model.ClassDates)
-		{
-			<div>
-				@date.Start.ToString("dddd, dd/MM/yyyy") start at: @date.Start.ToString("HH:mm") to @date.End.ToString("HH:mm")
-			</div>
-		}
-
 	</div>
 </div>
 
@@ -1236,9 +1234,6 @@
 		uploadChunks();
 	}
 </script> @*Upload file lớn*@
-
-
-
 <script>
 	// L?ng nghe s? ki?n khi ngày deadline thay d?i
 	document.getElementById("deadlineInput").addEventListener("change", function () {
@@ -1246,7 +1241,6 @@
 		var deadline = this.value;
 	});
 </script> @* Chọn deadline *@
-
 <script src="~/js/signalr/dist/browser/signalr.js"></script>
 <script src="~/js/chat.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/he@1.2.0/he.min.js"></script>
@@ -1460,18 +1454,17 @@
 			event.preventDefault(); // Prevent the default link action
 			var classId = document.getElementById("classId").value;
 			var roomOnlineUrl = $(this).attr('href');
-			var ajaxUrl = '@Url.Action("DiemDanhAsync", "ClassRooms")';
+			
 
-			console.log('AJAX URL:', ajaxUrl); // Log the URL to verify it's correct
-			console.log('link URL:', roomOnlineUrl);
-
-			$.post("/ClassRooms/DiemDanh", { classId: classId }, function (data) {
+			$.post("/ClassRooms/DiemDanhIn", { classId: classId }, function (data) {
 				if (data.success) {
-					console.log('Ði?m danh thành công');
+					console.log('Điểm danh thành công');
 					window.open(roomOnlineUrl, '_blank');
 				}
 				else {
-					console.log('Ði?m danh th?t b?i');
+					console.log(data.error);
+					alert(data.error);
+					console.log('Điểm danh thất bại');
 				}
 			});
 		});

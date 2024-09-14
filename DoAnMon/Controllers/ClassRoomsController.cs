@@ -1,4 +1,4 @@
-﻿using System;
+﻿  using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -306,7 +306,7 @@ namespace DoAnMon.Controllers
 				{
 					classRoom.Id = GenerateUniqueRandomString(6);
 					classRoom.UserId = currentUser.Id;
-					classRoom.RoomOnline = "https://meeting-room-onlya.glitch.me?room="+linkRoom;
+					classRoom.RoomOnline = "https://meeting-room-onlya1.glitch.me?room=" + linkRoom;
 					classRoom.backgroundUrl = "anhclass.png";
 					classRoom.STT = 0;
 
@@ -332,9 +332,6 @@ namespace DoAnMon.Controllers
         [HttpPost]
         public ActionResult ReceiveRoomUrl(string roomUrl1)
         {
-			// Xử lý dữ liệu roomUrl ở đây, ví dụ lưu vào cơ sở dữ liệu hoặc thực hiện các thao tác khác
-			// Ví dụ đơn giản, hiển thị dữ liệu roomUrl trong console log
-			//System.Console.WriteLine("Received roomUrl: " + roomUrl1);
 			linkRoom = roomUrl1;
             // Trả về kết quả, có thể là JSON hoặc các loại dữ liệu khác
             return Json(new { success = true });
@@ -1122,20 +1119,52 @@ namespace DoAnMon.Controllers
         }
 
 		[HttpPost]
-		public async Task<IActionResult> DiemDanh(string classId)
+		public async Task<IActionResult> DiemDanhIn(string classId)
 		{
 			try
 			{
-				DiemDanh dd = new DiemDanh();
-				DateTime dt = DateTime.Now;
+				int isDate = 0;
 				var currentUser = await _userManager.GetUserAsync(User);
-				dd.time = dt.ToString("hh:mm:ss - dd/MM/yyyy");
-				dd.UserId = currentUser.Id;
-				dd.ClassRoomId = classId;
+				string now = DateTime.Now.ToString("dd/MM/yyyy");
+				ClassRoom? clr = _context.classRooms.FirstOrDefault(p => p.Id == classId);
+				if (clr == null)
+				{
+					throw new Exception("Classroom không tồn tại !!!");
+				}
+				
+				var listdate = CalculateClassDates(
+										clr.StartDate,
+										clr.EndDate,
+										clr.DaysOfWeek,
+										new TimeSpan(clr.StartTime.Hours, clr.StartTime.Minutes, 0),
+										new TimeSpan(clr.EndTime.Hours, clr.EndTime.Minutes, 0)
+										);
+				foreach(var date in listdate)
+				{
+					if (now.Equals(date.Start.ToString("dd/MM/yyyy"))){
+						isDate = 1;
+						break;
+					}
+				}
+				if (isDate == 0)
+				{
+					throw new Exception("Hôm nay không có thời khoá biểu cho lớp này!!!");
+				}
+				DiemDanh? userDaDiemDanh = _context.diemDanh.FirstOrDefault(p => p.time.Trim().Substring(p.time.Length - 10, 10).Equals(now) && p.UserId == currentUser.Id && p.Check == "IN" && p.ClassRoomId == classId);
+				if (userDaDiemDanh == null)
+				{
+                    DiemDanh dd = new DiemDanh();
+                    DateTime dt = DateTime.Now;
+                    dd.time = dt.ToString("hh:mm:ss - dd/MM/yyyy");
+                    dd.UserId = currentUser.Id;
+                    dd.ClassRoomId = classId;
+                    dd.Check = "IN";
 
-				_context.diemDanh.Add(dd);
-				_context.SaveChanges();
-				TinhDTB(currentUser.Id,classId);
+                    _context.diemDanh.Add(dd);
+                    _context.SaveChanges();
+                    TinhDTB(currentUser.Id, classId);
+                }
+				
 				return Json(new { success = true });
             }
 			catch (Exception ex)
@@ -1144,7 +1173,28 @@ namespace DoAnMon.Controllers
             }
 		}
 
-		[HttpPost]
+        
+        public async Task<IActionResult> DiemDanhOut(string UserID, string classId)
+        {
+			var currentUserID = UserID;
+            string now = DateTime.Now.ToString("dd/MM/yyyy");
+            DiemDanh? userDaDiemDanh = _context.diemDanh.FirstOrDefault(p => p.time.Trim().Substring(p.time.Length - 10, 10).Equals(now) && p.UserId == currentUserID && p.Check == "OUT" && p.ClassRoomId == classId);
+            if (userDaDiemDanh == null)
+            {
+                DiemDanh dd = new DiemDanh();
+                DateTime dt = DateTime.Now;
+                dd.time = dt.ToString("hh:mm:ss - dd/MM/yyyy");
+                dd.UserId = currentUserID;
+                dd.ClassRoomId = classId;
+                dd.Check = "OUT";
+
+                _context.diemDanh.Add(dd);
+                _context.SaveChanges();
+            }
+            return RedirectToAction("Details", "ClassRooms", new { id = classId });
+        }
+
+        [HttpPost]
 		public async Task<IActionResult> changeBackground(IFormFile image, string classId)
 		{
 			if (image != null && !string.IsNullOrEmpty(classId))
@@ -1271,10 +1321,6 @@ namespace DoAnMon.Controllers
 						}
 					}
 				}
-
-				// Optionally, move or process the completed file
-				// For example, move it to a permanent storage location
-				// File.Move(finalFilePath, Path.Combine(_permanentStorageFolder, request.FileName));
 
 				return Ok();
 			}

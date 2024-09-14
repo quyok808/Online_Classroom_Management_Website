@@ -1,0 +1,113 @@
+﻿@using static DoAnMon.Models.ClassroomViewModel
+@model List<ClassRoomViewModel>
+@{
+    ViewData["Title"] = "Thời khoá biểu";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/ bootstrap.min.css" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/3.4.0/fullcalendar.css" />
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.18.1/moment.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/3.4.0/fullcalendar.min.js"></script>
+<!-- Custom CSS to ensure full responsiveness -->
+<style>
+    /* Calendar responsiveness */
+    #calendar {
+        max-width: 100%;
+     
+    }
+
+    /* FullCalendar styling */
+    .fc-toolbar h2 {
+        font-size: 1.25rem; /* Slightly smaller for mobile */
+        font-weight: bold;
+    }
+
+    .fc-toolbar button {
+        margin: 0 5px;
+        padding: 0 12px 23px 12px;
+        font-size: 10px;
+        border-radius: 4px;
+    }
+
+    .fc-event {
+        font-size: 14px;
+        background-color: #28a745;
+        border-color: #28a745;
+        color: white;
+        padding: 10px 5px;
+    }
+
+    /* Ensure cards stack properly */
+    .card {
+        border-radius: 8px;
+        border: none;
+    }
+
+    .card-body {
+        padding: 20px;
+    }
+
+    /* Responsive font sizes */
+    @@media (max-width: 768px) {
+        h5.card-title {
+            font-size: 1.1rem;
+        }
+
+        .fc-toolbar h2 {
+            font-size: 1.1rem;
+        }
+
+        .card-body {
+            padding: 15px;
+        }
+
+        .fc-event {
+            font-size: 11px;
+        }
+    }
+
+    /* Icons and layout adjustments for mobile */
+    .fas {
+        margin-right: 5px;
+        color: #007bff;
+    }
+</style>
+
+<div class="container-fluid" style="margin-top: 25px;margin-bottom: 10px;">
+    
+        <div class="card shadow-sm">
+            <div class="card-body">
+                <div id="calendar"></div>
+            </div>
+        </div>
+  
+</div>
+<script>
+    $(document).ready(function () {
+        $('#calendar').fullCalendar({
+            themeSystem: 'bootstrap',
+            header: {
+                left: 'prev,next today',
+                center: 'title',
+                right: 'month,agendaWeek,agendaDay'
+            },
+            events: [
+                @foreach (var classroom in Model)
+                {
+                    foreach (var date in classroom.ClassDates)
+                    {
+                        <text>
+                            {
+                                title: '@Html.Raw(classroom.ClassRoom.Name)',
+                                start: '@date.Start.ToString("yyyy-MM-ddTHH:mm:ss")',
+                                end: '@date.End.ToString("yyyy-MM-ddTHH:mm:ss")'
+                            },
+                        </text>
+                    }
+                }
+            ],
+        });
+    });
+</script>
+
