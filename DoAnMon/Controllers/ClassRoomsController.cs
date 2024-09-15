@@ -24,6 +24,7 @@ using DoAnMon.ModelListSVDownload;
 using Microsoft.AspNetCore.Authorization;
 using System.Globalization;
 using System.Security.Cryptography;
+using System.Runtime.ConstrainedExecution;
 
 namespace DoAnMon.Controllers
 {
@@ -896,16 +897,23 @@ namespace DoAnMon.Controllers
 
 		private int DiemDD(string userId, string classId)
 		{
-			int diemDD = 3;
+			int diemDD; //Điểm danh = (Số buổi tham gia / Tổng số buổi học) x Điểm tối đa cho phần điểm danh.
+			int tongSoBuoi = 1;
+			var classRoom = _context.classRooms.FirstOrDefault(p => p.Id == classId);
 			List<DiemDanh> diemDanh = _context.diemDanh.Where(p => p.UserId == userId && p.ClassRoomId == classId).ToList();
-			int TongBuoi = diemDanh
-							.Select(e => DateTime.ParseExact(e.time.Split('-')[1].Trim(), "dd/MM/yyyy", CultureInfo.InvariantCulture))
-							.Select(p => p.Date)
-							.Distinct()
-							.Count();
-			int diemtru = 9 - TongBuoi;
-			diemDD = diemDD - diemtru;
-			if (diemDD <= 0) diemDD = 0;
+			var soBuoiHoc = diemDanh.Count() / 2;
+			if (classRoom != null)
+			{
+				var listbuoi = CalculateClassDates(
+										classRoom.StartDate,
+										classRoom.EndDate,
+										classRoom.DaysOfWeek,
+										new TimeSpan(classRoom.StartTime.Hours, classRoom.StartTime.Minutes, 0),
+										new TimeSpan(classRoom.EndTime.Hours, classRoom.EndTime.Minutes, 0)
+										);
+				tongSoBuoi = listbuoi.Count();
+			}
+			diemDD = (soBuoiHoc / tongSoBuoi) * 3;
 			return diemDD;
 		}
 
@@ -1125,7 +1133,8 @@ namespace DoAnMon.Controllers
 			{
 				int isDate = 0;
 				var currentUser = await _userManager.GetUserAsync(User);
-				string now = DateTime.Now.ToString("dd/MM/yyyy");
+				DateTime timeNow = DateTime.Now;
+				string now = timeNow.ToString("dd/MM/yyyy");
 				ClassRoom? clr = _context.classRooms.FirstOrDefault(p => p.Id == classId);
 				if (clr == null)
 				{
@@ -1150,6 +1159,14 @@ namespace DoAnMon.Controllers
 				{
 					throw new Exception("Hôm nay không có thời khoá biểu cho lớp này!!!");
 				}
+				if (timeNow.TimeOfDay.Add(TimeSpan.FromMinutes(5)) < clr.StartTime)
+				{
+					throw new Exception("Chưa đến giờ học !!!");
+				}
+				if (currentUser == null)
+				{
+					throw new Exception("Không có thông tin người dùng !!!");
+				}
 				DiemDanh? userDaDiemDanh = _context.diemDanh.FirstOrDefault(p => p.time.Trim().Substring(p.time.Length - 10, 10).Equals(now) && p.UserId == currentUser.Id && p.Check == "IN" && p.ClassRoomId == classId);
 				if (userDaDiemDanh == null)
 				{
@@ -1162,7 +1179,6 @@ namespace DoAnMon.Controllers
 
                     _context.diemDanh.Add(dd);
                     _context.SaveChanges();
-                    TinhDTB(currentUser.Id, classId);
                 }
 				
 				return Json(new { success = true });
@@ -1177,21 +1193,38 @@ namespace DoAnMon.Controllers
         public async Task<IActionResult> DiemDanhOut(string UserID, string classId)
         {
 			var currentUserID = UserID;
-            string now = DateTime.Now.ToString("dd/MM/yyyy");
-            DiemDanh? userDaDiemDanh = _context.diemDanh.FirstOrDefault(p => p.time.Trim().Substring(p.time.Length - 10, 10).Equals(now) && p.UserId == currentUserID && p.Check == "OUT" && p.ClassRoomId == classId);
-            if (userDaDiemDanh == null)
-            {
-                DiemDanh dd = new DiemDanh();
-                DateTime dt = DateTime.Now;
-                dd.time = dt.ToString("hh:mm:ss - dd/MM/yyyy");
-                dd.UserId = currentUserID;
-                dd.ClassRoomId = classId;
-                dd.Check = "OUT";
+			DateTime totaldatenow = DateTime.Now;
+            string now = totaldatenow.ToString("dd/MM/yyyy");
+			var classroom = _context.classRooms.FirstOrDefault(p => p.Id == classId);
+			double minTime = 0.0;
+			if (classroom != null)
+			{
+				TimeSpan t = classroom.EndTime - classroom.StartTime;
+				minTime = t.TotalMinutes * 0.7;
+			}
+			var userDiemDanhIn = _context.diemDanh.FirstOrDefault(p => p.time.Trim().Substring(p.time.Length - 10, 10).Equals(now) && p.UserId == currentUserID && p.Check == "IN" && p.ClassRoomId == classId);
+			if (userDiemDanhIn != null)
+			{
+				DateTime inTime = DateTime.ParseExact(userDiemDanhIn.time.Substring(0, 8), "hh:mm:ss", null);
+				double time = (totaldatenow.TimeOfDay - inTime.TimeOfDay).TotalMinutes;
+				if (time >= minTime)
+				{
+					DiemDanh? userDaDiemDanh = _context.diemDanh.FirstOrDefault(p => p.time.Trim().Substring(p.time.Length - 10, 10).Equals(now) && p.UserId == currentUserID && p.Check == "OUT" && p.ClassRoomId == classId);
+					if (userDaDiemDanh == null)
+					{
+						DiemDanh dd = new DiemDanh();
 
-                _context.diemDanh.Add(dd);
-                _context.SaveChanges();
-            }
-            return RedirectToAction("Details", "ClassRooms", new { id = classId });
+						dd.time = totaldatenow.ToString("hh:mm:ss - dd/MM/yyyy");
+						dd.UserId = currentUserID;
+						dd.ClassRoomId = classId;
+						dd.Check = "OUT";
+						_context.diemDanh.Add(dd);
+						await _context.SaveChangesAsync();
+					}
+				}
+			}
+			TinhDTB(UserID, classId);
+			return RedirectToAction("Details", "ClassRooms", new { id = classId });
         }
 
         [HttpPost]
