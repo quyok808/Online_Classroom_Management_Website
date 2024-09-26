@@ -1167,7 +1167,7 @@ namespace DoAnMon.Controllers
 				{
 					throw new Exception("Không có thông tin người dùng !!!");
 				}
-				DiemDanh? userDaDiemDanh = _context.diemDanh.FirstOrDefault(p => p.time.Trim().Substring(p.time.Length - 10, 10).Equals(now) && p.UserId == currentUser.Id && p.Check == "IN" && p.ClassRoomId == classId);
+				DiemDanh? userDaDiemDanh = _context.diemDanh.FirstOrDefault(p => p.time.Trim().Substring(p.time.Length - 10, 10).Equals(now) && p.UserId == currentUser.Id && (p.Check == "IN" || p.Check == "LATE") && p.ClassRoomId == classId);
 				if (userDaDiemDanh == null)
 				{
                     DiemDanh dd = new DiemDanh();
@@ -1175,8 +1175,7 @@ namespace DoAnMon.Controllers
                     dd.time = dt.ToString("hh:mm:ss - dd/MM/yyyy");
                     dd.UserId = currentUser.Id;
                     dd.ClassRoomId = classId;
-                    dd.Check = "IN";
-
+                    dd.Check = timeNow.TimeOfDay.Add(TimeSpan.FromMinutes(-5)) > clr.StartTime ? "LATE" : "IN";
                     _context.diemDanh.Add(dd);
                     _context.SaveChanges();
                 }
@@ -1364,9 +1363,9 @@ namespace DoAnMon.Controllers
 			}
 		}
 
-		public List<(DateTime Start, DateTime End)> CalculateClassDates(DateTime startDate, DateTime endDate, string daysOfWeek, TimeSpan startTime, TimeSpan endTime)
+		public List<ClassDate> CalculateClassDates(DateTime startDate, DateTime endDate, string daysOfWeek, TimeSpan startTime, TimeSpan endTime)
 		{
-			var dates = new List<(DateTime Start, DateTime End)>();
+			var dates = new List<ClassDate>();
 			var days = daysOfWeek.Split(',').Select(day => Enum.Parse<DayOfWeek>(day)).ToList();
 
 			for (var date = startDate; date <= endDate; date = date.AddDays(1))
@@ -1376,7 +1375,7 @@ namespace DoAnMon.Controllers
 				{
 					var startDateTime = date.Date + startTime;
 					var endDateTime = date.Date + endTime;
-					dates.Add((startDateTime, endDateTime));
+					dates.Add(new ClassDate(startDateTime, endDateTime, true));
 				}
 			}
 

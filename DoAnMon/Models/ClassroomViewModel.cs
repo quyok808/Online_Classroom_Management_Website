@@ -16,7 +16,7 @@ namespace DoAnMon.Models
 
 			public List<Message>? Message { get; set; }
 
-			public List<(DateTime Start, DateTime End)> ClassDates { get; set; }
+			public List<ClassDate>? ClassDates { get; set; }
 		}
 
 	}

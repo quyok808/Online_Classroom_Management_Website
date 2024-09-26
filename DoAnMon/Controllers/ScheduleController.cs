@@ -75,14 +75,16 @@ namespace DoAnMon.Controllers
                         classRoomViewModels.Add(new ClassRoomViewModel { ClassRoom = classRoom, Owner = new CustomUser { UserName = "Unknown" } });
                     }
                 }
+                ViewBag.diemDanh = await _context.diemDanh.Where(p => p.UserId.Equals(currentUser.Id)).ToListAsync();
             }
             // Truyền danh sách lớp học của người dùng vào View
+            
             return View(classRoomViewModels);
         }
 
-        public List<(DateTime Start, DateTime End)> CalculateClassDates(DateTime startDate, DateTime endDate, string daysOfWeek, TimeSpan startTime, TimeSpan endTime)
+        public List<ClassDate> CalculateClassDates(DateTime startDate, DateTime endDate, string daysOfWeek, TimeSpan startTime, TimeSpan endTime)
         {
-            var dates = new List<(DateTime Start, DateTime End)>();
+            var dates = new List<ClassDate>();
             var days = daysOfWeek.Split(',').Select(day => Enum.Parse<DayOfWeek>(day)).ToList();
 
             for (var date = startDate; date <= endDate; date = date.AddDays(1))
@@ -92,7 +94,16 @@ namespace DoAnMon.Controllers
                 {
                     var startDateTime = date.Date + startTime;
                     var endDateTime = date.Date + endTime;
-                    dates.Add((startDateTime, endDateTime));
+                    var listDate = _context.diemDanh.Select(p => p.time.Trim().Substring(p.time.Length - 10, 10)).Distinct().ToList();
+                    ClassDate newclassdate = new ClassDate(startDateTime, endDateTime);
+                    foreach(var d in listDate)
+                    {
+                        if (date.Date.ToString("dd/MM/yyyy").Trim().Equals(d.Trim()))
+                        {
+                            newclassdate.AttendanceStatus = true;
+                        }
+                    }
+                    dates.Add(newclassdate);
                 }
             }
 
