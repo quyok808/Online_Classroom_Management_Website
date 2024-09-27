@@ -15,6 +15,8 @@ namespace DoAnMon.Models
 			public bool isOwner { get; set; }
 
 			public List<Message>? Message { get; set; }
+
+			public List<ClassDate>? ClassDates { get; set; }
 		}
 
 	}
