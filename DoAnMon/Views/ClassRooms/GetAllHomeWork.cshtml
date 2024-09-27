@@ -75,6 +75,10 @@
 
 	@foreach (var item in Model)
 	{
+		@* var countGiao = listClassDetail.Where(p => p.ClassRoomId == item.ClassRoomId).Count();
+		var countNop = listBaiNop.Where(p => p.BaiTapId == item.Id).Count();
+		var countCham = listBaiNop.Where(p => p.BaiTapId == item.Id && p.daChamDiem == 1).Count(); *@
+
 		<div class="item">
 			<div class="assignment" style="height: 30vh;">
 				<div class="assignment-content"
@@ -83,6 +87,10 @@
 					<p class="assignment-description">
 						@item.Content
 					</p>
+					<div style ="display: flex; float: right; margin-right: 10px; border: 1px solid groove;">
+						@* <p>Đã Giao: @countGiao <br />Đã nộp: @countNop <br />Đã chấm: @countCham </p> *@
+						<p>Done</p>
+					</div>
 				</div>
 				@if (User.IsInRole("Teacher"))
 				{

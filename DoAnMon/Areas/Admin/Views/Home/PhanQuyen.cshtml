@@ -28,6 +28,8 @@
 				<td>@user.Name</td>
 				<td>@user.Email</td>
 				<td>
+					<form id="updateUserRoleForm" method="post" action="/Admin/Home/UpdateUserRole">
+						<select name="roleName" class="form-control">
 					<form id="updateUserRoleForm" method="post" action="/Admin/Home/UpdateUserRole" style="display:flex; width:160px">
 						<select name="roleName" class="form-control" style="margin-right:20px">
 							<!-- Option to select current role -->

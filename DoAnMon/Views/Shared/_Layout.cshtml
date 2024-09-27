@@ -37,6 +37,7 @@
         /*PHẦN MENU*/
         nav {
             display: flex;
+            justify-content: space-between;
             background-color: #333;
             height: 60px;
             align-items: center;
@@ -45,7 +46,7 @@
 
         .menu {
             list-style-type: none;
-            margin: 150px;
+            margin-bottom: 0;
             padding: 0;
             display: flex;
             justify-content: flex-end;
@@ -73,12 +74,10 @@
                     white-space: nowrap;
                 }
 
-                    .menu li a.selected {
-                        color: rgb(224, 215, 215);
-                    }
+
 
                     .menu li a.selected {
-                        background-color: #017b48;
+                        background-color: #017b48!important;
                         color: hsl(0, 0%, 100%);
                     }
 
@@ -695,7 +694,7 @@
                     <li><a href="/Home/Index">Trang chủ</a></li>
                     <li><a href="/ClassRooms">Lớp học</a></li>
                     <li><a href="/BaiTaps">Bài tập</a></li>
-
+                    <li><a href="/Schedule">Thời khoá biểu</a></li>
                 </ul>
                 <div class="login-item">
                     <partial name="_LoginPartial" />
@@ -707,6 +706,7 @@
                 <a href="/Home/Index">Trang chủ</a>
                 <a href="/ClassRooms">Lớp học</a>
                 <a class="bt" href="/BaiTaps">Bài tập</a>
+                <a href="/Schedule">Thời khoá biểu</a>
                 <a href="https://sinhvien.hutech.edu.vn/#/sinhvien/login/login">Sinh viên Hutech</a>
                 <a href="https://daotao.hutech.edu.vn/>">Cổng Thông Tin Đào Tạo</a>
                 <a href="https://e-graduate.hutech.edu.vn/">E-Learning Hutech</a>

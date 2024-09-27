@@ -7,11 +7,11 @@ const vm = new Vue({
         roomId: "",
         roomToken: "",
         room: undefined,
-        callClient: undefined
+        callClient: undefined,
     },
     computed: {
         roomUrl: function () {
-            return `https://meeting-room-onlya.glitch.me?room=${this.roomId}`;
+            return `https://meeting-room-onlya1.glitch.me?room=${this.roomId}`;
         }
     },
     async mounted() {

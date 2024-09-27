@@ -151,6 +151,9 @@ namespace DoAnMon.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<int?>("daChamDiem")
+                        .HasColumnType("int");
+
                     b.HasKey("IdBaiNop");
 
                     b.HasIndex("BaiTapId");
@@ -229,8 +232,18 @@ namespace DoAnMon.Migrations
                     b.Property<string>("BaiTapId")
                         .HasColumnType("nvarchar(450)");
 
+                    b.Property<string>("DaysOfWeek")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("Description")
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("EndDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<TimeSpan>("EndTime")
+                        .HasColumnType("time");
 
                     b.Property<string>("Name")
                         .HasColumnType("nvarchar(max)");
@@ -238,8 +251,20 @@ namespace DoAnMon.Migrations
                     b.Property<string>("RoomOnline")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<int>("STT")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("StartDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<TimeSpan>("StartTime")
+                        .HasColumnType("time");
+
                     b.Property<string>("UserId")
                         .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("backgroundUrl")
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
 
@@ -281,14 +306,18 @@ namespace DoAnMon.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
+                    b.Property<string>("Check")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("ClassRoomId")
                         .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("UserId")
                         .HasColumnType("nvarchar(450)");
 
-                    b.Property<DateTime>("time")
-                        .HasColumnType("datetime2");
+                    b.Property<string>("time")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
 

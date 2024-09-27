@@ -64,6 +64,35 @@
 											<input name="Description" id="Description" class="form-control custom-input-width" />
 											<span id="DescriptionError" class="text-danger"></span>
 										</div>
+										<!-- Thêm các trường cho lịch học -->
+										<div class="form-group">
+											<label for="StartDate" class="control-label">Ngày bắt đầu:</label>
+											<input type="date" name="StartDate" id="StartDate" class="form-control" required />
+										</div>
+										<div class="form-group">
+											<label for="EndDate" class="control-label">Ngày kết thúc:</label>
+											<input type="date" name="EndDate" id="EndDate" class="form-control" required />
+										</div>
+										<div class="form-group">
+											<label for="DaysOfWeek" class="control-label">Chọn ngày học:</label>
+											<select name="DaysOfWeek" id="DaysOfWeek" multiple class="form-control" required>
+												<option value="Monday">Thứ 2</option>
+												<option value="Tuesday">Thứ 3</option>
+												<option value="Wednesday">Thứ 4</option>
+												<option value="Thursday">Thứ 5</option>
+												<option value="Friday">Thứ 6</option>
+												<option value="Saturday">Thứ 7</option>
+												<option value="Sunday">Chủ nhật</option>
+											</select>
+										</div>
+										<div class="form-group">
+											<label for="StartTime" class="control-label">Giờ bắt đầu:</label>
+											<input type="time" name="StartTime" id="StartTime" class="form-control" required />
+										</div>
+										<div class="form-group">
+											<label for="EndTime" class="control-label">Giờ kết thúc:</label>
+											<input type="time" name="EndTime" id="EndTime" class="form-control" required />
+										</div>
 									</div>
 								</div>
 								<div class="modal-footer">
@@ -142,5 +171,51 @@
 			});
 		});
 	</script>
+	<script>
+		document.getElementById('createRoomForm').addEventListener('submit', function (event) {
+			var startDateInput = document.getElementById('StartDate').value;
+			var endDateInput = document.getElementById('EndDate').value;
 
+			if (!startDateInput || !endDateInput) {
+				alert('Vui lòng chọn cả ngày bắt đầu và ngày kết thúc.');
+				event.preventDefault(); // Prevent form submission
+				return;
+			}
+
+			var startDate = new Date(startDateInput);
+			var endDate = new Date(endDateInput);
+			var today = new Date();
+			today.setHours(0, 0, 0, 0); // Set time to 00:00:00
+
+			if (startDate < today) {
+				alert('Ngày bắt đầu không được chọn ngày trước hôm nay.');
+				event.preventDefault(); // Prevent form submission
+				return;
+			}
+
+			if (endDate <= startDate) {
+				alert('Ngày kết thúc phải lớn hơn ngày bắt đầu.');
+				event.preventDefault(); // Prevent form submission
+				return;
+			}
+
+			var startTimeInput = document.getElementById('StartTime').value;
+			var endTimeInput = document.getElementById('EndTime').value;
+
+			if (!startTimeInput || !endTimeInput) {
+				alert('Vui lòng chọn cả giờ bắt đầu và giờ kết thúc.');
+				event.preventDefault(); // Prevent form submission
+				return;
+			}
+
+			var startTime = new Date('1970-01-01T' + startTimeInput + 'Z');
+			var endTime = new Date('1970-01-01T' + endTimeInput + 'Z');
+
+			if (endTime <= startTime) {
+				alert('Giờ kết thúc phải lớn hơn giờ bắt đầu.');
+				event.preventDefault(); // Prevent form submission
+				return;
+			}
+		});
+	</script>
 </body>
