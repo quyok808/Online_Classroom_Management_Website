@@ -9,6 +9,7 @@ namespace DoAnMon.Models
 		public string time { get; set; }
 		public string? UserId { get; set; }
 		public string? ClassRoomId { get; set; }
+		public string? Check {  get; set; }
 
 		[ValidateNever]
 		public CustomUser? User { get; set; }

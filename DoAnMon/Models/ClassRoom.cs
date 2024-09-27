@@ -10,12 +10,27 @@ namespace DoAnMon.Models
         public string? UserId { get; set; }
         public string? Description { get; set; }
         public string? RoomOnline { get; set; }
-        [ValidateNever]
+        public string? backgroundUrl { get; set; }
+        public int STT { get; set; }
+
+		// Các trường mới cho ngày học
+		public DateTime StartDate { get; set; }
+		public DateTime EndDate { get; set; }
+		public string DaysOfWeek { get; set; } // Đây sẽ là chuỗi chứa các ngày trong tuần (vd: "Monday,Wednesday")
+		public TimeSpan StartTime { get; set; }
+		public TimeSpan EndTime { get; set; }
+
+		[ValidateNever]
         public ICollection<ClassroomDetail> ClassroomDetails { get; set; }
         [ValidateNever]
         public CustomUser? User { get; set; }
         [ValidateNever]
 		public ICollection<BaiGiang> BaiGiangs { get; set; }
+
+		public int GetDisplayNumber()
+		{
+			return STT + 1;
+		}
 	}
 
 }
