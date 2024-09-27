@@ -5,7 +5,6 @@
 @inject SignInManager<CustomUser> _signInManager
 
 <style>
-    /* Chỉnh lại dropdown menu thành menu dọc và đẩy xuống phía dưới */
     .dropdown-menu {
         position: absolute;
         top: 100%;
@@ -13,7 +12,7 @@
         z-index: 1000;
         display: none;
         float: left;
-        min-width: 10rem; /* Đảm bảo chiều rộng tối thiểu */
+        min-width: 250px;
         padding: 0.5rem 0;
         margin: 0.125rem 0 0;
         font-size: 1rem;
@@ -26,56 +25,95 @@
         border-radius: 0.25rem;
     }
 
-    /* Chỉnh lại dropdown menu cho phù hợp với menu dọc */
     .dropdown-menu-right {
         right: 0;
         left: auto;
     }
 
-    /* Khi menu được mở ra, hiển thị nó */
     .show {
         display: block;
     }
 
-    /* Chỉnh lại dropdown-item để chiếm toàn bộ chiều rộng */
     .dropdown-item {
         width: 100%;
-        height: auto; /* Đảm bảo chiều cao tự động */
-        padding: 0.5rem 1rem; /* Đảm bảo padding cho mỗi mục */
+        height: auto;
+        padding: 0.5rem 1rem;
         margin: 0;
     }
 
-    .custom-padding{
-        padding-bottom: 15px;
+    .custom-padding {
+        padding-bottom: 10px;
+        font-size: 12px;
     }
-
 </style>
+@{
+    var user = await UserManager.GetUserAsync(User);
+}
+
 @{
     var user = await UserManager.GetUserAsync(User);
 }
 
 <ul class="navbar-nav">
     @if (SignInManager.IsSignedIn(User) && user != null)
-{ 
+    {
         <li class="nav-item dropdown">
             @{
                 var name = user?.Name;
             }
-            <a class="nav-link text-dark dropdown-toggle" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">@name</a>
+            <a class="nav-link text-dark dropdown-toggle" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="white-space: nowrap;">@name</a>
             <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
-                <p class="dropdown-item custom-padding">MSSV: @user.Mssv</p>
-                <p class="dropdown-item custom-padding">Email: @user.Email</p> 
-                <a class="text-dark dropdown-item nav-link" asp-area="Identity" asp-page="/Account/Manage/ChangePassword" title="Manage" style="padding-left: 16px;">Đổi mật khẩu</a>
+                <p class="dropdown-item custom-padding" style="margin: 0; margin-bottom: -7px;">MSSV: @user.Mssv</p>
+                <p class="dropdown-item custom-padding" style="margin: 0;">Email: @user.Email</p>
+                <a class="text-dark dropdown-item nav-link" asp-area="Identity" asp-page="/Account/Manage/ChangePassword" title="Manage" style="font-size: 12px; text-align:left; padding:10px; color: black;">Đổi mật khẩu</a>
                 <form class="form-inline dropdown-item" asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Action("Index", "Home", new { area = "" })">
-                    <button type="submit" class="btn btn-link text-dark" style="padding: 0; text-decoration: none; width: 100%; margin-bottom: 0; text-align:left;">Logout</button>
+                    <button type="submit" class="btn btn-link text-dark" style="padding: 0; text-decoration: none; width: 100%; margin-bottom: 0; text-align:left; color: black; font-size:12px;background-color: transparent;">Logout</button>
                 </form>
+                @if (User.IsInRole("Admin"))
+                {
+                    <a class="nav-link text-dark dropdown-toggle" id="adminDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="font-size: 12px; text-align:left; padding:10px; color: black;">Quản lí</a>
+                    <div class="dropdown-menu dropdown-menu-right" style="border-radius:5px" aria-labelledby="adminDropdown">
+                        <a class="dropdown-item" href="/Admin/Home/PhanQuyen" style="font-size: 12px; text-align:left; padding:10px; color: black;">Quản lí người dùng</a>
+                        <a class="dropdown-item" href="/Admin/Home/DSbaipost" style="font-size: 12px; text-align:left; padding:10px; color: black;">Bài post</a>
+                    </div>
+                }
             </div>
         </li>
-}
-else
-{
-    <li class="nav-item">
-        <a class="nav-link text-dark" asp-area="Identity" asp-page="/Account/Index">Login/Signup</a>
-    </li>
-}
+    }
+    else
+    {
+        <li class="nav-item">
+            <a class="nav-link text-dark" asp-area="Identity" asp-page="/Account/Index">Login/Signup</a>
+        </li>
+    }
 </ul>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        var dropdowns = document.querySelectorAll('.dropdown-toggle');
+        dropdowns.forEach(function (dropdown) {
+            dropdown.addEventListener('click', function (event) {
+                event.preventDefault();
+                event.stopPropagation();
+                var menu = this.nextElementSibling;
+                menu.classList.toggle('show');
+            });
+        });
+
+        document.addEventListener('click', function () {
+            dropdowns.forEach(function (dropdown) {
+                var menu = dropdown.nextElementSibling;
+                if (menu.classList.contains('show')) {
+                    menu.classList.remove('show');
+                }
+            });
+        });
+
+        var menus = document.querySelectorAll('.dropdown-menu');
+        menus.forEach(function (menu) {
+            menu.addEventListener('click', function (event) {
+                event.stopPropagation();
+            });
+        });
+    });
+</script>

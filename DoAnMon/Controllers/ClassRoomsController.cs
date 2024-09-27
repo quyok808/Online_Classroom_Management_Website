@@ -1,4 +1,4 @@
-﻿using System;
+﻿  using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -21,24 +21,32 @@ using SQLitePCL;
 using DoAnMon.Pagination;
 using Microsoft.CodeAnalysis.Elfie.Diagnostics;
 using DoAnMon.ModelListSVDownload;
+using Microsoft.AspNetCore.Authorization;
+using System.Globalization;
+using System.Security.Cryptography;
+using System.Runtime.ConstrainedExecution;
 
 namespace DoAnMon.Controllers
 {
+	[Authorize(Roles ="Admin, Teacher, Student")]
 	public class ClassRoomsController : Controller
 	{
 		private readonly ApplicationDbContext _context;
 		private readonly UserManager<CustomUser> _userManager;
 		private readonly IWebHostEnvironment _environment;
 		private readonly IStudent _studentRepo;
+		private static readonly SemaphoreSlim _semaphore = new SemaphoreSlim(1, 1);
+		private readonly ILogger<HomeController> _logger;
 
-		public ClassRoomsController(ApplicationDbContext context, UserManager<CustomUser> userManager, IWebHostEnvironment environment, IStudent studentRepo)
+		public ClassRoomsController(ApplicationDbContext context, UserManager<CustomUser> userManager, IWebHostEnvironment environment, IStudent studentRepo, ILogger<HomeController> logger)
 		{
 			_context = context;
 			_userManager = userManager;
 			_environment = environment;
 			_studentRepo = studentRepo;
+			_logger = logger;
 		}
-		static List<ClassRoom> userClasses;
+		public static List<ClassRoom>? userClasses;
 		// GET: ClassRooms
 		public async Task<IActionResult> Index()
 		{
@@ -67,7 +75,7 @@ namespace DoAnMon.Controllers
 					userClasses.AddRange(userClasses1);
 				}
 
-
+				userClasses = userClasses.OrderBy(p => p.STT).ToList();
 				foreach (var classRoom in userClasses)
 				{
 					var owner = await _context.Users.FirstOrDefaultAsync(u => u.Id == classRoom.UserId);
@@ -78,7 +86,7 @@ namespace DoAnMon.Controllers
 						classRoomViewModels.Add(new ClassRoomViewModel
 						{
 							ClassRoom = classRoom,
-							Owner = owner
+							Owner = owner,
 						});
 					}
 					else
@@ -86,6 +94,8 @@ namespace DoAnMon.Controllers
 						// Xử lý trường hợp không có chủ sở hữu (nếu cần)
 						classRoomViewModels.Add(new ClassRoomViewModel { ClassRoom = classRoom, Owner = new CustomUser { UserName = "Unknown" } });
 					}
+
+					
 				}
 			}
 			ViewBag.ListRoom = userClasses;
@@ -122,35 +132,36 @@ namespace DoAnMon.Controllers
 				return NotFound();
 			}
 			var viewModel = new ClassRoomViewModel();
-			// Kiểm tra null cho owner trước khi thêm vào classRoomViewModels
-			if (owner != null)
-			{
-				viewModel.ClassRoom = classRoom;
-				viewModel.Owner = owner;
-			}
-			else
-			{
-				// Xử lý trường hợp không có chủ sở hữu (nếu cần)
-				viewModel.ClassRoom = classRoom;
-				viewModel.Owner = new CustomUser { UserName = "Unknown" };
-			}
-			foreach (var item in Lecture)
+            // Kiểm tra null cho owner trước khi thêm vào classRoomViewModels
+            if (owner != null)
+            {
+                viewModel.ClassRoom = classRoom;
+                viewModel.Owner = owner;
+            }
+            else
+            {
+                // Xử lý trường hợp không có chủ sở hữu (nếu cần)
+                viewModel.ClassRoom = classRoom;
+                viewModel.Owner = new CustomUser { UserName = "Unknown" };
+            }
+            foreach (var item in Lecture)
 			{
 				viewModel.Unit = Lecture;
 			}
-			if (owner.Id == currentUser.Id)
-			{
-				viewModel.isOwner = true;
-				ViewBag.Isowner = true;
-			}
-			else
-			{
-				viewModel.isOwner = false;
-				ViewBag.Isowner = false;
-			}
-			viewModel.Homework = homework;
+            if (owner.Id == currentUser.Id)
+            {
+                viewModel.isOwner = true;
+                ViewBag.Isowner = true;
+            }
+            else
+            {
+                viewModel.isOwner = false;
+                ViewBag.Isowner = false;
+            }
+            viewModel.Homework = homework;
 			viewModel.Message = chatHistory;
 			ViewBag.ListRoom = userClasses;
+
 			var listBT = await _context.baiTaps.Where(p => p.ClassRoomId == id).ToListAsync();
 
 			var Diem = new List<DiemViewModel>();
@@ -201,6 +212,14 @@ namespace DoAnMon.Controllers
 			}
 			ViewBag.ListBT = listBT;
 			ViewBag.ListDiem = Diem;
+
+			viewModel.ClassDates = CalculateClassDates(
+										classRoom.StartDate, 
+										classRoom.EndDate, 
+										classRoom.DaysOfWeek, 
+										new TimeSpan(classRoom.StartTime.Hours, classRoom.StartTime.Minutes, 0),
+										new TimeSpan(classRoom.EndTime.Hours, classRoom.EndTime.Minutes,0)
+										);
 			return View(viewModel);
 		}
 
@@ -234,7 +253,7 @@ namespace DoAnMon.Controllers
 						.Where(p => classDetailClasses.Contains(p.Id))
 						.ToListAsync();
 				}
-
+				userClasses = userClasses.OrderBy(p => p.STT).ToList();
 				foreach (var classRoom in userClasses)
 				{
 					var owner = await _context.Users.FirstOrDefaultAsync(u => u.Id == classRoom.UserId);
@@ -278,7 +297,7 @@ namespace DoAnMon.Controllers
 		// For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
 		[HttpPost]
 		[ValidateAntiForgeryToken]
-		public async Task<IActionResult> Create(ClassRoom classRoom)
+		public async Task<IActionResult> Create(ClassRoom classRoom, string[] DaysOfWeek)
 		{
 			ModelState.Remove("Id");
 			if (ModelState.IsValid)
@@ -288,10 +307,22 @@ namespace DoAnMon.Controllers
 				{
 					classRoom.Id = GenerateUniqueRandomString(6);
 					classRoom.UserId = currentUser.Id;
-					classRoom.RoomOnline = "https://meeting-room-onlya.glitch.me?room="+linkRoom;
+					classRoom.RoomOnline = "https://meeting-room-onlya1.glitch.me?room=" + linkRoom;
+					classRoom.backgroundUrl = "anhclass.png";
+					classRoom.STT = 0;
+
+					// Ghép các ngày học lại thành chuỗi
+					classRoom.DaysOfWeek = string.Join(",", DaysOfWeek);
+
 					_context.Add(classRoom);
 					await _context.SaveChangesAsync();
 
+					var classrooms = await _context.classRooms.ToListAsync();
+					foreach (var clr in classrooms)
+					{
+						clr.STT++;
+					}
+					await _context.SaveChangesAsync();
 					return RedirectToAction(nameof(Index));
 				}
 			}
@@ -302,9 +333,6 @@ namespace DoAnMon.Controllers
         [HttpPost]
         public ActionResult ReceiveRoomUrl(string roomUrl1)
         {
-			// Xử lý dữ liệu roomUrl ở đây, ví dụ lưu vào cơ sở dữ liệu hoặc thực hiện các thao tác khác
-			// Ví dụ đơn giản, hiển thị dữ liệu roomUrl trong console log
-			//System.Console.WriteLine("Received roomUrl: " + roomUrl1);
 			linkRoom = roomUrl1;
             // Trả về kết quả, có thể là JSON hoặc các loại dữ liệu khác
             return Json(new { success = true });
@@ -344,29 +372,29 @@ namespace DoAnMon.Controllers
 			return Ok();
 		}
 
-		[HttpGet]
-		public async Task<PartialViewResult> GetLectureAsync(string ClassId)
-		{
-			var currentUser = await _userManager.GetUserAsync(User);
-			// Lấy danh sách bài giảng dựa trên ClassId từ cơ sở dữ liệu
-			List<BaiGiang> lectures = _context.BaiGiang.Where(l => l.ClassId == ClassId).ToList();
-			ClassRoom temp = _context.classRooms.FirstOrDefault(p => p.Id == ClassId);
-			if (temp != null)
-			{
-				if (currentUser.Id == temp.UserId)
-				{
-					ViewBag.Isowner = true;
-				}
-				else
-				{
-					ViewBag.Isowner = false;
-				}
-			}
-			return PartialView("_lecturePartial", lectures);
-		}
+        [HttpGet]
+        public async Task<PartialViewResult> GetLectureAsync(string ClassId)
+        {
+            var currentUser = await _userManager.GetUserAsync(User);
+            // Lấy danh sách bài giảng dựa trên ClassId từ cơ sở dữ liệu
+            List<BaiGiang> lectures = _context.BaiGiang.Where(l => l.ClassId == ClassId).ToList();
+            ClassRoom temp = _context.classRooms.FirstOrDefault(p => p.Id == ClassId);
+            if (temp != null)
+            {
+                if (currentUser.Id == temp.UserId)
+                {
+                    ViewBag.Isowner = true;
+                }
+                else
+                {
+                    ViewBag.Isowner = false;
+                }
+            }
+            return PartialView("_lecturePartial", lectures);
+        }
 
 
-		[HttpGet]
+        [HttpGet]
 		public PartialViewResult GetMessages()
 		{
 			List<Message> messages = _context.Messages.ToList();
@@ -443,29 +471,14 @@ namespace DoAnMon.Controllers
 		}
 
 		[HttpPost]
-		public async Task<IActionResult> CreateBaitap(IFormFile FileUpLoad, string Content, string Title, string ClassId, string FileFormat, DateTime Deadline)
+		public async Task<IActionResult> CreateBaitap(string AttactURL, string Content, string Title, string ClassId, string FileFormat, DateTime Deadline)
 		{
 
-			if (FileUpLoad != null && FileUpLoad.Length > 0)
-			{
-				var uploadsFolder = Path.Combine(_environment.WebRootPath, "BAITAP");
-				// Kiểm tra xem thư mục tồn tại hay không
-				if (!Directory.Exists(uploadsFolder))
-				{
-					// Nếu thư mục không tồn tại, tạo thư mục mới
-					Directory.CreateDirectory(uploadsFolder);
-				}
-				var filePath = Path.Combine(uploadsFolder, FileUpLoad.FileName);
-				using (var stream = new FileStream(filePath, FileMode.Create))
-				{
-					await FileUpLoad.CopyToAsync(stream);
-				}
-			}
 			BaiTap baitap = new BaiTap();
 			baitap.Title = Title;
 			baitap.Content = Content;
 			baitap.Id = Guid.NewGuid().ToString();
-			baitap.attractUrl = (FileUpLoad != null && FileUpLoad.Length > 0) ? FileUpLoad.FileName : null; ;
+			baitap.attractUrl = AttactURL;
 			baitap.ClassRoomId = ClassId;
 			baitap.FileFormat = FileFormat;
 			if (Deadline.ToString() != "01/01/0001 12:00:00 AM")
@@ -503,11 +516,12 @@ namespace DoAnMon.Controllers
 					decimal TongDiem_User = (decimal)_context.BaiNop.Where(p => p.UserId.Trim() == userId.Trim() && p.ClassId.Trim() == classId.Trim()).Select(p => p.Diem).Sum();
 					if (tongslBT > 0)
 					{
-						score.DTB = TongDiem_User / tongslBT;
+						score.DTB = ((TongDiem_User / tongslBT) * 0.7m) + (decimal)DiemDD(userId, classId);
+
 					}
 					else
 					{
-						score.DTB = 0;
+						score.DTB = (decimal)DiemDD(userId, classId);
 					}
 					_context.SaveChanges(); // Lưu thay đổi cho mỗi người dùng
 				}
@@ -560,7 +574,6 @@ namespace DoAnMon.Controllers
 				baiNop.SubmittedAt = DateTime.Now;
 				baiNop.Urlbainop = filename;
 				baiNop.Diem = 0;
-				baiNop.daChamDiem = 0;
 
 				_context.Add(baiNop);
 				await _context.SaveChangesAsync();
@@ -871,7 +884,6 @@ namespace DoAnMon.Controllers
 					return Json(new { success = false });
 				}
 				baiNop.Diem = diem;
-				baiNop.daChamDiem = 1;
 				_context.SaveChanges();
 
 				TinhDTB(baiNop.UserId, baiNop.ClassId);
@@ -883,6 +895,28 @@ namespace DoAnMon.Controllers
 			}
 		}
 
+		private int DiemDD(string userId, string classId)
+		{
+			int diemDD; //Điểm danh = (Số buổi tham gia / Tổng số buổi học) x Điểm tối đa cho phần điểm danh.
+			int tongSoBuoi = 1;
+			var classRoom = _context.classRooms.FirstOrDefault(p => p.Id == classId);
+			List<DiemDanh> diemDanh = _context.diemDanh.Where(p => p.UserId == userId && p.ClassRoomId == classId).ToList();
+			var soBuoiHoc = diemDanh.Count() / 2;
+			if (classRoom != null)
+			{
+				var listbuoi = CalculateClassDates(
+										classRoom.StartDate,
+										classRoom.EndDate,
+										classRoom.DaysOfWeek,
+										new TimeSpan(classRoom.StartTime.Hours, classRoom.StartTime.Minutes, 0),
+										new TimeSpan(classRoom.EndTime.Hours, classRoom.EndTime.Minutes, 0)
+										);
+				tongSoBuoi = listbuoi.Count();
+			}
+			diemDD = (soBuoiHoc / tongSoBuoi) * 3;
+			return diemDD;
+		}
+
 		private void TinhDTB(string userId, string classId)
 		{
 			BangDiem score = _context.bangDiem.FirstOrDefault(p => p.UserId == userId && p.ClassRoomId == classId);
@@ -892,11 +926,12 @@ namespace DoAnMon.Controllers
 				decimal TongDiem_User = (decimal)_context.BaiNop.Where(p => p.UserId.ToString().Trim() == userId.Trim() && p.ClassId.Trim() == classId.Trim()).Select(p => p.Diem).Sum();
 				if (tongslBT > 0)
 				{
-					score.DTB = TongDiem_User / tongslBT;
+					score.DTB = ((TongDiem_User / tongslBT) * 0.7m) + (decimal)DiemDD(userId, classId);
+
 				}
 				else
 				{
-					score.DTB = 0;
+					score.DTB = (decimal)DiemDD(userId, classId);
 				}
             }
 			_context.SaveChanges();
@@ -931,8 +966,13 @@ namespace DoAnMon.Controllers
 		[HttpGet]
 		public async Task<IActionResult> GetListSV(string classId)
 		{
+
 			try
 			{
+				if (_studentRepo.getListSV() != null)
+				{
+					_studentRepo.RemoveList();
+				}
 				var findClass = _context.classRooms.FirstOrDefault(p => p.Id == classId);
                 if (findClass == null)
                 {
@@ -960,129 +1000,387 @@ namespace DoAnMon.Controllers
 			}
 		}
 
+        [HttpPost]
+        public async Task<IActionResult> ExportDSSV(string classID)
+        {
+            try
+            {
+				List<SV> students = null; 
+                // Tạo một bảng tính mới
+                ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
+                using (var package = new ExcelPackage())
+                {
+                    var worksheet = package.Workbook.Worksheets.Add("Students");
+
+                    // Thêm dữ liệu vào bảng tính
+
+                    // Dòng 1 {
+                    worksheet.Cells["A1:C1"].Merge = true;
+                    worksheet.Cells["A1"].Value = "TRƯỜNG ĐẠI HỌC CÔNG NGHỆ TP.HCM";
+                    // Truy cập vào Style của ô A1
+                    var cellStyle_A1 = worksheet.Cells["A1"].Style;
+
+                    cellStyle_A1.Font.Name = "Times New Roman"; // Tên của font chữ
+                    cellStyle_A1.Font.Size = 8; // Cỡ chữ
+                    cellStyle_A1.Font.Bold = true; // In đậm
+                    cellStyle_A1.HorizontalAlignment = OfficeOpenXml.Style.ExcelHorizontalAlignment.Center;
+                    // } Hết dòng 1
+
+                    // Dòng 3 {
+                    worksheet.Cells["A3:D3"].Merge = true;
+                    worksheet.Cells["A3"].Value = "DANH SÁCH SINH VIÊN";
+                    // Truy cập vào Style của ô A3
+                    var cellStyle_A3 = worksheet.Cells["A3"].Style;
+
+                    cellStyle_A3.Font.Name = "Times New Roman"; // Tên của font chữ
+                    cellStyle_A3.Font.Size = 16; // Cỡ chữ
+                    cellStyle_A3.Font.Bold = true; // In đậm
+                    cellStyle_A3.HorizontalAlignment = OfficeOpenXml.Style.ExcelHorizontalAlignment.Center;
+                    // } Hết dòng 3
+
+                    // Chỉ định tên đầu mục cho mỗi cột
+                    // var headerRow = worksheet.Cells[Chỉ số hàng bắt đầu (dòng 5),  Chỉ số cột bắt đầu (cột 1, tương ứng với cột A),  Chỉ số hàng kết thúc (dòng 5, vẫn là dòng 5), Chỉ số cột kết thúc (cột 4, tương ứng với cột D)];
+                    List<string> headers = new List<string>
+                    {
+                        "STT",
+                        "MSSV",
+                        "Họ và tên",
+                        "Email"
+                    };
+
+                    worksheet.Cells[5, 1].LoadFromArrays(new List<string[]> { headers.ToArray() });
+
+                    var cellStyle_A5D5 = worksheet.Cells["A5:D5"].Style;
+
+                    cellStyle_A5D5.Font.Bold = true;
+                    cellStyle_A5D5.HorizontalAlignment = OfficeOpenXml.Style.ExcelHorizontalAlignment.Center;
+					students = _studentRepo.getListSV();
+					worksheet.Cells[6, 1].LoadFromCollection(students, false);
+
+                    // Tạo đối tượng Style cho border của dữ liệu được load
+                    var borderStyle = worksheet.Cells[5, 1, 5 + students.Count, 4].Style.Border;
+
+                    // Thiết lập border cho các ô
+                    borderStyle.Bottom.Style = borderStyle.Top.Style = borderStyle.Left.Style = borderStyle.Right.Style = OfficeOpenXml.Style.ExcelBorderStyle.Thin;
+
+                    worksheet.Column(1).AutoFit();
+                    worksheet.Column(2).AutoFit();
+                    worksheet.Column(3).AutoFit();
+                    worksheet.Column(4).AutoFit();
+
+                    // Lấy chỉ số của hàng cuối cùng trong danh sách
+                    int lastRowIndex = 5 + students.Count;
+
+                    // Gán giá trị cho ô cuối cùng trong cột thứ 4 (cột Email)
+                    worksheet.Cells[lastRowIndex + 1, 1].Value = "Tổng số sinh viên: " + students.Count;
+
+                    // Lưu trữ bảng tính vào một luồng bộ nhớ tạm thời
+                    MemoryStream stream = new MemoryStream();
+                    package.SaveAs(stream);
+
+                    _studentRepo.RemoveList();
+                    // Thiết lập dữ liệu phản hồi để tải xuống tệp Excel
+                    return File(stream.ToArray(), "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "DSSV_" + classID + ".xlsx");
+
+                }
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, "An error occurred while processing your request.");
+            }
+        }
+
+        [HttpGet]
+        public IActionResult DeleteLecture(int id, string classId)
+        {
+            var temp = _context.BaiGiang.FirstOrDefault(p => p.Id == id);
+            if (temp == null)
+            {
+                return NotFound("Không có bài giảng này trong CSDL");
+            }
+            else
+            {
+                _context.BaiGiang.Remove(temp);
+            }
+            _context.SaveChanges();
+            return RedirectToAction("Details", "ClassRooms", new { id = classId });
+        }
+
+        [HttpGet]
+        public IActionResult DeleteBT(string id, string classId)
+        {
+            var temp = _context.baiTaps.FirstOrDefault(p => p.Id == id);
+            if (temp == null)
+            {
+                return NotFound("Không có bài tập này trong CSDL");
+            }
+            var listBN = _context.BaiNop.Where(p => p.BaiTapId == id).ToList();
+            foreach (var item in listBN)
+            {
+				item.Diem = 0;
+                _context.BaiNop.Remove(item);
+            }
+            _context.baiTaps.Remove(temp);
+            _context.SaveChanges();
+            TinhDTB(classId);
+            return RedirectToAction("Details", "ClassRooms", new { id = classId });
+        }
+
 		[HttpPost]
-		public async Task<IActionResult> ExportDSSV(string classID)
+		public async Task<IActionResult> DiemDanhIn(string classId)
 		{
 			try
 			{
-				List<SV> students = _studentRepo.getListSV();
-				// Tạo một bảng tính mới
-				ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
-				using (var package = new ExcelPackage())
+				int isDate = 0;
+				var currentUser = await _userManager.GetUserAsync(User);
+				DateTime timeNow = DateTime.Now;
+				string now = timeNow.ToString("dd/MM/yyyy");
+				ClassRoom? clr = _context.classRooms.FirstOrDefault(p => p.Id == classId);
+				if (clr == null)
 				{
-					var worksheet = package.Workbook.Worksheets.Add("Students");
-
-					// Thêm dữ liệu vào bảng tính
-					
-					// Dòng 1 {
-					worksheet.Cells["A1:C1"].Merge = true;
-					worksheet.Cells["A1"].Value = "TRƯỜNG ĐẠI HỌC CÔNG NGHỆ TP.HCM";
-					// Truy cập vào Style của ô A1
-					var cellStyle_A1 = worksheet.Cells["A1"].Style;
-
-					cellStyle_A1.Font.Name = "Times New Roman"; // Tên của font chữ
-					cellStyle_A1.Font.Size = 8; // Cỡ chữ
-					cellStyle_A1.Font.Bold = true; // In đậm
-					cellStyle_A1.HorizontalAlignment = OfficeOpenXml.Style.ExcelHorizontalAlignment.Center;
-					// } Hết dòng 1
-
-					// Dòng 3 {
-					worksheet.Cells["A3:D3"].Merge = true;
-					worksheet.Cells["A3"].Value = "DANH SÁCH SINH VIÊN";
-					// Truy cập vào Style của ô A3
-					var cellStyle_A3 = worksheet.Cells["A3"].Style;
-
-					cellStyle_A3.Font.Name = "Times New Roman"; // Tên của font chữ
-					cellStyle_A3.Font.Size = 16; // Cỡ chữ
-					cellStyle_A3.Font.Bold = true; // In đậm
-					cellStyle_A3.HorizontalAlignment = OfficeOpenXml.Style.ExcelHorizontalAlignment.Center;
-					// } Hết dòng 3
-
-					// Chỉ định tên đầu mục cho mỗi cột
-					// var headerRow = worksheet.Cells[Chỉ số hàng bắt đầu (dòng 5),  Chỉ số cột bắt đầu (cột 1, tương ứng với cột A),  Chỉ số hàng kết thúc (dòng 5, vẫn là dòng 5), Chỉ số cột kết thúc (cột 4, tương ứng với cột D)];
-					List<string> headers = new List<string>
-					{
-						"STT",
-						"MSSV",
-						"Họ và tên",
-						"Email"
-					};
-
-					worksheet.Cells[5, 1].LoadFromArrays(new List<string[]> { headers.ToArray() });
-
-					var cellStyle_A5D5 = worksheet.Cells["A5:D5"].Style;
-
-					cellStyle_A5D5.Font.Bold = true;
-					cellStyle_A5D5.HorizontalAlignment = OfficeOpenXml.Style.ExcelHorizontalAlignment.Center;
-
-					worksheet.Cells[6,1].LoadFromCollection(students, false);
-
-					// Tạo đối tượng Style cho border của dữ liệu được load
-					var borderStyle = worksheet.Cells[5, 1, 5 + students.Count, 4].Style.Border;
-
-					// Thiết lập border cho các ô
-					borderStyle.Bottom.Style = borderStyle.Top.Style = borderStyle.Left.Style = borderStyle.Right.Style = OfficeOpenXml.Style.ExcelBorderStyle.Thin;
-
-					worksheet.Column(1).AutoFit();
-					worksheet.Column(2).AutoFit();
-					worksheet.Column(3).AutoFit();
-					worksheet.Column(4).AutoFit();
-
-					// Lấy chỉ số của hàng cuối cùng trong danh sách
-					int lastRowIndex = 5 + students.Count;
-
-					// Gán giá trị cho ô cuối cùng trong cột thứ 4 (cột Email)
-					worksheet.Cells[lastRowIndex + 1, 1].Value = "Tổng số sinh viên: " + students.Count;
-
-					// Lưu trữ bảng tính vào một luồng bộ nhớ tạm thời
-					MemoryStream stream = new MemoryStream();
-					package.SaveAs(stream);
-
-					_studentRepo.RemoveList();
-					// Thiết lập dữ liệu phản hồi để tải xuống tệp Excel
-					return File(stream.ToArray(), "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "DSSV_" + classID + ".xlsx");
-
+					throw new Exception("Classroom không tồn tại !!!");
 				}
+				
+				var listdate = CalculateClassDates(
+										clr.StartDate,
+										clr.EndDate,
+										clr.DaysOfWeek,
+										new TimeSpan(clr.StartTime.Hours, clr.StartTime.Minutes, 0),
+										new TimeSpan(clr.EndTime.Hours, clr.EndTime.Minutes, 0)
+										);
+				foreach(var date in listdate)
+				{
+					if (now.Equals(date.Start.ToString("dd/MM/yyyy"))){
+						isDate = 1;
+						break;
+					}
+				}
+				if (isDate == 0)
+				{
+					throw new Exception("Hôm nay không có thời khoá biểu cho lớp này!!!");
+				}
+				if (timeNow.TimeOfDay.Add(TimeSpan.FromMinutes(5)) < clr.StartTime)
+				{
+					throw new Exception("Chưa đến giờ học !!!");
+				}
+				if (currentUser == null)
+				{
+					throw new Exception("Không có thông tin người dùng !!!");
+				}
+				DiemDanh? userDaDiemDanh = _context.diemDanh.FirstOrDefault(p => p.time.Trim().Substring(p.time.Length - 10, 10).Equals(now) && p.UserId == currentUser.Id && (p.Check == "IN" || p.Check == "LATE") && p.ClassRoomId == classId);
+				if (userDaDiemDanh == null)
+				{
+                    DiemDanh dd = new DiemDanh();
+                    DateTime dt = DateTime.Now;
+                    dd.time = dt.ToString("hh:mm:ss - dd/MM/yyyy");
+                    dd.UserId = currentUser.Id;
+                    dd.ClassRoomId = classId;
+                    dd.Check = timeNow.TimeOfDay.Add(TimeSpan.FromMinutes(-5)) > clr.StartTime ? "LATE" : "IN";
+                    _context.diemDanh.Add(dd);
+                    _context.SaveChanges();
+                }
+				
+				return Json(new { success = true });
+            }
+			catch (Exception ex)
+			{
+                return Json(new { success = false, error = ex.Message });
+            }
+		}
+
+        
+        public async Task<IActionResult> DiemDanhOut(string UserID, string classId)
+        {
+			var currentUserID = UserID;
+			DateTime totaldatenow = DateTime.Now;
+            string now = totaldatenow.ToString("dd/MM/yyyy");
+			var classroom = _context.classRooms.FirstOrDefault(p => p.Id == classId);
+			double minTime = 0.0;
+			if (classroom != null)
+			{
+				TimeSpan t = classroom.EndTime - classroom.StartTime;
+				minTime = t.TotalMinutes * 0.7;
+			}
+			var userDiemDanhIn = _context.diemDanh.FirstOrDefault(p => p.time.Trim().Substring(p.time.Length - 10, 10).Equals(now) && p.UserId == currentUserID && p.Check == "IN" && p.ClassRoomId == classId);
+			if (userDiemDanhIn != null)
+			{
+				DateTime inTime = DateTime.ParseExact(userDiemDanhIn.time.Substring(0, 8), "hh:mm:ss", null);
+				double time = (totaldatenow.TimeOfDay - inTime.TimeOfDay).TotalMinutes;
+				if (time >= minTime)
+				{
+					DiemDanh? userDaDiemDanh = _context.diemDanh.FirstOrDefault(p => p.time.Trim().Substring(p.time.Length - 10, 10).Equals(now) && p.UserId == currentUserID && p.Check == "OUT" && p.ClassRoomId == classId);
+					if (userDaDiemDanh == null)
+					{
+						DiemDanh dd = new DiemDanh();
+
+						dd.time = totaldatenow.ToString("hh:mm:ss - dd/MM/yyyy");
+						dd.UserId = currentUserID;
+						dd.ClassRoomId = classId;
+						dd.Check = "OUT";
+						_context.diemDanh.Add(dd);
+						await _context.SaveChangesAsync();
+					}
+				}
+			}
+			TinhDTB(UserID, classId);
+			return RedirectToAction("Details", "ClassRooms", new { id = classId });
+        }
+
+        [HttpPost]
+		public async Task<IActionResult> changeBackground(IFormFile image, string classId)
+		{
+			if (image != null && !string.IsNullOrEmpty(classId))
+			{
+				// Xử lý lưu ảnh và liên kết với classId
+				var uploadsFolder = Path.Combine(_environment.WebRootPath, "images");
+				var filePath = Path.Combine(uploadsFolder, classId + "_img.png");
+
+				using (var stream = new FileStream(filePath, FileMode.Create))
+				{
+					await image.CopyToAsync(stream);
+				}
+
+				var classroom = _context.classRooms.FirstOrDefault(p => p.Id == classId);
+				if (classroom != null)
+				{
+					classroom.backgroundUrl = classId + "_img.png";
+				}
+				await _context.SaveChangesAsync();
+			}
+
+			return RedirectToAction("Details", "ClassRooms", new { id = classId });
+		}
+
+        [HttpPost]
+        public IActionResult UpdateOrder([FromBody] List<string> orderedIds)
+        {
+            if (orderedIds == null || !orderedIds.Any())
+            {
+                return BadRequest("The order list cannot be null or empty.");
+            }
+
+            foreach (var classroomId in orderedIds.Select((id, index) => new { id, index }))
+            {
+                var classroom = _context.classRooms.Find(classroomId.id);
+                if (classroom != null)
+                {
+                    classroom.STT = classroomId.index+1;
+                }
+                else
+                {
+                    return BadRequest($"Classroom with ID {classroomId.id} not found.");
+                }
+            }
+
+            try
+            {
+                _context.SaveChanges();
+                return Ok();
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Internal server error: {ex.Message}");
+            }
+        }
+
+		[HttpPost]
+		public async Task<IActionResult> UploadChunk(IFormFile chunk, int index, string fileName, string chunkHash)
+		{
+			if (chunk == null || chunk.Length == 0)
+			{
+				_logger.LogError("Chunk is null or empty");
+				return BadRequest("Chunk is null or empty");
+			}
+
+			var uploadFolder = Path.Combine(_environment.WebRootPath, "BAITAP");
+			var tempFilePath = Path.Combine(uploadFolder, fileName);
+
+			await _semaphore.WaitAsync();
+			try
+			{
+				// Verify chunk hash
+				using (var sha256 = SHA256.Create())
+				{
+					using (var stream = chunk.OpenReadStream())
+					{
+						var computedHash = sha256.ComputeHash(stream);
+						var computedHashString = BitConverter.ToString(computedHash).Replace("-", "").ToLower();
+						if (computedHashString != chunkHash.ToLower())
+						{
+							return BadRequest("Chunk hash mismatch");
+						}
+					}
+				}
+
+				// Append chunk to temp file
+				using (var stream = new FileStream(tempFilePath, index == 0 ? FileMode.Create : FileMode.Append, FileAccess.Write, FileShare.None))
+				{
+					await chunk.CopyToAsync(stream);
+				}
+				return Ok();
 			}
 			catch (Exception ex)
 			{
-				return StatusCode(500, "An error occurred while processing your request.");
+				_logger.LogError(ex, "Error uploading chunk");
+				return StatusCode(500, "Internal server error");
+			}
+			finally
+			{
+				_semaphore.Release();
 			}
 		}
 
-		[HttpGet]
-		public IActionResult DeleteLecture(int id, string classId)
+		[HttpPost]
+		public IActionResult CompleteUpload([FromBody] CompleteUploadRequest request)
 		{
-			var temp = _context.BaiGiang.FirstOrDefault(p => p.Id == id);
-			if (temp == null)
+			try
 			{
-				return NotFound("Không có bài giảng này trong CSDL");
+				var uploadFolder = Path.Combine(_environment.WebRootPath, "BAITAP");
+				var finalFilePath = Path.Combine(uploadFolder, request.FileName);
+
+				// Compute and verify hash of the final file
+				using (var sha256 = SHA256.Create())
+				{
+					using (var stream = new FileStream(finalFilePath, FileMode.Open, FileAccess.Read))
+					{
+						var finalFileHash = sha256.ComputeHash(stream);
+						var finalFileHashString = BitConverter.ToString(finalFileHash).Replace("-", "").ToLower();
+
+						// Compare with the file hash received from client
+						if (finalFileHashString != request.FileHash.ToLower())
+						{
+							return BadRequest("Final file hash mismatch");
+						}
+					}
+				}
+
+				return Ok();
 			}
-			else
+			catch (Exception ex)
 			{
-				_context.BaiGiang.Remove(temp);
+				_logger.LogError(ex, "Error completing upload");
+				return StatusCode(500, "Internal server error");
 			}
-			_context.SaveChanges();
-            return RedirectToAction("Details", "ClassRooms", new { id = classId });
-        }
-		
-		[HttpGet]
-		public IActionResult DeleteBT(string id, string classId)
+		}
+
+		public List<ClassDate> CalculateClassDates(DateTime startDate, DateTime endDate, string daysOfWeek, TimeSpan startTime, TimeSpan endTime)
 		{
-			var temp = _context.baiTaps.FirstOrDefault(p => p.Id == id);
-			if (temp == null)
+			var dates = new List<ClassDate>();
+			var days = daysOfWeek.Split(',').Select(day => Enum.Parse<DayOfWeek>(day)).ToList();
+
+			for (var date = startDate; date <= endDate; date = date.AddDays(1))
 			{
-				return NotFound("Không có bài tập này trong CSDL");
+				
+				if (days.Contains(date.DayOfWeek))
+				{
+					var startDateTime = date.Date + startTime;
+					var endDateTime = date.Date + endTime;
+					dates.Add(new ClassDate(startDateTime, endDateTime, true));
+				}
 			}
-			var listBN = _context.BaiNop.Where(p => p.BaiTapId == id).ToList();
-            foreach (var item in listBN)
-            {
-				_context.BaiNop.Remove(item);
-			}
-            _context.baiTaps.Remove(temp);
-			_context.SaveChanges();
-			TinhDTB(classId);
-			return RedirectToAction("Details", "ClassRooms", new { id = classId });
-        }
-    }
+
+			return dates;
+		}
+
+	}
 }
