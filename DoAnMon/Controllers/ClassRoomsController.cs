@@ -1093,14 +1093,21 @@ namespace DoAnMon.Controllers
         [HttpGet]
         public IActionResult DeleteLecture(int id, string classId)
         {
-            var temp = _context.BaiGiang.FirstOrDefault(p => p.Id == id);
-            if (temp == null)
+			
+			var temp = _context.BaiGiang.FirstOrDefault(p => p.Id == id);
+			var folderPath = Path.Combine(_environment.WebRootPath, "BAIGIANG");
+			string filePath = Path.Combine(folderPath, temp.UrlBaiGiang);
+			if (temp == null)
             {
                 return NotFound("Không có bài giảng này trong CSDL");
             }
             else
             {
-                _context.BaiGiang.Remove(temp);
+				if (System.IO.File.Exists(filePath))
+				{
+					System.IO.File.Delete(filePath);
+				}
+				_context.BaiGiang.Remove(temp);
             }
             _context.SaveChanges();
             return RedirectToAction("Details", "ClassRooms", new { id = classId });
@@ -1110,17 +1117,41 @@ namespace DoAnMon.Controllers
         public IActionResult DeleteBT(string id, string classId)
         {
             var temp = _context.baiTaps.FirstOrDefault(p => p.Id == id);
-            if (temp == null)
+			List<string> failedToDelete = new List<string>();
+			if (temp == null)
             {
                 return NotFound("Không có bài tập này trong CSDL");
             }
             var listBN = _context.BaiNop.Where(p => p.BaiTapId == id).ToList();
             foreach (var item in listBN)
             {
+				var folderPath = Path.Combine(_environment.WebRootPath, "BAINOP");
+				string filePath = Path.Combine(folderPath, item.Urlbainop);
+				if (System.IO.File.Exists(filePath))
+				{
+					System.IO.File.Delete(filePath);
+				}
+				else
+				{
+					failedToDelete.Add(filePath + " - File không tồn tại.");
+				}
 				item.Diem = 0;
                 _context.BaiNop.Remove(item);
             }
-            _context.baiTaps.Remove(temp);
+			if (temp.attractUrl != null)
+			{
+				var folderPath = Path.Combine(_environment.WebRootPath, "BAITAP");
+				string filePath = Path.Combine(folderPath, temp.attractUrl);
+				if (System.IO.File.Exists(filePath))
+				{
+					System.IO.File.Delete(filePath);
+				}
+				else
+				{
+					failedToDelete.Add(filePath + " - File không tồn tại.");
+				}
+			}
+			_context.baiTaps.Remove(temp);
             _context.SaveChanges();
             TinhDTB(classId);
             return RedirectToAction("Details", "ClassRooms", new { id = classId });
