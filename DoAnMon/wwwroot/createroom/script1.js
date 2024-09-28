@@ -21,7 +21,6 @@ const vm = new Vue({
         const roomId = urlParams.get("room");
         if (roomId) {
             this.roomId = roomId;
-
             await this.join();
         }
     },
