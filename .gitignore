@@ -361,3 +361,9 @@ MigrationBackup/
 
 # Fody - auto-generated XML schema
 FodyWeavers.xsd
+
+# Ignore BAITAP folder
+
+/DoAnMon/wwwroot/BAITAP
+/DoAnMon/wwwroot/BAIGIANG/
+/DoAnMon/wwwroot/BAINOP/

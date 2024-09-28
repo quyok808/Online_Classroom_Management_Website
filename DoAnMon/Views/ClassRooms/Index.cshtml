@@ -1,42 +1,556 @@
-﻿@using static DoAnMon.Models.ClassroomViewModel
+﻿@using DoAnMon.IdentityCudtomUser
+@using Microsoft.AspNetCore.Identity
+@inject SignInManager<CustomUser> SignInManager
+@inject UserManager<CustomUser> UserManager
+@inject SignInManager<CustomUser> _signInManager
+@using static DoAnMon.Models.ClassroomViewModel
 @model List<ClassRoomViewModel>
 
 @{
-	ViewData["Title"] = "Index";
-	Layout = "~/Views/Shared/_Layout1.cshtml";
+	ViewData["Title"] = "Classrooms";
+	Layout = "~/Views/Shared/_Layout.cshtml";
+    var user = await UserManager.GetUserAsync(User);
 }
 <style>
-	<link rel="preconnect" href="https://fonts.googleapis.com" >
-	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin >
-	<link href="https://fonts.googleapis.com/css2?family=Merriweather:ital,wght@0,300;0,400;0,700;0,900;1,300;1,400;1,700;1,900&display=swap" rel="stylesheet" >
-	<link href="https://fonts.googleapis.com/css2?family=Merriweather:ital,wght@0,300;0,400;0,700;0,900;1,300;1,400;1,700;1,900&family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap" rel="stylesheet" >
-	<link href="https://fonts.googleapis.com/css2?family=Merriweather:ital,wght@0,300;0,400;0,700;0,900;1,300;1,400;1,700;1,900&family=Oswald:wght@200..700&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap" rel="stylesheet" >
-</style>
+    <link rel="preconnect" href="https://fonts.googleapis.com" >
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin >
+    <link href="https://fonts.googleapis.com/css2?family=Merriweather:ital,wght@0,300;0,400;0,700;0,900;1,300;1,400;1,700;1,900&display=swap" rel="stylesheet" >
+    <link href="https://fonts.googleapis.com/css2?family=Merriweather:ital,wght@0,300;0,400;0,700;0,900;1,300;1,400;1,700;1,900&family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap" rel="stylesheet" >
+    <link href="https://fonts.googleapis.com/css2?family=Merriweather:ital,wght@0,300;0,400;0,700;0,900;1,300;1,400;1,700;1,900&family=Oswald:wght@200..700&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap" rel="stylesheet" >
+    /*-------------------------------------------------*/
+    .container {
+        display: flex; /* Sử dụng flexbox */
+    }
+    /*-------------------------------------------------*/
+    /* bên trái*/
+    .left-column {
+        min-height: 1216px;
+        width: 250px; /* Độ rộng của cột bên trái */
+        background-color: #f0f0f0; /* Màu nền của cột bên trái */
+        padding: 20px; /* Khoảng cách nội dung với viền của cột */
+        height: 500px;
+        /* Định dạng khung hình */
+        
+    }
 
-<div class="content">
-	@{
-		if (Model != null)
-		{
-			foreach (var viewModel in Model)
-			{
-				<div class="classroom">
-					<div class="card-top" style="background-image: url(/Images/anhclass.png);background-size: cover; background-position:center;color: white;">
-						<h2 style="font-family: Poppins, sans-serif; font-size: 24px">@viewModel.ClassRoom.Name</h2>
-						<div class="meta" style="font-family: Poppins, sans-serif; font-size: 13px;font-weight:300;color: white;">@viewModel.ClassRoom.Description</div>
-						<p style="padding-top: 3%; font-family: Poppins, sans-serif; font-size: 16px; font-weight:500">@viewModel.Owner.Name</p>
-					</div>
-					<div class="card-bottom">
-						<img class="PNzAWd" aria-hidden="true" src="/Imgs_avtUser/@viewModel.Owner.UrlAvt">
-						<a href="@viewModel.ClassRoom.RoomOnline" class="btn btn-primary btn-info btn-custom" target="_blank" style="font-family: Poppins, sans-serif; font-size: 14px;font-weight: 600;">Giảng đường</a>
-						<a asp-action="Details" asp-route-id="@viewModel.ClassRoom.Id" class="btn btn-primary btn-info btn-custom" style="margin-top: 10px; font-family: Poppins, sans-serif; font-size: 14px;font-weight:600;">Lớp học</a>
-					</div>
-				</div>
-			}
-		}
-	}
+    .image-frame {
+        border: 1px solid #ccc; /* Viền của khung hình */
+        border-radius: 50%; /* Bo tròn các góc */
+        overflow: hidden; /* Ẩn bất kỳ phần nào của hình ảnh vượt ra ngoài khung */
+        width: 150px;
+        margin-left: 30px;
+        margin-bottom: 15px;
+    }
+
+    /* Định dạng hình ảnh */
+    .image-frame img {
+        width: 100%; /* Đảm bảo hình ảnh chiếm đầy đủ chiều rộng của khung */
+        height: 150px; /* Đảm bảo tỷ lệ khung hình ảnh được duy trì */
+        object-fit: cover;
+    }
+
+    /* Định dạng menu dọc */
+    .vertical-menu1 {
+        list-style-type: none; /* Loại bỏ các dấu hiệu đầu mục của danh sách */
+        padding: 0; /* Xóa khoảng trống trong danh sách */
+    }
+
+    /* Định dạng mỗi mục menu */
+    .vertical-menu1 li {
+        margin-bottom: 0; /* Khoảng cách giữa các mục menu */
+    }
+
+    /* Định dạng liên kết trong mỗi mục menu */
+    .vertical-menu1 li a {
+        display: block; /* Chuyển liên kết thành khối để nó chiếm toàn bộ chiều rộng của mục */
+        padding: 10px; /* Khoảng cách giữa văn bản và viền của mục */
+        text-decoration: none; /* Loại bỏ gạch chân mặc định của liên kết */
+        color: #333; /* Màu chữ */
+        background-color: #f0f0f0; /* Màu nền của mục */
+        border-bottom: 1px solid #ccc; /* Thêm dấu gạch ngang */
+    }
+
+                /* Định dạng mục menu được chọn */
+    .vertical-menu1 li a:hover {
+        background-color: #ccc; /* Màu nền khi rê chuột qua */
+    }
+
+    /* chính----------------------------------------------*/
+    .main-content {
+        flex-grow: 1; /* Main content mở rộng để lấp đầy không gian trống */
+        padding: 20px; /* Khoảng cách nội dung với viền của main content */
+        background-color: #c2c0c0;
+        margin-top: 0;
+    }
+
+    .frame-container {
+        display: flex;
+        flex-wrap: wrap; /* Cho phép tự động xuống hàng */
+        margin-top: 50px;
+    }
+
+    .frame {
+        flex: 1 0 calc(33.33% - 20px); /* Tối đa 3 khung trên cùng một hàng */
+        margin-right: 20px; /* Khoảng cách giữa các khung */
+        margin-bottom: 20px; /* Khoảng cách giữa các hàng */
+        border: 1px solid #ccc; /* Viền của khung */
+        border-radius: 5px; /* Bo tròn các góc */
+        height: 250px;
+    }
+
+        .frame:last-child {
+            margin-right: 0; /* Loại bỏ khoảng cách bên phải của khung cuối cùng trên hàng */
+        }
+
+
+    .frame-header {
+        background-color: #f0f0f0; /* Màu nền của phần header */
+        padding: 10px; /* Khoảng cách giữa nội dung và viền */
+        height: 100px;
+        border-radius: 5px 5px 0 0;
+    }
+
+        .frame-header h2 {
+            margin: 0; /* Xóa margin mặc định của tiêu đề */
+        }
+
+        .frame-header h3 {
+            margin: 0;
+            font-size: 20px;
+        }
+
+    .frame-body {
+        padding: 20px; /* Khoảng cách giữa nội dung và viền */
+    }
+
+    /*----------------------------------------*/
+
+    .plus-button {
+        background: none;
+        border: none;
+        padding: 0;
+        cursor: pointer;
+        position: absolute;
+        /* right: 300px; */
+        /* Khoảng cách giữa nút và đỉnh của main content */
+        margin-right: 20px;
+    }
+
+        .plus-button svg {
+            fill: #ffffff; /* Màu sắc của biểu tượng */
+        }
+
+    /* .plus-button:hover svg {
+            fill: #ccc; /* Màu sắc của biểu tượng khi di chuột qua
+          } */
+    /* .plus-button:hover::after {
+            content: attr(aria-label); /* Hiển thị nội dung của aria-label */
+    /* background-color: #3c7ec9; Màu nền của tooltip */
+    /* color: #fff; Màu chữ của tooltip */
+    /* padding: 4px 8px; Khoảng cách giữa nội dung và viền tooltip */
+    /* border-radius: 4px; Bo tròn các góc của tooltip */
+    /* top: 0; Đẩy tooltip xuống phía dưới của nút    */
+    /* white-space: nowrap; Ngăn không cho tooltip xuống dòng */
+    /* font-size: 14px; Kích thước chữ của tooltip */
+    /* opacity: 1; Hiển thị tooltip       */
+    /* left: 0; Đặt left là 50% để căn giữa tooltip     */
+    /* position: absolute; */
+    /* transform: translateX(-200px); Dịch chuyển tooltip sang trái 50% để căn giữa  */
+    /* } */
+    /* Ẩn bảng option mặc định */
+    .title {
+        background-color: #7bdaf2;
+        color: #fff;
+        border-radius: 5px;
+    }
+
+    .hidden {
+        display: none;
+    }
+
+    /* Thiết lập kiểu dáng cho khung chứa options */
+    .options-frame {
+        background-color: #ffffff;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        padding: 10px;
+        position: absolute;
+        /* left: -150px ; /* Đặt vị trí của khung từ bên trái */
+        top: 230px; /* Đặt vị trí của khung từ phía trên dấu cộng */
+        width: 150px;
+        left: 550px;
+        z-index:50;
+    }
+    /* Thiết lập kiểu dáng cho các lựa chọn */
+    .option {
+        cursor: pointer;
+        padding: 10px;
+        /* background-color: #f0f0f0; */
+        border-radius: 4px;
+        margin-bottom: 0;
+    }
+
+        .option:hover {
+            background-color: #e0e0e0;
+        }
+
+    #join-frame {
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        padding: 20px;
+        background-color: #ffffff;
+        margin-top: 20px;
+        z-index: 1000;
+        position: absolute;
+        left: 700px;
+    }
+
+        #join-frame form {
+            margin-top: 10px;
+        }
+
+        #join-frame label {
+            font-weight: bold;
+        }
+
+        #join-frame input[type="text"],
+        #join-frame button {
+            padding: 8px;
+            border-radius: 4px;
+            border: 1px solid #ccc;
+        }
+
+        #join-frame input[type="text"] {
+            width: 200px;
+            margin-bottom: 10px;
+        }
+
+        #join-frame button {
+            background-color: #3c7ec9;
+            color: #fff;
+            cursor: pointer;
+            margin-left: 100px;
+        }
+
+    #classroomList {
+        max-height: 1216px; /* Điều chỉnh chiều cao tối đa */
+        overflow-y: auto; /* Đảm bảo có thể cuộn theo chiều dọc */
+    }
+
+</style>
+<div class="container">
+    <div class="left-column">
+        <!-- Nội dung cột bên trái -->
+        <div class="image-frame">
+            <img src="~/Imgs_avtUser/@user.UrlAvt" alt="Hình ảnh">
+        </div>
+        <center>
+            <p style="font-weight: bold; font-size: 20px;">@user.Name</p>
+        </center>
+        <ul class="vertical-menu1">
+            <li><a href="/Identity/Account/Manage/Index">Thông tin cá nhân</a></li>
+        </ul>
+    </div>
+    <div class="main-content">
+        <!-- Nội dung main content -->
+        <button class="plus-button" title="Tạo hoặc tham gia lớp học" onclick="toggleOptions()">
+            <svg xmlns="http://www.w3.org/2000/svg" width="35" height="35" viewBox="0 0 24 24">
+                <path d="M20 13h-7v7h-2v-7H4v-2h7V4h2v7h7v2z" />
+            </svg>
+        </button>
+        <div id="class-options-container" class="hidden">
+            <div class="options-frame">
+                @if (User.IsInRole("Teacher") || User.IsInRole("Admin"))
+                {
+
+                <div class="option">
+                    <a href="/ClassRooms/Create" title="Create Classroom" style="text-decoration:none;">
+                        <p style="font-size: 16px; padding-left: 5px; color: black; margin: 0;">Tạo mới</p>
+                    </a>
+                </div>
+                }
+                <div class="option">
+                    <button id="btnAddRoom" data-toggle="modal" data-target="#joinRoomModal" style="font-size: 16px;background-color: transparent; color:black; border-color:transparent;">Tham gia</button>
+                </div>
+                <div class="option">
+                    <button id="scanButton" style="font-size: 16px; border-color:transparent;background-color: transparent">Quét Mã QR</button>
+                </div>
+            </div>
+        </div>
+        <div id="joinRoomModal" class="modal" tabindex="-1">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header" style="margin-bottom: 10px; border-bottom: none">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                        <h5 class="modal-title" style="font-size:30px;font-weight:bold; color: #FA7070">THAM GIA PHÒNG HỌC</h5>
+                    </div>
+
+
+                    <form id="joinRoomForm" action="/ClassRooms/JoinClassV1" method="post">
+                        <div class="col-md-12" style="width: 100%">
+                            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                            <div class="form-group">
+                                <label for="ClassRoomId" class="control-label" style="color: black; text-align: left; display: block; margin:10px 0">Mã phòng học:</label>
+                                <input name="ClassRoomId" id="ClassRoomId" class="form-control custom-input-width" required />
+                                <span id="ClassRoomIdError" class="text-danger"></span>
+                            </div>
+                        </div>
+                        <div class="modal-footer" style="border-top: 1px solid #e5e5e5; padding-top: 10px">
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal" style="font-weight:bold; background-color: grey; font-size: 16px">Đóng</button>
+                            <input style="font-size: 16px; font-weight:bold" type="submit" value="Tham gia" class="btn btn-primary" />
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+        <div id="cameraModal" class="modal">
+            <div class="modal-content" style="align-items: center;justify-content: center;">
+                <span class="close">&times;</span>
+                <video id="qrScanner" width="400" height="400" autoplay style="align-items: center;justify-content: center;"></video>
+            </div>
+        </div>
+        
+        <div id="classroomList" class="content" style="margin-top: 50px;">
+            @{
+                if (Model != null)
+                {
+                    @foreach (var viewModel in Model)
+                    {
+                        <div class="classroom" data-id="@viewModel.ClassRoom.Id">
+                            <div class="card-top" style="background-image: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url(/images/@viewModel.ClassRoom.backgroundUrl);background-size: cover; background-position:center;color: white;">
+                                <h2 style="font-family: Poppins, sans-serif; font-size: 20px">@viewModel.ClassRoom.Name</h2>
+                                <div class="meta" style="font-family: Poppins, sans-serif; font-size: 12px;font-weight:300;color: white;">@viewModel.ClassRoom.Description</div>
+                                <p style="padding-top: 4%; font-family: Poppins, sans-serif; font-size: 15px; font-weight:500">@viewModel.Owner.Name</p>
+                            </div>
+                            <div class="card-bottom">
+                                <img class="PNzAWd" aria-hidden="true" src="/Imgs_avtUser/@viewModel.Owner.UrlAvt">
+                                <a href="@viewModel.ClassRoom.RoomOnline&User=@user.Id&class=@viewModel.ClassRoom.Id" id="diemDanhBtn" data-class-id="@viewModel.ClassRoom.Id" class="btn btn-primary btn-info btn-custom" target="_blank" style="font-family: Poppins, sans-serif; font-size: 14px;font-weight: 600;">Giảng đường</a>
+                                <a asp-action="Details" asp-route-id="@viewModel.ClassRoom.Id" class="btn btn-primary btn-info btn-custom" style="margin-top: 10px; font-family: Poppins, sans-serif; font-size: 14px;font-weight:600;">Lớp học</a>
+                            </div>
+                        </div>
+                    }
+                }
+            }
+        </div>
+        
+    </div>
 </div>
+
+
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/popperjs/core@1.16.1/dist/umd/popper.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Sortable/1.14.0/Sortable.min.js"></script>
+
 
 @if (!string.IsNullOrEmpty(ViewBag.StatusMessage))
 {
 	<script>alert('@ViewBag.StatusMessage');</script>
 }
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        // Lấy địa chỉ URL hiện tại
+        var url = window.location.href;
+
+        // Lấy tất cả các mục trong thanh menu
+        var menuItems = document.querySelectorAll('nav ul li a');
+
+        // Lặp qua từng mục trong thanh menu
+        menuItems.forEach(function (item) {
+            // Kiểm tra nếu địa chỉ URL chứa đường dẫn của mục đó
+            if (url.indexOf(item.getAttribute('href')) > -1) {
+                // Thêm lớp 'selected' cho mục đó
+                item.classList.add('selected');
+            }
+        });
+    });
+
+
+    function toggleOptions() {
+        var plusButton = document.getElementById("plus-button");
+        var options = document.getElementById("class-options-container");
+        options.classList.toggle("hidden");
+
+    }
+
+    function hideOptions() {
+        var joinFrame = document.getElementById("join-frame");
+        joinFrame.classList.remove("hidden");
+    }
+
+    function showJoinFrame() {
+        hideOptions();
+    }
+</script>
+<script>
+    $(document).ready(function () {
+        $("#btnAddRoom").click(function () {
+            $("#addRoomModal").modal('show');
+        });
+
+
+        $(".btn-info").click(function () {
+            $(this).closest("tr").find(".room-description").toggle();
+        });
+    });
+</script>
+<script>
+    $(document).ready(function () {
+        $('#scanButton').click(function () {
+            // Hiển thị modal
+            $('#cameraModal').css('display', 'block');
+
+            // Bắt đầu quét mã QR khi modal được mở
+            startQRScanning();
+        });
+
+        // Đóng modal khi nhấn vào nút đóng hoặc nút close
+        $('.close').click(function () {
+            $('#cameraModal').css('display', 'none');
+            stopQRScanning();
+        });
+
+        // Đóng modal khi nhấn ESC
+        $(document).keyup(function (e) {
+            if (e.key === "Escape") { // escape key maps to keycode `27`
+                $('#cameraModal').css('display', 'none');
+                stopQRScanning();
+            }
+        });
+    });
+
+    function startQRScanning() {
+        const video = document.getElementById('qrScanner');
+
+        // Truy cập vào camera và stream video
+        navigator.mediaDevices.getUserMedia({ video: { facingMode: 'environment' } })
+            .then(stream => {
+                video.srcObject = stream;
+                video.setAttribute('playsinline', true);
+                video.play();
+                // Bắt đầu quét mã QR
+                tick();
+            });
+
+        function tick() {
+            if (video.readyState === video.HAVE_ENOUGH_DATA) {
+                const canvas = document.createElement('canvas');
+                const ctx = canvas.getContext('2d');
+
+                canvas.width = video.videoWidth;
+                canvas.height = video.videoHeight;
+                ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+                const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+                const code = jsQR(imageData.data, imageData.width, imageData.height);
+                if (code) {
+                    // Hiển thị nội dung mã QR trong cửa sổ thông báo (alert)
+                    Swal.fire({
+                        title: 'QR Code content',
+                        text: code.data,
+                        icon: 'success',
+                        showConfirmButton: false,
+                        timer: 1500
+                    });
+                    // Gọi hàm để xử lý dữ liệu mã QR
+                    savedata(code.data);
+                    stopQRScanning();
+                }
+            }
+            // Lặp lại quét mã QR
+            requestAnimationFrame(tick);
+        }
+    }
+
+    function stopQRScanning() {
+        const video = document.getElementById('qrScanner');
+        const stream = video.srcObject;
+        const tracks = stream.getTracks();
+
+        tracks.forEach(track => track.stop());
+        video.srcObject = null;
+    }
+
+    function savedata(qrData) {
+        // Gửi dữ liệu mã QR đến server để lưu trữ
+        $.ajax({
+            url: '/ClassRooms/JoinClassWithQRCode',
+            type: 'POST',
+            data: { qrData: qrData },
+            success: function (response) {
+                if (response.success) {
+                    // Chuyển hướng hoặc hiển thị thông báo thành công
+                    window.location.href = '/ClassRooms';
+                } else {
+                    // Hiển thị thông báo lỗi nếu cần
+                    alert('Có lỗi xảy ra: ' + response.error);
+                }
+            },
+            error: function (xhr, status, error) {
+                // Xử lý lỗi nếu cần
+                console.error('Error:', error);
+            }
+        });
+    }
+</script>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+    $(document).ready(function () {
+        $('#diemDanhBtn').on('click', function (event) {
+            event.preventDefault(); // Prevent the default link action
+            var classId = $(this).data('class-id');
+            var roomOnlineUrl = $(this).attr('href');
+            var ajaxUrl = '@Url.Action("DiemDanhIn", "ClassRooms")';
+
+            $.post("/ClassRooms/DiemDanhIn", { classId: classId }, function (data) {
+                if (data.success) {
+                    console.log('Điểm danh thành công');
+                    window.open(roomOnlineUrl, '_blank');
+                }
+                else {
+                    console.log(data.error);
+                    alert(data.error);
+                    console.log('Điểm danh thất bại');
+                }
+            });
+        });
+    });
+</script>
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        var sortable = new Sortable(document.getElementById('classroomList'), {
+            animation: 150,
+            scroll: true, // Bật tính năng cuộn tự động
+            scrollSensitivity: 30, // Độ nhạy của việc cuộn (càng lớn thì cuộn càng nhanh)
+            scrollSpeed: 10, // Tốc độ cuộn
+            onEnd: function (evt) {
+                // Get the new order of classroom IDs
+                var order = sortable.toArray();
+                console.log("New order: ", order);
+                // Send the new order to the server
+                fetch('/ClassRooms/UpdateOrder', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'  // Include Anti-Forgery Token if necessary
+                    },
+                    body: JSON.stringify(order)
+                }).then(response => {
+                    if (response.ok) {
+                        console.log('Order updated successfully');
+                    } else {
+                        console.error('Failed to update order');
+                    }
+                }).catch(error => {
+                    console.error('Error:', error);
+                });
+            }
+        });
+    });
+</script>
+
+
+

@@ -1,103 +1,763 @@
 ﻿<!DOCTYPE html>
 <html lang="en">
-
 <head>
-	<meta charset="utf-8" />
-	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-	<title>@ViewData["Title"] - QUẢN LÝ PHÒNG HỌC TRỰC TUYẾN</title>
-	<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;700&display=swap">
-	<link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
-	<link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
-	<link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
-	<link rel="stylesheet" href="~/DoAnMon.styles.css" asp-append-version="true" />
-	<link rel="icon" href="/images/Logo_Web.png" type="image/x-icon">
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - Only A</title>
+    <link rel="icon" type="image/x-icon" href="/images/Logo_Web.png" />
+
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+    <link href="/assets/css/custom.css" rel="stylesheet" />
+
+    <!-- BOOTSTRAP STYLES-->
+    <link href="/assets/css/bootstrap.css" rel="stylesheet" />
+    <link rel="stylesheet" href="/assets/css/bootstrap.min.css">
+    <!-- FONTAWESOME STYLES-->
+    <link href="/assets/css/font-awesome.css" rel="stylesheet" />
+    <!--CUSTOM BASIC STYLES-->
+    <link href="/assets/css/basic.css" rel="stylesheet" />
+    <!--CUSTOM MAIN STYLES-->
+    <link href="/assets/css/custom.css" rel="stylesheet" />
+    <!-- GOOGLE FONTS-->
+    <link href='https://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet' type='text/css' />
+    <style>
+        @@import url('https://fonts.googleapis.com/css2?family=Lobster&display=swap');
+        @@import url('https://fonts.googleapis.com/css2?family=Great+Vibes&family=Platypi:ital,wght@0,300..800;1,300..800&display=swap');
+        /*PHẦN BANNER*/
+        .banner {
+            background-color: #f2f2f2; /* Màu nền của khung banner */
+            height: 150px; /* Chiều cao của khung banner */
+            width: 100%; /* Độ rộng của khung banner sẽ bằng với độ rộng của màn hình */
+            text-align: center;
+            padding: 25px 14px;
+            font-family: Georgia, 'Times New Roman', Times, serif;
+        }
+        /*PHẦN MENU*/
+        nav {
+            display: flex;
+            justify-content: space-between;
+            background-color: #333;
+            height: 60px;
+            align-items: center;
+            padding: 0 20px;
+        }
+
+        .menu {
+            list-style-type: none;
+            margin-bottom: 0;
+            padding: 0;
+            display: flex;
+            justify-content: flex-end;
+            align-items: center;
+            /*  margin-left: 500px; */
+        }
+
+
+            .menu li {
+                display: flex;
+                margin-right: 50px;
+            }
+
+                .menu li:nth-child(1) {
+                    margin-left: 360px;
+                }
+
+                .menu li a {
+                    display: block;
+                    color: rgb(224, 215, 215);
+                    text-align: center;
+                    padding: 16px;
+                    font-size: 20px;
+                    text-decoration: none;
+                    white-space: nowrap;
+                }
+
+
+
+                    .menu li a.selected {
+                        background-color: #017b48!important;
+                        color: hsl(0, 0%, 100%);
+                    }
+
+        .login-item {
+            margin-left: auto;
+            display: block;
+            text-align: center;
+            padding: 16px;
+            font-size: 20px;
+            text-decoration: none;
+            white-space: nowrap;
+        }
+
+            .login-item a {
+                color: rgb(224, 215, 215);
+            }
+
+        /* Menu dọc */
+        .vertical-menu {
+            display: none; /* Ẩn menu dọc mặc định */
+            background-color: rgba(51, 51, 51, 0.8); /* Màu nền mờ với độ trong suốt 80% */
+            height: 100%;
+            width: 250px;
+            position: fixed;
+            top: 10px;
+            left: 0;
+            padding-top: 60px;
+            z-index: 1000;
+            overflow-y: auto;
+        }
+
+            .vertical-menu a {
+                padding: 16px;
+                text-decoration: none;
+                font-size: 16px;
+                color: white;
+                display: block;
+                transition: 0.3s;
+            }
+
+            .vertical-menu .login-item {
+                margin-top: auto;
+            }
+
+            .vertical-menu a:hover {
+                background-color: rgba(255, 255, 255, 0.1); /* Hiệu ứng hover với màu nền mờ nhạt */
+            }
+
+            .vertical-menu .close-btn {
+                position: absolute;
+                top: 0;
+                right: 0;
+                font-size: 36px;
+            }
+
+        /* Biểu tượng menu */
+        .menu-icon {
+            display: none;
+            font-size: 24px;
+            color: white;
+            cursor: pointer;
+        }
+
+        body, html {
+            margin: 0;
+            padding: 0;
+            font-family: Arial, sans-serif;
+        }
+
+        .container {
+            display: flex;
+            width: 1100px;
+            justify-content: center; /* Căn giữa nội dung */
+        }
+
+        .sidebar,
+        .main-content,
+        .sidebar-right {
+            padding: 20px;
+        }
+        /* PHẦN NỘI DUNG BÊN TRÁI*/
+        .sidebar {
+            width: 200px; /* Độ rộng của cột chủ đề */
+            background-color: #E3E1D9;
+            margin-top: 20px;
+            right: 0;
+        }
+
+            .sidebar ul {
+                list-style-type: none;
+                padding: 0;
+                margin: 0;
+                display: block;
+            }
+
+                .sidebar ul li {
+                    border-bottom: 1px solid #949191;
+                    width: 100%;
+                    display: block;
+                }
+
+                    .sidebar ul li:last-child {
+                        border-bottom: none; /* Loại bỏ đường viền ở mục cuối cùng */
+                    }
+
+                    .sidebar ul li a {
+                        /* text-decoration: none; */
+                        color: #333;
+                        font-size: 15px;
+                        padding: 5px;
+                        /* display: block; */
+                        text-align: left;
+                        overflow: hidden;
+                        white-space: wrap;
+                        text-overflow: ellipsis;
+                    }
+
+                        .sidebar ul li a:hover {
+                            text-decoration: underline;
+                            color: #333;
+                            font-size: 15px;
+                            outline: none;
+                        }
+
+            .sidebar h2 {
+                margin-top: 10px; /* Loại bỏ khoảng cách trên đầu tiêu đề */
+                margin-bottom: 10px; /* Tạo khoảng cách dưới tiêu đề */
+                text-align: center;
+            }
+        /*PHẦN NỘI DUNG CHÍNH*/
+        .main-content {
+            flex-grow: 1;
+            background-color: #F6F5F2;
+            /*Khoảng cách giữa cột chủ đề và cột nội dung bên phải */
+            width: 650px;
+            margin-top: 20px;
+            /* border: 1px solid #949191; */
+        }
+
+            .main-content .post-content {
+                text-overflow: inherit;
+                overflow: auto;
+                display: block;
+                -webkit-line-clamp: initial;
+                -webkit-box-orient: initial;
+            }
+
+            .main-content img {
+                max-height: 300px;
+                max-width: 500px;
+            }
+
+            .main-content h3{
+                font-size: 45px;
+                font-weight: bold;
+            }
+
+
+        /*PHẦN NỘI DUNG BÊN PHẢI*/
+        .sidebar-right {
+            width: 250px; /* Độ rộng của cột nội dung bên phải */
+            background-color: #E3E1D9;
+            margin-top: 20px;
+            height: 900px;
+            overflow-y: auto;
+        }
+
+        .post {
+            background-color: #ffffff;
+            border: 1px solid #ccc; /* Đường viền khung bài viết */
+            padding: 10px; /*Khoảng cách giữa đường viền và nội dung */
+            border-radius: 5px;
+            margin-bottom: 20px; /* Khoảng cách giữa các bài viết */
+            text-align: left;
+            /* overflow: hidden;
+                                    text-overflow: ellipsis; */
+            width: 100%;
+            height: 250px;
+            display: flex;
+            flex-direction: column;
+            justify-content: normal;
+        }
+
+
+            .post img {
+                margin-bottom: 5px; /* Khoảng cách giữa hình ảnh và nội dung */
+                width: 100%; /* Đảm bảo hình ảnh không quá rộng */
+                height: 120px;
+            }
+
+        .post-content {
+            height: auto; /* Chiều cao tối đa cho nội dung */
+            */ text-align: left; /* Căn trái nội dung */
+            /*  margin-top: 10px; /* khoảng cách từ hình ảnh tới nội dung */ */ padding: 10px;
+            box-sizing: border-box;
+            overflow: hidden;
+        }
+
+        /*  .post-content { */
+        /* overflow: hidden; /* Ẩn bất kỳ nội dung nào vượt quá khung */ */
+        /* text-overflow: ellipsis; /* Thêm dấu ba chấm (...) khi nội dung vượt quá */ */
+        /* display: -webkit-box; /* Sử dụng thuộc tính box để xử lý vấn đề */ */
+        /*  -webkit-line-clamp: 3; /* Số dòng tối đa mà nội dung có thể hiển thị */ */
+        /*  -webkit-box-orient: vertical; */
+        /*  }  */
+        .post h3 {
+            margin-top: 0; /* Loại bỏ khoảng cách trên cùng của tiêu đề */
+            font-size: 8px;
+            text-align: center;
+        }
+
+        .post a {
+            display: block; /* Biến liên kết thành một khối để có thể căn lề và thêm padding */
+            text-align: center; /* Căn giữa nút "Đọc thêm" */
+            padding: 5px 0; /* Khoảng cách giữa các bên của nút */
+            background-color: #f0f0f0; /* Màu nền của nút */
+            color: #333; /* Màu chữ của nút */
+            text-decoration: none; /* Loại bỏ gạch chân của liên kết */
+        }
+
+            .post a:hover {
+                background-color: #e0e0e0; /* Màu nền khi di chuột vào nút */
+            }
+
+        /* Responsive styles */
+        @@media screen and (max-width: 768px) {
+
+            .menu {
+                display: none; /* Ẩn menu ngang */
+            }
+
+            .menu-icon {
+                display: block; /* Hiển thị biểu tượng menu */
+            }
+
+            .container {
+                display: flex;
+                width: 100%;
+                justify-content: center; /* Căn giữa nội dung */
+            }
+
+            .sidebar,
+            .main-content,
+            .sidebar-right {
+                padding: 20px;
+            }
+            /* PHẦN NỘI DUNG BÊN TRÁI*/
+            .sidebar {
+                display: none;
+            }
+            /*PHẦN NỘI DUNG CHÍNH*/
+            .main-content {
+                flex-grow: 1;
+                background-color: #F6F5F2;
+                /*Khoảng cách giữa cột chủ đề và cột nội dung bên phải */
+                width: 400px;
+                margin-top: 20px;
+                height: 800px;
+                /* border: 1px solid #949191; */
+            }
+
+                .main-content .post-content {
+                    text-overflow: inherit;
+                    overflow: auto;
+                    display: block;
+                    -webkit-line-clamp: initial;
+                    -webkit-box-orient: initial;
+                }
+
+                .main-content img {
+                    max-height: 300px;
+                    max-width: 500px;
+                }
+
+            .sidebar-right {
+                display: none;
+            }
+        }
+
+        /* STYLE CHO TRANG LỚP HỌC  */
+
+        .left-column {
+            width: 250px; /* Độ rộng của cột bên trái */
+            background-color: #f0f0f0; /* Màu nền của cột bên trái */
+            padding: 20px; /* Khoảng cách nội dung với viền của cột */
+            height: 1500px;
+        }
+
+        .image-frame {
+            border: 1px solid #ccc; /* Viền của khung hình */
+            border-radius: 50%; /* Bo tròn các góc */
+            overflow: hidden; /* Ẩn bất kỳ phần nào của hình ảnh vượt ra ngoài khung */
+            width: 150px;
+            margin-left: 30px;
+        }
+
+            .image-frame img {
+                width: 100%; /* Đảm bảo hình ảnh chiếm đầy đủ chiều rộng của khung */
+                height: auto; /* Đảm bảo tỷ lệ khung hình ảnh được duy trì */
+            }
+
+        /* chính----------------------------------------------*/
+        .chinh-content {
+            flex-grow: 1; /* Main content mở rộng để lấp đầy không gian trống */
+            padding: 20px; /* Khoảng cách nội dung với viền của main content */
+            background-color: #c2c0c0;
+            margin-top: 0;
+        }
+
+        .frame-container {
+            display: flex;
+            flex-wrap: wrap; /* Cho phép tự động xuống hàng */
+            margin-top: 50px;
+        }
+
+        .frame {
+            flex: 1 0 calc(33.33% - 20px); /* Tối đa 3 khung trên cùng một hàng */
+            margin-right: 20px; /* Khoảng cách giữa các khung */
+            margin-bottom: 20px; /* Khoảng cách giữa các hàng */
+            border: 1px solid #ccc; /* Viền của khung */
+            border-radius: 5px; /* Bo tròn các góc */
+            height: 250px;
+        }
+
+            .frame:last-child {
+                margin-right: 0; /* Loại bỏ khoảng cách bên phải của khung cuối cùng trên hàng */
+            }
+
+
+        .frame-header {
+            background-color: #f0f0f0; /* Màu nền của phần header */
+            padding: 10px; /* Khoảng cách giữa nội dung và viền */
+            height: 100px;
+            border-radius: 5px 5px 0 0;
+        }
+
+            .frame-header h2 {
+                margin: 0; /* Xóa margin mặc định của tiêu đề */
+            }
+
+            .frame-header h3 {
+                margin: 0;
+                font-size: 20px;
+            }
+
+        .frame-body {
+            padding: 20px; /* Khoảng cách giữa nội dung và viền */
+        }
+
+        /*----------------------------------------*/
+
+        .plus-button {
+            background: none;
+            border: none;
+            padding: 0;
+            cursor: pointer;
+            position: absolute;
+            /* right: 300px; */
+            /* Khoảng cách giữa nút và đỉnh của main content */
+            margin-right: 20px;
+        }
+
+            .plus-button svg {
+                fill: #ffffff; /* Màu sắc của biểu tượng */
+            }
+
+        .title {
+            background-color: #7bdaf2;
+            color: #fff;
+            border-radius: 5px;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        /* Thiết lập kiểu dáng cho khung chứa options */
+        .options-frame {
+            background-color: #ffffff;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            padding: 10px;
+            position: absolute;
+            /* left: -150px ; /* Đặt vị trí của khung từ bên trái */
+            top: 230px; /* Đặt vị trí của khung từ phía trên dấu cộng */
+            width: 150px;
+            left: 550px;
+        }
+        /* Thiết lập kiểu dáng cho các lựa chọn */
+        .option {
+            cursor: pointer;
+            padding: 10px;
+            /* background-color: #f0f0f0; */
+            border-radius: 4px;
+            margin-bottom: 0;
+        }
+
+            .option:hover {
+                background-color: #e0e0e0;
+            }
+
+        #join-frame {
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            padding: 20px;
+            background-color: #ffffff;
+            margin-top: 20px;
+            z-index: 1000;
+            position: absolute;
+            left: 700px;
+        }
+
+            #join-frame form {
+                margin-top: 10px;
+            }
+
+            #join-frame label {
+                font-weight: bold;
+            }
+
+            #join-frame input[type="text"],
+            #join-frame button {
+                padding: 8px;
+                border-radius: 4px;
+                border: 1px solid #ccc;
+            }
+
+            #join-frame input[type="text"] {
+                width: 200px;
+                margin-bottom: 10px;
+            }
+
+            #join-frame button {
+                background-color: #3c7ec9;
+                color: #fff;
+                cursor: pointer;
+                margin-left: 100px;
+            }
+
+        footer {
+            background-color: #333;
+            color: white;
+            text-align: center;
+            padding: 20px 0;
+            margin-top:auto;
+        }
+
+        .footer-icons {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            /* position: relative; Parent container for absolute positioning */
+        }
+
+            .footer-icons a {
+                color: white;
+                text-decoration: none;
+                font-size: 24px;
+                position: relative;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                width: 40px; /* Adjust the size as needed */
+                height: 40px; /* Adjust the size as needed */
+                transition: margin 0.3s; /* Add transition for smooth animation */
+            }
+
+                .footer-icons a .info {
+                    font-size: 18px;
+                    display: none;
+                    position: absolute;
+                    top: 50%;
+                    left: 50%;
+                    transform: translate(-50%, -50%);
+                    background-color: white;
+                    color: black;
+                    padding: 5px 10px;
+                    border-radius: 5px;
+                    white-space: nowrap;
+                    z-index: 1;
+                    box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+                }
+
+
+
+                .footer-icons a:hover i {
+                    display: none;
+                }
+
+                .footer-icons a:hover .info {
+                    display: block;
+                }
+
+                .footer-icons a:hover {
+                    color: #ddd;
+                    margin-left: 50px; /* Adjust the margin to push icons to the left */
+                    margin-right: 50px; /* Adjust the margin to push icons to the right */
+                }
+
+        .last-info {
+            margin-left: 150px; /* Đẩy bảng cuối cùng ra xa các icon bên trái */
+        }
+
+        .sidebar,
+.main-content,
+.sidebar-right {
+    padding: 20px;
+}
+/* PHẦN NỘI DUNG BÊN TRÁI*/
+.sidebar {
+    width: 200px; /* Độ rộng của cột chủ đề */
+    background-color: #ccc;
+    margin-top: 20px;
+    right: 0;
+    padding-left: 10px;
+}
+
+.sidebar ul {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+    display: block;
+}
+
+.sidebar ul li {
+    border-bottom: 1px solid #949191;   
+    width: 100%;
+    display: block;
+    margin: 10px 0;
+    text-align: center;
+}
+.sidebar ul li:last-child {
+    border-bottom: none; /* Loại bỏ đường viền ở mục cuối cùng */
+}
+
+.sidebar ul li a {
+    /* text-decoration: none; */
+    color: #333;
+    font-size: 17px;
+    padding: 5px;
+    padding-left: 0;
+    display: inline-block;
+    text-align: center;
+    overflow: hidden;
+    white-space: wrap;
+    text-overflow: ellipsis;
+    font-family: "Platypi", serif;
+    font-optical-sizing: auto;
+    font-style: normal;
+    width: 100%;
+}
+
+.sidebar ul li a:hover {
+    text-decoration: none;
+    color: #333;
+    background-color: #fff;
+}
+
+.sidebar h2 {
+    margin-top: 0px; /* Loại bỏ khoảng cách trên đầu tiêu đề */
+    margin-bottom: 30px; /* Tạo khoảng cách dưới tiêu đề */
+    text-align: center;
+    font-weight: bold;
+    font-size: 50px;
+    font-family: "Lobster", sans-serif;
+}
+
+        @@media screen and (max-width: 768px) {
+            .left-column {
+                display: none;
+            }
+
+            .options-frame {
+                left: 0;
+                transform: translateX(-460px);
+                top: 150px; /* Điều chỉnh top nếu cần */
+                width: 150px; /* Thay đổi kích thước khung nếu cần */
+            }
+        }
+
+        .wrapper {
+                    display: flex;
+                    flex-direction: column;
+                    min-height: 200vh;
+                }
+
+        main {
+            flex:1;
+        }
+
+        footer {
+                    background-color: black;
+                    color: white;
+                    padding: 20px;
+                } 
+    </style>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/jsqr/dist/jsQR.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    
 </head>
 <body>
-	<header>
-		<nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow " style="padding: 0">
-			<div class="container-fluid">
+    <div class="wrapper">
+        <header>
+            <div class="banner">
+                <h1>LEARN WITH ONLY A</h1>
+            </div>
+            <nav>
+                <div class="menu-icon" onclick="toggleMenu()">
+                    &#9776;
+                </div>
+                <ul class="menu">
+                    <li><a href="/Home/Index">Trang chủ</a></li>
+                    <li><a href="/ClassRooms">Lớp học</a></li>
+                    <li><a href="/BaiTaps">Bài tập</a></li>
+                    <li><a href="/Schedule">Thời khoá biểu</a></li>
+                </ul>
+                <div class="login-item">
+                    <partial name="_LoginPartial" />
+                </div>
+            </nav>
+            <!-- Menu dọc sẽ hiển thị khi responsive -->
+            <div class="vertical-menu" id="verticalMenu">
+                <a href="javascript:void(0)" class="close-btn" onclick="toggleMenu()">&times;</a>
+                <a href="/Home/Index">Trang chủ</a>
+                <a href="/ClassRooms">Lớp học</a>
+                <a class="bt" href="/BaiTaps">Bài tập</a>
+                <a href="/Schedule">Thời khoá biểu</a>
+                <a href="https://sinhvien.hutech.edu.vn/#/sinhvien/login/login">Sinh viên Hutech</a>
+                <a href="https://daotao.hutech.edu.vn/>">Cổng Thông Tin Đào Tạo</a>
+                <a href="https://e-graduate.hutech.edu.vn/">E-Learning Hutech</a>
 
-				@if (User.Identity.IsAuthenticated)
-				{
-					<a class="navbar-brand" asp-area="" asp-controller="ClassRooms" asp-action="Index" style="font-family: 'Poppins', sans-serif; padding: 0">
-						<img src="/images/Logo_Web.png" alt="Logo" width="70" height="auto">
-						
-					</a>
-				}
-				else
-				{
-					<a class="navbar-brand" asp-area="Identity" asp-page="/Account/Index" style="font-family: 'Poppins', sans-serif; padding: 0">
-						<img src="/images/Logo_Web.png" alt="Logo" width="70" height="auto">
-						
-					</a>
-				}
+            </div>
+        </header>
+        <main>
+            @RenderBody()
+        </main>
+        <footer>
+            <div class="footer-icons">
+                <a href="https://www.facebook.com/profile.php?id=61560499766790" target="_blank">
+                    <i class="fab fa-facebook-f"></i>
+                    <div class="info">Only A Classroom</div>
+                </a>
+                <a href="https://www.instagram.com" target="_blank">
+                    <i class="fab fa-instagram"></i>
+                    <div class="info">Only A</div>
+                </a>
+                <a href="https://github.com/quyok808/DAMH_QLClassroom" target="_blank">
+                    <i class="fab fa-github"></i>
+                    <div class="info">OnlyA Classroom</div>
+                </a>
+                <a href="https://www.linkedin.com" target="_blank">
+                    <i class="fab fa-linkedin-in"></i>
+                    <div class="info">Only A</div>
+                </a>
+                <a href="https://mail.google.com/mail/?view=cm&fs=1&to=quyok8080@gmail.com" target="_blank">
+                    <i class="fas fa-envelope"></i>
+                    <div class="info" style="margin-left: 30px;">quyok8080@gmail.com</div>
+                </a>
 
+            </div>
+            <p>
+                © 2024
+                <a href="https://zalo.me/0358361511" target="_blank" rel="noopener noreferrer">Only A</a>.
+                All rights reserved.
+            </p>
+        </footer>
+    </div>
+    @await RenderSectionAsync("Scripts", required: false)
+    <script>
+        function toggleMenu() {
+            var menu = document.getElementById('verticalMenu');
+            if (menu.style.display === 'block') {
+                menu.style.display = 'none';
+            } else {
+                menu.style.display = 'block';
+            }
+        }
+    </script>
 
-				<button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
-						aria-expanded="false" aria-label="Toggle navigation">
-					<span class="navbar-toggler-icon"></span>
-				</button>
-				<div class="navbar-collapse collapse d-sm-inline-flex justify-content-end">
-					<partial name="_LoginPartial" />
-				</div>
-			</div>
-		</nav>
-	</header>
-	<div class="container-fluid d-flex justify-content-center align-items-center " style="
-                                                                                            background-image: url(/images/hinhnen.jpg);
-                                                                                            background-repeat: no-repeat;
-                                                                                            background-size: cover;
-                                                                                            height: 91vh;
-																						">
-		<main role="main">
-			@RenderBody()
-		</main>
-	</div>
-
-
-	<script>
-		function updateDateTime() {
-			var currentDateTime = new Date();
-			var hours = currentDateTime.getHours();
-			var minutes = currentDateTime.getMinutes();
-			var seconds = currentDateTime.getSeconds();
-			var day = currentDateTime.getDate();
-			var month = currentDateTime.getMonth() + 1; // Tháng bắt đầu từ 0
-			var year = currentDateTime.getFullYear();
-			var weekday = currentDateTime.getDay();
-
-			hours = (hours < 10) ? "0" + hours : hours;
-			minutes = (minutes < 10) ? "0" + minutes : minutes;
-			seconds = (seconds < 10) ? "0" + seconds : seconds;
-
-			day = (day < 10) ? "0" + day : day;
-			month = (month < 10) ? "0" + month : month;
-
-			var weekdays = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
-			var weekdayName = weekdays[weekday];
-
-			// Định dạng thời gian
-			var formattedDateTime = weekdayName + " • " + day + "/" + month + "/" + year + " " + hours + ":" + minutes + ":" + seconds;
-
-			// Hiển thị thời gian
-			document.getElementById("currentDateTime").innerText = formattedDateTime;
-		}
-
-		// Cập nhật thời gian mỗi giây
-		setInterval(updateDateTime, 1000);
-
-		// Gọi hàm updateDateTime lần đầu tiên để hiển thị thời gian ngay từ khi trang được tải
-		updateDateTime();
-	</script>
-
-
-	<script src="~/lib/jquery/dist/jquery.min.js"></script>
-	<script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
-	<script src="~/js/site.js" asp-append-version="true"></script>
-
-	<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
-	<script src="https://cdn.jsdelivr.net/npm/popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
-	<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
-	@await RenderSectionAsync("Scripts", required: false)
 </body>
 </html>

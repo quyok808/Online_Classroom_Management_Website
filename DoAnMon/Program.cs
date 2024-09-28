@@ -1,8 +1,12 @@
 ﻿using DoAnMon.Data;
 using DoAnMon.IdentityCudtomUser;
+using DoAnMon.ModelListSVDownload;
 using DoAnMon.Models;
 using DoAnMon.SignalR;
+using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Http.Features;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Server.Kestrel.Core;
 using Microsoft.EntityFrameworkCore;
 using OfficeOpenXml;
 
@@ -14,28 +18,30 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseSqlServer(connectionString));
 builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 
+builder.Services.AddScoped<IStudent, StudentRepo>();
+
 builder.Services.AddDefaultIdentity<CustomUser>(options => options.SignIn.RequireConfirmedAccount = true)
     .AddRoles<IdentityRole>()
     .AddEntityFrameworkStores<ApplicationDbContext>();
+
+builder.Services.Configure<FormOptions>(options =>
+{
+    options.MultipartBodyLengthLimit = long.MaxValue; // 1GB
+});
 builder.Services.AddControllersWithViews();
 
 builder.Services.AddSingleton<ClassroomViewModel>();
 builder.Services.AddSignalR();
 builder.Services.AddScoped<ICheckNop, CheckNop>();
+
+builder.Services.ConfigureApplicationCookie(options =>
+{
+	options.LoginPath = "/Identity/Account/Index"; // Đường dẫn đến trang từ chối truy cập mới
+});
+
+
 ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
 var app = builder.Build();
-
-// Khởi tạo dịch vụ UserManager và RoleManager
-using (var scope = app.Services.CreateScope())
-{
-	var services = scope.ServiceProvider;
-	var userManager = services.GetRequiredService<UserManager<CustomUser>>();
-	var roleManager = services.GetRequiredService<RoleManager<IdentityRole>>();
-
-	// Gọi phương thức tạo dữ liệu mặc định
-	SeedData.Initialize(userManager, roleManager).Wait();
-}
-
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
@@ -47,6 +53,12 @@ else
     // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
     app.UseHsts();
 }
+
+app.Use(async (context, next) =>
+{
+    context.Request.EnableBuffering();
+    await next();
+});
 
 app.UseHttpsRedirection();
 app.UseStaticFiles();
@@ -66,6 +78,12 @@ app.MapControllerRoute(
 			pattern: "{area:exists}/{controller=Home}/{action=TrangChu}/{id?}"
 
 		  );
+app.MapControllerRoute(
+	name: "SaveDataAsync",
+	pattern: "/ClassRooms/SaveDataAsync",
+	defaults: new { controller = "ClassRooms", action = "SaveDataAsync" }
+);
+
 app.MapRazorPages();
 
 app.Run();

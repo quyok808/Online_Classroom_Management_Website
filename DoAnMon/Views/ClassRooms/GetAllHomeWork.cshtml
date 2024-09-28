@@ -1,88 +1,143 @@
-﻿@model IEnumerable<DoAnMon.Models.BaiTap>
+﻿@using DoAnMon.Pagination
+@model PaginatedList<DoAnMon.Models.BaiTap>
 
 @{
-    ViewData["Title"] = "GetAllHomeWork";
-    Layout = "~/Views/Shared/_Layout1.cshtml";
+	ViewData["Title"] = "GetAllHomeWork";
+	Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<style>
-    .button {
-        display: inline-block;
-        padding: 10px 20px;
-        background-color: #007bff;
-        color: #fff;
-        text-decoration: none;
-        border-radius: 5px;
-        font-size: 16px;
-        border: none;
-        cursor: pointer;
-        text-align: center;
-    }
 
-        .button:hover {
-            background-color: #0056b3;
-            color: white;
-        }
 
-    .assignment {
-        background-color: #f9f9f9;
-        padding: 20px;
-        border-radius: 5px;
-        margin-bottom: 20px;
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        border: 1px solid #ccc;
-        /* Thêm viền */
-    }
+<form id="Search-form" method="get">
+	<input type="text" id="query" name="query" placeholder="Nhập tên bài tập hoặc mã lớp" class="search-input" value="@Model.CurrentQuery" style="width: 70%;" />
+	<input id="searchButton" type="submit" value="Search" />
+</form>
+<div style="margin: 10px auto;">
+	<hr style="border: 1px solid black;"/>
+</div>
+<div id="assignmentContainer">
+	<style>
+		.button {
+			display: inline-block;
+			padding: 10px 20px;
+			background-color: #007bff;
+			color: #fff;
+			text-decoration: none;
+			border-radius: 5px;
+			font-size: 16px;
+			border: none;
+			cursor: pointer;
+			white-space: nowrap;
+			text-align: center;
+		}
 
-    .assignment-content {
-        flex-grow: 1;
-        margin-right: 20px;
-    }
+			.button:hover {
+				background-color: #0056b3;
+				color: white;
+			}
 
-    .assignment h3 {
-        margin-top: 0;
-        margin-bottom: 10px;
-    }
+		.assignment {
+			background-color: #f9f9f9;
+			padding: 20px;
+			border-radius: 5px;
+			margin-bottom: 20px;
+			display: flex;
+			justify-content: space-between;
+			align-items: center;
+			border: 1px solid #ccc;
+			/* Thêm viền */
+		}
 
-    .assignment-description {
-        margin-bottom: 20px;
-    }
+		.assignment-content {
+			flex-grow: 1;
+			margin-right: 20px;
+		}
 
-    .active-menu{
-        background-color: black!important;
-        color: white!important;
-    }
+		.assignment h3 {
+			margin-top: 0;
+			margin-bottom: 10px;
+		}
 
-    .getallhw{
-        background-color: #00CA79 !important;
-        color: white!important;
-    }
-</style>
+		.assignment-description {
+			margin-bottom: 20px;
+		}
 
+		.active-menu {
+			background-color: black !important;
+			color: white !important;
+		}
+
+		.getallhw {
+			background-color: #00CA79 !important;
+			color: white !important;
+		}
+	</style>
+
+	@foreach (var item in Model)
+	{
+		@* var countGiao = listClassDetail.Where(p => p.ClassRoomId == item.ClassRoomId).Count();
+		var countNop = listBaiNop.Where(p => p.BaiTapId == item.Id).Count();
+		var countCham = listBaiNop.Where(p => p.BaiTapId == item.Id && p.daChamDiem == 1).Count(); *@
+
+		<div class="item">
+			<div class="assignment" style="height: 30vh;">
+				<div class="assignment-content"
+					 style="border-right: 1px solid black; height: 100%; width: 100%; margin: 50px;">
+					<h3 class="text-center">@item.Title</h3>
+					<p class="assignment-description">
+						@item.Content
+					</p>
+					<div style ="display: flex; float: right; margin-right: 10px; border: 1px solid groove;">
+						@* <p>Đã Giao: @countGiao <br />Đã nộp: @countNop <br />Đã chấm: @countCham </p> *@
+						<p>Done</p>
+					</div>
+				</div>
+				@if (User.IsInRole("Teacher"))
+				{
+					<a asp-action="GetAllBTStu" asp-controller="ClassRooms" asp-route-classid="@item.ClassRoomId" asp-route-baitapID="@item.Id" class="button">Xem Bài tập</a>
+				}
+				else
+				{
+					<a asp-action="GetOwnBT" asp-controller="ClassRooms" asp-route-classid="@item.ClassRoomId" asp-route-baitapID="@item.Id" class="button">Xem Bài tập</a>
+				}
+			</div>
+		</div>
+	}
+</div>
 @{
-    foreach (var item in Model)
-    {
-        <div class="assignment" style="height: 30vh;">
-            <div class="assignment-content"
-                 style="border-right: 1px solid black; height: 100%; width: 100%; margin: 50px;">
-                <h3 class="text-center">@item.Title</h3>
-                <p class="assignment-description">
-                    @item.Content
-                </p>
-            </div>
-            @{
-                if (User.IsInRole("Teacher"))
-                {
-                    <a asp-action="GetAllBTStu" asp-controller="ClassRooms" asp-route-classid = "@item.ClassRoomId" asp-route-baitapID="@item.Id" class="button">Xem Bài tập</a>
-                }
-                else
-                {
-                    <a asp-action="GetOwnBT" asp-controller="ClassRooms" asp-route-classid="@item.ClassRoomId" asp-route-baitapID="@item.Id" class="button">Xem Bài tập</a>
-                }
-            }
-            
-        </div>
-    }
+	var prevDisabled = !Model.HasPreviousPage ? "hidden" : "";
+	var nextDisabled = !Model.HasNextPage ? "hidden" : "";
+}
+<div style="display:flex; justify-content: space-between;">
+	<a asp-action="GetAllHomeWork" asp-controller="ClassRooms" asp-route-pageNumber="@(Model.PageIndex- 1)" asp-route-query="@Model.CurrentQuery" class="btn btn-default @prevDisabled">
+		Previous
+	</a>
+	<a asp-action="GetAllHomeWork" asp-controller="ClassRooms" asp-route-pageNumber="@(Model.PageIndex + 1)" asp-route-query="@Model.CurrentQuery" class="btn btn-default @nextDisabled">
+		Next
+	</a>
+</div>
+@section Scripts {
+	<script>
+		$(document).ready(function () {
+			$("#searchButton").click(function () {
+				search();
+			});
+		});
+
+		function search() {
+			var query = $("#query").val();
+
+			$.ajax({
+				url: "/ClassRooms/Search",
+				type: "GET",
+				data: { query: query },
+				success: function (data) {
+					$("#assignmentContainer").html(data);
+				},
+				error: function (xhr, status, error) {
+					console.error("Error:", error);
+				}
+			});
+		}
+	</script>
 }
