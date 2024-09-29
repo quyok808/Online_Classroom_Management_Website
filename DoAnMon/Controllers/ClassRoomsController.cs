@@ -25,6 +25,7 @@ using Microsoft.AspNetCore.Authorization;
 using System.Globalization;
 using System.Security.Cryptography;
 using System.Runtime.ConstrainedExecution;
+using Microsoft.IdentityModel.Tokens;
 
 namespace DoAnMon.Controllers
 {
@@ -617,18 +618,22 @@ namespace DoAnMon.Controllers
 				return NotFound();
 			}
 			var lectures = await _context.BaiGiang.Where(p => p.ClassId == id).ToListAsync();
+			
 			foreach (var item in lectures)
 			{
+				deleteFile("BAIGIANG", item.UrlBaiGiang);
 				_context.BaiGiang.Remove(item);
 			}
 			var homeworks = await _context.baiTaps.Where(p => p.ClassRoomId == id).ToListAsync();
 			foreach (var item in homeworks)
 			{
+				deleteFile("BAITAP", item.attractUrl);
 				_context.baiTaps.Remove(item);
 			}
 			var bainops = await _context.BaiNop.Where(p => p.ClassId == id).ToListAsync();
 			foreach (var item in bainops)
 			{
+				deleteFile("BAINOP", item.Urlbainop);
 				_context.BaiNop.Remove(item);
 			}
 			_context.classRooms.Remove(classRoom);
@@ -636,6 +641,23 @@ namespace DoAnMon.Controllers
 
 			return RedirectToAction(nameof(Index));
 		}
+
+		//DELETE FILE
+		public void deleteFile(string folder, string fileName)
+		{
+			if (fileName.IsNullOrEmpty())
+			{
+				return;
+			}
+			var uploadsFolder = Path.Combine(_environment.WebRootPath, folder);
+			
+			var filePath = Path.Combine(uploadsFolder, fileName);
+			if (System.IO.File.Exists(filePath))
+			{
+				System.IO.File.Delete(filePath);
+			}
+		}
+
 		// GET: ClassRooms/Edit/5
 		public async Task<IActionResult> Edit(string id)
 		{
@@ -1117,7 +1139,6 @@ namespace DoAnMon.Controllers
         public IActionResult DeleteBT(string id, string classId)
         {
             var temp = _context.baiTaps.FirstOrDefault(p => p.Id == id);
-			List<string> failedToDelete = new List<string>();
 			if (temp == null)
             {
                 return NotFound("Không có bài tập này trong CSDL");
@@ -1125,31 +1146,13 @@ namespace DoAnMon.Controllers
             var listBN = _context.BaiNop.Where(p => p.BaiTapId == id).ToList();
             foreach (var item in listBN)
             {
-				var folderPath = Path.Combine(_environment.WebRootPath, "BAINOP");
-				string filePath = Path.Combine(folderPath, item.Urlbainop);
-				if (System.IO.File.Exists(filePath))
-				{
-					System.IO.File.Delete(filePath);
-				}
-				else
-				{
-					failedToDelete.Add(filePath + " - File không tồn tại.");
-				}
+				deleteFile("BAINOP", item.Urlbainop);
 				item.Diem = 0;
                 _context.BaiNop.Remove(item);
             }
 			if (temp.attractUrl != null)
 			{
-				var folderPath = Path.Combine(_environment.WebRootPath, "BAITAP");
-				string filePath = Path.Combine(folderPath, temp.attractUrl);
-				if (System.IO.File.Exists(filePath))
-				{
-					System.IO.File.Delete(filePath);
-				}
-				else
-				{
-					failedToDelete.Add(filePath + " - File không tồn tại.");
-				}
+				deleteFile("BAITAP", temp.attractUrl);
 			}
 			_context.baiTaps.Remove(temp);
             _context.SaveChanges();
