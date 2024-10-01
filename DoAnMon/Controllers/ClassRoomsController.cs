@@ -543,8 +543,12 @@ namespace DoAnMon.Controllers
 				var homework = _context.baiTaps.FirstOrDefault(h => h.Id == BaitapId);
 				var Tenbai = homework.Title;
 				var filename = $"{MSSV}_{Name}_{Tenbai}{Path.GetExtension(FileNopbai.FileName)}";
-				var uploadsFolder = Path.Combine(_environment.WebRootPath, "BAINOP");
-				if (FileNopbai != null || FileNopbai.Length > 0)
+				var uploadsFolder = Path.Combine(_environment.WebRootPath,"Uploads", "BAINOP");
+                if (!Directory.Exists(uploadsFolder))
+                {
+                    Directory.CreateDirectory(uploadsFolder);
+                }
+                if (FileNopbai != null || FileNopbai.Length > 0)
 				{
 
 					// Kiểm tra xem thư mục tồn tại hay không
@@ -820,7 +824,7 @@ namespace DoAnMon.Controllers
 			var fileNames = new List<string>();
 			foreach (var item in lbn)
 			{
-				fileNames.Add(("BAINOP/" + item.Urlbainop));
+				fileNames.Add(("Uploads/BAINOP/" + item.Urlbainop));
 			}
 			string name = lbn[0].ClassId + "_" + lbn[0].BaiTapId;
 			// Tạo tên tập tin nén
