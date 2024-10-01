@@ -1493,6 +1493,7 @@
 	r.on('fileSuccess', function (file, message) {
 		console.log('Hoàn thành upload file:', file.fileName);
 		resetFileName()
+		reloadLecture()
 	});
 
 	// Xử lý lỗi

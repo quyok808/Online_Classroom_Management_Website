@@ -38,14 +38,15 @@ namespace DoAnMon.Controllers
 				folderPath = Path.Combine(_uploadPath, "BAITAP");
 			}
 			else if (folderType == "BAIGIANG")
-			{
-				var file = Request.Form.Files[0];
-				var fileExtension = Path.GetExtension(file.FileName);
-				folderPath = Path.Combine(_uploadPath, "BAIGIANG");
-				resumableFilename = $"{ClassId}_{fileName}{fileExtension}";
-				SavedatabaseBAIGIANG(ClassId, resumableFilename, fileName);
-			}
-			else if (folderType == "BAINOP")
+            {
+                var file = Request.Form.Files[0];
+                var fileExtension = Path.GetExtension(file.FileName);
+                folderPath = Path.Combine(_uploadPath, "BAIGIANG");
+                resumableFilename = $"{ClassId}_{fileName}{fileExtension}";
+				if (resumableChunkNumber == resumableTotalChunks)
+					await SavedatabaseBAIGIANG(ClassId, resumableFilename, fileName); // Sử dụng await
+            }
+            else if (folderType == "BAINOP")
 			{
 				folderPath = Path.Combine(_uploadPath, "BAINOP");
 			}
@@ -103,19 +104,19 @@ namespace DoAnMon.Controllers
 			return Ok();
 		}
 
-		private  async void SavedatabaseBAIGIANG(StringValues classId, StringValues resumableFilename, StringValues name)
-		{
-			BaiGiang newLecture = new BaiGiang();
-			newLecture.UrlBaiGiang = resumableFilename;
-			newLecture.Name = name;
-			newLecture.ClassId = classId;
-			_context.BaiGiang.Add(newLecture);
-			await _context.SaveChangesAsync();
-		}
+        private async Task SavedatabaseBAIGIANG(StringValues classId, StringValues resumableFilename, StringValues name)
+        {
+            BaiGiang newLecture = new BaiGiang();
+            newLecture.UrlBaiGiang = resumableFilename;
+            newLecture.Name = name;
+            newLecture.ClassId = classId;
+            _context.BaiGiang.Add(newLecture);
+            await _context.SaveChangesAsync();
+        }
 
 
-		// Kiểm tra chunk đã tồn tại chưa
-		[HttpGet]
+        // Kiểm tra chunk đã tồn tại chưa
+        [HttpGet]
 		public IActionResult DoesChunkExist()
 		{
 			var resumableChunkNumber = Request.Query["resumableChunkNumber"];
