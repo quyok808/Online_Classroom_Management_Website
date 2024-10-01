@@ -619,21 +619,27 @@ namespace DoAnMon.Controllers
 			}
 			var lectures = await _context.BaiGiang.Where(p => p.ClassId == id).ToListAsync();
 
+
 			foreach (var item in lectures)
 			{
 				deleteFile("Uploads/BAIGIANG", item.UrlBaiGiang);
+
 				_context.BaiGiang.Remove(item);
 			}
 			var homeworks = await _context.baiTaps.Where(p => p.ClassRoomId == id).ToListAsync();
 			foreach (var item in homeworks)
 			{
+
 				deleteFile("Uploads/BAITAP", item.attractUrl);
+
 				_context.baiTaps.Remove(item);
 			}
 			var bainops = await _context.BaiNop.Where(p => p.ClassId == id).ToListAsync();
 			foreach (var item in bainops)
 			{
+
 				deleteFile("Uploads/BAINOP", item.Urlbainop);
+
 				_context.BaiNop.Remove(item);
 			}
 			_context.classRooms.Remove(classRoom);
@@ -657,6 +663,7 @@ namespace DoAnMon.Controllers
 				System.IO.File.Delete(filePath);
 			}
 		}
+
 		// GET: ClassRooms/Edit/5
 		public async Task<IActionResult> Edit(string id)
 		{
@@ -1114,6 +1121,7 @@ namespace DoAnMon.Controllers
 		public IActionResult DeleteLecture(int id, string classId)
 		{
 
+
 			var temp = _context.BaiGiang.FirstOrDefault(p => p.Id == id);
 			var folderPath = Path.Combine(_environment.WebRootPath, "Uploads","BAIGIANG");
 			string filePath = Path.Combine(folderPath, temp.UrlBaiGiang);
@@ -1123,11 +1131,13 @@ namespace DoAnMon.Controllers
 			}
 			else
 			{
+
 				if (System.IO.File.Exists(filePath))
 				{
 					System.IO.File.Delete(filePath);
 				}
 				_context.BaiGiang.Remove(temp);
+
 			}
 			_context.SaveChanges();
 			return RedirectToAction("Details", "ClassRooms", new { id = classId });
