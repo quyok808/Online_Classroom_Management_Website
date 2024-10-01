@@ -25,6 +25,7 @@ using Microsoft.AspNetCore.Authorization;
 using System.Globalization;
 using System.Security.Cryptography;
 using System.Runtime.ConstrainedExecution;
+using Microsoft.IdentityModel.Tokens;
 
 namespace DoAnMon.Controllers
 {
@@ -617,24 +618,44 @@ namespace DoAnMon.Controllers
 				return NotFound();
 			}
 			var lectures = await _context.BaiGiang.Where(p => p.ClassId == id).ToListAsync();
+
 			foreach (var item in lectures)
 			{
+				deleteFile("Uploads/BAIGIANG", item.UrlBaiGiang);
 				_context.BaiGiang.Remove(item);
 			}
 			var homeworks = await _context.baiTaps.Where(p => p.ClassRoomId == id).ToListAsync();
 			foreach (var item in homeworks)
 			{
+				deleteFile("Uploads/BAITAP", item.attractUrl);
 				_context.baiTaps.Remove(item);
 			}
 			var bainops = await _context.BaiNop.Where(p => p.ClassId == id).ToListAsync();
 			foreach (var item in bainops)
 			{
+				deleteFile("Uploads/BAINOP", item.Urlbainop);
 				_context.BaiNop.Remove(item);
 			}
 			_context.classRooms.Remove(classRoom);
 			await _context.SaveChangesAsync();
 
 			return RedirectToAction(nameof(Index));
+		}
+
+		//DELETE FILE
+		public void deleteFile(string folder, string fileName)
+		{
+			if (fileName.IsNullOrEmpty())
+			{
+				return;
+			}
+			var uploadsFolder = Path.Combine(_environment.WebRootPath, folder);
+
+			var filePath = Path.Combine(uploadsFolder, fileName);
+			if (System.IO.File.Exists(filePath))
+			{
+				System.IO.File.Delete(filePath);
+			}
 		}
 		// GET: ClassRooms/Edit/5
 		public async Task<IActionResult> Edit(string id)
@@ -1089,42 +1110,53 @@ namespace DoAnMon.Controllers
                 return StatusCode(500, "An error occurred while processing your request.");
             }
         }
+		[HttpGet]
+		public IActionResult DeleteLecture(int id, string classId)
+		{
 
-        [HttpGet]
-        public IActionResult DeleteLecture(int id, string classId)
-        {
-            var temp = _context.BaiGiang.FirstOrDefault(p => p.Id == id);
-            if (temp == null)
-            {
-                return NotFound("Không có bài giảng này trong CSDL");
-            }
-            else
-            {
-                _context.BaiGiang.Remove(temp);
-            }
-            _context.SaveChanges();
-            return RedirectToAction("Details", "ClassRooms", new { id = classId });
-        }
+			var temp = _context.BaiGiang.FirstOrDefault(p => p.Id == id);
+			var folderPath = Path.Combine(_environment.WebRootPath, "Uploads","BAIGIANG");
+			string filePath = Path.Combine(folderPath, temp.UrlBaiGiang);
+			if (temp == null)
+			{
+				return NotFound("Không có bài giảng này trong CSDL");
+			}
+			else
+			{
+				if (System.IO.File.Exists(filePath))
+				{
+					System.IO.File.Delete(filePath);
+				}
+				_context.BaiGiang.Remove(temp);
+			}
+			_context.SaveChanges();
+			return RedirectToAction("Details", "ClassRooms", new { id = classId });
+		}
 
-        [HttpGet]
-        public IActionResult DeleteBT(string id, string classId)
-        {
-            var temp = _context.baiTaps.FirstOrDefault(p => p.Id == id);
-            if (temp == null)
-            {
-                return NotFound("Không có bài tập này trong CSDL");
-            }
-            var listBN = _context.BaiNop.Where(p => p.BaiTapId == id).ToList();
-            foreach (var item in listBN)
-            {
+		[HttpGet]
+		public IActionResult DeleteBT(string id, string classId)
+		{
+			var temp = _context.baiTaps.FirstOrDefault(p => p.Id == id);
+			if (temp == null)
+			{
+				return NotFound("Không có bài tập này trong CSDL");
+			}
+			var listBN = _context.BaiNop.Where(p => p.BaiTapId == id).ToList();
+			foreach (var item in listBN)
+			{
+				deleteFile("Uploads/BAINOP", item.Urlbainop);
 				item.Diem = 0;
-                _context.BaiNop.Remove(item);
-            }
-            _context.baiTaps.Remove(temp);
-            _context.SaveChanges();
-            TinhDTB(classId);
-            return RedirectToAction("Details", "ClassRooms", new { id = classId });
-        }
+				_context.BaiNop.Remove(item);
+			}
+			if (temp.attractUrl != null)
+			{
+				deleteFile("Uploads/BAITAP", temp.attractUrl);
+			}
+			_context.baiTaps.Remove(temp);
+			_context.SaveChanges();
+			TinhDTB(classId);
+			return RedirectToAction("Details", "ClassRooms", new { id = classId });
+		}
 
 		[HttpPost]
 		public async Task<IActionResult> DiemDanhIn(string classId)
@@ -1292,9 +1324,13 @@ namespace DoAnMon.Controllers
 				return BadRequest("Chunk is null or empty");
 			}
 
-			var uploadFolder = Path.Combine(_environment.WebRootPath, "BAITAP");
+			var uploadFolder = Path.Combine(_environment.WebRootPath,"Uploads" , "BAITAP");
+			
+			if (!Directory.Exists(uploadFolder))
+			{
+				Directory.CreateDirectory(uploadFolder);
+			}
 			var tempFilePath = Path.Combine(uploadFolder, fileName);
-
 			await _semaphore.WaitAsync();
 			try
 			{
@@ -1335,7 +1371,7 @@ namespace DoAnMon.Controllers
 		{
 			try
 			{
-				var uploadFolder = Path.Combine(_environment.WebRootPath, "BAITAP");
+				var uploadFolder = Path.Combine(_environment.WebRootPath, "Uploads", "BAITAP");
 				var finalFilePath = Path.Combine(uploadFolder, request.FileName);
 
 				// Compute and verify hash of the final file

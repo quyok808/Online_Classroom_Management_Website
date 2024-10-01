@@ -1,11 +1,14 @@
-﻿@using static DoAnMon.Models.ClassroomViewModel
+﻿﻿@using DoAnMon.IdentityCudtomUser
+@using Microsoft.AspNetCore.Identity
+@using static DoAnMon.Models.ClassroomViewModel
 @model List<ClassRoomViewModel>
+@inject UserManager<CustomUser> _userManager
 
 @{
     ViewData["Title"] = "Thời khoá biểu";
     Layout = "~/Views/Shared/_Layout.cshtml";
     List<DiemDanh> listdiemdanh = ViewBag.diemDanh as List<DiemDanh>;
-
+    var user = await _userManager.GetUserAsync(User);
 }
 
 <script src='https://cdn.jsdelivr.net/npm/fullcalendar-scheduler@6.1.15/index.global.min.js'></script>
@@ -39,70 +42,83 @@
             },
             eventOverlap: false,
             events: [
-                @foreach (var classroom in Model)
+    @foreach (var classroom in Model)
+    {
+        foreach (var date in classroom.ClassDates)
+        {
+            // Tạo biến cho màu sắc mặc định
+            var color = "f5455a"; // Màu mặc định
+            var hasIn = false; // Biến để kiểm tra xem có IN không
+            var hasOut = false; // Biến để kiểm tra xem có OUT không
+            var hasLate = false; // Biến để kiểm tra xem có LATE không
+            var tooltipValue = "Chưa học";
+
+            // Kiểm tra điều kiện
+            foreach (var item in listdiemdanh)
+            {
+                if (item.ClassRoom.Id == classroom.ClassRoom.Id &&
+                item.time.Substring(10).Trim().Equals(date.Start.ToString("dd/MM/yyyy")))
                 {
-                    foreach (var date in classroom.ClassDates)
+                    if (item.Check.Equals("OUT", StringComparison.OrdinalIgnoreCase))
                     {
-                        // Tạo biến cho màu sắc mặc định
-                        var color = "f5455a"; // Màu mặc định
-                        var hasIn = false; // Biến để kiểm tra xem có IN không
-                        var hasOut = false; // Biến để kiểm tra xem có OUT không
-                        var hasLate = false; // Biến để kiểm tra xem có LATE không
-                        var tooltipValue = "Chưa học";
-
-                        // Kiểm tra điều kiện
-                        foreach (var item in listdiemdanh)
-                        {
-                            if (item.ClassRoom.Id == classroom.ClassRoom.Id &&
-                            item.time.Substring(10).Trim().Equals(date.Start.ToString("dd/MM/yyyy")))
-                            {
-                                if (item.Check.Equals("OUT", StringComparison.OrdinalIgnoreCase))
-                                {
-                                    hasOut = true;
-                                }
-                                else if (item.Check.Equals("IN", StringComparison.OrdinalIgnoreCase))
-                                {
-                                    hasIn = true;
-                                }
-                                else if (item.Check.Equals("LATE", StringComparison.OrdinalIgnoreCase))
-                                {
-                                    hasLate = true;
-                                }
-                            }
-                        }
-
-                        // Gán màu sắc dựa trên điều kiện
-                        if (hasIn && hasOut)
-                        {
-                            color = "95cd41"; // Nếu có cả IN và OUT
-                            tooltipValue = "Đúng giờ";
-                        }
-                        else if (hasLate && hasOut)
-                        {
-                            color = "f7cc04"; // Nếu có cả LATE và OUT
-                            tooltipValue = "Trễ Giờ";
-                        }
-
-                        <text>
-                                    {
-                                        title: '@Html.Raw(classroom.ClassRoom.Name)',
-                                        start: '@date.Start.ToString("yyyy-MM-ddTHH:mm:ss")',
-                                        end: '@date.End.ToString("yyyy-MM-ddTHH:mm:ss")',
-                                        backgroundColor: '#@color', // Sử dụng giá trị màu sắc đã xác định
-                                        url: '@Url.Action("Details", "ClassRooms", new { id = classroom.ClassRoom.Id })',
-                                        tooltip: '@tooltipValue',
-                                        extendedProps: {
-                                            tooltip: '@tooltipValue' // Sử dụng extendedProps để lưu tooltip
-                                        }
-                                    },
-                        </text>
+                        hasOut = true;
+                    }
+                    else if (item.Check.Equals("IN", StringComparison.OrdinalIgnoreCase))
+                    {
+                        hasIn = true;
+                    }
+                    else if (item.Check.Equals("LATE", StringComparison.OrdinalIgnoreCase))
+                    {
+                        hasLate = true;
                     }
                 }
-            ],
+            }
+
+            // Gán màu sắc dựa trên điều kiện
+            if (hasIn && hasOut)
+            {
+                color = "95cd41"; // Nếu có cả IN và OUT
+                tooltipValue = "Đúng giờ";
+            }
+            else if (hasLate && hasOut)
+            {
+                color = "f7cc04"; // Nếu có cả LATE và OUT
+                tooltipValue = "Trễ Giờ";
+            }
+
+            <text>
+                        {
+                            title: '@Html.Raw(classroom.ClassRoom.Name)',
+                            start: '@date.Start.ToString("yyyy-MM-ddTHH:mm:ss")',
+                            end: '@date.End.ToString("yyyy-MM-ddTHH:mm:ss")',
+                            backgroundColor: '#@color', // Sử dụng giá trị màu sắc đã xác định
+                            url: "@classroom.ClassRoom.RoomOnline&User=@user.Id&class=@classroom.ClassRoom.Id",
+                            tooltip: '@tooltipValue',
+                            extendedProps: {
+                                tooltip: '@tooltipValue', // Sử dụng extendedProps để lưu tooltip
+                                classId: '@classroom.ClassRoom.Id'
+                            }
+                        },
+            </text>
+        }
+    }
+                ],
             eventClick: function (info) {
                 // Điều hướng đến trang chi tiết lớp học
-                window.location.href = info.event.url;
-                info.jsEvent.preventDefault(); // Ngăn hành vi mặc định của thẻ <a> nếu có
+                const classId = info.event.extendedProps.classId;
+                info.jsEvent.preventDefault();
+                $.post("/ClassRooms/DiemDanhIn", { classId: classId }, function (data) {
+                    if (data.success) {
+                        console.log('Điểm danh thành công');
+                        window.open(info.event.url, '_blank');
+                    }
+                    else {
+                        console.log(data.error);
+                        alert(data.error);
+                        console.log('Điểm danh thất bại');
+                    }
+                });
+                // Ngăn hành vi mặc định của thẻ <a> nếu có
             },
             eventDidMount: function (info) {
                 // Tạo tooltip cho từng sự kiện
