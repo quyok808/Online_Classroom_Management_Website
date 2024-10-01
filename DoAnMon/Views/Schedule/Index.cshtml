@@ -1,4 +1,6 @@
-﻿﻿@using DoAnMon.IdentityCudtomUser
+
+﻿@using DoAnMon.IdentityCudtomUser
+
 @using Microsoft.AspNetCore.Identity
 @using static DoAnMon.Models.ClassroomViewModel
 @model List<ClassRoomViewModel>
@@ -88,21 +90,27 @@
 
             <text>
                         {
-                            title: '@Html.Raw(classroom.ClassRoom.Name)',
-                            start: '@date.Start.ToString("yyyy-MM-ddTHH:mm:ss")',
-                            end: '@date.End.ToString("yyyy-MM-ddTHH:mm:ss")',
-                            backgroundColor: '#@color', // Sử dụng giá trị màu sắc đã xác định
-                            url: "@classroom.ClassRoom.RoomOnline&User=@user.Id&class=@classroom.ClassRoom.Id",
-                            tooltip: '@tooltipValue',
-                            extendedProps: {
-                                tooltip: '@tooltipValue', // Sử dụng extendedProps để lưu tooltip
-                                classId: '@classroom.ClassRoom.Id'
-                            }
-                        },
-            </text>
-        }
-    }
-                ],
+                            color = "f7cc04"; // Nếu có cả LATE và OUT
+                            tooltipValue = "Trễ Giờ";
+                        }
+
+                        <text>
+                                    {
+                                        title: '@Html.Raw(classroom.ClassRoom.Name)',
+                                        start: '@date.Start.ToString("yyyy-MM-ddTHH:mm:ss")',
+                                        end: '@date.End.ToString("yyyy-MM-ddTHH:mm:ss")',
+                                        backgroundColor: '#@color', // Sử dụng giá trị màu sắc đã xác định
+                                        url: "@classroom.ClassRoom.RoomOnline&User=@user.Id&class=@classroom.ClassRoom.Id",
+                                        tooltip: '@tooltipValue',
+                                        extendedProps: {
+                                            tooltip: '@tooltipValue', // Sử dụng extendedProps để lưu tooltip
+                                            classId: '@classroom.ClassRoom.Id'
+                                        }
+                                    },
+                        </text>
+                    }
+                }
+            ],
             eventClick: function (info) {
                 // Điều hướng đến trang chi tiết lớp học
                 const classId = info.event.extendedProps.classId;
@@ -118,7 +126,6 @@
                         console.log('Điểm danh thất bại');
                     }
                 });
-                // Ngăn hành vi mặc định của thẻ <a> nếu có
             },
             eventDidMount: function (info) {
                 // Tạo tooltip cho từng sự kiện

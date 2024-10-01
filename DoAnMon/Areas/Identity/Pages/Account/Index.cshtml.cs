@@ -95,6 +95,7 @@ namespace DoAnMon.Areas.Identity.Pages.Account
             [Required]
             [StringLength(100, ErrorMessage = "The {0} must be at least {2} and at max {1} characters long.", MinimumLength = 6)]
             [DataType(DataType.Password)]
+            [RegularExpression(@"^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[\W_]).+$", ErrorMessage = "Mật khẩu phải bao gồm 6 kí tự và có ít nhất 1 số, 1 chữ hoa, 1 chữ thường và 1 kí tự đặc biệt.")]
             [Display(Name = "Password")]
             public string Password { get; set; }
 

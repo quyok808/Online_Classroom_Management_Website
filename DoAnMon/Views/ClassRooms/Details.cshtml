@@ -830,14 +830,15 @@
 				</div>
 			</div>
 			<div class="row p-1">
-				<div class="col-1" style="font-family: Poppins, sans-serif; font-weight: 500;font-size: 16px;">Tin nhắn: </div>
-				<div class="col-5"><input style="font-family: Poppins, sans-serif;" type="text" class="form-control" id="messageInput" /></div>
+				<div class="col-1" style="font-family: Poppins, sans-serif; font-weight: 500; font-size: 16px;">
+					Tin nhắn:
+				</div>
+				<div class="col-5">
+					<input style="font-family: Poppins, sans-serif;" type="text" class="form-control" id="messageInput" />
+				</div>
+				<button onclick="startSpeechRecognition()">Start Recording</button>
 				<div class="col-6 text-end" style="margin-top: 10px;">
-					<input style="
-								font-family: Poppins, sans-serif;
-								font-size: 16px;
-								font-weight: 700;"
-						   type="button" id="sendButton" class="btn btn-primary" value="Gửi" />
+					<input style="font-family: Poppins, sans-serif; font-size: 16px; font-weight: 700;" type="button" id="sendButton" class="btn btn-primary" value="Gửi" />
 				</div>
 			</div>
 
@@ -965,7 +966,6 @@
 		xhr.send();
 	}
 </script> @* T?o bài gi?ng m?i *@
-
 
 <script src="https://apis.google.com/js/api.js"></script>
 <script>
@@ -1426,6 +1426,7 @@
 		});
 	});
 </script> @* Ði?m danh *@
+
 <script src="~/js/resumable.js"></script>
 <script>
 	// Tạo đối tượng Resumable.js
@@ -1501,3 +1502,27 @@
 		console.error('Lỗi khi upload file:', file.fileName, message);
 	});
 </script>
+
+<script>
+	function startSpeechRecognition() {
+		// Kiểm tra nếu trình duyệt hỗ trợ API Nhận dạng giọng nói
+		const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+
+		if (!SpeechRecognition) {
+			alert("Trình duyệt của bạn không hỗ trợ tính năng nhận dạng giọng nói");
+			return;
+		}
+
+		const recognition = new SpeechRecognition(); // Tạo một đối tượng nhận dạng giọng nói
+		recognition.lang = 'vi-VN'; // Thiết lập ngôn ngữ là tiếng Việt
+
+		recognition.onresult = function (event) {
+			const transcript = event.results[0][0].transcript; // Lấy văn bản từ kết quả nhận dạng
+			document.getElementById('messageInput').value = transcript; // Đưa văn bản vào thẻ input
+			console.log(transcript);
+		};
+
+		recognition.start(); // Bắt đầu nhận dạng giọng nói từ microphone
+	}
+</script>@*Voice to text*@
+
