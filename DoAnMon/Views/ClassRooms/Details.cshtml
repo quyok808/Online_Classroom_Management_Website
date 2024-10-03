@@ -586,6 +586,8 @@
 	<div class="tab" onclick="openTab(event, 'listsv')" style="font-family: Poppins, sans-serif;font-weight: 600">Danh sách sinh viên</div>
 	<div class="tab" onclick="openTab(event, 'bangdiem')" style="font-family: Poppins, sans-serif;font-weight: 600">Bảng điểm</div>
 	<div class="tab" onclick="openTab(event, 'padlet')" style="font-family: Poppins, sans-serif;font-weight: 600">Padlet</div>
+	<div class="tab" onclick="openTab(event, 'letter')" style="font-family: Poppins, sans-serif;font-weight: 600">Đơn từ</div>
+	<div class="tab" onclick="openTab(event, 'setting')" style="font-family: Poppins, sans-serif;font-weight: 600">Settings</div>
 	<div class="tab" onclick="openTab(event, 'mainload')" style="font-family: Poppins, sans-serif;font-weight: 600" hidden>MainLoad</div>
 </div>
 <div id="teacher" class="tabcontent">
@@ -602,7 +604,6 @@
 		</div>
 	</div>
 </div>
-
 <div id="posts" class="tabcontent">
 	@{
 		if (Model.isOwner)
@@ -922,7 +923,12 @@
 <div id="padlet" class="tabcontent">
 	<div class="padlet-embed" style="border:1px solid rgba(0,0,0,0.1);border-radius:2px;box-sizing:border-box;overflow:hidden;position:relative;width:100%;background:#F4F4F4"><p style="padding:0;margin:0"><iframe src="https://padlet.com/embed/lup9um2r33899yju" frameborder="0" allow="camera;microphone;geolocation" style="width:100%;height:608px;display:block;padding:0;margin:0"></iframe></p><div style="display:flex;align-items:center;justify-content:end;margin:0;height:28px"><a href="https://padlet.com?ref=embed" style="display:block;flex-grow:0;margin:0;border:none;padding:0;text-decoration:none" target="_blank"><div style="display:flex;align-items:center;"><img src="https://padlet.net/embeds/made_with_padlet_2022.png" width="114" height="28" style="padding:0;margin:0;background:0 0;border:none;box-shadow:none" alt="Made with Padlet"></div></a></div></div>
 </div>
-
+<div id="letter" class="tabcontent">
+	<h1>This is letters</h1>
+</div>
+<div id="setting" class="tabcontent">
+	<h1>This is setting class</h1>
+</div>
 <div id="mainload" class="tabcontent">
 	<div class="text-center">
 		<h1 class="display-4" style="font-family: 'Poppins', sans-serif">Let's Study With Us</h1>
@@ -931,28 +937,39 @@
 </div>
 
 @* ==================================SCRIPT======================================================*@
-@* <script src="https://cdnjs.cloudflare.com/ajax/libs/resumable.js/1.0.1/resumable.min.js"></script>*@
-
 <script>
 	function openTab(evt, tabName) {
 		var i, tabcontent, tablinks;
 		tabcontent = document.getElementsByClassName("tabcontent");
-		for (i = 0; i < tabcontent.length; i++) {
-			tabcontent[i].style.display = "none";
-		}
 		tablinks = document.getElementsByClassName("tab");
-		for (i = 0; i < tablinks.length; i++) {
-			tablinks[i].classList.remove("active");
+
+		// Kiểm tra nếu tab hiện tại đang mở
+		var currentOpenTab = document.querySelector(".tabcontent[style='display: block;']");
+		if (currentOpenTab && currentOpenTab.id === tabName) {
+			// Nếu tab đã mở và nhấp lại thì đóng tab đó và hiện tab 'mainload'
+			currentOpenTab.style.display = "none";
+			document.getElementById('mainload').style.display = "block";
+			evt.currentTarget.classList.remove("active");
+		} else {
+			// Ẩn tất cả các tab trước
+			for (i = 0; i < tabcontent.length; i++) {
+				tabcontent[i].style.display = "none";
+			}
+			// Loại bỏ class 'active' từ tất cả các tablinks
+			for (i = 0; i < tablinks.length; i++) {
+				tablinks[i].classList.remove("active");
+			}
+			// Hiển thị tab được chọn và thêm class 'active'
+			document.getElementById(tabName).style.display = "block";
+			evt.currentTarget.classList.add("active");
 		}
-		document.getElementById(tabName).style.display = "block";
-		evt.currentTarget.classList.add("active");
 	}
 
 	document.addEventListener("DOMContentLoaded", function () {
-		openTab(event, 'mainload');
+		openTab(event, 'mainload'); // Mở tab mainload khi tải trang
 	});
-</script> @* Chuy?n tab trên trang *@
 
+</script> @* Chuy?n tab trên trang *@
 <script>
 	function reloadLecture() {
 		var xhr = new XMLHttpRequest();
@@ -972,7 +989,6 @@
 		xhr.send();
 	}
 </script> @* T?o bài gi?ng m?i *@
-
 <script src="https://apis.google.com/js/api.js"></script>
 <script>
 	function validateAndSubmit(requiredFormat, assignmentId, event) {
@@ -1432,7 +1448,6 @@
 		});
 	});
 </script> @* Ði?m danh *@
-
 <script src="~/js/resumable.js"></script>
 <script>
 	// Tạo đối tượng Resumable.js
@@ -1507,8 +1522,7 @@
 	r.on('fileError', function (file, message) {
 		console.error('Lỗi khi upload file:', file.fileName, message);
 	});
-</script>
-
+</script> @*Truyền file lớn BAIGIANG*@
 <script>
 	function startSpeechRecognition() {
 		// Kiểm tra nếu trình duyệt hỗ trợ API Nhận dạng giọng nói
