@@ -19,15 +19,15 @@
     {
         var item = lectures[i];
         <div class="post" style="height:auto;">
-            <h2>@item.UrlBaiGiang.Substring(0, @item.UrlBaiGiang.IndexOf("_"))</h2>
+            <h2>@item.Name</h2>
             @if (isOwner)
             {
                 <a class="btn btn-info" style="background-color: #5bc0de;" asp-action="DeleteLecture" asp-controller="ClassRooms" asp-route-id="@item.Id" asp-route-classId="@item.ClassId" onclick="return confirm('Bạn có chắc muốn xóa không ?')">Xóa bài giảng</a>
             }
 
             <div class="pdf-container">
-                <object data="/BAIGIANG/@item.UrlBaiGiang" type="application/pdf" width="100%" height="600px">
-                    <embed src="/BAIGIANG/@item.UrlBaiGiang" type="application/pdf" />
+                <object data="/Uploads/BAIGIANG/@item.UrlBaiGiang" type="application/pdf" width="100%" height="600px">
+                    <embed src="/Uploads/BAIGIANG/@item.UrlBaiGiang" type="application/pdf" />
                 </object>
             </div>
         </div>

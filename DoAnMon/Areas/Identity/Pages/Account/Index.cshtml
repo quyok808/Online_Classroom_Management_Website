@@ -9,17 +9,59 @@
     <link rel="stylesheet" href="/style.css" type="text/css">
     <link rel="icon" type="image/x-icon" href="/images/Logo_Web.png" />
     <title>Login/Register - Only A</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+    <style>
+        .form-container .position-relative {
+            position: relative;
+            width: 100%;
+        }
+
+        .form-container .form-control {
+            padding-right: 40px; /* Space for the icon */
+        }
+
+        .form-container .fa-eye,
+        .form-container .fa-eye-slash {
+            position: absolute;
+            right: 10px;
+            top: 50%;
+            transform: translateY(-50%);
+            cursor: pointer;
+            display: inline-block;
+            color: #B7B7B7; /* Adjust as per design */
+        }
+
+    </style>
+
 </head>
 <body>
     <div class="container" id="container">
         <div class="form-container sign-up">
             <form id="registerForm" asp-route-returnUrl="@Model.ReturnUrl" method="post" onsubmit="return validateForm()">
                 <h1>Tạo tài khoản</h1>
+                <hr />
+                <div asp-validation-summary="ModelOnly" class="text-danger" role="alert"></div>
                 <input id="mssv" asp-for="Input.Mssv" type="text" placeholder="Mã số sinh viên" required>
                 <input id="name" asp-for="Input.Name" type="text" placeholder="Họ và tên" required>
                 <input id="email" asp-for="Input.Email" type="email" placeholder="Email" required>
-                <input id="password" asp-for="Input.Password" type="password" placeholder="Password" required>
-                <input id="confirmPassword" asp-for="Input.ConfirmPassword" type="password" placeholder="Confirm Password" required>
+
+
+                <div class="position-relative">
+                    <input id="Registerpassword" asp-for="Input.Password" type="password" class="form-control" placeholder="Password" required style="padding-right: 40px;">
+                    <i class="fa fa-eye position-absolute" id="toggleIconRegisterPassword"
+                       style="right: 10px; top: 50%; transform: translateY(-50%); cursor: pointer; display: inline-block;"
+                       onclick="togglePasswordVisibility('Registerpassword', 'toggleIconRegisterPassword')"></i>
+                    
+                </div>
+                <span asp-validation-for="Input.Password" class="text-danger"></span>
+                <div class="position-relative">
+                    <input id="confirmPassword" asp-for="Input.ConfirmPassword" type="password" class="form-control" placeholder="Password" required style="padding-right: 40px;">
+                    <i class="fa fa-eye position-absolute" id="toggleIconconfirmPassword"
+                       style="right: 10px; top: 50%; transform: translateY(-50%); cursor: pointer; display: inline-block;"
+                       onclick="togglePasswordVisibility('confirmPassword', 'toggleIconconfirmPassword')"></i>
+                </div>
+
+   
                 <button id="registerSubmit" type="submit" class="w-100 btn btn-lg btn-primary">Đăng Kí</button>
             </form>
         </div>
@@ -28,7 +70,13 @@
             <form id="account" method="post" asp-page="./Login" asp-page-handler="Login" onsubmit="return validateForm()">
                 <h1>Đăng Nhập</h1>
                 <input id="username" asp-for="Input.Username" type="text" placeholder="Username" required>
-                <input id="password" asp-for="Input.Password" type="password" placeholder="Password" required>
+                <div class="position-relative">
+                    <input id="Loginpassword" asp-for="Input.Password" type="password" class="form-control" placeholder="Password" required style="padding-right: 40px;">
+                    <i class="fa fa-eye position-absolute" id="toggleIconLoginPassword"
+                       style="right: 10px; top: 50%; transform: translateY(-50%); cursor: pointer; display: inline-block;"
+                       onclick="togglePasswordVisibility('Loginpassword', 'toggleIconLoginPassword')"></i>
+                </div>
+
                 <div class="checkbox mb-3">
                     <label asp-for="Input.RememberMe" class="form-label">
                         <input id="rememberMe" class="form-check-input" asp-for="Input.RememberMe" />
@@ -68,6 +116,37 @@
         function showAlert(message) {
             alert(message);
         }
+    </script>
+
+    <script>
+        function togglePasswordVisibility(passwordFieldId, iconId) {
+            var passwordField = document.getElementById(passwordFieldId);
+            var toggleIcon = document.getElementById(iconId);
+
+            if (passwordField.type === "password") {
+                passwordField.type = "text";
+                toggleIcon.classList.remove("fa-eye");
+                toggleIcon.classList.add("fa-eye-slash");
+            } else {
+                passwordField.type = "password";
+                toggleIcon.classList.remove("fa-eye-slash");
+                toggleIcon.classList.add("fa-eye");
+            }
+        }
+    </script>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.3/jquery.validate.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validation-unobtrusive/3.2.12/jquery.validate.unobtrusive.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            $('registerForm').validate();  // Kích hoạt jQuery validation cho form
+
+            $('#Registerpassword').on('input', function () {
+                $(this).valid();  // Kích hoạt validation khi nhập liệu
+            });
+        });
+
     </script>
 
 </body>

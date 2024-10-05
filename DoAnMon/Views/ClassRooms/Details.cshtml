@@ -585,6 +585,9 @@
 	<div class="tab" onclick="openTab(event, 'discussion')" style="font-family: Poppins, sans-serif;font-weight: 600">Thảo luận</div>
 	<div class="tab" onclick="openTab(event, 'listsv')" style="font-family: Poppins, sans-serif;font-weight: 600">Danh sách sinh viên</div>
 	<div class="tab" onclick="openTab(event, 'bangdiem')" style="font-family: Poppins, sans-serif;font-weight: 600">Bảng điểm</div>
+	<div class="tab" onclick="openTab(event, 'padlet')" style="font-family: Poppins, sans-serif;font-weight: 600">Padlet</div>
+	<div class="tab" onclick="openTab(event, 'letter')" style="font-family: Poppins, sans-serif;font-weight: 600">Đơn từ</div>
+	<div class="tab" onclick="openTab(event, 'setting')" style="font-family: Poppins, sans-serif;font-weight: 600">Settings</div>
 	<div class="tab" onclick="openTab(event, 'mainload')" style="font-family: Poppins, sans-serif;font-weight: 600" hidden>MainLoad</div>
 </div>
 <div id="teacher" class="tabcontent">
@@ -605,28 +608,33 @@
 	@{
 		if (Model.isOwner)
 		{
-								<div>
-									<button onclick="showUploadForm()"
-											style="
-																				background-color: #3498db;
-																				font-family: Poppins, sans-serif;
-																				color: #ffffff;
-																				padding: 10px 20px;
-																				border: none;
-																				border-radius: 5px;
-																				cursor: pointer;
-																				transition: background-color 0.3s;
-																				font-size: 15px;
-																				font-weight: bold;">
-										Upload bài giảng mới
-									</button>
-									<form id="uploadForm" action="/ClassRooms/Upload" method="POST" enctype="multipart/form-data" style="display: none;">
-										<input type="hidden" name="lectureName" id="lectureNameInput">
-										<input type="hidden" name="ClassId" id="classIdInput" value="@Model.ClassRoom.Id">
-										<input type="file" name="pdfFile" id="pdfFileInput" accept=".pdf">
-									</form>
+			<div>
+			@*
+				<button onclick="showUploadForm()"
+						style="
+					background-color: #3498db;
+					font-family: Poppins, sans-serif;
+					color: #ffffff;
+					padding: 10px 20px;
+					border: none;
+					border-radius: 5px;
+					cursor: pointer;
+					transition: background-color 0.3s;
+					font-size: 15px;
+					font-weight: bold;">
+					Upload bài giảng mới
+				</button>
 
-								</div>
+				<form id="uploadForm" style="display: none;">
+					<input type="hidden" name="lectureName" id="lectureNameInput">
+					<input type="hidden" name="ClassId" id="classIdInput" value="@Model.ClassRoom.Id">
+					<input type="file" name="pdfFile" id="pdfFileInput" accept=".pdf" style="display: none;">
+				</form>
+				*@
+				<button id="browseBaiGiang">Chọn File BAIGIANG</button>
+				<div id="progressBar"></div>
+			</div>
+
 		}
 	}
 	<div class="posts" id="lectureContainer">
@@ -673,27 +681,28 @@
 										</select>
 
 									</div>
-									<input type="hidden" name="ClassId" id="classIdInput" value="@Model.ClassRoom.Id">
-									<label for="fileInput">Hướng dẫn (Nếu có): </label>
-									<input type="file" name="FileUpLoad" id="fileInput" /> <!-- ?n input file -->
-									<input type="hidden" name="AttactURL" id="attactURL">
-									<button type="button" onclick="uploadFile()">Upload</button>
+				<input type="hidden" name="ClassId" id="classIdInput" value="@Model.ClassRoom.Id">
+				<label for="fileInput">Hướng dẫn (Nếu có): </label>
+				<input type="file" name="FileUpLoad" id="fileInput" /> <!-- ?n input file -->
+				<input type="hidden" name="AttactURL" id="attactURL">
+				<button type="button" onclick="uploadFile()">Upload</button>
 
-									<div class="modal" id="uploadModal" style="background-color: transparent;">
-										<div class="modal-content">
-											<div class="modal-header">
-												<h5 class="modal-title">Uploading File</h5>
-											</div>
-											<div class="modal-body text-center">
-												<div class="loader" id="loader" style="display: block;"></div>
-												<progress id="progressBar" value="0" max="100" style="display: none;"></progress>
-												<div id="progressText" style="display: block;" class="mt-3">0%</div>
-												<div id="successText" class="mt-3" style="display: none;">Upload thành công</div>
-											</div>
-										</div>
-									</div>
+				<div class="modal" id="uploadModal" style="background-color: transparent;">
+					<div class="modal-content">
+						<div class="modal-header">
+							<h5 class="modal-title">Uploading File</h5>
+						</div>
+						<div class="modal-body text-center">
+							<div class="loader" id="loader" style="display: block;"></div>
+							<progress id="progressBar" value="0" max="100" style="display: none;"></progress>
+							<div id="progressText" style="display: block;" class="mt-3">0%</div>
+							<div id="successText" class="mt-3" style="display: none;">Upload thành công</div>
+						</div>
+					</div>
+				</div>
 
-									<div class="modal-backdrop" id="modalBackdrop"></div>
+				<div class="modal-backdrop" id="modalBackdrop"></div>
+
 
 									<input type="submit" value="Giao bài" class="btn btn-primary"></input> <!-- Nút giao bài -->
 								</form>
@@ -729,7 +738,7 @@
 					<!-- Hi?n th? t?p dính kèm -->
 					@if (!string.IsNullOrEmpty(assignment.attractUrl))
 					{
-						<a href="/BAITAP/@assignment.attractUrl" target="_blank" style="text-decoration:none; color: deepskyblue!important;">@assignment.attractUrl</a>
+						<a href="/Uploads/BAITAP/@assignment.attractUrl" target="_blank" style="text-decoration:none; color: deepskyblue!important;">@assignment.attractUrl</a>
 					}
 				</div>
 				@{
@@ -824,14 +833,15 @@
 				</div>
 			</div>
 			<div class="row p-1">
-				<div class="col-1" style="font-family: Poppins, sans-serif; font-weight: 500;font-size: 16px;">Tin nhắn: </div>
-				<div class="col-5"><input style="font-family: Poppins, sans-serif;" type="text" class="form-control" id="messageInput" /></div>
+				<div class="col-1" style="font-family: Poppins, sans-serif; font-weight: 500; font-size: 16px;">
+					Tin nhắn:
+				</div>
+				<div class="col-5">
+					<input style="font-family: Poppins, sans-serif;" type="text" class="form-control" id="messageInput" />
+				</div>
+				<button onclick="startSpeechRecognition()">Start Recording</button>
 				<div class="col-6 text-end" style="margin-top: 10px;">
-					<input style="
-								font-family: Poppins, sans-serif;
-								font-size: 16px;
-								font-weight: 700;"
-						   type="button" id="sendButton" class="btn btn-primary" value="Gửi" />
+					<input style="font-family: Poppins, sans-serif; font-size: 16px; font-weight: 700;" type="button" id="sendButton" class="btn btn-primary" value="Gửi" />
 				</div>
 			</div>
 
@@ -910,6 +920,15 @@
 		</table>
 	</div>
 </div>
+<div id="padlet" class="tabcontent">
+	<div class="padlet-embed" style="border:1px solid rgba(0,0,0,0.1);border-radius:2px;box-sizing:border-box;overflow:hidden;position:relative;width:100%;background:#F4F4F4"><p style="padding:0;margin:0"><iframe src="https://padlet.com/embed/lup9um2r33899yju" frameborder="0" allow="camera;microphone;geolocation" style="width:100%;height:608px;display:block;padding:0;margin:0"></iframe></p><div style="display:flex;align-items:center;justify-content:end;margin:0;height:28px"><a href="https://padlet.com?ref=embed" style="display:block;flex-grow:0;margin:0;border:none;padding:0;text-decoration:none" target="_blank"><div style="display:flex;align-items:center;"><img src="https://padlet.net/embeds/made_with_padlet_2022.png" width="114" height="28" style="padding:0;margin:0;background:0 0;border:none;box-shadow:none" alt="Made with Padlet"></div></a></div></div>
+</div>
+<div id="letter" class="tabcontent">
+	<h1>This is letters</h1>
+</div>
+<div id="setting" class="tabcontent">
+	<h1>This is setting class</h1>
+</div>
 <div id="mainload" class="tabcontent">
 	<div class="text-center">
 		<h1 class="display-4" style="font-family: 'Poppins', sans-serif">Let's Study With Us</h1>
@@ -922,20 +941,34 @@
 	function openTab(evt, tabName) {
 		var i, tabcontent, tablinks;
 		tabcontent = document.getElementsByClassName("tabcontent");
-		for (i = 0; i < tabcontent.length; i++) {
-			tabcontent[i].style.display = "none";
-		}
 		tablinks = document.getElementsByClassName("tab");
-		for (i = 0; i < tablinks.length; i++) {
-			tablinks[i].classList.remove("active");
+
+		// Kiểm tra nếu tab hiện tại đang mở
+		var currentOpenTab = document.querySelector(".tabcontent[style='display: block;']");
+		if (currentOpenTab && currentOpenTab.id === tabName) {
+			// Nếu tab đã mở và nhấp lại thì đóng tab đó và hiện tab 'mainload'
+			currentOpenTab.style.display = "none";
+			document.getElementById('mainload').style.display = "block";
+			evt.currentTarget.classList.remove("active");
+		} else {
+			// Ẩn tất cả các tab trước
+			for (i = 0; i < tabcontent.length; i++) {
+				tabcontent[i].style.display = "none";
+			}
+			// Loại bỏ class 'active' từ tất cả các tablinks
+			for (i = 0; i < tablinks.length; i++) {
+				tablinks[i].classList.remove("active");
+			}
+			// Hiển thị tab được chọn và thêm class 'active'
+			document.getElementById(tabName).style.display = "block";
+			evt.currentTarget.classList.add("active");
 		}
-		document.getElementById(tabName).style.display = "block";
-		evt.currentTarget.classList.add("active");
 	}
 
 	document.addEventListener("DOMContentLoaded", function () {
-		openTab(event, 'mainload');
+		openTab(event, 'mainload'); // Mở tab mainload khi tải trang
 	});
+
 </script> @* Chuy?n tab trên trang *@
 <script>
 	function reloadLecture() {
@@ -955,61 +988,6 @@
 		};
 		xhr.send();
 	}
-
-
-
-	function showUploadForm() {
-		var lectureName = prompt("Nh?p tên bài gi?ng:");
-
-		if (!lectureName) {
-			alert("Vui lòng di?n tên bài gi?ng.");
-			return;
-		}
-
-		var pdfFileInput = document.getElementById('pdfFileInput');
-		var lectureNameInput = document.getElementById('lectureNameInput');
-
-		// C?p nh?t giá tr? c?a các tru?ng d? li?u trong form ?n
-		lectureNameInput.value = lectureName;
-
-		// X? lý khi ngu?i dùng ch?n t?p
-		pdfFileInput.onchange = function () {
-			var file = pdfFileInput.files[0];
-			if (!file) {
-				alert("Vui lòng ch?n m?t t?p PDF.");
-				return;
-			} else
-				// Ki?m tra ph?n m? r?ng c?a t?p
-				if (file.type !== 'application/pdf') {
-					alert("Vui lòng ch? ch?n t?p PDF.");
-					return;
-				}
-			var classid = document.getElementById('classIdInput').value;
-			var formData = new FormData();
-			formData.append('pdfFile', file);
-			formData.append('lectureName', lectureName);
-			formData.append('ClassId', classid);
-
-			// G?i yêu c?u AJAX d? t?i lên t?p
-			var xhr = new XMLHttpRequest();
-			xhr.open('POST', '/ClassRooms/Upload', true); // Ði?u ch?nh URL tuong ?ng v?i endpoint backend c?a b?n
-			xhr.onload = function () {
-				if (xhr.status === 200) {
-					// N?u t?i lên thành công, th?c hi?n làm m?i d? li?u
-					reloadLecture();
-				} else {
-					// X? lý l?i
-					alert('Ðã x?y ra l?i khi t?i lên t?p.' + xhr.status);
-				}
-			};
-			xhr.send(formData);
-		};
-
-		// Kích ho?t s? ki?n click d? m? h?p tho?i ch?n t?p
-		pdfFileInput.click();
-	}
-
-
 </script> @* T?o bài gi?ng m?i *@
 <script src="https://apis.google.com/js/api.js"></script>
 <script>
@@ -1214,11 +1192,11 @@
 			xhr.onload = function () {
 				if (xhr.status === 200) {
 					attactURL.value = fileName;
-					
+
 						showSuccessMessage();
 						setTimeout(hideModal, 2000);
 						setTimeout(resetProgress, 3000);
-					
+
 				} else {
 					console.error('Error completing upload:', xhr.responseText);
 				}
@@ -1470,3 +1448,101 @@
 		});
 	});
 </script> @* Ði?m danh *@
+<script src="~/js/resumable.js"></script>
+<script>
+	// Tạo đối tượng Resumable.js
+	var r = new Resumable({
+		target: '/upload',
+		chunkSize: 1 * 1024 * 1024, // 1MB mỗi chunk
+		simultaneousUploads: 3,
+		testChunks: true,
+		throttleProgressCallbacks: 1,
+		query: {} // Thêm tham số sau khi người dùng chọn thư mục
+	});
+	// Biến để theo dõi trạng thái tên file
+	var fileNameSet = false;
+
+	// Hàm gán sự kiện cho button
+	function setupBrowseButton(buttonId, folderType) {
+		var button = document.getElementById(buttonId);
+		var classId = document.getElementById("classId").value;
+		r.assignBrowse(button); // Gán sự kiện chọn file cho button
+
+		button.addEventListener('click', function () {
+			// Đặt thư mục
+			r.opts.query.folderType = folderType;
+			r.opts.query.ClassId = classId;
+
+			// Nếu là BAIGIANG và chưa nhập tên file
+			if (folderType === 'BAIGIANG' && !fileNameSet) {
+				var customFileName = prompt("Nhập tên file cho BAIGIANG:");
+				if (customFileName) {
+					r.opts.query.fileName = customFileName; // Đặt tên file
+					fileNameSet = true; // Đánh dấu là đã nhập tên
+				} else {
+					alert("Tên file không thể để trống. Upload bị hủy."); // Thông báo nếu không nhập tên
+					return; // Dừng hàm nếu không có tên
+				}
+			}
+		});
+
+		// Lắng nghe sự kiện khi file được thêm và bắt đầu upload
+		r.on('fileAdded', function (file) {
+			console.log('Bắt đầu upload file:', file.fileName);
+			r.upload(); // Bắt đầu upload
+		});
+	}
+
+	// Hàm để reset tên file
+	function resetFileName() {
+		r.opts.query.fileName = null; // Reset tên file
+		fileNameSet = false; // Đặt lại trạng thái
+	}
+
+	// Gọi hàm reset khi cần, ví dụ: thêm một nút reset
+
+	// Thiết lập các button
+
+	setupBrowseButton('browseBaiGiang', 'BAIGIANG');
+
+	// Lắng nghe tiến trình upload
+	r.on('fileProgress', function (file) {
+		var progress = Math.floor(file.progress() * 100); // Sử dụng file.progress() thay vì r.progress()
+		document.getElementById('progressBar').innerText = 'Tiến trình: ' + progress + '%';
+	});
+
+	// Xử lý khi hoàn thành upload
+	r.on('fileSuccess', function (file, message) {
+		console.log('Hoàn thành upload file:', file.fileName);
+		resetFileName()
+		reloadLecture()
+	});
+
+	// Xử lý lỗi
+	r.on('fileError', function (file, message) {
+		console.error('Lỗi khi upload file:', file.fileName, message);
+	});
+</script> @*Truyền file lớn BAIGIANG*@
+<script>
+	function startSpeechRecognition() {
+		// Kiểm tra nếu trình duyệt hỗ trợ API Nhận dạng giọng nói
+		const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+
+		if (!SpeechRecognition) {
+			alert("Trình duyệt của bạn không hỗ trợ tính năng nhận dạng giọng nói");
+			return;
+		}
+
+		const recognition = new SpeechRecognition(); // Tạo một đối tượng nhận dạng giọng nói
+		recognition.lang = 'vi-VN'; // Thiết lập ngôn ngữ là tiếng Việt
+
+		recognition.onresult = function (event) {
+			const transcript = event.results[0][0].transcript; // Lấy văn bản từ kết quả nhận dạng
+			document.getElementById('messageInput').value = transcript; // Đưa văn bản vào thẻ input
+			console.log(transcript);
+		};
+
+		recognition.start(); // Bắt đầu nhận dạng giọng nói từ microphone
+	}
+</script>@*Voice to text*@
+

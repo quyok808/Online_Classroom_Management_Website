@@ -8,6 +8,13 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="wwwroot\BAIGIANG\**" />
+    <Content Remove="wwwroot\BAIGIANG\**" />
+    <EmbeddedResource Remove="wwwroot\BAIGIANG\**" />
+    <None Remove="wwwroot\BAIGIANG\**" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="EPPlus" Version="7.1.1" />
     <PackageReference Include="Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore" Version="8.0.3" />
     <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="8.0.3" />
@@ -24,7 +31,6 @@
 
   <ItemGroup>
     <Folder Include="Areas\Admin\Data\" />
-    <Folder Include="wwwroot\BAIGIANG\" />
   </ItemGroup>
 
 </Project>

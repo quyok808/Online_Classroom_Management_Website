@@ -363,6 +363,10 @@ MigrationBackup/
 FodyWeavers.xsd
 
 # Ignore BAITAP folder
-/BAITAP/
-/BAIGIANG/
-/BAINOP/
+
+/DoAnMon/wwwroot/BAITAP/
+/DoAnMon/wwwroot/BAIGIANG/
+/DoAnMon/wwwroot/BAINOP/
+
+
+/DoAnMon/wwwroot/Uploads
