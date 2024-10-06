@@ -26,6 +26,8 @@ namespace DoAnMon.Models
         public CustomUser? User { get; set; }
         [ValidateNever]
 		public ICollection<BaiGiang> BaiGiangs { get; set; }
+        [ValidateNever]
+        public ICollection<LeaveRequest> leaveRequests {  get; set; }
 
 		public int GetDisplayNumber()
 		{
