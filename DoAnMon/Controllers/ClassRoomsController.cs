@@ -26,6 +26,7 @@ using System.Globalization;
 using System.Security.Cryptography;
 using System.Runtime.ConstrainedExecution;
 using Microsoft.IdentityModel.Tokens;
+using DoAnMon.Migrations;
 
 namespace DoAnMon.Controllers
 {
@@ -128,6 +129,7 @@ namespace DoAnMon.Controllers
 			var Lecture = await _context.BaiGiang.Where(p => p.ClassId == classRoom.Id).ToListAsync();
 			var chatHistory = await _context.Messages.Where(p => p.ClassRoomId == classRoom.Id).ToListAsync();
 			var homework = await _context.baiTaps.Where(p => p.ClassRoomId == classRoom.Id).ToListAsync();
+			var post = await _context.posts.Where(p => p.ClassRoomId == classRoom.Id).ToListAsync();
 			if (owner == null)
 			{
 				return NotFound();
@@ -149,6 +151,7 @@ namespace DoAnMon.Controllers
 			{
 				viewModel.Unit = Lecture;
 			}
+
             if (owner.Id == currentUser.Id)
             {
                 viewModel.isOwner = true;
@@ -159,10 +162,13 @@ namespace DoAnMon.Controllers
                 viewModel.isOwner = false;
                 ViewBag.Isowner = false;
             }
+			viewModel.Post = post;
             viewModel.Homework = homework;
 			viewModel.Message = chatHistory;
 			ViewBag.ListRoom = userClasses;
 
+
+			//var listpost = await _context.posts.Where(p => p.ClassRoomId == id).ToListAsync();
 			var listBT = await _context.baiTaps.Where(p => p.ClassRoomId == id).ToListAsync();
 
 			var Diem = new List<DiemViewModel>();
@@ -472,7 +478,7 @@ namespace DoAnMon.Controllers
 		}
 
 		[HttpPost]
-		public async Task<IActionResult> CreateBaitap(string AttactURL, string Content, string Title, string ClassId, string FileFormat, DateTime Deadline)
+		public async Task<IActionResult> CreateBaitap(string AttactURL, string Content, string Title, string ClassId, string FileFormat, DateTime Deadline, DateTime CreateAt)
 		{
 
 			BaiTap baitap = new BaiTap();
@@ -481,6 +487,7 @@ namespace DoAnMon.Controllers
 			baitap.Id = Guid.NewGuid().ToString();
 			baitap.attractUrl = AttactURL;
 			baitap.ClassRoomId = ClassId;
+			baitap.CreatedAt = DateTime.Now;
 			baitap.FileFormat = FileFormat;
 			if (Deadline.ToString() != "01/01/0001 12:00:00 AM")
 			{
@@ -495,6 +502,20 @@ namespace DoAnMon.Controllers
 			await _context.SaveChangesAsync();
 
 			TinhDTB(ClassId);
+			return RedirectToAction("Details", "ClassRooms", new { id = ClassId });
+		}
+
+		[HttpPost]
+		public async Task<IActionResult> CreatePost(string Content, string Title, string ClassId, DateTime CreateTime)
+		{
+			Post posts = new Post();
+			posts.Id = Guid.NewGuid().ToString();
+			posts.Title = Title;
+			posts.Content = Content;
+			posts.CreateTime = DateTime.Now;
+			posts.ClassRoomId = ClassId;
+			_context.Add(posts);
+			await _context.SaveChangesAsync();
 			return RedirectToAction("Details", "ClassRooms", new { id = ClassId });
 		}
 
