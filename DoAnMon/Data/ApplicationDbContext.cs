@@ -25,6 +25,7 @@ namespace DoAnMon.Data
 		public DbSet<BaiNop> BaiNop { get; set; }
         public DbSet<BangDiem> bangDiem { get; set; }
         public DbSet<DiemDanh> diemDanh { get; set; }
+		public DbSet<FileAttachment> FileAttachments { get; set; }
 
 		protected override void OnModelCreating(ModelBuilder modelBuilder) 
         { 
@@ -44,7 +45,11 @@ namespace DoAnMon.Data
 				.WithOne(bg => bg.ClassRoom)
 				.HasForeignKey(bg => bg.ClassId);
 
-			
+			modelBuilder.Entity<Message>()
+			.HasMany(m => m.FileAttachments)
+			.WithOne(f => f.Message)
+			.HasForeignKey(f => f.MessageId);
+
 
 		}
 

@@ -11,7 +11,20 @@
     {
         var chat = listmsg[i];
         CustomUser chattinguser = _userManager.FindByIdAsync(chat.UserId).Result;
-        <li style="font-size: 17px;"><strong>@chattinguser.Mssv _ @chattinguser.Name (@chat.Time):</strong> @chat.Noidung</li>
-	}
+        <li style="font-size: 17px;">
+            <strong>@chattinguser.Mssv _ @chattinguser.Name (@chat.Time):</strong> @chat.Noidung
+            @if (chat.FileAttachments != null && chat.FileAttachments.Any())
+            {
+                <ul>
+                    @foreach (var file in chat.FileAttachments)
+                    {
+                        <li>
+                            <a href="@file.FilePath" target="_blank">@file.FileName</a>
+                        </li>
+                    }
+                </ul>
+            }
+        </li>
+    }
 }
 

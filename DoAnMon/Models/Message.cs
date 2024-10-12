@@ -16,5 +16,7 @@ namespace DoAnMon.Models
 
 		[ValidateNever]
 		public ClassRoom? ClassRoom { get; set; }
+		public List<FileAttachment>? FileAttachments { get; set; }  
+
 	}
 }

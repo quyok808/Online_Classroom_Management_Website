@@ -18,27 +18,42 @@ namespace DoAnMon.SignalR
 			_context = context;
 		}
 
-		public async Task SendMessage(string user, string message, string time, string ClassID)
+		public async Task SendMessage(string user, string message, string time, string ClassID, List<FileAttachment> attachments)
 		{
-
-			await Clients.All.SendAsync("ReceiveMessage", user, message);
-
-			await SaveMessageToDatabase(ClassID, message, time);
-
+			await Clients.All.SendAsync("ReceiveMessage", user, message, attachments);
+			await SaveMessageToDatabase(ClassID, message, time, attachments);  // Không cần gọi song song
 		}
 
-		private async Task SaveMessageToDatabase(string ClassID, string message, string time)
+
+		private async Task SaveMessageToDatabase(string ClassID, string message, string time, List<FileAttachment> attachments)
 		{
 			var user = Context.User;
 			var currentUserId = user.FindFirst(ClaimTypes.NameIdentifier)?.Value;
-			var newMessage = new Message();
-			newMessage.UserId = currentUserId;
-			newMessage.Noidung = message;
-			newMessage.Time = time;
-			newMessage.ClassRoomId = ClassID;
 
+			// Tạo đối tượng Message mới và khởi tạo danh sách FileAttachments
+			var newMessage = new Message
+			{
+				UserId = currentUserId,
+				Noidung = message,
+				Time = time,
+				ClassRoomId = ClassID,
+				FileAttachments = new List<FileAttachment>()  // Khởi tạo danh sách
+			};
+
+			// Lưu tin nhắn vào cơ sở dữ liệu trước để lấy ID
 			_context.Messages.Add(newMessage);
+			await _context.SaveChangesAsync();  // Lưu để ID của newMessage được tạo
+
+			// Thêm từng file đính kèm vào danh sách FileAttachments
+			foreach (var attachment in attachments)
+			{
+				attachment.MessageId = newMessage.Id;  // Gắn ID message.
+				newMessage.FileAttachments.Add(attachment);
+			}
+
+			// Cập nhật cơ sở dữ liệu.
 			await _context.SaveChangesAsync();
 		}
+
 	}
 }
