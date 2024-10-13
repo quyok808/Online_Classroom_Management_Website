@@ -1,8 +1,299 @@
-﻿
+﻿@using DoAnMon.Areas.Admin.Models
+@using DoAnMon.IdentityCudtomUser
+@using DoAnMon.Models
+@using Microsoft.AspNetCore.Identity
+@inject UserManager<CustomUser> _userManager
+@model List<LeaveRequest>
 @{
     ViewData["Title"] = "TrangChu";
     Layout = "~/Areas/Admin/Views/Shared/_LayoutAdmin.cshtml";
+    var countDuyet = Model.Where(p => p.Status == 1).Count();
+    var countCho = Model.Where(p => p.Status == 0).Count();
+    var countDeny = Model.Where(p => p.Status == -1).Count();
+    // Prepare the chart data from ViewBag
+    var chartData = ViewData["LeaveCounts"] as List<leaveRequestViewModel>;
+    if (chartData == null || !chartData.Any())
+    {
+        <p>Không có dữ liệu để hiển thị biểu đồ.</p>
+        return; // Exit if there's no data
+    }
+    var labels = chartData.Select(c => c.TeacherName).ToList();
+    var counts = chartData.Select(c => c.Count).ToList();
 }
+<style>
+    h1 {
+        text-align: center;
+        color: #333;
+        margin: 20px 0;
+    }
 
-<h2>Chào mừng </h2>
+    .container-admin {
+        display: flex;
+        justify-content: space-between;
+        flex-wrap: wrap;
+        margin: 20px;
+    }
+
+    .box-admin {
+        background-color: #fff;
+        border-radius: 10px;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        padding: 20px;
+        margin-bottom: 20px;
+        flex: 1 1 calc(48% - 20px);
+        min-width: 300px;
+        transition: transform 0.3s;
+    }
+
+    .left-side {
+        background-color: #fff;
+        border-radius: 10px;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        padding: 20px;
+        margin-bottom: 20px;
+        width: 30%;
+        padding: 20px; /* Add padding if needed */
+        box-sizing: border-box; /* Ensure padding doesn't affect width */
+        min-width: 300px;
+        transition: transform 0.3s;
+        margin-right: 20px;
+    }
+
+    .box-admin:hover, .left-side:hover {
+        transform: translateY(-5px);
+    }
+
+    table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 20px;
+    }
+
+    table, th, td {
+        border: 1px solid #ddd;
+        padding: 12px;
+        text-align: left;
+    }
+
+    th {
+        background-color: #007bff;
+        color: white;
+    }
+
+    tr:nth-child(even) {
+        background-color: #f2f2f2;
+    }
+
+    .chart-admin {
+        width: 100%;
+        height: 300px;
+        background-color: #fff;
+        border-radius: 10px;
+        margin-top: 20px;
+        color: white;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        font-size: 24px;
+        margin-bottom: 40px;
+    }
+
+    ul {
+        list-style-type: none;
+        padding: 0;
+    }
+
+        ul li {
+            background: #e9ecef;
+            margin: 5px 0;
+            padding: 15px;
+            border-radius: 5px;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+        }
+
+    footer {
+        text-align: center;
+        margin-top: 30px;
+        color: #777;
+        padding: 10px 0;
+    }
+</style>
+<h1>Dashboard Quản Lý Đơn Xin Nghỉ Giáo Viên</h1>
+
+<div class="container-admin">
+    <div class="left-side">
+        <h2>Tổng Quan Đơn Xin Nghỉ</h2>
+        <p>Số lượng đơn xin nghỉ đã gửi: <strong>@Model.Count</strong></p>
+        <p>Số lượng đơn đã được phê duyệt: <strong>@countDuyet</strong></p>
+        <p>Số lượng đơn đang chờ xử lý: <strong>@countCho</strong></p>
+        <p>Số lượng đơn bị từ chối: <strong>@countDeny</strong></p>
+    </div>
+
+    <div class="box-admin">
+        <h2>Danh Sách Đơn Xin Nghỉ</h2>
+        <table id="leaveRequestsTable">
+            <thead>
+                <tr>
+                    <th>Tên Giáo Viên</th>
+                    <th>Ngày Gửi Đơn</th>
+                    <th>Thời Gian Nghỉ</th>
+                    <th>Lý Do Nghỉ</th>
+                    <th>Tình Trạng Đơn</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                @{
+                    foreach(var item in Model)
+                    {
+                        var name = await _userManager.FindByIdAsync(item.UserID);
+                        
+                        <tr>
+                            <td>@name.Name</td>
+                            <td>Nhớ bổ sung</td>
+                            <td>@item.StartDate.ToString("dd/MM/yyyy") - @item.EndDate.ToString("dd/MM/yyyy")</td>
+                            <td>@item.Reasion</td>
+                            <td>
+                                @(item.Status == 1 ? "Đã phê duyệt" : item.Status == -1 ? "Bị từ chối" : "Đang chờ duyệt")
+                            </td>
+                            <td>
+                                <button popovertarget="popover-@item.Id">Details</button>
+                            </td>
+                        </tr>
+                        <div id="popover-@item.Id" popover>
+                            <div class="card shadow">
+                                <div class="card-header bg-primary text-white">
+                                    <h5 class="card-title">Đơn Xin Nghỉ: @name.Name</h5>
+                                </div>
+                                <div class="card-body">
+                                    <p><strong>Ngày Gửi Đơn:</strong> @item.StartDate.ToString("dd/MM/yyyy")</p>
+                                    <p><strong>Thời Gian Nghỉ:</strong> @item.EndDate</p>
+                                    <p><strong>Lý Do Nghỉ:</strong> @item.Reasion</p>
+                                    @if (item.Status == 0)
+                                    {
+                                        <div class="d-flex justify-content-between">
+                                            <button class="btn btn-success" onclick="approveRequest(@item.Id)">Duyệt</button>
+                                            <button class="btn btn-danger" onclick="rejectRequest(@item.Id)">Từ chối</button>
+                                        </div>
+                                    }
+                                </div>
+                            </div>
+                        </div>
+                        
+                    }
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<div class="chart-admin">
+    <canvas id="leaveChart" width="600" height="300"></canvas>
+</div>
+
+<div class="box-admin">
+    <h2>Rubrik Cho Giáo Viên</h2>
+    <ul>
+        <li>Lý do nghỉ phép: Nghỉ bệnh, Nghỉ thai sản, Nghỉ cá nhân, Nghỉ chăm sóc gia đình.</li>
+        <li>Thời gian nghỉ tối thiểu: 1 ngày.</li>
+        <li>Thời gian thông báo trước: ít nhất 3 ngày.</li>
+        <li>Yêu cầu về hồ sơ: Đơn xin nghỉ viết tay hoặc trực tuyến, Giấy tờ chứng minh (nếu có).</li>
+        <li>Thời gian xử lý đơn: Trong vòng 2 ngày.</li>
+    </ul>
+</div>
+
+<footer>
+    <p>&copy; 2024 Hệ Thống Quản Lý Nghỉ Phép Giáo Viên</p>
+</footer>
+<!-- Thêm jQuery từ CDN -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<!-- Hàm xử lý phê duyệt hoặc từ chối đơn -->
+<script>
+    var jq = jQuery.noConflict();
+    function updateRequestStatus(id, status) {
+        jq.ajax({
+            type: "PUT",
+            url: '/LeaveRequests/UpdateStatus', // Thay đổi URL theo controller của bạn
+            contentType: "application/json",
+            data: JSON.stringify({ leaveRequestId: id, status: status }),
+            success: function (response) {
+                // Cập nhật lại tbody bằng dữ liệu mới
+                window.location.reload();
+                alert(response.message);
+            },
+            error: function (xhr, status, error) {
+                alert("Đã xảy ra lỗi trong quá trình cập nhật trạng thái!");
+            }
+        });
+    }
+
+    function approveRequest(id) {
+        updateRequestStatus(id, 1); // 1 là trạng thái đã phê duyệt
+    }
+
+    function rejectRequest(id) {
+        updateRequestStatus(id, -1); // -1 là trạng thái bị từ chối
+    }
+</script>
+<!-- Tạo biểu đồ -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+@section Scripts {
+    <script>
+        // Create the chart
+        var ctx = document.getElementById('leaveChart').getContext('2d');
+        var leaveChart = new Chart(ctx, {
+            type: 'bar', // You can change this to 'line', 'pie', etc.
+            data: {
+                labels: @Html.Raw(Json.Serialize(labels)), // Serialize labels
+                datasets: [{
+                    label: 'Số lượng đơn xin nghỉ',
+                    data: @Html.Raw(Json.Serialize(counts)), // Serialize counts
+                    backgroundColor: 'rgba(54, 162, 235, 0.5)', // Light blue with transparency
+                    borderColor: 'rgba(54, 162, 235, 1)', // Darker blue
+                    borderWidth: 2,
+                    hoverBackgroundColor: 'rgba(75, 192, 192, 0.6)', // Teal when hovered
+                    hoverBorderColor: 'rgba(75, 192, 192, 1)' // Darker teal on hover
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        title: {
+                            display: true,
+                            text: 'Số lượng đơn',
+                            font: {
+                                size: 16,
+                                weight: 'bold',
+                                family: 'Arial, sans-serif',
+                            },
+                        },
+                        grid: {
+                            color: 'rgba(0, 0, 0, 0.1)', // Light grid lines
+                        }
+                    },
+                    x: {
+                        grid: {
+                            display: false, // Hide vertical grid lines
+                        }
+                    }
+                },
+                plugins: {
+                    legend: {
+                        labels: {
+                            font: {
+                                size: 14,
+                                weight: 'bold',
+                                family: 'Arial, sans-serif',
+                            },
+                            color: '#333',
+                        }
+                    }
+                }
+            }
+        });
+    </script>
+}
 
