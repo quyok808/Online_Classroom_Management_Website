@@ -328,36 +328,6 @@ namespace DoAnMon.Migrations
                     b.ToTable("diemDanh");
                 });
 
-            modelBuilder.Entity("DoAnMon.Models.FileAttachment", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<string>("FileName")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("FilePath")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("FileType")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("MessageId")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("MessageId");
-
-                    b.ToTable("FileAttachments");
-                });
-
             modelBuilder.Entity("DoAnMon.Models.Message", b =>
                 {
                     b.Property<int>("Id")
@@ -369,6 +339,9 @@ namespace DoAnMon.Migrations
                     b.Property<string>("ClassRoomId")
                         .IsRequired()
                         .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("FilePath")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Noidung")
                         .IsRequired()
@@ -620,17 +593,6 @@ namespace DoAnMon.Migrations
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("DoAnMon.Models.FileAttachment", b =>
-                {
-                    b.HasOne("DoAnMon.Models.Message", "Message")
-                        .WithMany("FileAttachments")
-                        .HasForeignKey("MessageId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Message");
-                });
-
             modelBuilder.Entity("DoAnMon.Models.Message", b =>
                 {
                     b.HasOne("DoAnMon.Models.ClassRoom", "ClassRoom")
@@ -721,11 +683,6 @@ namespace DoAnMon.Migrations
                     b.Navigation("BaiGiangs");
 
                     b.Navigation("ClassroomDetails");
-                });
-
-            modelBuilder.Entity("DoAnMon.Models.Message", b =>
-                {
-                    b.Navigation("FileAttachments");
                 });
 #pragma warning restore 612, 618
         }

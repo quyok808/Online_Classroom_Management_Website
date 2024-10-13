@@ -479,9 +479,66 @@
     background-position: right
   }
 }
-  
+/*      css record và add file  */
+	#recordButton, .file-label {
+		font-family: Poppins, sans-serif;
+		font-size: 16px;
+		color: #007bff;
+		border: 1px solid #007bff;
+		border-radius: 50%;
+		padding: 10px;
+		width: 50px;
+		height: 50px;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		transition: background-color 0.3s ease, color 0.3s ease;
+		margin-right: 15px; /* Tạo khoảng cách giữa các nút và trường nhập */
+	}
+
+	#messageInput {
+		font-family: Poppins, sans-serif;
+		margin-right: 15px; /* Tạo khoảng cách giữa input và các biểu tượng */
+		padding: 10px; /* Tăng padding cho khung nhập để dễ thao tác hơn */
+		font-size: 16px;
+		margin-bottom: 10px;
+	}
+		#recordButton:hover, .file-label:hover {
+			background-color: #007bff;
+			color: #fff;
+		}
+
+	#sendButton {
+		font-family: Poppins, sans-serif;
+		font-size: 16px;
+		font-weight: 700;
+	}
+
+	.file-name {
+		font-family: Poppins, sans-serif;
+		font-size: 14px;
+		margin-left: 10px;
+		color: #6c757d;
+		display: inline-block;
+		max-width: 350px;
+		white-space: nowrap;
+		overflow: hidden;
+		text-overflow: ellipsis;
+		margin-top: 15px;
+	}
+
+	.d-flex {
+		display: flex;
+	}
+
+	.gap-2 {
+		gap: 10px;
+	}
+
+
 
 </style>
+
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@16,400,0,0" />
 <style>
@@ -494,6 +551,7 @@
 <link href="https://fonts.googleapis.com/css2?family=Merriweather:ital,wght@0,300;0,400;0,700;0,900;1,300;1,400;1,700;1,900&display=swap" rel="stylesheet">
 <link href="https://fonts.googleapis.com/css2?family=Merriweather:ital,wght@0,300;0,400;0,700;0,900;1,300;1,400;1,700;1,900&family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap" rel="stylesheet">
 <link href="https://fonts.googleapis.com/css2?family=Merriweather:ital,wght@0,300;0,400;0,700;0,900;1,300;1,400;1,700;1,900&family=Oswald:wght@200..700&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 
 
 <div style="position: relative;">
@@ -826,28 +884,37 @@
 <div id="discussion" class="tabcontent">
 	<div class="discussion">
 		<div class="container-fluid">
-			<div class="row p-1" hidden>
-				<div class="col-5"><input type="text" id="userInput" class="form-control" /></div>
-				<div class="col-5">
-					<input type="text" id="classId" class="form-control" value="@Model.ClassRoom.Id" />
+			<form id="uploadForm" enctype="multipart/form-data">
+				<div class="row p-1" hidden>
+					<div class="col-5">
+						<input type="text" id="userInput" class="form-control" />
+					</div>
+					<div class="col-5">
+						<input type="text" id="classId" class="form-control" value="@Model.ClassRoom.Id" />
+					</div>
 				</div>
-			</div>
-			<div class="row p-1">
-				<div class="col-1" style="font-family: Poppins, sans-serif; font-weight: 500; font-size: 16px;">
-					Tin nhắn:
+				<div class="row p-1">
+					<div class="col-1" style="font-family: Poppins, sans-serif; font-weight: 500; font-size: 16px;">
+						Tin nhắn:
+					</div>
+					<div class="col-4">
+						<input style="font-family: Poppins, sans-serif;" type="text" class="form-control" id="messageInput" />
+					</div>
+					<div class="col-2 d-flex align-items-center gap-2">
+						<button type="button" onclick="startSpeechRecognition()" id="recordButton" class="btn btn-light" title="Bắt đầu ghi âm">
+							<i class="fas fa-microphone"></i>
+						</button>
+						<label class="btn btn-light file-label" for="FileInput" title="Chọn tệp">
+							<i class="fas fa-paperclip"></i>
+						</label>
+						<input type="file" id="FileInput" style="display: none;">
+						<span id="fileName" class="file-name">Không có tệp nào được chọn</span>
+					</div>
+					<div class="col-2 text-end">
+						<input style="font-family: Poppins, sans-serif; font-size: 16px; font-weight: 700;" type="button" id="sendButton" class="btn btn-primary" value="Gửi" />
+					</div>
 				</div>
-				<div class="col-5">
-					<input style="font-family: Poppins, sans-serif;" type="text" class="form-control" id="messageInput" />
-				</div>
-				<button onclick="startSpeechRecognition()">Start Recording</button>
-				<div class="col-5">
-					<!-- Input chọn file -->
-					<input type="file" id="fileInput" multiple class="form-control" />
-				</div>
-				<div class="col-6 text-end" style="margin-top: 10px;">
-					<input style="font-family: Poppins, sans-serif; font-size: 16px; font-weight: 700;" type="button" id="sendButton" class="btn btn-primary" value="Gửi" />
-				</div>
-			</div>
+			</form>
 
 			<div class="row p-1">
 				<div class="col-6">
@@ -864,6 +931,9 @@
 		</div>
 	</div>
 </div>
+
+
+
 <div id="listsv" class="tabcontent">
 	@{
 		if (Model.isOwner)
@@ -1228,6 +1298,20 @@
 <script src="https://cdn.jsdelivr.net/npm/he@1.2.0/he.min.js"></script>
 <script>
 	document.addEventListener("DOMContentLoaded", async function () {
+		console.log(document.getElementById('FileInput'));  
+		const connection = new signalR.HubConnectionBuilder()
+			.withUrl("/chathub") 
+			.build();
+
+		connection.onclose(function () {
+			console.log("SignalR connection closed.");
+		});
+
+		connection.start().then(function () {
+			console.log("SignalR connected successfully.");
+		}).catch(function (err) {
+			return console.error("SignalR connection error:", err.toString());
+		});
 		try {
 			var encodedName = "@((await _userManager.GetUserAsync(User)).Name)";
 			var decodedName = he.decode(encodedName);
@@ -1242,8 +1326,9 @@
 		return div.innerHTML;
 	}
 
-	connection.on("ReceiveMessage", function (user, message, attachments) {
+	connection.on("ReceiveMessage", function (user, message, fileUrl) {
 		var li = document.createElement("li");
+		var classId = document.getElementById("classId").value;
 
 		const currentTime = new Date();
 		const year = currentTime.getFullYear();
@@ -1253,38 +1338,28 @@
 		const minutes = currentTime.getMinutes();
 		const seconds = currentTime.getSeconds();
 		const formatTime = `${hours}:${minutes}:${seconds} - ${day}/${month}/${year}`;
-
-		var classId = document.getElementById("classId").value;
 
 		var encodedUser = encodeHTML(user);
 		var encodedMessage = encodeHTML(message);
 
 		var formattedMessage = `<strong>${encodedUser} (${formatTime}):</strong> ${encodedMessage}`;
-		li.innerHTML = formattedMessage;
 
-		if (attachments && attachments.length > 0) {
-			var fileList = document.createElement("ul");
-			attachments.forEach(function (file) {
-				var fileItem = document.createElement("li");
-				fileItem.innerHTML = `<a href="${file.filePath}" target="_blank">${file.fileName}</a>`;
-				fileList.appendChild(fileItem);
-			});
-			li.appendChild(fileList);
+		// Nếu có file, thêm liên kết tải file vào tin nhắn
+		if (fileUrl) {
+			formattedMessage += ` <a href="${fileUrl}" target="_blank">[Open File]</a>`;
 		}
+
+		li.innerHTML = formattedMessage;
 
 		var messagesList = document.getElementById("messagesList");
 		if (messagesList.firstChild) {
-			messagesList.insertBefore(li, messagesList.firstChild); // Thêm tin nh?n m?i vào d?u danh sách
+			messagesList.insertBefore(li, messagesList.firstChild); // Thêm tin nhắn mới vào đầu danh sách
 		} else {
-			messagesList.appendChild(li); // N?u danh sách tr?ng, thêm tin nh?n vào cu?i danh sách
+			messagesList.appendChild(li); // Nếu danh sách trống, thêm tin nhắn vào cuối danh sách
 		}
 	});
 
-
-	document.getElementById("sendButton").addEventListener("click", async function () {
-		var user = document.getElementById("userInput").value;
-		var message = document.getElementById("messageInput").value;
-
+	function getCurrentTime() {
 		const currentTime = new Date();
 		const year = currentTime.getFullYear();
 		const month = currentTime.getMonth() + 1;
@@ -1292,38 +1367,84 @@
 		const hours = currentTime.getHours();
 		const minutes = currentTime.getMinutes();
 		const seconds = currentTime.getSeconds();
-		const formatTime = `${hours}:${minutes}:${seconds} - ${day}/${month}/${year}`;
-		var classId = document.getElementById("classId").value;
+		return `${hours}:${minutes}:${seconds} - ${day}/${month}/${year}`;
+	}
 
-		var formData = new FormData();
-		var fileInput = document.getElementById("fileInput");
-		for (var i = 0; i < fileInput.files.length; i++) {
-			formData.append("file", fileInput.files[i]);
-		}
-		formData.append("messageId", classId);
-		if (fileInput.files.length > 0) {
+	function getClassId() {
+		return document.getElementById("classId").value;
+	}
+	
+	async function sendMessage() {
+		var user = document.getElementById("userInput").value;
+		var message = document.getElementById("messageInput").value;
+		var classId = document.getElementById("classId").value;
+		var formatTime = getCurrentTime();
+		var FileInput = document.getElementById("FileInput");
+		var fileUrl = null;
+
+		if (FileInput.files.length > 0) {
+			var file = FileInput.files[0];
+			console.log("File đã được chọn:", file.name);
+
+			var formData = new FormData();
+			formData.append("file", file); 
+
 			try {
-				const response = await fetch('/upload/upload-file-message', {  
+				console.log("Đang gửi file tới API...");
+				let response = await fetch('/api/upfilemessage', {
 					method: 'POST',
 					body: formData
 				});
-				if (!response.ok) throw new Error("Failed to upload file");
-			} catch (error) {
-				console.error("File upload failed:", error);
+
+				if (response.ok) {
+					fileUrl = await response.text(); 
+					console.log("File URL: ", fileUrl);
+				} else {
+					console.error('Lỗi khi upload file.');
+					return;  
+				}
+			} catch (err) {
+				console.error('Lỗi khi gửi file: ' + err.toString());
+				return; 
 			}
 		}
-		try {
-			await connection.invoke("SendMessage", user, message, formatTime, classId, []);
-		} catch (err) {
-			console.error("Send message failed:", err);
+		if (message.trim() !== "" || fileUrl) {
+			try {
+				await connection.invoke("SendMessage", user, message, formatTime, classId, fileUrl).catch(function (err) {
+					console.error("Lỗi khi gửi tin nhắn:", err.toString());
+				});
+
+				// Xóa nội dung sau khi gửi
+				document.getElementById("messageInput").value = '';
+				fileInput.value = '';
+				document.getElementById("fileName").textContent = 'Không có tệp nào được chọn';  // Cập nhật tên file sau khi gửi
+			} catch (err) {
+				console.error("Lỗi khi gửi tin nhắn:", err.toString());
+			}
 		}
+	}
 
-		document.getElementById("messageInput").value = '';
-		document.getElementById("messageInput").focus();
+	document.getElementById('FileInput').addEventListener('change', function () {
+		var fileInput = document.getElementById('FileInput');
+		var fileNameSpan = document.getElementById('fileName');
 
+		console.log(fileInput);
+
+		if (fileInput.files.length > 0) {
+			fileNameSpan.textContent = fileInput.files[0].name; // Hiển thị tên tệp đã chọn
+			console.log('File đã được chọn:', fileInput.files[0]);
+		} else {
+			console.log('Không có file nào được chọn.');
+			fileNameSpan.textContent = 'Không có tệp được chọn'; 
+		}
 	});
 
-	document.getElementById("messageInput").addEventListener("keydown", function (event) {
+
+	document.getElementById("sendButton").addEventListener("click", async function (event) {
+		await sendMessage();  
+	});
+
+	document.getElementById("messageInput").addEventListener("keydown", async function (event) {
 		if (event.key == 'Enter' && !event.shiftKey) {
 			event.preventDefault();
 			var user = document.getElementById("userInput").value;
@@ -1339,34 +1460,27 @@
 			const formatTime = `${hours}:${minutes}:${seconds} - ${day}/${month}/${year}`;
 			var classId = document.getElementById("classId").value;
 
-			var formData = new FormData();
-			var fileInput = document.getElementById("fileInput");
-			for (var i = 0; i < fileInput.files.length; i++) {
-				formData.append("file", fileInput.files[i]);
-			}
-			formData.append("messageId", classId);
-
-			if (fileInput.files.length > 0) {
-				try {
-					await fetch('/upload/upload-file-message', {
-						method: 'POST',
-						body: formData
-					});
-				} catch (error) {
-					console.error("File upload failed:", error);
-				}
+			if (message.trim() !== "") {
+				await connection.invoke("SendMessage", user, message, formatTime, classId).catch(function (err) {
+					return console.error(err.toString());
+				});
+				document.getElementById("messageInput").value = '';  
+				document.getElementById("messageInput").focus();
 			}
 
-			connection.invoke("SendMessage", user, message, formatTime, classId).catch(function (err) {
-				return console.error(err.toString());
-			});
-
-			document.getElementById("messageInput").value = '';
-			document.getElementById("messageInput").focus();
+			await sendFile();
 		}
 	});
 
+	connection.on("ReceiveFile", function (user, downloadText, fileUrl) {
+		var li = document.createElement("li");
+		var formattedMessage = `<strong>${user}:</strong> <a href="${fileUrl}" download>${downloadText}</a>`;
+		li.innerHTML = formattedMessage;
+		document.getElementById("messagesList").appendChild(li);
+	});
+
 </script> @* G?i tin nh?n *@
+<
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 <script>
 	function getListStudents() {

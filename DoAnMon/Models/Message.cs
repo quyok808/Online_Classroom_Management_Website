@@ -10,13 +10,14 @@ namespace DoAnMon.Models
 		public string Time { get; set; }
 		public string UserId { get; set; }
 		public string ClassRoomId { get; set; }
+        public string? FilePath { get; set; }
 
-		[ValidateNever]
+
+        [ValidateNever]
 		public CustomUser? User { get; set; }
 
 		[ValidateNever]
 		public ClassRoom? ClassRoom { get; set; }
-		public List<FileAttachment>? FileAttachments { get; set; }  
 
 	}
 }

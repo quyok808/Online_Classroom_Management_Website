@@ -13,7 +13,6 @@ namespace DoAnMon.Controllers
 	{
 		private readonly string _tempPath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot","Uploads", "Temp");
 		private readonly string _uploadPath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "Uploads");
-		private readonly string _messageUploadPath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "messagefile");
 		private readonly ApplicationDbContext _context;
 
 		public UploadController(ApplicationDbContext context)
@@ -134,47 +133,6 @@ namespace DoAnMon.Controllers
 				return StatusCode(204); // Chunk chưa tồn tại
 			}
 		}
-		[HttpPost]
-		[Route("upload-file-message")]
-		public async Task<IActionResult> UploadFileForMessage(IFormFile file, int messageId)
-		{
-			if (file == null || file.Length == 0)
-			{
-				return BadRequest("No file uploaded.");
-			}
-
-			// Đường dẫn lưu file riêng cho tin nhắn
-			if (!Directory.Exists(_messageUploadPath))
-			{
-				Directory.CreateDirectory(_messageUploadPath);
-			}
-
-			// Tạo tên file duy nhất để tránh trùng lặp
-			var uniqueFileName = Guid.NewGuid().ToString() + "_" + Path.GetFileName(file.FileName);
-			var filePath = Path.Combine(_messageUploadPath, uniqueFileName);
-
-			// Lưu file vào thư mục FileMessage
-			using (var fileStream = new FileStream(filePath, FileMode.Create))
-			{
-				await file.CopyToAsync(fileStream);
-			}
-
-			// Lưu thông tin file vào bảng FileAttachment
-			var fileAttachment = new FileAttachment
-			{
-				FileName = file.FileName,
-				FilePath = "/messagefile/" + uniqueFileName,  // Đường dẫn tương đối cho web
-				FileType = file.ContentType,
-				MessageId = messageId  // Liên kết với tin nhắn
-			};
-
-			_context.FileAttachments.Add(fileAttachment);
-			await _context.SaveChangesAsync();
-
-			return Ok(new { filePath = fileAttachment.FilePath });
-		}
-
-
 	}
 
 }
