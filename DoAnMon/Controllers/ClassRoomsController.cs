@@ -26,6 +26,7 @@ using System.Globalization;
 using System.Security.Cryptography;
 using System.Runtime.ConstrainedExecution;
 using Microsoft.IdentityModel.Tokens;
+using DoAnMon.SendMail;
 
 namespace DoAnMon.Controllers
 {
@@ -39,15 +40,16 @@ namespace DoAnMon.Controllers
 		private static readonly SemaphoreSlim _semaphore = new SemaphoreSlim(1, 1);
 		private readonly ILogger<HomeController> _logger;
 
-		public ClassRoomsController(ApplicationDbContext context, UserManager<CustomUser> userManager, IWebHostEnvironment environment, IStudent studentRepo, ILogger<HomeController> logger)
+        public ClassRoomsController(ApplicationDbContext context, UserManager<CustomUser> userManager, IWebHostEnvironment environment, IStudent studentRepo, ILogger<HomeController> logger)
 		{
 			_context = context;
 			_userManager = userManager;
 			_environment = environment;
 			_studentRepo = studentRepo;
 			_logger = logger;
-		}
-		public static List<ClassRoom>? userClasses;
+
+        }
+        public static List<ClassRoom>? userClasses;
 		// GET: ClassRooms
 		public async Task<IActionResult> Index()
 		{
@@ -1432,5 +1434,5 @@ namespace DoAnMon.Controllers
 			return dates;
 		}
 
-	}
+    }
 }

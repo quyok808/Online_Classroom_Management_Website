@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.WebUtilities;
+using Microsoft.Extensions.Options;
 using System.ComponentModel.DataAnnotations;
 using System.Text.Encodings.Web;
 using System.Text;
@@ -12,6 +13,7 @@ using System.Net.Mail;
 using System.Net;
 using DoAnMon.IdentityCudtomUser;
 using DoAnMon.SendMail;
+using DoAnMon.Models;
 
 namespace DoAnMon.Areas.Identity.Pages.Account
 {
@@ -24,7 +26,7 @@ namespace DoAnMon.Areas.Identity.Pages.Account
         private readonly ILogger<RegisterModel> _logger;
         private readonly IEmailSender _emailSender;
         private readonly RoleManager<IdentityRole> _roleManager;
-        private Mail mail = new Mail();
+        private readonly Mail _mailService; // Thay đổi biến thành _mailService
 
         public IndexModel(
             UserManager<CustomUser> userManager,
@@ -32,7 +34,8 @@ namespace DoAnMon.Areas.Identity.Pages.Account
             SignInManager<CustomUser> signInManager,
             ILogger<RegisterModel> logger,
             IEmailSender emailSender,
-            RoleManager<IdentityRole> roleManager)
+            RoleManager<IdentityRole> roleManager,
+            IOptions<SmtpSettings> smtpSettings)
         {
             _userManager = userManager;
             _userStore = userStore;
@@ -41,6 +44,7 @@ namespace DoAnMon.Areas.Identity.Pages.Account
             _logger = logger;
             _emailSender = emailSender;
             _roleManager = roleManager;
+            _mailService = new Mail(smtpSettings);
         }
 
         /// <summary>
@@ -174,10 +178,11 @@ namespace DoAnMon.Areas.Identity.Pages.Account
                             values: new { area = "Identity", userId = userId, code = code, returnUrl = returnUrl },
                             protocol: Request.Scheme);
 
-                        await mail.SendEmailAsync(Input.Email, "Confirm your email",
+                        await _mailService.SendEmailAsync(Input.Email, "Confirm your email",
                             $"Please confirm your account by <a href='{HtmlEncoder.Default.Encode(callbackUrl)}'>clicking here</a>." +
                             $"<br> You can login with Username: {Input.Mssv} or {Input.Email}." +
                             $"<br>Password: {Input.Password}");
+
 
 
                         if (_userManager.Options.SignIn.RequireConfirmedAccount)

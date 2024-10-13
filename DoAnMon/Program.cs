@@ -2,6 +2,7 @@
 using DoAnMon.IdentityCudtomUser;
 using DoAnMon.ModelListSVDownload;
 using DoAnMon.Models;
+using DoAnMon.SendMail;
 using DoAnMon.SignalR;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Http.Features;
@@ -38,6 +39,12 @@ builder.Services.ConfigureApplicationCookie(options =>
 {
 	options.LoginPath = "/Identity/Account/Index"; // Đường dẫn đến trang từ chối truy cập mới
 });
+builder.Services.Configure<SmtpSettings>(builder.Configuration.GetSection("SmtpSettings"));
+builder.Services.AddScoped<Mail>();
+builder.Services.AddHostedService<EmailSchedulerService>();
+
+
+
 
 
 ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
@@ -60,7 +67,7 @@ app.Use(async (context, next) =>
     await next();
 });
 
-app.UseHttpsRedirection();
+//app.UseHttpsRedirection();
 app.UseStaticFiles();
 
 app.UseRouting();

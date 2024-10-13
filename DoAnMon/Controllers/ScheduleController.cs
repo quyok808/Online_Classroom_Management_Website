@@ -6,6 +6,7 @@ using static DoAnMon.Models.ClassroomViewModel;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using DoAnMon.Models;
+using DoAnMon.SendMail;
 
 namespace DoAnMon.Controllers
 {
@@ -13,11 +14,13 @@ namespace DoAnMon.Controllers
 	{
         private readonly ApplicationDbContext _context;
         private readonly UserManager<CustomUser> _userManager;
+        private readonly Mail _mail;
 
-        public ScheduleController(ApplicationDbContext context, UserManager<CustomUser> userManager)
+        public ScheduleController(ApplicationDbContext context, UserManager<CustomUser> userManager, Mail mail)
         {
             _context = context;
             _userManager = userManager;
+            _mail = mail;
         }
         public static List<ClassRoom>? userClasses;
         // GET: ScheduleController
@@ -108,6 +111,16 @@ namespace DoAnMon.Controllers
             }
 
             return dates;
+        }
+        [HttpPost]
+        public async Task<IActionResult> NotifyStudents(string email, string className, DateTime classTime)
+        {
+            var subject = $"Nhắc nhở: Lớp học {className} sắp diễn ra!";
+            var body = $"Chào bạn,<br><br>Xin nhắc nhở rằng lớp học {className} sẽ diễn ra vào {classTime}.<br><br>Chúc bạn học tốt!";
+
+            await _mail.SendEmailAsync(email, subject, body);
+
+            return Ok("Email đã được gửi đi.");
         }
     }
 }
