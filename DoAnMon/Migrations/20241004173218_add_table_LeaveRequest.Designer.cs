@@ -4,6 +4,7 @@ using DoAnMon.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,13 +12,15 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DoAnMon.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20241004173218_add_table_LeaveRequest")]
+    partial class add_table_LeaveRequest
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "8.0.8")
+                .HasAnnotation("ProductVersion", "8.0.4")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
@@ -336,6 +339,9 @@ namespace DoAnMon.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
+                    b.Property<string>("ClassId")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("ClassRoomId")
                         .HasColumnType("nvarchar(450)");
 
@@ -347,9 +353,6 @@ namespace DoAnMon.Migrations
 
                     b.Property<DateTime>("StartDate")
                         .HasColumnType("datetime2");
-
-                    b.Property<int>("Status")
-                        .HasColumnType("int");
 
                     b.Property<string>("UserID")
                         .HasColumnType("nvarchar(450)");
@@ -374,9 +377,6 @@ namespace DoAnMon.Migrations
                     b.Property<string>("ClassRoomId")
                         .IsRequired()
                         .HasColumnType("nvarchar(450)");
-
-                    b.Property<string>("FilePath")
-                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Noidung")
                         .IsRequired()

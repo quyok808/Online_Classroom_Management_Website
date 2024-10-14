@@ -479,6 +479,7 @@
     background-position: right
   }
 }
+
 /*      css record và add file  */
 	#recordButton, .file-label {
 		font-family: Poppins, sans-serif;
@@ -535,7 +536,46 @@
 		gap: 10px;
 	}
 
+	.card {
+		border: 1px solid #ccc;
+		padding: 15px;
+		border-radius: 10px;
+		margin-bottom: 15px;
+		box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+		position: relative;
+		min-width: 215px;
+		margin-top: 15px;
+		margin-right: 15pc;
+	}
 
+	.card-title {
+		font-size: 1.25rem;
+		font-weight: bold;
+	}
+
+	.card-text {
+		font-size: 1rem;
+	}
+
+	.delete-btn {
+		position: absolute; /* Position it absolutely within the card */
+		top: 10px; /* Adjust as needed */
+		right: 5px; /* Adjust as needed */
+		border: none; /* Remove border */
+		background: transparent; /* Make background transparent */
+		font-size: 18px; /* Adjust size */
+		color: #fff; /* Change color to white */
+		cursor: pointer; /* Change cursor to pointer */
+	}
+
+		.delete-btn:hover {
+			color: #ff0000; /* Change color on hover */
+		}
+
+	.ctnleaveForm{
+		justify-content: flex-start;
+		gap: 20px;
+	}
 
 </style>
 
@@ -559,15 +599,15 @@
 	@{
 		if (Model.isOwner)
 		{
-			<form id="changeBG" action="/ClassRooms/changeBackground" method="POST" enctype="multipart/form-data" style="position: absolute; bottom: 10px; right: 10px;">
-				<input type="hidden" name="classId" value="@Model.ClassRoom.Id" />
-				<label for="file-upload" class="custom-file-upload">
-					<i class="fa-solid fa-camera"></i>
-					Thay đổi ảnh bìa
-				</label>
-				<input id="file-upload" type="file" name="image" accept="image/*" required
-					   onchange="document.getElementById('changeBG').submit();" style="display:none;" />
-			</form>
+								<form id="changeBG" action="/ClassRooms/changeBackground" method="POST" enctype="multipart/form-data" style="position: absolute; bottom: 10px; right: 10px;">
+									<input type="hidden" name="classId" value="@Model.ClassRoom.Id" />
+									<label for="file-upload" class="custom-file-upload">
+										<i class="fa-solid fa-camera"></i>
+										Thay đổi ảnh bìa
+									</label>
+									<input id="file-upload" type="file" name="image" accept="image/*" required
+									   	onchange="document.getElementById('changeBG').submit();" style="display:none;" />
+								</form>
 		}
 	}
 	
@@ -666,8 +706,8 @@
 	@{
 		if (Model.isOwner)
 		{
-			<div>
-			@*
+								<div>
+								@*
 				<button onclick="showUploadForm()"
 						style="
 					background-color: #3498db;
@@ -689,9 +729,9 @@
 					<input type="file" name="pdfFile" id="pdfFileInput" accept=".pdf" style="display: none;">
 				</form>
 				*@
-				<button id="browseBaiGiang">Chọn File BAIGIANG</button>
-				<div id="progressBar"></div>
-			</div>
+									<button id="browseBaiGiang">Chọn File BAIGIANG</button>
+									<div id="progressBar"></div>
+								</div>
 
 		}
 	}
@@ -704,66 +744,66 @@
 	@{
 		if (Model.isOwner)
 		{
-								<button id="uploadButton" onclick="Showtaobaitap()"
-										style="
-																			background-color: #3498db;
-																			font-family: Poppins, sans-serif;
-																			color: #ffffff;
-																			padding: 10px 20px;
-																			border: none;
-																			border-radius: 5px;
-																			cursor: pointer;
-																			transition: background-color 0.3s;
-																			font-size: 15px;
-																			font-weight: bold;">
-									Tạo bài tập mới
-								</button>
-								<form id="uploadbaitap" action="/ClassRooms/CreateBaitap" method="POST" style="display: none;">
-									<div class="form-section">
-										<!-- Ph?n nh?p tiêu d? -->
-										<input type="text" name="Title" id="titleInput" class="form-control" placeholder="Nhập tiêu đề">
-										<!-- G?ch ngang -->
-										<hr>
-										<!-- Ph?n nh?p mô t? -->
-										<textarea name="Content" id="descriptionInput" class="form-control" placeholder="Nhập mô tả"></textarea>
-										<label for="deadlineInput">Hạn nộp:</label>
-										<input type="datetime-local" name="Deadline" id="deadlineInput" class="form-control">
+													<button id="uploadButton" onclick="Showtaobaitap()"
+															style="
+																								background-color: #3498db;
+																								font-family: Poppins, sans-serif;
+																								color: #ffffff;
+																								padding: 10px 20px;
+																								border: none;
+																								border-radius: 5px;
+																								cursor: pointer;
+																								transition: background-color 0.3s;
+																								font-size: 15px;
+																								font-weight: bold;">
+														Tạo bài tập mới
+													</button>
+													<form id="uploadbaitap" action="/ClassRooms/CreateBaitap" method="POST" style="display: none;">
+														<div class="form-section">
+															<!-- Ph?n nh?p tiêu d? -->
+															<input type="text" name="Title" id="titleInput" class="form-control" placeholder="Nhập tiêu đề">
+															<!-- G?ch ngang -->
+															<hr>
+															<!-- Ph?n nh?p mô t? -->
+															<textarea name="Content" id="descriptionInput" class="form-control" placeholder="Nhập mô tả"></textarea>
+															<label for="deadlineInput">Hạn nộp:</label>
+															<input type="datetime-local" name="Deadline" id="deadlineInput" class="form-control">
 
-										<label for="fileFormatSelect">Chọn định dạng file cần nộp:</label>
-										<select name="FileFormat" id="fileFormatSelect">
-											<option value="pdf">pdf</option>
-											<option value="docx">docx</option>
-											<option value="xlsx">xls</option>
-											<option value="allfile">all file</option>
-											<!-- Thêm các lo?i d?nh d?ng khác n?u c?n -->
-										</select>
+															<label for="fileFormatSelect">Chọn định dạng file cần nộp:</label>
+															<select name="FileFormat" id="fileFormatSelect">
+																<option value="pdf">pdf</option>
+																<option value="docx">docx</option>
+																<option value="xlsx">xls</option>
+																<option value="allfile">all file</option>
+																<!-- Thêm các lo?i d?nh d?ng khác n?u c?n -->
+															</select>
 
+														</div>
+									<input type="hidden" name="ClassId" id="classIdInput" value="@Model.ClassRoom.Id">
+									<label for="fileInput">Hướng dẫn (Nếu có): </label>
+									<input type="file" name="FileUpLoad" id="fileInput" /> <!-- ?n input file -->
+									<input type="hidden" name="AttactURL" id="attactURL">
+									<button type="button" onclick="uploadFile()">Upload</button>
+
+									<div class="modal" id="uploadModal" style="background-color: transparent;">
+										<div class="modal-content">
+											<div class="modal-header">
+												<h5 class="modal-title">Uploading File</h5>
+											</div>
+											<div class="modal-body text-center">
+												<div class="loader" id="loader" style="display: block;"></div>
+												<progress id="progressBar" value="0" max="100" style="display: none;"></progress>
+												<div id="progressText" style="display: block;" class="mt-3">0%</div>
+												<div id="successText" class="mt-3" style="display: none;">Upload thành công</div>
+											</div>
+										</div>
 									</div>
-				<input type="hidden" name="ClassId" id="classIdInput" value="@Model.ClassRoom.Id">
-				<label for="fileInput">Hướng dẫn (Nếu có): </label>
-				<input type="file" name="FileUpLoad" id="fileInput" /> <!-- ?n input file -->
-				<input type="hidden" name="AttactURL" id="attactURL">
-				<button type="button" onclick="uploadFile()">Upload</button>
 
-				<div class="modal" id="uploadModal" style="background-color: transparent;">
-					<div class="modal-content">
-						<div class="modal-header">
-							<h5 class="modal-title">Uploading File</h5>
-						</div>
-						<div class="modal-body text-center">
-							<div class="loader" id="loader" style="display: block;"></div>
-							<progress id="progressBar" value="0" max="100" style="display: none;"></progress>
-							<div id="progressText" style="display: block;" class="mt-3">0%</div>
-							<div id="successText" class="mt-3" style="display: none;">Upload thành công</div>
-						</div>
-					</div>
-				</div>
-
-				<div class="modal-backdrop" id="modalBackdrop"></div>
+									<div class="modal-backdrop" id="modalBackdrop"></div>
 
 
-									<input type="submit" value="Giao bài" class="btn btn-primary"></input> <!-- Nút giao bài -->
-								</form>
+														<input type="submit" value="Giao bài" class="btn btn-primary"></input> <!-- Nút giao bài -->
+													</form>
 		}
 	}
 	<div class="assignments">
@@ -775,7 +815,7 @@
 					@{
 						if (Model.isOwner)
 						{
-												<a class="btn btn-info" style="float: left; max-width: 50px; padding: 5px;" asp-action="DeleteBT" asp-controller="ClassRooms" asp-route-id="@assignment.Id" asp-route-classId="@assignment.ClassRoomId" onclick="return confirm('B?n có ch?c mu?n xóa không ?')">Xóa</a>
+																	<a class="btn btn-info" style="float: left; max-width: 50px; padding: 5px;" asp-action="DeleteBT" asp-controller="ClassRooms" asp-route-id="@assignment.Id" asp-route-classId="@assignment.ClassRoomId" onclick="return confirm('B?n có ch?c mu?n xóa không ?')">Xóa</a>
 						}
 					}
 					<h3 class="text-center">@assignment.Title</h3>
@@ -783,11 +823,11 @@
 					@{
 						if (assignment.Deadline.HasValue)
 						{
-												<p class="assignment-description">H?n n?p: @assignment.Deadline</p>
+																	<p class="assignment-description">H?n n?p: @assignment.Deadline</p>
 						}
 						else
 						{
-												<p class="assignment-description">Hạn nộp: Vô thời hạn</p>
+																	<p class="assignment-description">Hạn nộp: Vô thời hạn</p>
 						}
 					}
 
@@ -816,12 +856,12 @@
 						@{
 							if (!Model.isOwner)
 							{
-													<label for="file-upload" class="file-label" style="white-space: nowrap;">Bài tập của bạn</label>
-													<div class="file-input-wrapper">
-														@{
+																		<label for="file-upload" class="file-label" style="white-space: nowrap;">Bài tập của bạn</label>
+																		<div class="file-input-wrapper">
+																			@{
 										if (hasSubmitted)
 										{
-																	<p style="text-align: center; margin-left: 15px;">Đã nộp bài</p>
+																											<p style="text-align: center; margin-left: 15px;">Đã nộp bài</p>
 										}
 										else
 										{
@@ -837,41 +877,41 @@
 												{
 													// X? lý khi deadline dã qua
 													// Ví d?: hi?n th? thông báo cho ngu?i dùng
-																							<p>Deadline dã qua. Không thể nộp bài tập nữa.</p>
+																																	<p>Deadline dã qua. Không thể nộp bài tập nữa.</p>
 												}
 												else
 												{
 													// X? lý khi deadline chua qua
 													// Ví d?: cho phép ngu?i dùng n?p bài t?p
-																							<p>Thi?u</p>
-																							<input id="FileInput_@assignment.Id" type="file" name="FileNopbai">
-																							<input type="hidden" name="ClassId" id="classIdInput" value="@Model.ClassRoom.Id">
-																							<input type="hidden" name="BaitapId" id="baitapinput" value="@assignment.Id">
+																																	<p>Thi?u</p>
+																																	<input id="FileInput_@assignment.Id" type="file" name="FileNopbai">
+																																	<input type="hidden" name="ClassId" id="classIdInput" value="@Model.ClassRoom.Id">
+																																	<input type="hidden" name="BaitapId" id="baitapinput" value="@assignment.Id">
 
-																							<button type="submit">Nộp bài</button>
-																							<button type="button" onclick="previewFile('@assignment.Id')">Xem trước</button>
+																																	<button type="submit">Nộp bài</button>
+																																	<button type="button" onclick="previewFile('@assignment.Id')">Xem trước</button>
 												}
 											}
 											else
 											{
 												// X? lý khi không có deadline du?c d?t
 
-																						<p>Thiếu</p>
-																						<input id="FileInput_@assignment.Id" type="file" name="FileNopbai">
-																						<input type="hidden" name="ClassId" id="classIdInput" value="@Model.ClassRoom.Id">
-																						<input type="hidden" name="BaitapId" id="baitapinput" value="@assignment.Id">
+																																<p>Thiếu</p>
+																																<input id="FileInput_@assignment.Id" type="file" name="FileNopbai">
+																																<input type="hidden" name="ClassId" id="classIdInput" value="@Model.ClassRoom.Id">
+																																<input type="hidden" name="BaitapId" id="baitapinput" value="@assignment.Id">
 
-																						<button type="submit">Nộp bài</button>
-																						<button type="button" onclick="previewFile('@assignment.Id')">Xem trước</button>
+																																<button type="submit">Nộp bài</button>
+																																<button type="button" onclick="previewFile('@assignment.Id')">Xem trước</button>
 											}
 										}
-														}
-													</div>
-													<div id="previewContainer_@assignment.Id"></div>
+																			}
+																		</div>
+																		<div id="previewContainer_@assignment.Id"></div>
 							}
 							else
 							{
-													<a asp-action="GetAllBTStu" asp-controller="ClassRooms" asp-route-classid="@Model.ClassRoom.Id" asp-route-baitapID="@assignment.Id" class="btn btn-info ">Xem bài tập đã nộp</a>
+																		<a asp-action="GetAllBTStu" asp-controller="ClassRooms" asp-route-classid="@Model.ClassRoom.Id" asp-route-baitapID="@assignment.Id" class="btn btn-info ">Xem bài tập đã nộp</a>
 							}
 						}
 
@@ -938,11 +978,11 @@
 	@{
 		if (Model.isOwner)
 		{
-								<div style="margin-bottom: -35px;">
-									<form asp-controller="ClassRooms" asp-action="ExportDSSV" asp-route-classID="@Model.ClassRoom.Id" method="post">
-										<button type="submit" class="btn btn-info">Xuất danh sách sinh viên</button>
-									</form>
-								</div>
+													<div style="margin-bottom: -35px;">
+														<form asp-controller="ClassRooms" asp-action="ExportDSSV" asp-route-classID="@Model.ClassRoom.Id" method="post">
+															<button type="submit" class="btn btn-info">Xuất danh sách sinh viên</button>
+														</form>
+													</div>
 		}
 	}
 	<div id="listsv1">
@@ -998,8 +1038,51 @@
 	<div class="padlet-embed" style="border:1px solid rgba(0,0,0,0.1);border-radius:2px;box-sizing:border-box;overflow:hidden;position:relative;width:100%;background:#F4F4F4"><p style="padding:0;margin:0"><iframe src="https://padlet.com/embed/lup9um2r33899yju" frameborder="0" allow="camera;microphone;geolocation" style="width:100%;height:608px;display:block;padding:0;margin:0"></iframe></p><div style="display:flex;align-items:center;justify-content:end;margin:0;height:28px"><a href="https://padlet.com?ref=embed" style="display:block;flex-grow:0;margin:0;border:none;padding:0;text-decoration:none" target="_blank"><div style="display:flex;align-items:center;"><img src="https://padlet.net/embeds/made_with_padlet_2022.png" width="114" height="28" style="padding:0;margin:0;background:0 0;border:none;box-shadow:none" alt="Made with Padlet"></div></a></div></div>
 </div>
 <div id="letter" class="tabcontent">
-	<h1>This is letters</h1>
+	<button type="button" class="btn btn-primary" onclick="toggleLeaveRequestForm()">Tạo đơn xin nghỉ phép</button>
+	<div id="leaveRequestFormContainer" style="display:none; margin-top: 20px;">
+		<form id="leaveRequestForm">
+			<input type="hidden" name="Id" value="0" />
+
+			<div class="form-group" hidden>
+				<label for="ClassId">Class ID:</label>
+				<input type="text" class="form-control" id="ClassId" name="ClassId" value="@Model.ClassRoom.Id" readonly hidden/>
+			</div>
+
+			<div class="form-group">
+				<label for="StudenName">Họ và tên:</label>
+				<input type="text" class="form-control" id="StudenName" name="Name" value="@user.Name"/>
+				<input type="hidden" class="form-control" id="UserID" name="UserID" value="@user.Id" hidden/>
+			</div>
+
+			<div class="form-group">
+				<label for="StartDate">Ngày bắt đầu:</label>
+				<input type="date" class="form-control" id="StartDate" name="StartDate" />
+			</div>
+
+			<div class="form-group">
+				<label for="EndDate">Ngày kết thúc:</label>
+				<input type="date" class="form-control" id="EndDate" name="EndDate" />
+			</div>
+
+			<div class="form-group">
+				<label for="Reason">Lý do:</label>
+				<textarea class="form-control" id="Reason" name="Reason" rows="4"></textarea>
+			</div>
+
+			<button type="submit" class="btn btn-primary" onclick="submitLeaveRequest(event)">Gửi yêu cầu</button>
+		</form>
+	</div>
+
+	<div class="container ctnleaveForm">
+		<div id="leaveRequestsList" class="row">
+			<!-- Cards will be dynamically added here -->
+		</div>
+	</div>
+
+
+
 </div>
+
 <div id="setting" class="tabcontent">
 	<h1>This is setting class</h1>
 </div>
@@ -1737,4 +1820,247 @@
 		recognition.start(); // Bắt đầu nhận dạng giọng nói từ microphone
 	}
 </script>@*Voice to text*@
+<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+<script>
+	function toggleLeaveRequestForm() {
+		const formContainer = document.getElementById('leaveRequestFormContainer');
+		if (formContainer.style.display === 'none' || formContainer.style.display === '') {
+			formContainer.style.display = 'block'; // Show the form
+		} else {
+			formContainer.style.display = 'none';  // Hide the form
+		}
+	}
+
+// Hàm để gán giá trị mặc định cho ngày bắt đầu và ngày kết thúc
+    function setDefaultDates() {
+        const today = new Date();
+        const tomorrow = new Date(today);
+        tomorrow.setDate(today.getDate() + 1); // Cộng thêm 1 ngày để lấy ngày mai
+
+        // Định dạng ngày theo chuẩn yyyy-mm-dd
+        const todayStr = today.toISOString().split('T')[0];
+        const tomorrowStr = tomorrow.toISOString().split('T')[0];
+
+        document.getElementById("StartDate").value = todayStr; // Đặt giá trị mặc định cho ngày bắt đầu
+        document.getElementById("StartDate").setAttribute("min", todayStr); // Chặn các ngày trước hôm nay
+
+        document.getElementById("EndDate").value = tomorrowStr; // Đặt giá trị mặc định cho ngày kết thúc (ngày mai)
+        document.getElementById("EndDate").setAttribute("min", todayStr); // Chặn các ngày trước hôm nay
+    }
+
+    // Gọi hàm này khi trang được load để thiết lập giá trị mặc định ban đầu
+    document.addEventListener("DOMContentLoaded", function() {
+        setDefaultDates(); // Gán giá trị mặc định
+    });
+
+    // Đoạn mã để reset form và giữ lại ngày mặc định
+    $('#leaveRequestForm').on('reset', function() {
+        setTimeout(function() {
+            setDefaultDates(); // Gán lại giá trị mặc định sau khi form được reset
+        }, 0); // Đợi form reset xong, rồi mới gán lại giá trị
+    });
+
+function submitLeaveRequest(event) {
+    event.preventDefault();
+
+    // Create FormData object
+    const formData = new FormData();
+
+    // Get form values and append to FormData
+    formData.append('ClassRoomId', document.getElementById('ClassId').value);
+    formData.append('UserID', document.getElementById('UserID').value);
+    formData.append('StartDate', document.getElementById('StartDate').value);
+    formData.append('EndDate', document.getElementById('EndDate').value);
+    formData.append('Reasion', document.getElementById('Reason').value);
+
+    const token = document.querySelector('input[name="__RequestVerificationToken"]').value;
+
+    // Use Axios to send a POST request with FormData
+    axios.post('/LeaveRequests/Create', formData, {
+        headers: {
+            'RequestVerificationToken': token,
+            'Content-Type': 'multipart/form-data' // Important for sending FormData
+        }
+    })
+    .then(function (response) {
+        if (response.data.success) {
+            alert(response.data.message);
+			$('#leaveRequestForm')[0].reset();
+			toggleLeaveRequestForm(); // Hide the form on success
+			getAllLeaveRequests();
+        }
+    })
+    .catch(function (error) {
+        if (error.response && error.response.status === 400) {
+            alert('Validation errors: ' + error.response.data.errors.join(', '));
+        } else {
+            alert('An error occurred: ' + error.message);
+        }
+    });
+}
+
+	function getAllLeaveRequests() {
+		const classId = document.getElementById('ClassId').value;
+		const userId = document.getElementById('UserID').value;
+		const isOwner = '@Model.isOwner';
+		let params = { classId: classId, userId: userId, isOwner: isOwner }
+		axios.get('/LeaveRequests/GetAllLeaveRequestByUserId', { params })
+			.then(function (response) {
+				const leaveRequests = response.data;
+				const leaveRequestsContainer = document.getElementById('leaveRequestsList');
+				leaveRequestsContainer.innerHTML = ''; // Clear previous data
+
+				leaveRequests.forEach(request => {
+					// Create a column wrapper for the card
+					const col = document.createElement('div');
+					col.classList.add('col-md-3', 'col-sm-6', 'mb-3'); // 4 cards per row on medium+ and 2 on small screens
+
+					// Create the card and append it to the column
+					const card = createLeaveRequestCard(request);
+					col.appendChild(card);
+
+					// Append the column (with the card) to the row container
+					leaveRequestsContainer.appendChild(col);
+				});
+			})
+			.catch(function (error) {
+				console.error('An error occurred while fetching leave requests:', error);
+			});
+	}
+
+	function createLeaveRequestCard(request) {
+		const card = document.createElement('div');
+		card.classList.add('card', 'h-100', 'position-relative'); // Ensure cards are equal height
+
+		// Set the background color based on status
+		if (request.status === 0) {
+			card.style.backgroundColor = 'yellow'; // Background color for status 0
+		} else if (request.status === 1) {
+			card.style.backgroundColor = 'lightgreen'; // Background color for status 1
+		} else if (request.status === -1) {
+			card.style.backgroundColor = 'lightcoral'; // Background color for status -1
+		}
+
+		// Create a delete button
+		const deleteButton = document.createElement('button');
+		deleteButton.innerHTML = '&times;'; // This is the "X" character
+		deleteButton.classList.add('delete-btn'); // Button styling and positioning
+		deleteButton.onclick = function () {
+			deleteLeaveRequest(request.id); // Pass the leave request ID to delete function
+		};
+
+		const cardBody = document.createElement('div');
+		cardBody.classList.add('card-body');
+		let statusMessage;
+		switch (request.status) {
+			case 0:
+				statusMessage = 'Đang chờ duyệt'; // Status 0
+				break;
+			case 1:
+				statusMessage = 'Đã duyệt'; // Status 1
+				break;
+			case -1:
+				statusMessage = 'Đã từ chối'; // Status -1
+				break;
+			default:
+				statusMessage = 'Trạng thái không xác định'; // Fallback for undefined status
+		}
+		const isOwner = @Model.isOwner.ToString().ToLower(); // Chuyển đổi thành true/false
+		const userId = @Html.Raw(Json.Serialize(Model.Owner.Id));
+
+		if (isOwner)
+		{
+			cardBody.innerHTML = `
+				<h5 class="card-title">Lý do: ${request.reasion}</h5>
+				<p class="card-text">
+					<strong>Họ và tên:</strong> ${request.name}<br/>
+					<strong>Ngày bắt đầu:</strong> ${new Date(request.startDate).toLocaleDateString()}<br/>
+					<strong>Ngày kết thúc:</strong> ${new Date(request.endDate).toLocaleDateString()}<br/>
+					<strong>Trạng thái:</strong> ${statusMessage}<br/>
+				</p>`;
+			if (request.status === 0 && request.userID.trim() !== userId) {
+
+
+				// Tạo button Duyệt
+				const approveButton = document.createElement('button');
+				approveButton.textContent = 'Duyệt';
+				approveButton.classList.add('btn', 'btn-success', 'mr-2');
+				approveButton.onclick = function () {
+					updateLeaveRequestStatus(request.id, 1); // 1 cho "Đã duyệt"
+				};
+
+				// Tạo button Từ chối
+				const rejectButton = document.createElement('button');
+				rejectButton.textContent = 'Từ chối';
+				rejectButton.classList.add('btn', 'btn-danger');
+				rejectButton.onclick = function () {
+					updateLeaveRequestStatus(request.id, -1); // -1 cho "Đã từ chối"
+				};
+
+				// Thêm các nút vào card body
+				cardBody.appendChild(approveButton);
+				cardBody.appendChild(rejectButton);
+			}
+		}
+		else {
+			cardBody.innerHTML = `
+						<h5 class="card-title">Lý do: ${request.reasion}</h5>
+						<p class="card-text">
+							<strong>Ngày bắt đầu:</strong> ${new Date(request.startDate).toLocaleDateString()}<br/>
+							<strong>Ngày kết thúc:</strong> ${new Date(request.endDate).toLocaleDateString()}<br/>
+							<strong>Trạng thái:</strong> ${statusMessage}<br/>
+						</p>`;
+		}
+	
+
+		card.appendChild(deleteButton);
+		card.appendChild(cardBody);
+		return card;
+	}
+
+	function updateLeaveRequestStatus(requestId, status) {
+		axios.put('/LeaveRequests/UpdateStatus', { leaveRequestId: requestId, status: status })
+			.then(response => {
+				if (response.data.success) {
+					console.log('Cập nhật trạng thái thành công!');
+					// Cập nhật lại danh sách yêu cầu nghỉ phép nếu cần
+					getAllLeaveRequests();
+				} else {
+					console.error('Có lỗi xảy ra:', response.data.errors);
+				}
+			})
+			.catch(error => {
+				if (error.response) {
+					console.error('Có lỗi xảy ra khi gọi API:', error.response.data);
+				} else {
+					console.error('Có lỗi xảy ra:', error);
+				}
+			});
+	}
+
+
+
+	document.addEventListener('DOMContentLoaded', function () {
+		getAllLeaveRequests(); // Call function when the page loads
+	});
+
+	function deleteLeaveRequest(id) {
+		// Show a confirmation dialog before deleting
+		const confirmation = confirm("Bạn có chắc chắn muốn xoá yêu cầu nghỉ phép này?");
+		if (confirmation) {
+			// Make an axios call to delete the leave request
+			axios.delete(`/LeaveRequests/Delete/${id}`)
+				.then(function (response) {
+					// Refresh the leave requests list
+					getAllLeaveRequests();
+				})
+				.catch(function (error) {
+					console.error('An error occurred while deleting the leave request:', error);
+				});
+		}
+	}
+
+
+</script> @* Gửi đơn xin nghỉ phép*@
+
 
