@@ -1480,6 +1480,33 @@
 	});
 
 </script> @* G?i tin nh?n *@
+<script>
+	// Sự kiện khi trang được kích hoạt lại (quay lại tab)
+	document.addEventListener('visibilitychange', function () {
+		if (document.visibilityState === 'visible') {
+			console.log("Trang đã được kích hoạt lại.");
+			// Thực hiện cập nhật giao diện nếu cần thiết
+		}
+	});
+
+	// Sự kiện khi cửa sổ lấy lại sự tập trung
+	window.addEventListener('focus', function () {
+		console.log("Trang đã được lấy lại sự tập trung.");
+		// Cập nhật lại giao diện nếu cần
+	});
+	window.addEventListener('focus', function () {
+		console.log("Trang đã được lấy lại sự tập trung.");
+		var messagesList = document.getElementById("messagesList");
+		if (messagesList) {
+			// Buộc cập nhật lại danh sách tin nhắn
+			messagesList.style.display = 'none';
+			setTimeout(function () {
+				messagesList.style.display = 'block';
+			}, 10);
+		}
+	});
+
+</script>
 <
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 <script>
