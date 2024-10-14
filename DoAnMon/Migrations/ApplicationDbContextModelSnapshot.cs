@@ -375,6 +375,9 @@ namespace DoAnMon.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(450)");
 
+                    b.Property<string>("FilePath")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("Noidung")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");

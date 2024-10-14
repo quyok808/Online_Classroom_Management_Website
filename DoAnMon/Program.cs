@@ -29,6 +29,11 @@ builder.Services.Configure<FormOptions>(options =>
 {
     options.MultipartBodyLengthLimit = long.MaxValue; // 1GB
 });
+builder.WebHost.ConfigureKestrel(serverOptions =>
+{
+	serverOptions.Limits.MaxRequestBodySize = 1000 * 1024 * 1024; // 50MB (có thể điều chỉnh tùy nhu cầu)
+});
+
 builder.Services.AddControllersWithViews();
 
 builder.Services.AddSingleton<ClassroomViewModel>();
