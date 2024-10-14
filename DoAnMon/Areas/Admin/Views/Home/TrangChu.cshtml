@@ -12,11 +12,6 @@
     var countDeny = Model.Where(p => p.Status == -1).Count();
     // Prepare the chart data from ViewBag
     var chartData = ViewData["LeaveCounts"] as List<leaveRequestViewModel>;
-    if (chartData == null || !chartData.Any())
-    {
-        <p>Không có dữ liệu để hiển thị biểu đồ.</p>
-        return; // Exit if there's no data
-    }
     var labels = chartData.Select(c => c.TeacherName).ToList();
     var counts = chartData.Select(c => c.Count).ToList();
 }

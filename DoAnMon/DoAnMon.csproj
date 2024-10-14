@@ -8,9 +8,13 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Areas\Admin\Data\**" />
     <Compile Remove="wwwroot\BAIGIANG\**" />
+    <Content Remove="Areas\Admin\Data\**" />
     <Content Remove="wwwroot\BAIGIANG\**" />
+    <EmbeddedResource Remove="Areas\Admin\Data\**" />
     <EmbeddedResource Remove="wwwroot\BAIGIANG\**" />
+    <None Remove="Areas\Admin\Data\**" />
     <None Remove="wwwroot\BAIGIANG\**" />
   </ItemGroup>
 
@@ -28,10 +32,6 @@
     </PackageReference>
     <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="8.0.6" />
     <PackageReference Include="ZXing.Net" Version="0.16.9" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="Areas\Admin\Data\" />
   </ItemGroup>
 
 </Project>
