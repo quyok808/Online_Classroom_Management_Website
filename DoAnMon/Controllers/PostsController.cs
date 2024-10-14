@@ -151,31 +151,32 @@ namespace DoAnMon.Controllers
                         throw;
                     }
                 }
-                return RedirectToAction(nameof(Index));
+                return RedirectToAction("Details", "ClassRooms", new { id = post.ClassRoomId });
             }
             return View(post);
         }
 
-        // GET: Posts/Delete/5
-        public async Task<IActionResult> Delete(string id)
-        {
-            if (id == null)
-            {
-                return NotFound();
-            }
 
-            var post = await _context.posts
-                .FirstOrDefaultAsync(m => m.Id == id);
-            if (post == null)
-            {
-                return NotFound();
-            }
+		// GET: Posts/Delete/5
+		public IActionResult Delete(string id, string classId)
+		{
+			if (id == null)
+			{
+				return NotFound();
+			}
 
-            return View(post);
-        }
+			var post = _context.posts.FirstOrDefault(m => m.Id == id);
+			if (post == null)
+			{
+				return NotFound();
+			}
+			_context.posts.Remove(post);
+			_context.SaveChanges();
+			return RedirectToAction("Details", "ClassRooms", new { id = classId });
+		}
 
-        // POST: Posts/Delete/5
-        [HttpPost, ActionName("Delete")]
+		// POST: Posts/Delete/5
+		[HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(string id)
         {
@@ -189,9 +190,12 @@ namespace DoAnMon.Controllers
             return RedirectToAction(nameof(Index));
         }
 
-        private bool PostExists(string id)
+
+		private bool PostExists(string id)
         {
             return _context.posts.Any(e => e.Id == id);
         }
+
+
     }
 }

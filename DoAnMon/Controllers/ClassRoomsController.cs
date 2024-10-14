@@ -1192,6 +1192,7 @@ namespace DoAnMon.Controllers
 			TinhDTB(classId);
 			return RedirectToAction("Details", "ClassRooms", new { id = classId });
 		}
+		
 
 		[HttpPost]
 		public async Task<IActionResult> DiemDanhIn(string classId)
