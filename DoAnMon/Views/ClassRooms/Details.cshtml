@@ -707,28 +707,6 @@
 		if (Model.isOwner)
 		{
 								<div>
-								@*
-				<button onclick="showUploadForm()"
-						style="
-					background-color: #3498db;
-					font-family: Poppins, sans-serif;
-					color: #ffffff;
-					padding: 10px 20px;
-					border: none;
-					border-radius: 5px;
-					cursor: pointer;
-					transition: background-color 0.3s;
-					font-size: 15px;
-					font-weight: bold;">
-					Upload bài giảng mới
-				</button>
-
-				<form id="uploadForm" style="display: none;">
-					<input type="hidden" name="lectureName" id="lectureNameInput">
-					<input type="hidden" name="ClassId" id="classIdInput" value="@Model.ClassRoom.Id">
-					<input type="file" name="pdfFile" id="pdfFileInput" accept=".pdf" style="display: none;">
-				</form>
-				*@
 									<button id="browseBaiGiang">Chọn File BAIGIANG</button>
 									<div id="progressBar"></div>
 								</div>
@@ -823,7 +801,7 @@
 					@{
 						if (assignment.Deadline.HasValue)
 						{
-																	<p class="assignment-description">H?n n?p: @assignment.Deadline</p>
+							<p class="assignment-description">Hạn nộp: @assignment.Deadline</p>
 						}
 						else
 						{
@@ -856,7 +834,7 @@
 						@{
 							if (!Model.isOwner)
 							{
-																		<label for="file-upload" class="file-label" style="white-space: nowrap;">Bài tập của bạn</label>
+																		<label for="file-upload" class="file-label1" style="white-space: nowrap;">Bài tập của bạn</label>
 																		<div class="file-input-wrapper">
 																			@{
 										if (hasSubmitted)
@@ -883,7 +861,7 @@
 												{
 													// X? lý khi deadline chua qua
 													// Ví d?: cho phép ngu?i dùng n?p bài t?p
-																																	<p>Thi?u</p>
+																																	<p>Thiếu</p>
 																																	<input id="FileInput_@assignment.Id" type="file" name="FileNopbai">
 																																	<input type="hidden" name="ClassId" id="classIdInput" value="@Model.ClassRoom.Id">
 																																	<input type="hidden" name="BaitapId" id="baitapinput" value="@assignment.Id">
@@ -1050,7 +1028,7 @@
 
 			<div class="form-group">
 				<label for="StudenName">Họ và tên:</label>
-				<input type="text" class="form-control" id="StudenName" name="Name" value="@user.Name"/>
+				<input type="text" class="form-control" id="StudenName" name="Name" value="@user.Name" readonly/>
 				<input type="hidden" class="form-control" id="UserID" name="UserID" value="@user.Id" hidden/>
 			</div>
 
@@ -1173,7 +1151,7 @@
 				form.submit(); // G?i form di
 			} else {
 				// N?u không dúng d?nh d?ng, hi?n th? thông báo l?i
-				alert("Ð?nh d?ng file không dúng. Vui lòng ch?n file có d?nh d?ng " + requiredFormat);
+				alert("Định dạng file không đúng. Vui lòng chọn file có định dạng " + requiredFormat);
 			}
 		}
 	}
@@ -1590,7 +1568,6 @@
 	});
 
 </script>
-<
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 <script>
 	function getListStudents() {
@@ -1941,14 +1918,6 @@ function submitLeaveRequest(event) {
 			card.style.backgroundColor = 'lightcoral'; // Background color for status -1
 		}
 
-		// Create a delete button
-		const deleteButton = document.createElement('button');
-		deleteButton.innerHTML = '&times;'; // This is the "X" character
-		deleteButton.classList.add('delete-btn'); // Button styling and positioning
-		deleteButton.onclick = function () {
-			deleteLeaveRequest(request.id); // Pass the leave request ID to delete function
-		};
-
 		const cardBody = document.createElement('div');
 		cardBody.classList.add('card-body');
 		let statusMessage;
@@ -1980,7 +1949,6 @@ function submitLeaveRequest(event) {
 				</p>`;
 			if (request.status === 0 && request.userID.trim() !== userId) {
 
-
 				// Tạo button Duyệt
 				const approveButton = document.createElement('button');
 				approveButton.textContent = 'Duyệt';
@@ -1996,10 +1964,17 @@ function submitLeaveRequest(event) {
 				rejectButton.onclick = function () {
 					updateLeaveRequestStatus(request.id, -1); // -1 cho "Đã từ chối"
 				};
-
+				// Create a delete button
+				const deleteButton = document.createElement('button');
+				deleteButton.innerHTML = '&times;'; // This is the "X" character
+				deleteButton.classList.add('delete-btn'); // Button styling and positioning
+				deleteButton.onclick = function () {
+					deleteLeaveRequest(request.id); // Pass the leave request ID to delete function
+				};
 				// Thêm các nút vào card body
 				cardBody.appendChild(approveButton);
 				cardBody.appendChild(rejectButton);
+				card.appendChild(deleteButton);
 			}
 		}
 		else {
@@ -2013,7 +1988,7 @@ function submitLeaveRequest(event) {
 		}
 	
 
-		card.appendChild(deleteButton);
+		
 		card.appendChild(cardBody);
 		return card;
 	}
