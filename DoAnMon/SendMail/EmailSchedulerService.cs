@@ -37,19 +37,21 @@ public class EmailSchedulerService : IHostedService, IDisposable
         using (var scope = _serviceProvider.CreateScope())
         {
             var mail = scope.ServiceProvider.GetRequiredService<Mail>();
-            var context = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>(); // Lấy ApplicationDbContext từ scope
+            var context = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
 
             var classes = await GetClassesWithUpcomingSessionsAsync(context);
 
             foreach (var classRoom in classes)
             {
                 var startTime = classRoom.StartDate.Add(classRoom.StartTime);
-                if (startTime <= DateTime.Now.AddMinutes(30) && startTime >= DateTime.Now)
+                var timeUntilClass = startTime - DateTime.Now;
+
+                // Kiểm tra xem thời gian còn lại có trong khoảng từ 29 đến 30 phút
+                if (timeUntilClass.TotalMinutes <= 30 && timeUntilClass.TotalMinutes > 29)
                 {
                     var subject = $"Nhắc nhở: Lớp học {classRoom.Name} sắp diễn ra!";
                     var body = $"Chào bạn,<br><br>Xin nhắc nhở rằng lớp học {classRoom.Name} sẽ diễn ra vào {startTime}.<br><br>Chúc bạn học tốt!";
 
-                    // Lấy danh sách sinh viên từ ClassroomDetail với context
                     var students = await GetStudentsInClassAsync(classRoom.Id, context);
 
                     foreach (var student in students)
@@ -63,6 +65,7 @@ public class EmailSchedulerService : IHostedService, IDisposable
             }
         }
     }
+
 
     private async Task<List<CustomUser>> GetStudentsInClassAsync(string classRoomId, ApplicationDbContext context)
     {
