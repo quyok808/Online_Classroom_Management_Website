@@ -120,11 +120,37 @@ namespace DoAnMon.Controllers
             }
             return View(post);
         }
+		[HttpPost]
+		public IActionResult Editpost(string id, [Bind("Id,Content,Title,CreateTime,ClassId")] Post post)
+		{
+			if (ModelState.IsValid)
+			{
+				// Tìm bài viết trong cơ sở dữ liệu theo Id
+				var existingPost = _context.posts.Find(post.Id);
 
-        // POST: Posts/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
-        [HttpPost]
+				if (existingPost != null)
+				{
+					// Cập nhật tiêu đề và nội dung bài viết
+					existingPost.Title = post.Title;
+					existingPost.Content = post.Content;
+
+
+					// Lưu thay đổi vào cơ sở dữ liệu
+					_context.SaveChanges();
+
+					// Chuyển hướng về trang chi tiết của lớp học
+					return RedirectToAction("Details", "ClassRooms", new { id = existingPost.ClassRoomId });
+				}
+			}
+
+			// Nếu dữ liệu không hợp lệ, hiển thị lại form chỉnh sửa
+			return View(post);
+		}
+
+		// POST: Posts/Edit/5
+		// To protect from overposting attacks, enable the specific properties you want to bind to.
+		// For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
+		[HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(string id, [Bind("Id,Content,Title,CreateTime,ClassRoomId")] Post post)
         {
@@ -174,6 +200,8 @@ namespace DoAnMon.Controllers
 			_context.SaveChanges();
 			return RedirectToAction("Details", "ClassRooms", new { id = classId });
 		}
+		
+
 
 		// POST: Posts/Delete/5
 		[HttpPost, ActionName("Delete")]

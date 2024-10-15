@@ -230,7 +230,6 @@ namespace DoAnMon.Controllers
 			return View(viewModel);
 		}
 
-
 		// GET: ClassRooms/Create
 		public async Task<IActionResult> Create()
 		{
