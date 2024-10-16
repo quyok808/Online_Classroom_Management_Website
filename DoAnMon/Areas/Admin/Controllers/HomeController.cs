@@ -1,6 +1,7 @@
 ﻿using DoAnMon.Areas.Admin.Models;
 using DoAnMon.Data;
 using DoAnMon.IdentityCudtomUser;
+using DoAnMon.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -25,10 +26,30 @@ namespace DoAnMon.Areas.Admin.Controllers
 
 		public IActionResult TrangChu()
 		{
-			return View();
-		}
+            // Get the list of UserIds from classRooms
+            var listUser = _context.classRooms.Select(p => p.UserId).ToList();
 
-        
+            // Get leave requests where UserID is in the list of UserIds
+            List<LeaveRequest> leaveRequests = _context.leaveRequest
+                .Where(p => listUser.Contains(p.UserID)) // Corrected this line
+                .ToList();
+
+            // Prepare data for the chart: count leave requests per UserID
+            var leaveCounts = leaveRequests.GroupBy(l => l.UserID)
+				.Select(g => new leaveRequestViewModel
+				{
+					TeacherName = _context.Users.FirstOrDefault(u => u.Id == g.Key)?.Name ?? "Unknown", // Fetching Teacher Name
+					Count = g.Count()
+				})
+				.ToList();
+            ViewData["LeaveCounts"] = leaveCounts;
+
+            // Pass the leaveRequests to the view
+            return View(leaveRequests);
+
+        }
+
+
         public async Task<IActionResult> PhanQuyen()
 		{
 			var users = await _userManager.Users.ToListAsync();

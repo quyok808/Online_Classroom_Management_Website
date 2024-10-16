@@ -18,24 +18,29 @@ namespace DoAnMon.SignalR
 			_context = context;
 		}
 
-		public async Task SendMessage(string user, string message, string time, string ClassID)
+		public async Task SendMessage(string user, string message, string time, string classID, string? fileUrl = null)
 		{
-
-			await Clients.All.SendAsync("ReceiveMessage", user, message);
-
-			await SaveMessageToDatabase(ClassID, message, time);
-
+			if (!string.IsNullOrEmpty(message) || !string.IsNullOrEmpty(fileUrl))
+			{
+				var content = string.IsNullOrEmpty(message) ? "Đã gửi một file." : message;
+				await SaveMessageToDatabase(classID, content, time, fileUrl);
+				await Clients.All.SendAsync("ReceiveMessage", user, content, fileUrl);
+			}
 		}
 
-		private async Task SaveMessageToDatabase(string ClassID, string message, string time)
+		private async Task SaveMessageToDatabase(string classID, string message, string time, string? filePath)
 		{
 			var user = Context.User;
 			var currentUserId = user.FindFirst(ClaimTypes.NameIdentifier)?.Value;
-			var newMessage = new Message();
-			newMessage.UserId = currentUserId;
-			newMessage.Noidung = message;
-			newMessage.Time = time;
-			newMessage.ClassRoomId = ClassID;
+
+			var newMessage = new Message
+			{
+				UserId = currentUserId,
+				Noidung = message,
+				Time = time,
+				ClassRoomId = classID,
+				FilePath = filePath
+			};
 
 			_context.Messages.Add(newMessage);
 			await _context.SaveChangesAsync();

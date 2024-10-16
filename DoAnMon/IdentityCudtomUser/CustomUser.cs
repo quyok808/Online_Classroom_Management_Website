@@ -11,5 +11,6 @@ namespace DoAnMon.IdentityCudtomUser
         public string? UrlAvt { get; set; }
 
         public ICollection<ClassroomDetail> ClassroomDetails { get; set; }
+        public ICollection<LeaveRequest> leaveRequests { get; set; }
     }
 }
