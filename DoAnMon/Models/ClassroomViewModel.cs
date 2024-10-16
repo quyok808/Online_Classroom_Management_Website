@@ -12,11 +12,13 @@ namespace DoAnMon.Models
 			public List<BaiGiang>? Unit { get; set; }
 
 			public List<BaiTap>? Homework { get; set; }
+			public List<Post>? Post { get; set; }
 			public bool isOwner { get; set; }
 
 			public List<Message>? Message { get; set; }
 
 			public List<ClassDate>? ClassDates { get; set; }
+			
 		}
 
 	}

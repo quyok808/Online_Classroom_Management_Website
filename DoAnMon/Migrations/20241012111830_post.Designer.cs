@@ -4,6 +4,7 @@ using DoAnMon.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,14 +12,15 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DoAnMon.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20241012111830_post")]
+    partial class post
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "8.0.10")
-
+                .HasAnnotation("ProductVersion", "8.0.4")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
@@ -172,9 +174,6 @@ namespace DoAnMon.Migrations
 
                     b.Property<string>("Content")
                         .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("datetime2");
 
                     b.Property<DateTime?>("Deadline")
                         .HasColumnType("datetime2");
@@ -337,41 +336,6 @@ namespace DoAnMon.Migrations
                     b.ToTable("diemDanh");
                 });
 
-            modelBuilder.Entity("DoAnMon.Models.LeaveRequest", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<string>("ClassRoomId")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<DateTime>("EndDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("Reasion")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime>("StartDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<int>("Status")
-                        .HasColumnType("int");
-
-                    b.Property<string>("UserID")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("ClassRoomId");
-
-                    b.HasIndex("UserID");
-
-                    b.ToTable("leaveRequest");
-                });
-
             modelBuilder.Entity("DoAnMon.Models.Message", b =>
                 {
                     b.Property<int>("Id")
@@ -383,9 +347,6 @@ namespace DoAnMon.Migrations
                     b.Property<string>("ClassRoomId")
                         .IsRequired()
                         .HasColumnType("nvarchar(450)");
-
-                    b.Property<string>("FilePath")
-                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Noidung")
                         .IsRequired()
@@ -663,21 +624,6 @@ namespace DoAnMon.Migrations
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("DoAnMon.Models.LeaveRequest", b =>
-                {
-                    b.HasOne("DoAnMon.Models.ClassRoom", "ClassRoom")
-                        .WithMany("leaveRequests")
-                        .HasForeignKey("ClassRoomId");
-
-                    b.HasOne("DoAnMon.IdentityCudtomUser.CustomUser", "User")
-                        .WithMany("leaveRequests")
-                        .HasForeignKey("UserID");
-
-                    b.Navigation("ClassRoom");
-
-                    b.Navigation("User");
-                });
-
             modelBuilder.Entity("DoAnMon.Models.Message", b =>
                 {
                     b.HasOne("DoAnMon.Models.ClassRoom", "ClassRoom")
@@ -751,8 +697,6 @@ namespace DoAnMon.Migrations
             modelBuilder.Entity("DoAnMon.IdentityCudtomUser.CustomUser", b =>
                 {
                     b.Navigation("ClassroomDetails");
-
-                    b.Navigation("leaveRequests");
                 });
 
             modelBuilder.Entity("DoAnMon.Models.BaiNop", b =>
@@ -770,8 +714,6 @@ namespace DoAnMon.Migrations
                     b.Navigation("BaiGiangs");
 
                     b.Navigation("ClassroomDetails");
-
-                    b.Navigation("leaveRequests");
                 });
 
             modelBuilder.Entity("DoAnMon.Models.Post", b =>
