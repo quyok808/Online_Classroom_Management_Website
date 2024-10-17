@@ -10,6 +10,7 @@ namespace DoAnMon.Models
 		public string? attractUrl { get; set; }
 		public string FileFormat { get; set; }
 		public bool HasSubmittedFile { get; set; }
+		public DateTime CreatedAt { get; set; }
 		public string? ClassRoomId { get; set; }
 		
 		public DateTime? Deadline { get; set; }

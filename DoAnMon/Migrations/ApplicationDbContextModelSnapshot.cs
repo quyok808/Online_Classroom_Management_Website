@@ -17,7 +17,8 @@ namespace DoAnMon.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "8.0.4")
+                .HasAnnotation("ProductVersion", "8.0.10")
+
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
@@ -172,6 +173,9 @@ namespace DoAnMon.Migrations
                     b.Property<string>("Content")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
                     b.Property<DateTime?>("Deadline")
                         .HasColumnType("datetime2");
 
@@ -248,6 +252,9 @@ namespace DoAnMon.Migrations
                     b.Property<string>("Name")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("PostId")
+                        .HasColumnType("nvarchar(450)");
+
                     b.Property<string>("RoomOnline")
                         .HasColumnType("nvarchar(max)");
 
@@ -271,6 +278,8 @@ namespace DoAnMon.Migrations
                     b.HasIndex("BaiNopIdBaiNop");
 
                     b.HasIndex("BaiTapId");
+
+                    b.HasIndex("PostId");
 
                     b.HasIndex("UserId");
 
@@ -328,6 +337,41 @@ namespace DoAnMon.Migrations
                     b.ToTable("diemDanh");
                 });
 
+            modelBuilder.Entity("DoAnMon.Models.LeaveRequest", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("ClassRoomId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<DateTime>("EndDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Reasion")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("StartDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("Status")
+                        .HasColumnType("int");
+
+                    b.Property<string>("UserID")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ClassRoomId");
+
+                    b.HasIndex("UserID");
+
+                    b.ToTable("leaveRequest");
+                });
+
             modelBuilder.Entity("DoAnMon.Models.Message", b =>
                 {
                     b.Property<int>("Id")
@@ -339,6 +383,9 @@ namespace DoAnMon.Migrations
                     b.Property<string>("ClassRoomId")
                         .IsRequired()
                         .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("FilePath")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Noidung")
                         .IsRequired()
@@ -359,6 +406,28 @@ namespace DoAnMon.Migrations
                     b.HasIndex("UserId");
 
                     b.ToTable("Messages");
+                });
+
+            modelBuilder.Entity("DoAnMon.Models.Post", b =>
+                {
+                    b.Property<string>("Id")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("ClassRoomId")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Content")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("CreateTime")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Title")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("posts");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
@@ -549,6 +618,10 @@ namespace DoAnMon.Migrations
                         .WithMany("ClassRooms")
                         .HasForeignKey("BaiTapId");
 
+                    b.HasOne("DoAnMon.Models.Post", null)
+                        .WithMany("ClassRooms")
+                        .HasForeignKey("PostId");
+
                     b.HasOne("DoAnMon.IdentityCudtomUser.CustomUser", "User")
                         .WithMany()
                         .HasForeignKey("UserId");
@@ -584,6 +657,21 @@ namespace DoAnMon.Migrations
                     b.HasOne("DoAnMon.IdentityCudtomUser.CustomUser", "User")
                         .WithMany()
                         .HasForeignKey("UserId");
+
+                    b.Navigation("ClassRoom");
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("DoAnMon.Models.LeaveRequest", b =>
+                {
+                    b.HasOne("DoAnMon.Models.ClassRoom", "ClassRoom")
+                        .WithMany("leaveRequests")
+                        .HasForeignKey("ClassRoomId");
+
+                    b.HasOne("DoAnMon.IdentityCudtomUser.CustomUser", "User")
+                        .WithMany("leaveRequests")
+                        .HasForeignKey("UserID");
 
                     b.Navigation("ClassRoom");
 
@@ -663,6 +751,8 @@ namespace DoAnMon.Migrations
             modelBuilder.Entity("DoAnMon.IdentityCudtomUser.CustomUser", b =>
                 {
                     b.Navigation("ClassroomDetails");
+
+                    b.Navigation("leaveRequests");
                 });
 
             modelBuilder.Entity("DoAnMon.Models.BaiNop", b =>
@@ -680,6 +770,13 @@ namespace DoAnMon.Migrations
                     b.Navigation("BaiGiangs");
 
                     b.Navigation("ClassroomDetails");
+
+                    b.Navigation("leaveRequests");
+                });
+
+            modelBuilder.Entity("DoAnMon.Models.Post", b =>
+                {
+                    b.Navigation("ClassRooms");
                 });
 #pragma warning restore 612, 618
         }
