@@ -2289,6 +2289,7 @@ function submitLeaveRequest(event) {
 		}
 		const isOwner = @Model.isOwner.ToString().ToLower(); // Chuyển đổi thành true/false
 		const userId = @Html.Raw(Json.Serialize(Model.Owner.Id));
+		const currentUserId = @Html.Raw(Json.Serialize(user.Id));
 
 		if (isOwner)
 		{
@@ -2300,6 +2301,7 @@ function submitLeaveRequest(event) {
 					<strong>Ngày kết thúc:</strong> ${new Date(request.endDate).toLocaleDateString()}<br/>
 					<strong>Trạng thái:</strong> ${statusMessage}<br/>
 				</p>`;
+			
 			if (request.status === 0 && request.userID.trim() !== userId) {
 
 				// Tạo button Duyệt
@@ -2317,17 +2319,11 @@ function submitLeaveRequest(event) {
 				rejectButton.onclick = function () {
 					updateLeaveRequestStatus(request.id, -1); // -1 cho "Đã từ chối"
 				};
-				// Create a delete button
-				const deleteButton = document.createElement('button');
-				deleteButton.innerHTML = '&times;'; // This is the "X" character
-				deleteButton.classList.add('delete-btn'); // Button styling and positioning
-				deleteButton.onclick = function () {
-					deleteLeaveRequest(request.id); // Pass the leave request ID to delete function
-				};
+				
 				// Thêm các nút vào card body
 				cardBody.appendChild(approveButton);
 				cardBody.appendChild(rejectButton);
-				card.appendChild(deleteButton);
+				
 			}
 		}
 		else {
@@ -2341,7 +2337,17 @@ function submitLeaveRequest(event) {
 		}
 	
 
-		
+		if (request.status === 0 && request.userID.trim() === currentUserId) {
+			// Create a delete button
+			const deleteButton = document.createElement('button');
+			deleteButton.innerHTML = '&times;'; // This is the "X" character
+			deleteButton.classList.add('delete-btn'); // Button styling and positioning
+			deleteButton.onclick = function () {
+				deleteLeaveRequest(request.id); // Pass the leave request ID to delete function
+			};
+
+			card.appendChild(deleteButton);
+		}
 		card.appendChild(cardBody);
 		return card;
 	}
