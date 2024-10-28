@@ -28,6 +28,7 @@ using System.Runtime.ConstrainedExecution;
 using Microsoft.IdentityModel.Tokens;
 using DoAnMon.Migrations;
 using DoAnMon.SendMail;
+using System.Security.Claims;
 namespace DoAnMon.Controllers
 {
 	[Authorize(Roles ="Admin, Teacher, Student")]
@@ -167,7 +168,13 @@ namespace DoAnMon.Controllers
             viewModel.Homework = homework;
 			viewModel.Message = chatHistory;
 			ViewBag.ListRoom = userClasses;
-
+			var userId = User.FindFirstValue(ClaimTypes.NameIdentifier); // Lấy UserId
+			var userposts = await _context.posts
+				.Where(p => p.UserId == userId) // Lọc theo UserId
+				.GroupBy(p => new { p.Title, p.Content })
+				.Select(g => g.First())
+				.ToListAsync();
+			ViewBag.UserPosts = userposts;
 
 			//var listpost = await _context.posts.Where(p => p.ClassRoomId == id).ToListAsync();
 			var listBT = await _context.baiTaps.Where(p => p.ClassRoomId == id).ToListAsync();
@@ -506,7 +513,7 @@ namespace DoAnMon.Controllers
 		}
 
 		[HttpPost]
-		public async Task<IActionResult> CreatePost(string Content, string Title, string ClassId, DateTime CreateTime)
+		public async Task<IActionResult> CreatePost(string Content, string Title, string ClassId, DateTime CreateTime, string UserId)
 		{
 			Post posts = new Post();
 			posts.Id = Guid.NewGuid().ToString();
@@ -514,11 +521,36 @@ namespace DoAnMon.Controllers
 			posts.Content = Content;
 			posts.CreateTime = DateTime.Now;
 			posts.ClassRoomId = ClassId;
+			posts.UserId = UserId;
 			_context.Add(posts);
 			await _context.SaveChangesAsync();
 			return RedirectToAction("Details", "ClassRooms", new { id = ClassId });
 		}
+		[HttpPost]
+		public async Task<IActionResult> ReusePost(string postId, string ClassId, string UserId)
+		{
+			var post = await _context.posts.FindAsync(postId);
+			if (post == null)
+			{
+				return NotFound();
+			}
 
+			// Tạo bài post mới dựa trên bài post đã chọn
+			var newPost = new Post
+			{
+				Id = Guid.NewGuid().ToString(), // Tạo Id mới cho bài post
+				Title = post.Title,
+				Content = post.Content,
+				CreateTime = DateTime.Now, // Thiết lập thời gian tạo
+				ClassRoomId = ClassId, // Thiết lập ID của Classroom
+				UserId = UserId // Lấy UserId từ người dùng hiện tại
+			};
+
+			_context.posts.Add(newPost);
+			await _context.SaveChangesAsync();
+
+			return RedirectToAction("Details", "ClassRooms", new { id = ClassId });
+		}
 		private void TinhDTB(string classId)
 		{
 			// Lấy bản ghi của lớp học

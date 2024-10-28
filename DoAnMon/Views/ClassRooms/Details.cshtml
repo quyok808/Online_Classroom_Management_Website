@@ -1187,9 +1187,43 @@
 						</div>
 					</div>
 					<input type="hidden" name="ClassId" id="classIdInput" value="@Model.ClassRoom.Id" />
+					<input type="hidden" name="UserId" id="UserIdInput" value="@Model.ClassRoom.UserId" />
 				</form>
-			</div>
+				@{
+					if (Model.isOwner)
+					{
+						<div style="background-color: none; color: white; border-radius: 50%; width: 40px; height: 40px; display: flex; align-items: center; justify-content: center; margin-left: auto;">
+							<button onclick="toggleClassSelection()" class="icon">
+								<svg focusable="false" width="24" height="24" viewBox="0 0 24 24" class=" NMm5M">
+									<path d="M19 5H4v6h2V7h13M5 19h15v-6h-2v4H5"></path>
+									<path d="M16.29 10.71l-1.41-1.42L18.17 6l-3.29-3.29 1.41-1.42L21 6zm-8.58 12L3 18l4.71-4.71 1.41 1.42L5.83 18l3.29 3.29z"></path>
+								</svg>
+							</button>
+						</div>
 
+					}
+				}
+			</div>
+			<div id="postContainer" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0, 0, 0, 0.7); z-index: 1000;">
+				<div style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); background-color: #444; color: white; border-radius: 8px; padding: 20px; width: 500px; height: 300px; overflow: auto;">
+					<button onclick="closePostContainer()" style="float: right;margin-left:20px ;margin-bottom:50%;background-color: red; color: white; border: none; cursor: pointer; border-radius: 4px;">
+						<i class="fas fa-times" style="font-size: 20px;"></i> <!-- Biểu tượng dấu X -->
+					</button>
+					@foreach (var post in ViewBag.UserPosts)
+					{
+						<div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+							<span style="text-align: left;">@post.Title</span>
+							<form method="post" asp-action="ReusePost" asp-controller="ClassRooms" style="display: inline;">
+								<input type="hidden" name="postId" value="@post.Id" />
+								<input type="hidden" name="ClassId" id="classIdInput" value="@Model.ClassRoom.Id" />
+								<input type="hidden" name="UserId" id="UserIdInput" value="@Model.ClassRoom.UserId" />
+								<button type="submit" style="color: black;">Sử dụng lại</button>
+							</form>
+						</div>
+					}
+
+				</div>
+			</div>
 		}
 	}	
 	
@@ -1284,6 +1318,7 @@
 								<button type="submit" class="btn btn-success">Lưu</button>
 							</div>
 							<input type="hidden" name="ClassId" id="classIdInput" value="@Model.ClassRoom.Id" />
+							<input type="hidden" name="UserId" id="UserIdInput" value="@Model.ClassRoom.UserId" />
 						</form>
 					</div>
 				}
@@ -1294,7 +1329,20 @@
 </div>
 
 @* ==================================SCRIPT======================================================*@
-
+<script>
+	function toggleClassSelection() {
+		var form = document.getElementById("postContainer");
+		// Kiểm tra trạng thái hiển thị và thay đổi
+		if (form.style.display === "none" || form.style.display === "") {
+			form.style.display = "block"; // Hiện form
+		} else {
+			form.style.display = "none"; // Ẩn form
+		}
+	}
+	function closePostContainer() {
+		document.getElementById("postContainer").style.display = "none";
+	}
+</script>
 <script>
 	function showEditForm(postId) {
 		// Ẩn tất cả các form chỉnh sửa khác
@@ -1383,12 +1431,13 @@
 		const uploadPostForm = document.getElementById('uploadpost');
 		const notifyText = document.querySelector('.notify-text'); // Dòng thông báo
 		const circleIcon = document.querySelector('.circle-icon'); // Icon hình tròn
+		const Icon = document.querySelector('.icon');
 
 		expandableForm.style.display = 'block'; // Hiện form
 		uploadPostForm.style.display = 'block'; // Hiện toàn bộ form
 		notifyText.style.display = 'none'; // Ẩn dòng text
 		circleIcon.style.display = 'none'; // Ẩn icon hình tròn
-		
+		Icon.style.display = 'none';
 	}
 
 	function cancelInput() {
@@ -1396,11 +1445,13 @@
 		const uploadPostForm = document.getElementById('uploadpost');
 		const notifyText = document.querySelector('.notify-text'); // Dòng thông báo
 		const circleIcon = document.querySelector('.circle-icon'); // Icon hình tròn
+		const Icon = document.querySelector('.icon');
 
 		expandableForm.style.display = 'none'; // Hiện form
 		uploadPostForm.style.display = 'none'; // Hiện toàn bộ form
 		notifyText.style.display = 'block'; // Ẩn dòng text
 		circleIcon.style.display = 'flex'; // Ẩn icon hình tròn
+		Icon.style.display = 'flex';
 	}
 
 	function checkInput() {
