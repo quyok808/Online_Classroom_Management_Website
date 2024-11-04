@@ -527,7 +527,7 @@ namespace DoAnMon.Controllers
 			return RedirectToAction("Details", "ClassRooms", new { id = ClassId });
 		}
 		[HttpPost]
-		public async Task<IActionResult> ReusePost(string postId, string ClassId, string UserId)
+		public async Task<IActionResult> ReusePost(string postId, string ClassId, string UserId, string Title, string Content)
 		{
 			var post = await _context.posts.FindAsync(postId);
 			if (post == null)
@@ -539,8 +539,8 @@ namespace DoAnMon.Controllers
 			var newPost = new Post
 			{
 				Id = Guid.NewGuid().ToString(), // Tạo Id mới cho bài post
-				Title = post.Title,
-				Content = post.Content,
+				Title = string.IsNullOrWhiteSpace(Title) ? post.Title : Title, // Sử dụng tiêu đề đã chỉnh sửa hoặc tiêu đề cũ nếu trống
+				Content = string.IsNullOrWhiteSpace(Content) ? post.Content : Content, // Sử dụng nội dung đã chỉnh sửa hoặc nội dung cũ nếu trống
 				CreateTime = DateTime.Now, // Thiết lập thời gian tạo
 				ClassRoomId = ClassId, // Thiết lập ID của Classroom
 				UserId = UserId // Lấy UserId từ người dùng hiện tại
