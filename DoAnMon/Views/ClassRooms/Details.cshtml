@@ -605,6 +605,8 @@
 			outline: none; /* Bỏ viền mặc định khi focus */
 			border-bottom: 2px solid rgb(66, 133, 244); /* Đường viền dưới khi focus */
 		}
+
+	
 	/* Nút bị vô hiệu hóa (disabled) */
 	.disabled-button {
 		background-color: lightgray;
@@ -1187,9 +1189,56 @@
 						</div>
 					</div>
 					<input type="hidden" name="ClassId" id="classIdInput" value="@Model.ClassRoom.Id" />
+					<input type="hidden" name="UserId" id="UserIdInput" value="@Model.ClassRoom.UserId" />
 				</form>
-			</div>
+				@{
+					if (Model.isOwner)
+					{
+						<div style="background-color: none; color: white; border-radius: 50%; width: 40px; height: 40px; display: flex; align-items: center; justify-content: center; margin-left: auto;">
+							<button onclick="toggleClassSelection()" class="icon">
+								<svg focusable="false" width="24" height="24" viewBox="0 0 24 24" class=" NMm5M">
+									<path d="M19 5H4v6h2V7h13M5 19h15v-6h-2v4H5"></path>
+									<path d="M16.29 10.71l-1.41-1.42L18.17 6l-3.29-3.29 1.41-1.42L21 6zm-8.58 12L3 18l4.71-4.71 1.41 1.42L5.83 18l3.29 3.29z"></path>
+								</svg>
+							</button>
+						</div>
 
+					}
+				}
+			</div>
+			<div id="postContainer" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0, 0, 0, 0.7); z-index: 1000;">
+				<div style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); background-color: #fff; color: black; border-radius: 8px; padding: 20px; width: 500px; height: 300px; overflow: auto;">
+					<button onclick="closePostContainer()" style="float: right;margin_bottom:10%;margin-left:20px ;background-color: red; color: white; border: none; cursor: pointer; border-radius: 4px;">
+						<i class="fas fa-times" style="font-size: 20px;"></i> <!-- Biểu tượng dấu X -->
+					</button>
+					<div class="mainList" style="margin-top:40px;">
+						@foreach (var post in ViewBag.UserPosts)
+						{
+							<div style="margin-bottom: 10px; display: flex; justify-content: space-between; align-items: center;">
+								<span style="text-align: left;">@post.Title</span>
+								<button type="button" style="color: black;" onclick="showPostContent('@post.Id')">Sử dụng lại</button>
+							</div>
+						}
+					</div>
+
+					@foreach (var post in ViewBag.UserPosts)
+					{
+						<div id="postList-@post.Id" class="postList" style="display: none; margin-top: 40px;">
+							<form method="post" asp-action="ReusePost" asp-controller="ClassRooms" style="display: inline;">
+								<input type="hidden" name="postId" value="@post.Id" />
+								<input type="hidden" name="ClassId" id="classIdInput" value="@Model.ClassRoom.Id" />
+								<input type="hidden" name="UserId" id="UserIdInput" value="@Model.ClassRoom.UserId" />
+								<!-- Cho phép chỉnh sửa tiêu đề và nội dung -->
+								<input type="text" name="Title" class="form-control" value="@post.Title" />
+								<textarea name="Content" class="input-textarea" style="width: 100%; border-radius: 5px; margin-top: 10px; padding: 10px;">@post.Content</textarea>
+								<button type="submit" style="color: black;">Đăng</button>
+								<button type="button" onclick="cancelReuse('@post.Id')" style="color: black; margin-left: 10px;">Hủy</button>
+							</form>
+						</div>
+					}
+				</div>
+			</div>
+				
 		}
 	}	
 	
@@ -1284,6 +1333,7 @@
 								<button type="submit" class="btn btn-success">Lưu</button>
 							</div>
 							<input type="hidden" name="ClassId" id="classIdInput" value="@Model.ClassRoom.Id" />
+							<input type="hidden" name="UserId" id="UserIdInput" value="@Model.ClassRoom.UserId" />
 						</form>
 					</div>
 				}
@@ -1294,7 +1344,74 @@
 </div>
 
 @* ==================================SCRIPT======================================================*@
+<script>
+	function showPostContent(postId) {
+		// Hide all post lists
+		const postLists = document.querySelectorAll('.postList');
+		postLists.forEach(postList => {
+			postList.style.display = 'none'; // Hide all postLists
+		});
 
+		// Show the specific postList related to the clicked button
+		const postListToShow = document.getElementById(`postList-${postId}`);
+		if (postListToShow) {
+			postListToShow.style.display = 'block'; // Show the specific postList
+		}
+
+		// Hide the main list (you may need to adjust the selector based on your structure)
+		const mainList = document.querySelector('.mainList'); // Assuming you wrap your main list in a div with class "mainList"
+		if (mainList) {
+			mainList.style.display = 'none'; // Hide the main list
+		}
+	}
+
+	function cancelReuse(postId) {
+		// Hide the specific postList when cancel is clicked
+		const postListToHide = document.getElementById(`postList-${postId}`);
+		if (postListToHide) {
+			postListToHide.style.display = 'none'; // Hide the postList
+		}
+
+		// Optionally show the main list again
+		const mainList = document.querySelector('.mainList'); // Again, adjust if necessary
+		if (mainList) {
+			mainList.style.display = 'block'; // Show the main list
+		}
+	}
+
+</script>
+@*<script>
+	function populatePostForm(title, content, postId) {
+		Điền tiêu đề và nội dung vào form
+		document.getElementById('postTitle').value = title;
+		document.getElementById('postContent').value = content;
+		document.getElementById('postIdInput').value = postId;
+
+		Ẩn danh sách bài viết và hiển thị form sử dụng lại
+		document.getElementById('postList').style.display = 'none'; Ẩn postList
+		document.getElementById('reuseForm').style.display = 'block'; Hiển thị reuseForm
+	}
+	function cancelReuse() {
+		Ẩn form sử dụng lại và hiển thị lại danh sách bài viết
+		document.getElementById('reuseForm').style.display = 'none'; Ẩn reuseForm
+		document.getElementById('postList').style.display = 'block'; Hiển thị lại postList
+	}
+</script>*@
+<script>
+	function toggleClassSelection() {
+		var form = document.getElementById("postContainer");
+		// Check display status and toggle visibility
+		if (form.style.display === "none" || form.style.display === "") {
+			form.style.display = "block"; // Show the form
+		} else {
+			form.style.display = "none"; // Hide the form
+		}
+	}
+
+	function closePostContainer() {
+		document.getElementById("postContainer").style.display = "none";
+	}	
+</script>
 <script>
 	function showEditForm(postId) {
 		// Ẩn tất cả các form chỉnh sửa khác
@@ -1383,12 +1500,13 @@
 		const uploadPostForm = document.getElementById('uploadpost');
 		const notifyText = document.querySelector('.notify-text'); // Dòng thông báo
 		const circleIcon = document.querySelector('.circle-icon'); // Icon hình tròn
+		const Icon = document.querySelector('.icon');
 
 		expandableForm.style.display = 'block'; // Hiện form
 		uploadPostForm.style.display = 'block'; // Hiện toàn bộ form
 		notifyText.style.display = 'none'; // Ẩn dòng text
 		circleIcon.style.display = 'none'; // Ẩn icon hình tròn
-		
+		Icon.style.display = 'none';
 	}
 
 	function cancelInput() {
@@ -1396,11 +1514,13 @@
 		const uploadPostForm = document.getElementById('uploadpost');
 		const notifyText = document.querySelector('.notify-text'); // Dòng thông báo
 		const circleIcon = document.querySelector('.circle-icon'); // Icon hình tròn
+		const Icon = document.querySelector('.icon');
 
 		expandableForm.style.display = 'none'; // Hiện form
 		uploadPostForm.style.display = 'none'; // Hiện toàn bộ form
 		notifyText.style.display = 'block'; // Ẩn dòng text
 		circleIcon.style.display = 'flex'; // Ẩn icon hình tròn
+		Icon.style.display = 'flex';
 	}
 
 	function checkInput() {
