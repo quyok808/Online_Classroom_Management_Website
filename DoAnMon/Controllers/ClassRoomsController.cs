@@ -54,6 +54,15 @@ namespace DoAnMon.Controllers
 		// GET: ClassRooms
 		public async Task<IActionResult> Index()
 		{
+			List<ClassRoom> classroomsList = _context.classRooms.ToList();
+			DateTime nowDate = DateTime.UtcNow;
+			foreach (var item in classroomsList)
+			{
+				if (item.EndDate.Date.AddDays(30) == nowDate.Date)
+				{
+                    DeleteClassrooms(item.Id);
+                }
+			}
 			var currentUser = await _userManager.GetUserAsync(User);
 			List<ClassRoomViewModel> classRoomViewModels = new List<ClassRoomViewModel>();
 
@@ -107,10 +116,49 @@ namespace DoAnMon.Controllers
 			return View(classRoomViewModels);
 		}
 
+        public void DeleteClassrooms(string id)
+        {
+            var classRoom = _context.classRooms.FirstOrDefault(p => p.Id.Equals(id));
+            if (classRoom == null)
+            {
+				return;
+            }
+            var lectures = _context.BaiGiang.Where(p => p.ClassId.Equals(id)).ToList();
 
 
-		// GET: ClassRooms/Details/5
-		public async Task<IActionResult> Details(string id)
+            foreach (var item in lectures)
+            {
+                deleteFile("Uploads/BAIGIANG", item.UrlBaiGiang);
+
+                _context.BaiGiang.Remove(item);
+            }
+            var homeworks = _context.baiTaps.Where(p => p.ClassRoomId.Equals(id)).ToList();
+            foreach (var item in homeworks)
+            {
+
+                deleteFile("Uploads/BAITAP", item.attractUrl);
+
+                _context.baiTaps.Remove(item);
+            }
+            var bainops = _context.BaiNop.Where(p => p.ClassId.Equals(id)).ToList();
+            foreach (var item in bainops)
+            {
+
+                deleteFile("Uploads/BAINOP", item.Urlbainop);
+
+                _context.BaiNop.Remove(item);
+            }
+            List<ClassroomDetail> classroomDetails = _context.classroomDetail.Where(p => p.ClassRoomId.Equals(id)).ToList();
+            foreach (var item in classroomDetails)
+            {
+                _context.classroomDetail.Remove(item);
+            }
+            _context.classRooms.Remove(classRoom);
+            _context.SaveChanges();
+        }
+
+        // GET: ClassRooms/Details/5
+        public async Task<IActionResult> Details(string id)
 		{
 			ViewBag.ListRoom = userClasses;
 			if (id == null)
@@ -698,6 +746,11 @@ namespace DoAnMon.Controllers
 				deleteFile("Uploads/BAINOP", item.Urlbainop);
 
 				_context.BaiNop.Remove(item);
+			}
+			List<ClassroomDetail> classroomDetails = await _context.classroomDetail.Where(p => p.ClassRoomId.Equals(id)).ToListAsync();
+			foreach(var item in classroomDetails)
+			{
+				_context.classroomDetail.Remove(item);
 			}
 			_context.classRooms.Remove(classRoom);
 			await _context.SaveChangesAsync();
