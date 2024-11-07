@@ -28,6 +28,7 @@ using System.Runtime.ConstrainedExecution;
 using Microsoft.IdentityModel.Tokens;
 using DoAnMon.Migrations;
 using DoAnMon.SendMail;
+using System.Security.Claims;
 namespace DoAnMon.Controllers
 {
 	[Authorize(Roles ="Admin, Teacher, Student")]
@@ -53,6 +54,15 @@ namespace DoAnMon.Controllers
 		// GET: ClassRooms
 		public async Task<IActionResult> Index()
 		{
+			List<ClassRoom> classroomsList = _context.classRooms.ToList();
+			DateTime nowDate = DateTime.UtcNow;
+			foreach (var item in classroomsList)
+			{
+				if (item.EndDate.Date.AddDays(30) == nowDate.Date)
+				{
+                    DeleteClassrooms(item.Id);
+                }
+			}
 			var currentUser = await _userManager.GetUserAsync(User);
 			List<ClassRoomViewModel> classRoomViewModels = new List<ClassRoomViewModel>();
 
@@ -106,10 +116,49 @@ namespace DoAnMon.Controllers
 			return View(classRoomViewModels);
 		}
 
+        public void DeleteClassrooms(string id)
+        {
+            var classRoom = _context.classRooms.FirstOrDefault(p => p.Id.Equals(id));
+            if (classRoom == null)
+            {
+				return;
+            }
+            var lectures = _context.BaiGiang.Where(p => p.ClassId.Equals(id)).ToList();
 
 
-		// GET: ClassRooms/Details/5
-		public async Task<IActionResult> Details(string id)
+            foreach (var item in lectures)
+            {
+                deleteFile("Uploads/BAIGIANG", item.UrlBaiGiang);
+
+                _context.BaiGiang.Remove(item);
+            }
+            var homeworks = _context.baiTaps.Where(p => p.ClassRoomId.Equals(id)).ToList();
+            foreach (var item in homeworks)
+            {
+
+                deleteFile("Uploads/BAITAP", item.attractUrl);
+
+                _context.baiTaps.Remove(item);
+            }
+            var bainops = _context.BaiNop.Where(p => p.ClassId.Equals(id)).ToList();
+            foreach (var item in bainops)
+            {
+
+                deleteFile("Uploads/BAINOP", item.Urlbainop);
+
+                _context.BaiNop.Remove(item);
+            }
+            List<ClassroomDetail> classroomDetails = _context.classroomDetail.Where(p => p.ClassRoomId.Equals(id)).ToList();
+            foreach (var item in classroomDetails)
+            {
+                _context.classroomDetail.Remove(item);
+            }
+            _context.classRooms.Remove(classRoom);
+            _context.SaveChanges();
+        }
+
+        // GET: ClassRooms/Details/5
+        public async Task<IActionResult> Details(string id)
 		{
 			ViewBag.ListRoom = userClasses;
 			if (id == null)
@@ -167,7 +216,13 @@ namespace DoAnMon.Controllers
             viewModel.Homework = homework;
 			viewModel.Message = chatHistory;
 			ViewBag.ListRoom = userClasses;
-
+			var userId = User.FindFirstValue(ClaimTypes.NameIdentifier); // Lấy UserId
+			var userposts = await _context.posts
+				.Where(p => p.UserId == userId) // Lọc theo UserId
+				.GroupBy(p => new { p.Title, p.Content })
+				.Select(g => g.First())
+				.ToListAsync();
+			ViewBag.UserPosts = userposts;
 
 			//var listpost = await _context.posts.Where(p => p.ClassRoomId == id).ToListAsync();
 			var listBT = await _context.baiTaps.Where(p => p.ClassRoomId == id).ToListAsync();
@@ -506,7 +561,7 @@ namespace DoAnMon.Controllers
 		}
 
 		[HttpPost]
-		public async Task<IActionResult> CreatePost(string Content, string Title, string ClassId, DateTime CreateTime)
+		public async Task<IActionResult> CreatePost(string Content, string Title, string ClassId, DateTime CreateTime, string UserId)
 		{
 			Post posts = new Post();
 			posts.Id = Guid.NewGuid().ToString();
@@ -514,11 +569,36 @@ namespace DoAnMon.Controllers
 			posts.Content = Content;
 			posts.CreateTime = DateTime.Now;
 			posts.ClassRoomId = ClassId;
+			posts.UserId = UserId;
 			_context.Add(posts);
 			await _context.SaveChangesAsync();
 			return RedirectToAction("Details", "ClassRooms", new { id = ClassId });
 		}
+		[HttpPost]
+		public async Task<IActionResult> ReusePost(string postId, string ClassId, string UserId, string Title, string Content)
+		{
+			var post = await _context.posts.FindAsync(postId);
+			if (post == null)
+			{
+				return NotFound();
+			}
 
+			// Tạo bài post mới dựa trên bài post đã chọn
+			var newPost = new Post
+			{
+				Id = Guid.NewGuid().ToString(), // Tạo Id mới cho bài post
+				Title = string.IsNullOrWhiteSpace(Title) ? post.Title : Title, // Sử dụng tiêu đề đã chỉnh sửa hoặc tiêu đề cũ nếu trống
+				Content = string.IsNullOrWhiteSpace(Content) ? post.Content : Content, // Sử dụng nội dung đã chỉnh sửa hoặc nội dung cũ nếu trống
+				CreateTime = DateTime.Now, // Thiết lập thời gian tạo
+				ClassRoomId = ClassId, // Thiết lập ID của Classroom
+				UserId = UserId // Lấy UserId từ người dùng hiện tại
+			};
+
+			_context.posts.Add(newPost);
+			await _context.SaveChangesAsync();
+
+			return RedirectToAction("Details", "ClassRooms", new { id = ClassId });
+		}
 		private void TinhDTB(string classId)
 		{
 			// Lấy bản ghi của lớp học
@@ -666,6 +746,11 @@ namespace DoAnMon.Controllers
 				deleteFile("Uploads/BAINOP", item.Urlbainop);
 
 				_context.BaiNop.Remove(item);
+			}
+			List<ClassroomDetail> classroomDetails = await _context.classroomDetail.Where(p => p.ClassRoomId.Equals(id)).ToListAsync();
+			foreach(var item in classroomDetails)
+			{
+				_context.classroomDetail.Remove(item);
 			}
 			_context.classRooms.Remove(classRoom);
 			await _context.SaveChangesAsync();

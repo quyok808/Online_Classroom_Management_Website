@@ -11,5 +11,6 @@ namespace DoAnMon.Models
 		public string? ClassRoomId { get; set; }
 		[ValidateNever]
 		public ICollection<ClassRoom> ClassRooms { get; set; }
+		public string? UserId { get; set; }
 	}
 }
