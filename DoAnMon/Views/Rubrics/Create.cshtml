@@ -1,0 +1,358 @@
+﻿@using DoAnMon.ViewModels
+@model CreateRubricViewModel
+
+@{
+    ViewData["Title"] = "Create";
+    Layout = null;
+}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Rubric Details</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+          rel="stylesheet"
+          integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH"
+          crossorigin="anonymous" />
+        <style >
+        @@import url("https://fonts.googleapis.com/css2?family=JetBrains+Mono:ital,wght@0,100..800;1,100..800&display=swap");
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: "JetBrains Mono", monospace;
+        }
+
+        .img_container {
+            width: 100%;
+        }
+
+            .img_container > img {
+                width: 400px;
+                height: 130px;
+                object-fit: fill;
+            }
+
+        .rubric_h2 {
+            text-align: center;
+            font-weight: bold;
+            margin-bottom: 30px;
+            text-transform: uppercase;
+            margin-top: 5px;
+        }
+
+        .rubric_h6 {
+            text-align: center;
+            text-decoration: underline;
+            font-size: 20px;
+        }
+
+        .custom-field-container {
+            padding-bottom: 20px;
+            width: 100%;
+        }
+
+        .rubric_label {
+            font-weight: bold;
+            margin-right: 5px;
+            font-size: 16px;
+        }
+
+        .custom-input {
+            margin-bottom: 10px;
+            width: 90%;
+            font-size: 16px;
+            border: none;
+            border-bottom: 1px solid #515151;
+        }
+
+            .custom-input:focus {
+                outline: none;
+            }
+
+        hr {
+            margin-top: 5px;
+        }
+
+        .add-btn {
+            margin: 0 10px 10px 10px;
+            width: 40px;
+            height: 40px;
+            background-color: transparent;
+            border-radius: 5px;
+            font-size: 30px;
+            display: flex;
+            justify-content: center; /* Căn giữa theo chiều ngang */
+            align-items: center;
+        }
+
+            .add-btn:active {
+                background-color: #b9b9b9;
+            }
+
+        .custom-label {
+            align-content: center;
+        }
+
+        .button_container {
+            display: flex;
+            justify-content: space-between;
+            margin: 0 20%;
+        }
+
+        .btn-controls {
+            width: 100%;
+            margin: 10px;
+            border-radius: 15px;
+            font-weight: bold;
+            padding: 2px;
+            border: none;
+        }
+
+        .table-info {
+            width: 100%;
+        }
+
+        .custom-table thead th {
+            background-color: #b9b9b9;
+        }
+
+        .custom-table {
+            border-collapse: separate; /* Để các ô có thể giữ được viền riêng */
+            border-spacing: 0; /* Loại bỏ khoảng cách giữa các ô */
+            border-radius: 10px; /* Đặt độ bo góc */
+            overflow: hidden; /* Đảm bảo nội dung bảng giữ bo góc */
+        }
+
+            .custom-table th,
+            .custom-table td {
+                border: 1px solid #000000; /* Đặt viền cho các ô */
+            }
+
+            .custom-table thead th:first-child {
+                border-top-left-radius: 10px; /* Bo góc trên cùng bên trái */
+            }
+
+            .custom-table thead th:last-child {
+                border-top-right-radius: 10px; /* Bo góc trên cùng bên phải */
+            }
+
+            .custom-table tbody tr:last-child td:first-child {
+                border-bottom-left-radius: 10px; /* Bo góc dưới cùng bên trái */
+            }
+
+            .custom-table tbody tr:last-child td:last-child {
+                border-bottom-right-radius: 10px; /* Bo góc dưới cùng bên phải */
+            }
+
+        .custom-tr {
+            text-align: center;
+            vertical-align: middle; /* Căn giữa theo chiều dọc */
+        }
+
+        .deleteRow {
+            cursor: pointer;
+        }
+
+        .context-menu {
+            background-color: #fff;
+            border: 1px solid #ccc;
+            padding: 5px;
+            list-style: none;
+            margin: 0;
+            width: 130px;
+            z-index: 1000;
+            box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.2);
+        }
+
+            .context-menu li {
+                padding: 8px 12px;
+                cursor: pointer;
+            }
+
+                .context-menu li:hover {
+                    background-color: #f5f5f5;
+                }
+
+    </style>
+</head>
+<body>
+<h2 class="rubric_h2">TẠO BẢNG ĐÁNH GIÁ CHẤT LƯỢNG</h2>
+
+<div class="container-fluid">
+    <form id="rubric-form" asp-action="Create" method="post">
+        <div class="custom-field-container">
+            <label class="rubric_label" for="Name">Tên bảng:</label>
+            <input class="custom-input" type="text" name="Name" id="Name" required />
+        </div>
+        <input type="hidden" id="criteriaData" asp-for="CriteriaData" />
+        <input type="hidden" name="classRoomId" value="@ViewBag.ClassroomId" />
+    </form>
+    <hr />
+
+    <label class="rubric_label">Danh sách tiêu chí</label>
+    <table class="table table-bordered custom-table" id="tieuChi_Table">
+        <thead>
+            <tr class="text-center">
+                <th scope="col">STT</th>
+                <th scope="col">Tên tiêu chí</th>
+                <th scope="col">Trọng số</th>
+                <th scope="col">Hành động</th>
+            </tr>
+        </thead>
+        <tbody></tbody>
+    </table>
+
+    <div class="row">
+        <label class="col-md-auto custom-label rubric_label" for="Title">Tên tiêu chí:</label>
+        <input class="custom-input col" type="text" id="Title" />
+        <label class="col-md-auto custom-label rubric_label" for="Weight">Trọng số:</label>
+        <input class="custom-input col" type="number" id="Weight" min="0" max="1" step="0.01" oninput="validateInput(this)" />
+        <button class="add-btn col-1" type="button" id="addTieuChiBtn">+</button>
+    </div>
+
+    <div class="button_container">
+        <button class="btn-controls" style="background-color: #c9e9d2" type="button" onclick="window.location.href='@Url.Action("Index")'">Quay lại</button>
+        <button class="btn-controls" style="background-color: #fdcedf" type="submit" form="rubric-form">Lưu bảng đánh giá chất lượng học tập</button>
+    </div>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
+        crossorigin="anonymous"></script>
+    <script>
+        const criteriaList = [];
+
+        // Function to add criteria to the table
+        function addRowTieuChi(tieuChi_name, tieuChi_trongSo) {
+            // Thêm tiêu chí vào mảng criteriaList
+            criteriaList.push({ Title: tieuChi_name, Weight: parseFloat(tieuChi_trongSo) });
+
+            const tableBody = document.getElementById("tieuChi_Table").getElementsByTagName("tbody")[0];
+            const newRowTieuChi = tableBody.insertRow();
+
+            // Thêm nội dung vào hàng mới
+            newRowTieuChi.innerHTML = `
+                <td class="text-center" data-index="${criteriaList.length - 1}">${criteriaList.length}</td>
+                <td class="title-cell" contenteditable="true" data-index="${criteriaList.length - 1}">${tieuChi_name}</td>
+                <td class="weight-cell" contenteditable="true" class="text-center number-only" data-index="${criteriaList.length - 1}">${tieuChi_trongSo}</td>
+                <td class="text-center"><span class="deleteTieuChiRow" style="cursor:pointer">Xoá</span></td>
+            `;
+
+            console.log(criteriaList); // Kiểm tra mảng criteriaList sau khi thêm
+
+            // Reset input fields
+            document.getElementById("Title").value = "";
+            document.getElementById("Weight").value = "";
+
+            // Sự kiện xóa dòng
+            newRowTieuChi.querySelector(".deleteTieuChiRow").addEventListener("click", function () {
+                const rowIndex = parseInt(newRowTieuChi.querySelector(".text-center").getAttribute("data-index"));
+
+                // Xóa phần tử khỏi criteriaList
+                criteriaList.splice(rowIndex, 1);
+                newRowTieuChi.remove();
+
+                // Cập nhật lại các chỉ số index trong bảng
+                updateSTTTieuChi();
+                updateDataIndexesTieuChi();
+            });
+
+            // Đảm bảo chỉ nhập số trong các ô "number-only"
+            document.querySelectorAll(".number-only").forEach(function (cell) {
+                cell.addEventListener("input", function () {
+                    this.textContent = this.textContent.replace(/[^0-9.]/g, ""); // Loại bỏ các ký tự không phải số
+                });
+            });
+
+            // Lắng nghe sự kiện 'blur' để cập nhật giá trị vào mảng criteriaList
+            document.querySelectorAll('td[contenteditable="true"]').forEach((cell) => {
+                cell.addEventListener("blur", function () {
+                    const index = parseInt(cell.getAttribute("data-index")); // Lấy chỉ số từ data-index
+                    console.log("Index = ", index);
+                    // Kiểm tra xem index có hợp lệ không
+                    if (!isNaN(index) && index >= 0 && index < criteriaList.length) {
+                        const newValue = cell.innerText.trim(); // Lấy giá trị mới từ ô
+
+                        // Cập nhật giá trị vào mảng criteriaList
+                        if (cell.classList.contains("title-cell")) {
+                            criteriaList[index].Title = newValue; // Cập nhật Title
+                        } else if (cell.classList.contains("weight-cell")) {
+                            criteriaList[index].Weight = parseFloat(newValue) || 0; // Cập nhật Weight
+                        }
+                    } else {
+                        console.error("Index không hợp lệ hoặc ngoài phạm vi của mảng criteriaList, index = ", index);
+                    }
+
+                    console.log(criteriaList); // Kiểm tra mảng criteriaList sau khi cập nhật
+                });
+            });
+        }
+
+        // Cập nhật các chỉ số trong bảng sau khi xóa
+        function updateSTTTieuChi() {
+            const rows = document.querySelectorAll("#tieuChi_Table tbody tr");
+            rows.forEach((row, index) => {
+                row.querySelector(".text-center").textContent = index + 1; // Cập nhật lại STT
+                row.querySelector(".text-center").setAttribute("data-index", index); // Cập nhật lại data-index
+            });
+        }
+
+        // Cập nhật lại các chỉ số data-index sau khi xóa
+        function updateDataIndexesTieuChi() {
+            const rows = document.querySelectorAll("#tieuChi_Table tbody tr");
+            rows.forEach((row, index) => {
+                row.querySelector(".title-cell").setAttribute("data-index", index);
+                row.querySelector(".weight-cell").setAttribute("data-index", index);
+            });
+        }
+
+
+        // Add criteria on button click
+        document.getElementById("addTieuChiBtn").addEventListener("click", function () {
+            const tieuChi_name = document.getElementById("Title").value;
+            const tieuChi_trongSo = document.getElementById("Weight").value;
+
+            if (tieuChi_name && tieuChi_trongSo) {
+                addRowTieuChi(tieuChi_name, tieuChi_trongSo);
+            } else {
+                alert("Vui lòng nhập đầy đủ thông tin tiêu chí.");
+            }
+        });
+
+        // Update the numbering of criteria
+        function updateSTTTieuChi() {
+            const rows = document.querySelectorAll("#tieuChi_Table tbody tr");
+            rows.forEach((row, index) => {
+                row.querySelector("td:first-child").innerText = index + 1;
+            });
+        }
+
+        // Hàm cập nhật lại data-index cho các ô trong bảng
+        function updateDataIndexesTieuChi() {
+            document
+                .querySelectorAll("#tieuChi_Table tbody tr")
+                .forEach((row, rowIndex) => {
+                    row
+                        .querySelectorAll("td[contenteditable='true']")
+                        .forEach((cell, cellIndex) => {
+                            cell.setAttribute("data-index", rowIndex * 2 + cellIndex); // Cập nhật lại data-index
+                        });
+                });
+        }
+
+        // Convert criteria list to JSON before submitting
+        document.getElementById("rubric-form").addEventListener("submit", (e) => {
+            document.getElementById("criteriaData").value = JSON.stringify(criteriaList);
+        });
+
+        function validateInput(input) {
+            if (parseFloat(input.value) > 1) {
+                input.value = 1;
+            }
+        }
+    </script>
+
+</body>
+</html>

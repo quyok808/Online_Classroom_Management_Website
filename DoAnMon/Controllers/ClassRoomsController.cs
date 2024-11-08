@@ -153,7 +153,16 @@ namespace DoAnMon.Controllers
             {
                 _context.classroomDetail.Remove(item);
             }
-            _context.classRooms.Remove(classRoom);
+			var rubric = _context.Rubric.FirstOrDefault(p => p.ClassRoomId.Equals(id));
+			if (rubric != null)
+			{
+				var Criteria = _context.Criteria.Where(p => p.RubricId == rubric.Id);
+				Criteria.ForEachAsync(p => _context.Criteria.Remove(p));
+				var StudentsList = _context.Students.Where(p => p.RubricId == rubric.Id);
+				StudentsList.ForEachAsync(p => _context.Students.Remove(p));
+				_context.Rubric.Remove(rubric);
+			}
+			_context.classRooms.Remove(classRoom);
             _context.SaveChanges();
         }
 
@@ -283,6 +292,17 @@ namespace DoAnMon.Controllers
 										new TimeSpan(classRoom.StartTime.Hours, classRoom.StartTime.Minutes, 0),
 										new TimeSpan(classRoom.EndTime.Hours, classRoom.EndTime.Minutes,0)
 										);
+
+			
+			if (classRoom.RubricId == -1)
+			{
+				viewModel.CustomRubric = false;
+			}
+			else
+			{
+				viewModel.CustomRubric = true;
+				viewModel.Rubric = await _context.Rubric.FirstOrDefaultAsync(p => p.ClassRoomId.Equals(id));
+			}
 			return View(viewModel);
 		}
 
@@ -359,7 +379,7 @@ namespace DoAnMon.Controllers
 		// For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
 		[HttpPost]
 		[ValidateAntiForgeryToken]
-		public async Task<IActionResult> Create(ClassRoom classRoom, string[] DaysOfWeek)
+		public async Task<IActionResult> Create(ClassRoom classRoom, string[] DaysOfWeek, bool haveRubric)
 		{
 			ModelState.Remove("Id");
 			if (ModelState.IsValid)
@@ -372,9 +392,13 @@ namespace DoAnMon.Controllers
 					classRoom.RoomOnline = "https://meeting-room-onlya1.glitch.me?room=" + linkRoom;
 					classRoom.backgroundUrl = "anhclass.png";
 					classRoom.STT = 0;
+                    if (haveRubric)
+					{
+						classRoom.RubricId = -1;
+					}
 
-					// Ghép các ngày học lại thành chuỗi
-					classRoom.DaysOfWeek = string.Join(",", DaysOfWeek);
+                    // Ghép các ngày học lại thành chuỗi
+                    classRoom.DaysOfWeek = string.Join(",", DaysOfWeek);
 
 					_context.Add(classRoom);
 					await _context.SaveChangesAsync();
@@ -385,7 +409,9 @@ namespace DoAnMon.Controllers
 						clr.STT++;
 					}
 					await _context.SaveChangesAsync();
-					return RedirectToAction(nameof(Index));
+					if (haveRubric)
+						return RedirectToAction(nameof(Index));
+					return RedirectToAction("Create", "Rubrics", new { classroomId = classRoom.Id });
 				}
 			}
 			return View(classRoom);
@@ -751,6 +777,15 @@ namespace DoAnMon.Controllers
 			foreach(var item in classroomDetails)
 			{
 				_context.classroomDetail.Remove(item);
+			}
+			var rubric = _context.Rubric.FirstOrDefault(p => p.ClassRoomId.Equals(id));
+			if (rubric != null)
+			{
+				var Criteria = _context.Criteria.Where(p => p.RubricId == rubric.Id);
+				await Criteria.ForEachAsync(p => _context.Criteria.Remove(p));
+				var StudentsList = _context.Students.Where(p => p.RubricId == rubric.Id);
+				await StudentsList.ForEachAsync(p => _context.Students.Remove(p));
+				_context.Rubric.Remove(rubric);
 			}
 			_context.classRooms.Remove(classRoom);
 			await _context.SaveChangesAsync();

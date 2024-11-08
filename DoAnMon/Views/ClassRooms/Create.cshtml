@@ -93,6 +93,12 @@
 											<label for="EndTime" class="control-label">Giờ kết thúc:</label>
 											<input type="time" name="EndTime" id="EndTime" class="form-control" required />
 										</div>
+										<div class="form-group">
+											<label for="haveRubric" class="control-label">Sử dụng bảng đánh giá mặc định:</label>
+											<input type="checkbox" id="haveRubric" name="haveRubric" value="true" class="form-control" />
+											@Html.Hidden("haveRubric", "false")
+
+										</div>
 									</div>
 								</div>
 								<div class="modal-footer">
@@ -100,8 +106,6 @@
 									<input type="submit" value="Tạo phòng" class="btn btn-primary" />
 								</div>
 							</form>
-
-
 						</div>
 					</div>
 				</div>
