@@ -789,8 +789,7 @@ namespace DoAnMon.Controllers
 			}
 			_context.classRooms.Remove(classRoom);
 			await _context.SaveChangesAsync();
-
-			return RedirectToAction(nameof(Index));
+			return RedirectToAction(nameof(Create));
 		}
 
 		//DELETE FILE

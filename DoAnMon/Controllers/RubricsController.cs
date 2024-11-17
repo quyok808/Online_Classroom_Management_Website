@@ -142,12 +142,18 @@ namespace DoAnMon.Controllers
                 return NotFound();
             }
 
-            var rubric = await _context.Rubric.FindAsync(id);
+            Rubric? rubric = await _context.Rubric.FindAsync(id);
             if (rubric == null)
             {
                 return NotFound();
             }
-            return View(rubric);
+            List<Criterion>? criterions = await _context.Criteria.Where(p => p.RubricId == rubric.Id).ToListAsync();
+            EditRubricViewModel rubricEdit = new()
+            {
+                Rubric = rubric,
+                Criterion = criterions
+            };
+            return View(rubricEdit);
         }
 
         // POST: Rubrics/Edit/5
@@ -155,9 +161,9 @@ namespace DoAnMon.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Name")] Rubric rubric)
+        public async Task<IActionResult> Edit(int id, EditRubricViewModel editViewModel)
         {
-            if (id != rubric.Id)
+            if (id != editViewModel.Rubric.Id)
             {
                 return NotFound();
             }
@@ -166,12 +172,16 @@ namespace DoAnMon.Controllers
             {
                 try
                 {
-                    _context.Update(rubric);
+                    _context.Update(editViewModel.Rubric);
+                    foreach (var item in editViewModel.Criterion)
+                    {
+                        _context.Update(item);
+                    }
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!RubricExists(rubric.Id))
+                    if (!RubricExists(editViewModel.Rubric.Id))
                     {
                         return NotFound();
                     }
@@ -180,33 +190,14 @@ namespace DoAnMon.Controllers
                         throw;
                     }
                 }
-                return RedirectToAction(nameof(Index));
+                return Redirect("https://localhost:7142/Admin");
             }
-            return View(rubric);
-        }
-
-        // GET: Rubrics/Delete/5
-        public async Task<IActionResult> Delete(int? id)
-        {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
-            var rubric = await _context.Rubric
-                .FirstOrDefaultAsync(m => m.Id == id);
-            if (rubric == null)
-            {
-                return NotFound();
-            }
-
-            return View(rubric);
+            return View(editViewModel);
         }
 
         // POST: Rubrics/Delete/5
-        [HttpPost, ActionName("Delete")]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(int id)
+        [HttpDelete]
+        public async Task<IActionResult> Delete(int id)
         {
             var rubric = await _context.Rubric.FindAsync(id);
             if (rubric != null)
@@ -219,7 +210,22 @@ namespace DoAnMon.Controllers
             }
 
             await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
+            return Ok();
+        }
+
+        [HttpDelete]
+        public async Task<IActionResult> Delete_Criteria(int id)
+        {
+            var criterion = await _context.Criteria.FindAsync(id);
+            if (criterion == null)
+            {
+                return NotFound();
+            }
+
+            _context.Criteria.Remove(criterion);
+            await _context.SaveChangesAsync();
+
+            return Ok(); // Trả về trạng thái thành công
         }
 
         private bool RubricExists(int id)

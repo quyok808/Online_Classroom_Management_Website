@@ -5,13 +5,9 @@
 	Layout = "~/Areas/Admin/Views/Shared/_LayoutAdmin.cshtml";
 }
 
-
-<h1 style="color: #FA7070; padding-bottom:20px; padding-top:20px;text-align:center;">QUẢN LÝ NGƯỜI DÙNG</h1>
-
-<table class="table" @* style="font-size: 20px; border-collapse: collapse;border: 1px solid #000; border-right: none; border-right: 1px solid #000; ;" *@>
+<table class="table" >
 	<thead>
 		<tr>
-			@* <th>Mã người dùng</th> *@
 			<th>Mã số</th>
 			<th>Tên</th>
 			<th>Email</th>
@@ -48,7 +44,6 @@
 		}
 	</tbody>
 </table> 
-<a style="text-align: center;display: flex;justify-content: center;" href="/Admin/Home/DSbaipost">Danh sách bài post</a>
 @if (TempData["AlertMessage"] != null)
 {
     <script>

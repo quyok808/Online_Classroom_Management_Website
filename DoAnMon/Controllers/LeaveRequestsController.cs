@@ -111,6 +111,8 @@ namespace DoAnMon.Controllers
 
 			if (ModelState.IsValid)
 			{
+				DateTime now = DateTime.Now;
+				leaveRequest.ThoiGianYeuCau = now;
 				_context.Add(leaveRequest);
 				await _context.SaveChangesAsync();
 				return Json(new { success = true, message = "Leave request created successfully." });
