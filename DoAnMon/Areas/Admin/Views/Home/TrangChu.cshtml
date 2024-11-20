@@ -388,6 +388,7 @@
                 <table id="leaveRequestsTable">
                     <thead>
                         <tr>
+                            <th>Mã giảng viên</th>
                             <th>Tên Giáo Viên</th>
                             <th>Ngày Gửi Đơn</th>
                             <th>Thời Gian Nghỉ</th>
@@ -403,6 +404,7 @@
                                 var name = await _userManager.FindByIdAsync(item.UserID);
 
                                 <tr>
+                                    <td>@name.Mssv</td>
                                     <td>@name.Name</td>
                                     <td>@(item.ThoiGianYeuCau == null ? "-1" : item.ThoiGianYeuCau.ToString("dd/MM/yyyy - HH:mm:ss"))</td>
                                     <td>@item.StartDate.ToString("dd/MM/yyyy") - @item.EndDate.ToString("dd/MM/yyyy")</td>
@@ -414,7 +416,7 @@
                                         <button popovertarget="popover-@item.Id">Details</button>
                                     </td>
                                 </tr>
-                                <div id="popover-@item.Id" popover>
+                                    <div id="popover-@item.Id" popover style="position: absolute; left: 50%; transform: translate(-50%,50%); ">
                                     <div class="card shadow">
                                         <div class="card-header bg-primary text-white">
                                             <h5 class="card-title">Đơn Xin Nghỉ: @name.Name</h5>
