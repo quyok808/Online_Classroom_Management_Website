@@ -1480,7 +1480,22 @@
 
 				@if (item.Type == "Post")
 				{
-					<p style="font-size: 16px; margin-bottom: 0px;">@item.Content</p>
+					string content = item.Content;
+					string pattern = @"(https?://[a-zA-Z0-9.-]+(?:/[^\s]*)?)"; // Regex nhận diện URL đầy đủ với đường dẫn
+					var parts = System.Text.RegularExpressions.Regex.Split(content, pattern); // Tách nội dung
+					<p style="font-size: 16px; margin-bottom: 0px;">
+						@foreach (var part in parts)
+						{
+							if (System.Text.RegularExpressions.Regex.IsMatch(part, pattern)) // Nếu là link hợp lệ
+							{
+								<a href="@part" target="_blank" style="color: #007bff; text-decoration: none;">@part</a>
+							}
+							else // Nếu không phải là link
+							{
+								@part
+							}
+						}
+					</p>
 				}
 				<p class="post-created-at" style="font-size: 14px; color: gray; margin-top: 0px;">@item.CreatedAt.ToString("dd/MM/yyyy - HH:mm:ss")</p>
 			</div>
@@ -1559,23 +1574,6 @@
 	}
 
 </script>
-@*<script>
-	function populatePostForm(title, content, postId) {
-		Điền tiêu đề và nội dung vào form
-		document.getElementById('postTitle').value = title;
-		document.getElementById('postContent').value = content;
-		document.getElementById('postIdInput').value = postId;
-
-		Ẩn danh sách bài viết và hiển thị form sử dụng lại
-		document.getElementById('postList').style.display = 'none'; Ẩn postList
-		document.getElementById('reuseForm').style.display = 'block'; Hiển thị reuseForm
-	}
-	function cancelReuse() {
-		Ẩn form sử dụng lại và hiển thị lại danh sách bài viết
-		document.getElementById('reuseForm').style.display = 'none'; Ẩn reuseForm
-		document.getElementById('postList').style.display = 'block'; Hiển thị lại postList
-	}
-</script>*@
 <script>
 	function toggleClassSelection() {
 		var form = document.getElementById("postContainer");
@@ -1644,7 +1642,6 @@
 		}
 	}
 </script>@*form sửa*@
-
 <script>
 	const iconButtons = document.querySelectorAll('.icon'); // Chọn tất cả các phần tử có class "icon"
 
@@ -1672,7 +1669,6 @@
 		});
 	});
 </script>@*option xóa & sửa*@
-
 <script>
 	function expandContent() {
 		const expandableForm = document.getElementById('expandable-form');
