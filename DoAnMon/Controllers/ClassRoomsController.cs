@@ -29,6 +29,7 @@ using Microsoft.IdentityModel.Tokens;
 using DoAnMon.Migrations;
 using DoAnMon.SendMail;
 using System.Security.Claims;
+using DoAnMon.ViewModels;
 namespace DoAnMon.Controllers
 {
 	[Authorize(Roles ="Admin, Teacher, Student")]
@@ -808,79 +809,162 @@ namespace DoAnMon.Controllers
 			}
 		}
 
-		// GET: ClassRooms/Edit/5
-		public async Task<IActionResult> Edit(string id)
-		{
-			ViewBag.ListRoom = userClasses;
-			if (id == null)
-			{
-				return NotFound();
-			}
+        // GET: ClassRooms/Edit/5
+        //public async Task<IActionResult> Edit(string id)
+        //{
+        //	ViewBag.ListRoom = userClasses;
+        //	if (id == null)
+        //	{
+        //		return NotFound();
+        //	}
 
-			var classRoom = await _context.classRooms.FindAsync(id);
-			if (classRoom == null)
-			{
-				return NotFound();
-			}
+        //	var classRoom = await _context.classRooms.FindAsync(id);
+        //	if (classRoom == null)
+        //	{
+        //		return NotFound();
+        //	}
 
-			return View(classRoom);
-		}
+        //	return View(classRoom);
+        //}
 
-		[HttpPost]
-		[ValidateAntiForgeryToken]
-		public async Task<IActionResult> Edit(string id, ClassRoom classRoom)
-		{
+        //[HttpPost]
+        //[ValidateAntiForgeryToken]
+        //public async Task<IActionResult> Edit(string id, ClassRoom classRoom)
+        //{
 
-			if (id == null || classRoom == null || classRoom.Id != id)
-			{
-				return NotFound();
-			}
+        //	if (id == null || classRoom == null || classRoom.Id != id)
+        //	{
+        //		return NotFound();
+        //	}
 
-			if (ModelState.IsValid)
-			{
-				try
-				{
-					// Lấy thông tin classRoom hiện tại từ cơ sở dữ liệu
-					var existingClassRoom = await _context.classRooms.FindAsync(id);
+        //	if (ModelState.IsValid)
+        //	{
+        //		try
+        //		{
+        //			// Lấy thông tin classRoom hiện tại từ cơ sở dữ liệu
+        //			var existingClassRoom = await _context.classRooms.FindAsync(id);
 
-					if (existingClassRoom == null)
-					{
-						return NotFound();
-					}
+        //			if (existingClassRoom == null)
+        //			{
+        //				return NotFound();
+        //			}
 
-					// Lấy thông tin chủ sở hữu (owner) của classRoom hiện tại
-					var owner = await _context.Users.FirstOrDefaultAsync(u => u.Id == existingClassRoom.UserId);
+        //			// Lấy thông tin chủ sở hữu (owner) của classRoom hiện tại
+        //			var owner = await _context.Users.FirstOrDefaultAsync(u => u.Id == existingClassRoom.UserId);
 
-					// Cập nhật thông tin từ classRoom được gửi từ view
-					existingClassRoom.Name = classRoom.Name;
-					existingClassRoom.Description = classRoom.Description;
+        //			// Cập nhật thông tin từ classRoom được gửi từ view
+        //			existingClassRoom.Name = classRoom.Name;
+        //			existingClassRoom.Description = classRoom.Description;
 
-					// Gán lại giá trị UserId
-					existingClassRoom.UserId = existingClassRoom.UserId; // Giữ nguyên giá trị UserId
+        //			// Gán lại giá trị UserId
+        //			existingClassRoom.UserId = existingClassRoom.UserId; // Giữ nguyên giá trị UserId
 
-					_context.Update(existingClassRoom);
-					await _context.SaveChangesAsync();
-					return RedirectToAction(nameof(Index));
-				}
-				catch (DbUpdateConcurrencyException)
-				{
-					if (!ClassRoomExists(classRoom.Id))
-					{
-						return NotFound();
-					}
-					else
-					{
-						throw;
-					}
-				}
-			}
-			return View(classRoom);
-		}
+        //			_context.Update(existingClassRoom);
+        //			await _context.SaveChangesAsync();
+        //			return RedirectToAction(nameof(Index));
+        //		}
+        //		catch (DbUpdateConcurrencyException)
+        //		{
+        //			if (!ClassRoomExists(classRoom.Id))
+        //			{
+        //				return NotFound();
+        //			}
+        //			else
+        //			{
+        //				throw;
+        //			}
+        //		}
+        //	}
+        //	return View(classRoom);
+        //}
 
-		private bool ClassRoomExists(string id)
-		{
-			return _context.classRooms.Any(e => e.Id == id);
-		}
+        // GET: ClassRooms/Edit/5
+        public async Task<IActionResult> Edit(string id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            // Lấy thông tin lớp học dựa trên Id
+            var classRoom = await _context.classRooms.FindAsync(id);
+            if (classRoom == null)
+            {
+                return NotFound();
+            }
+
+            // Truyền dữ liệu ra ViewModel
+            var viewModel = new EditClassRoomViewModel
+            {
+                Id = classRoom.Id,
+                Name = classRoom.Name,
+                Description = classRoom.Description,
+                StartDate = classRoom.StartDate,
+                EndDate = classRoom.EndDate,
+                DaysOfWeek = classRoom.DaysOfWeek?.Split(',') ?? Array.Empty<string>(),
+                StartTime = classRoom.StartTime,
+                EndTime = classRoom.EndTime
+            };
+
+            return View(viewModel);
+        }
+
+        // POST: ClassRooms/Edit/5
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Edit(string id, EditClassRoomViewModel viewModel)
+        {
+            if (id != viewModel.Id)
+            {
+                return NotFound();
+            }
+
+            if (ModelState.IsValid)
+            {
+                try
+                {
+                    // Lấy thông tin lớp học từ database
+                    var classRoom = await _context.classRooms.FindAsync(id);
+                    if (classRoom == null)
+                    {
+                        return NotFound();
+                    }
+
+                    // Cập nhật các trường được chỉnh sửa
+                    classRoom.Name = viewModel.Name;
+                    classRoom.Description = viewModel.Description;
+                    classRoom.StartDate = viewModel.StartDate;
+                    classRoom.EndDate = viewModel.EndDate;
+                    classRoom.DaysOfWeek = string.Join(",", viewModel.DaysOfWeek);
+                    classRoom.StartTime = viewModel.StartTime;
+                    classRoom.EndTime = viewModel.EndTime;
+
+                    // Lưu lại thay đổi
+                    _context.Update(classRoom);
+                    await _context.SaveChangesAsync();
+
+                    return RedirectToAction(nameof(Create));
+                }
+                catch (DbUpdateConcurrencyException)
+                {
+                    if (!ClassRoomExists(viewModel.Id))
+                    {
+                        return NotFound();
+                    }
+                    else
+                    {
+                        throw;
+                    }
+                }
+            }
+            return View(viewModel);
+        }
+
+        // Kiểm tra lớp học có tồn tại không
+        private bool ClassRoomExists(string id)
+        {
+            return _context.classRooms.Any(e => e.Id == id);
+        }
 
 		private static string classID;
 		public IActionResult AddListSV(string id)
