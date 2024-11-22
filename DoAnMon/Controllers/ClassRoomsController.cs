@@ -1,4 +1,4 @@
-﻿  using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -188,7 +188,7 @@ namespace DoAnMon.Controllers
 			var owner = await _context.Users.FirstOrDefaultAsync(u => u.Id == classRoom.UserId);
 			var Lecture = await _context.BaiGiang.Where(p => p.ClassId == classRoom.Id).ToListAsync();
 			var chatHistory = await _context.Messages.Where(p => p.ClassRoomId == classRoom.Id).ToListAsync();
-			var homework = await _context.baiTaps.Where(p => p.ClassRoomId == classRoom.Id).ToListAsync();
+			var homework = await _context.baiTaps.Where(p => p.ClassRoomId == classRoom.Id).OrderByDescending(p => p.CreatedAt).ToListAsync();
 			var post = await _context.posts.Where(p => p.ClassRoomId == classRoom.Id).ToListAsync();
 			if (owner == null)
 			{
@@ -560,7 +560,7 @@ namespace DoAnMon.Controllers
 		}
 
 		[HttpPost]
-		public async Task<IActionResult> CreateBaitap(string AttactURL, string Content, string Title, string ClassId, string FileFormat, DateTime Deadline, DateTime CreateAt)
+		public async Task<IActionResult> CreateBaitap(string AttactURL, string Content, string Title, string ClassId, string FileFormat, DateTime Deadline, DateTime CreateAt, int MaxSize)
 		{
 
 			BaiTap baitap = new BaiTap();
@@ -571,6 +571,7 @@ namespace DoAnMon.Controllers
 			baitap.ClassRoomId = ClassId;
 			baitap.CreatedAt = DateTime.Now;
 			baitap.FileFormat = FileFormat;
+			baitap.MaxSize = MaxSize != 0 ? MaxSize : 10;
 			if (Deadline.ToString() != "01/01/0001 12:00:00 AM")
 			{
 				baitap.Deadline = Deadline;
