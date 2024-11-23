@@ -1,7 +1,7 @@
 ﻿@model IEnumerable<DoAnMon.Models.BaiGiang>
 
 @{
-    var lectures = Model != null ? Model.ToList() : new List<BaiGiang>();
+    var lectures = Model != null ? Model.OrderBy(p => p.Id).ToList() : new List<BaiGiang>();
     var totalCount = lectures.Count;
     bool isOwner = ViewBag.Isowner;
 }

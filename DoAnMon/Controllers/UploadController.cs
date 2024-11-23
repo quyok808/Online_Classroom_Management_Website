@@ -21,7 +21,7 @@ namespace DoAnMon.Controllers
 			_context = context;
 		}
 
-		[HttpPost]
+		[HttpPost("UploadChunk")]
 		public async Task<IActionResult> UploadChunk()
 		{
 			var folderType = Request.Form["folderType"]; // Lấy loại thư mục từ yêu cầu
@@ -117,7 +117,7 @@ namespace DoAnMon.Controllers
 
 
         // Kiểm tra chunk đã tồn tại chưa
-        [HttpGet]
+        [HttpGet("DoesChunkExist")]
 		public IActionResult DoesChunkExist()
 		{
 			var resumableChunkNumber = Request.Query["resumableChunkNumber"];
@@ -135,7 +135,7 @@ namespace DoAnMon.Controllers
 			}
 		}
 
-		[HttpPost]
+		[HttpPost("UploadFileResumable")]
 		public IActionResult UploadFileResumable()
 		{
 			var resumableIdentifier = Request.Form["resumableIdentifier"];
