@@ -12,6 +12,7 @@ namespace DoAnMon.Models
         public string? RoomOnline { get; set; }
         public string? backgroundUrl { get; set; }
         public int STT { get; set; }
+        public int? RubricId { get; set; } // Nếu dùng rubric default thì giá trị là -1
 
 		// Các trường mới cho ngày học
 		public DateTime StartDate { get; set; }
@@ -20,6 +21,7 @@ namespace DoAnMon.Models
 		public TimeSpan StartTime { get; set; }
 		public TimeSpan EndTime { get; set; }
 
+        public Rubric? Rubric { get; set; }
 		[ValidateNever]
         public ICollection<ClassroomDetail> ClassroomDetails { get; set; }
         [ValidateNever]

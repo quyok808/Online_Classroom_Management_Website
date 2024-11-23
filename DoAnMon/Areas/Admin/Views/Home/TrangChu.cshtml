@@ -16,12 +16,6 @@
     var counts = chartData.Select(c => c.Count).ToList();
 }
 <style>
-    h1 {
-        text-align: center;
-        color: #333;
-        margin: 20px 0;
-    }
-
     .container-admin {
         display: flex;
         justify-content: space-between;
@@ -58,24 +52,24 @@
         transform: translateY(-5px);
     }
 
-    table {
+    #leaveRequestsTable {
         width: 100%;
         border-collapse: collapse;
         margin-top: 20px;
     }
 
-    table, th, td {
+        #leaveRequestsTable, #leaveRequestsTable > thead > tr > th, #leaveRequestsTable > tbody > tr > td {
         border: 1px solid #ddd;
         padding: 12px;
         text-align: left;
     }
 
-    th {
+    #leaveRequestsTable > thead > tr > th {
         background-color: #007bff;
         color: white;
     }
 
-    tr:nth-child(even) {
+    #leaveRequestsTable > thead > tr:nth-child(even) {
         background-color: #f2f2f2;
     }
 
@@ -92,114 +86,504 @@
         font-size: 24px;
         margin-bottom: 40px;
     }
+</style>
+<style>
+    @@import url("https://fonts.googleapis.com/css2?family=JetBrains+Mono:ital,wght@0,100..800;1,100..800&family=Literata:ital,opsz,wght@0,7..72,200..900;1,7..72,200..900&family=Lobster&family=Pinyon+Script&display=swap");
 
-    ul {
-        list-style-type: none;
+    * {
+        margin: 0;
         padding: 0;
+        box-sizing: border-box;
     }
 
-        ul li {
-            background: #e9ecef;
-            margin: 5px 0;
-            padding: 15px;
-            border-radius: 5px;
-            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    .admin-container {
+        display: flex;
+    }
+
+    .left-container_admin {
+        width: 20%;
+        position: sticky;
+        top: 0;
+        align-self: flex-start;
+        box-shadow: 4px 4px 4px rgba(0, 0, 0, 0.25);
+        height: 100vh;
+        overflow-y: auto;
+    }
+
+    /* Ẩn thanh cuộn */
+    .left-container_admin::-webkit-scrollbar {
+        display: none; /* Dành cho Chrome, Safari và Edge */
+    }
+
+    .left-container_admin {
+        -ms-overflow-style: none; /* Dành cho Internet Explorer và Edge */
+        scrollbar-width: none; /* Dành cho Firefox */
+    }
+
+    .chiMuc {
+        margin-top: 1rem;
+    }
+
+    .chiMuc > li {
+        padding: 10px;
+        padding-bottom: 26px;
+    }
+
+    .itemChiMuc {
+        font-family: "Lobster", sans-serif;
+        font-size: 16px;
+        color: #000000;
+        text-decoration: none;
+    }
+
+    .chiMuc li .active {
+        width: 100%;
+        height: 5px;
+        background-color: #9af6b4; /* Active color */
+        bottom: 0;
+        left: 0;
+    }
+
+    .chiMuc li.active .active {
+        display: block; /* Show for active item */
+    }
+
+    .right-container_admin {
+        flex: 1;
+        padding: 20px;
+        /* background-color: antiquewhite; */
+        /* height: 100vh; */
+    }
+
+    .title_chiMuc {
+        font-family: "Lobster", sans-serif;
+        font-size: 36px;
+    }
+
+    .rubric-search {
+        margin-top: 15px;
+    }
+
+    /* search box Rubric*/
+    .form-container_admin {
+        width: 60%;
+        height: 3rem;
+        position: relative;
+        display: flex;
+        border-radius: 1rem;
+    }
+
+    .input-field_admin {
+        width: 100%;
+        height: 100%;
+        padding: 0 1rem;
+        font-size: 1rem;
+        border-radius: 1rem;
+        background-color: transparent;
+        border: 1px solid #000000;
+        outline: none;
+        background-color: white;
+        transition: box-shadow 0.15s;
+    }
+
+        .input-field_admin:focus {
+            box-shadow: 0 0 0 3px rgba(0, 0, 0, 0.25);
         }
 
-    footer {
-        text-align: center;
-        margin-top: 30px;
-        color: #777;
-        padding: 10px 0;
+    .input-label_admin {
+        position: absolute;
+        top: 50%;
+        left: 1rem;
+        transform: translateY(-50%);
+        background-color: white;
+        font-size: 1rem;
+        color: #000000;
+        padding: 0 0.5rem;
+        transition: all 0.15s;
+        font-family: "Literata", serif;
+    }
+
+    .input-field_admin:focus + .input-label_admin,
+    .input-field_admin:valid + .input-label_admin {
+        top: 0;
+        left: 0.75rem;
+        font-size: 0.875rem;
+        color: #000000;
+    }
+    /*=========================================*/
+
+    .rubric_container_admin {
+        width: 100%;
+        margin-top: 10px;
+        max-height: 900px;
+        overflow-y: scroll;
+        /*Cần custom lại scroll bar*/
+    }
+
+    .Rubric-info_admin {
+        border: 1px solid #000000;
+        border-radius: 10px;
+    }
+
+    .rubric_container_admin {
+        display: flex;
+        flex-wrap: wrap;
+        /* gap: 60px; */ /* Khoảng cách giữa các thẻ */
+        justify-content: flex-start;
+    }
+
+    .Rubric-info_admin {
+        /* flex: 1 1 calc(33.333% - 20px); */ /* Chiều rộng của mỗi thẻ là 1/3 hàng trừ đi khoảng cách */
+        box-sizing: border-box;
+        border: 1px solid #000000;
+        background-color: #f9f9f9;
+        max-height: 300px;
+        margin: 20px;
+    }
+
+    .Rubric-info-head_admin {
+        border-top-left-radius: 10px;
+        border-top-right-radius: 10px;
+        background-color: aqua;
+        height: 47px;
+        display: grid;
+        place-content: center;
+        border-bottom: 1px solid #000000;
+    }
+
+    .Rubric-info-head-title_admin {
+        font-family: "Lobster", sans-serif;
+        padding: 0 20px;
+        font-size: 20px;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+
+    .Rubric-info-body_admin {
+        padding: 20px;
+    }
+
+    .Rubric-info-body-infomation_admin {
+        font-family: "JetBrains Mono", sans-serif;
+        font-size: 14px;
+    }
+
+    .iframe-custom_admin {
+        border-radius: 5px;
+        border: 1px solid #000000;
+        pointer-events: none;
+    }
+
+    .table-changeSchedule {
+        margin-top: 10px;
+    }
+
+    .custom-table_admin > thead > tr > th {
+        background-color: #b4b4b8;
+    }
+    /*Bo viền table*/
+    .custom-table_admin {
+        border-radius: 10px;
+        border-collapse: separate;
+        border-spacing: 0;
+    }
+
+        /* Apply bottom and right borders to table cells */
+        .custom-table_admin > thead > tr > th,
+        .custom-table_admin > tbody > tr > td {
+            border-bottom: 1px solid black; /* Bottom border */
+            border-right: 1px solid black; /* Right border */
+            padding: 0.5rem; /* Optional: Add padding for content */
+        }
+
+        .custom-table_admin tr td:first-child,
+        .custom-table_admin tr th:first-child {
+            border-left: 1px solid black;
+        }
+
+        .custom-table_admin tr th {
+            border-top: 1px solid black;
+        }
+
+        .custom-table_admin tr:first-child th:first-child {
+            border-top-left-radius: 10px;
+        }
+
+        .custom-table_admin tr:first-child th:last-child {
+            border-top-right-radius: 10px;
+        }
+
+        .custom-table_admin tr:last-child td:first-child {
+            border-bottom-left-radius: 10px;
+        }
+
+        .custom-table_admin tr:last-child td:last-child {
+            border-bottom-right-radius: 10px;
+        }
+    /*===================================================*/
+
+</style>
+<style>
+    .flowtableLeaveRequest::-webkit-scrollbar {
+        display: none;
+    }
+
+    .info-container_admin{
+        display: flex;
+        justify-content: space-between;
     }
 </style>
-<h1>Dashboard Quản Lý Đơn Xin Nghỉ Giáo Viên</h1>
-
-<div class="container-admin">
-    <div class="left-side">
-        <h2>Tổng Quan Đơn Xin Nghỉ</h2>
-        <p>Số lượng đơn xin nghỉ đã gửi: <strong>@Model.Count</strong></p>
-        <p>Số lượng đơn đã được phê duyệt: <strong>@countDuyet</strong></p>
-        <p>Số lượng đơn đang chờ xử lý: <strong>@countCho</strong></p>
-        <p>Số lượng đơn bị từ chối: <strong>@countDeny</strong></p>
+<div class="admin-container">
+    <div class="left-container_admin">
+        <a href="/">
+            <img src="https://media.loveitopcdn.com/3807/logo-hutech-1.png"
+             alt="HUTECH"
+             width="100%"
+             height="auto" />
+        </a>
+        <ul class="chiMuc">
+            <li>
+                <a href="#NghiPhep"
+                   class="itemChiMuc"
+                   style="background-color: #fff">Quản lý đơn xin nghỉ phép</a>
+                <div class="active"></div>
+            </li>
+            <li>
+                <a href="#User" class="itemChiMuc" style="background-color: #fff">Quản lý người dùng</a>
+                <div class="active" style="display: none"></div>
+            </li>
+            <li>
+                <a href="#Post" class="itemChiMuc" style="background-color: #fff">Quản lý truyền thông</a>
+                <div class="active" style="display: none"></div>
+            </li>
+            <li>
+                <a href="#Rubric" class="itemChiMuc" style="background-color: #fff">Quản lý rubric</a>
+                <div class="active" style="display: none"></div>
+            </li>
+            <li>
+                <a href="#ChangeSchedule"
+                   class="itemChiMuc"
+                   style="background-color: #fff">Quản lý đơn xin đổi lịch học</a>
+                <div class="active" style="display: none"></div>
+            </li>
+        </ul>
     </div>
 
-    <div class="box-admin">
-        <h2>Danh Sách Đơn Xin Nghỉ</h2>
-        <table id="leaveRequestsTable">
-            <thead>
-                <tr>
-                    <th>Tên Giáo Viên</th>
-                    <th>Ngày Gửi Đơn</th>
-                    <th>Thời Gian Nghỉ</th>
-                    <th>Lý Do Nghỉ</th>
-                    <th>Tình Trạng Đơn</th>
-                    <th></th>
-                </tr>
-            </thead>
-            <tbody>
-                @{
-                    foreach(var item in Model)
-                    {
-                        var name = await _userManager.FindByIdAsync(item.UserID);
-                        
+    <div class="right-container_admin">
+        <h1 id="NghiPhep" class="title_chiMuc">Quản lý đơn xin nghỉ phép</h1>
+
+        <div class="container-admin">
+            <div class="left-side">
+                <h2>Tổng Quan Đơn Xin Nghỉ</h2>
+                <p>Số lượng đơn xin nghỉ đã gửi: <strong>@Model.Count</strong></p>
+                <p>Số lượng đơn đã được phê duyệt: <strong>@countDuyet</strong></p>
+                <p>Số lượng đơn đang chờ xử lý: <strong>@countCho</strong></p>
+                <p>Số lượng đơn bị từ chối: <strong>@countDeny</strong></p>
+            </div>
+
+            <div class="box-admin">
+                <h2>Danh Sách Đơn Xin Nghỉ</h2>
+                <div class="flowtableLeaveRequest" style="max-height: 313px; overflow-y: auto; padding:0;">
+                <table id="leaveRequestsTable">
+                    <thead>
                         <tr>
-                            <td>@name.Name</td>
-                            <td>Nhớ bổ sung</td>
-                            <td>@item.StartDate.ToString("dd/MM/yyyy") - @item.EndDate.ToString("dd/MM/yyyy")</td>
-                            <td>@item.Reasion</td>
-                            <td>
-                                @(item.Status == 1 ? "Đã phê duyệt" : item.Status == -1 ? "Bị từ chối" : "Đang chờ duyệt")
-                            </td>
-                            <td>
-                                <button popovertarget="popover-@item.Id">Details</button>
-                            </td>
+                            <th>Mã giảng viên</th>
+                            <th>Tên Giáo Viên</th>
+                            <th>Ngày Gửi Đơn</th>
+                            <th>Thời Gian Nghỉ</th>
+                            <th>Lý Do Nghỉ</th>
+                            <th>Tình Trạng Đơn</th>
+                            <th></th>
                         </tr>
-                        <div id="popover-@item.Id" popover>
-                            <div class="card shadow">
-                                <div class="card-header bg-primary text-white">
-                                    <h5 class="card-title">Đơn Xin Nghỉ: @name.Name</h5>
-                                </div>
-                                <div class="card-body">
-                                    <p><strong>Ngày Gửi Đơn:</strong> @item.StartDate.ToString("dd/MM/yyyy")</p>
-                                    <p><strong>Thời Gian Nghỉ:</strong> @item.EndDate</p>
-                                    <p><strong>Lý Do Nghỉ:</strong> @item.Reasion</p>
-                                    @if (item.Status == 0)
-                                    {
-                                        <div class="d-flex justify-content-between">
-                                            <button class="btn btn-success" onclick="approveRequest(@item.Id)">Duyệt</button>
-                                            <button class="btn btn-danger" onclick="rejectRequest(@item.Id)">Từ chối</button>
+                    </thead>
+                    <tbody>
+                        @{
+                            foreach (var item in Model)
+                            {
+                                var name = await _userManager.FindByIdAsync(item.UserID);
+
+                                <tr>
+                                    <td>@name.Mssv</td>
+                                    <td>@name.Name</td>
+                                    <td>@(item.ThoiGianYeuCau == null ? "-1" : item.ThoiGianYeuCau.ToString("dd/MM/yyyy - HH:mm:ss"))</td>
+                                    <td>@item.StartDate.ToString("dd/MM/yyyy") - @item.EndDate.ToString("dd/MM/yyyy")</td>
+                                    <td>@item.Reasion</td>
+                                    <td>
+                                        @(item.Status == 1 ? "Đã phê duyệt" : item.Status == -1 ? "Bị từ chối" : "Đang chờ duyệt")
+                                    </td>
+                                    <td>
+                                        <button popovertarget="popover-@item.Id">Details</button>
+                                    </td>
+                                </tr>
+                                    <div id="popover-@item.Id" popover style="position: absolute; left: 50%; transform: translate(-50%,50%); ">
+                                    <div class="card shadow">
+                                        <div class="card-header bg-primary text-white">
+                                            <h5 class="card-title">Đơn Xin Nghỉ: @name.Name</h5>
                                         </div>
-                                    }
+                                        <div class="card-body">
+                                            <p><strong>Thời gian gửi đơn:</strong> @(item.ThoiGianYeuCau == null ? "-1" : item.ThoiGianYeuCau.ToString("dd/MM/yyyy - HH:mm:ss"))</p>
+                                            <p><strong>Lớp: </strong>@item.ClassRoom.Name (@item.ClassRoomId)</p>
+                                            <p><strong>Nghỉ từ ngày:</strong> @item.StartDate.ToString("dd/MM/yyyy")</p>
+                                            <p><strong>Đến ngày:</strong> @item.EndDate</p>
+                                            <p><strong>Lý Do Nghỉ:</strong> @item.Reasion</p>
+                                            @if (item.Status == 0)
+                                            {
+                                                <div class="d-flex justify-content-between">
+                                                    <button class="btn btn-success" onclick="approveRequest(@item.Id)">Duyệt</button>
+                                                    <button class="btn btn-danger" onclick="rejectRequest(@item.Id)">Từ chối</button>
+                                                </div>
+                                            }
+                                        </div>
+                                    </div>
                                 </div>
+                            }
+                        }
+                    </tbody>
+                </table>
+                </div>
+            </div>
+        </div>
+
+        <div class="chart-admin">
+            <canvas id="leaveChart" width="600" height="300"></canvas>
+        </div>
+
+        @* <div class="box-admin">
+            <h2>Yêu cầu khi làm đơn nghỉ phép</h2>
+            <ul>
+                <li>Lý do nghỉ phép: Nghỉ bệnh, Nghỉ thai sản, Nghỉ cá nhân, Nghỉ chăm sóc gia đình.</li>
+                <li>Thời gian nghỉ tối thiểu: 1 ngày.</li>
+                <li>Thời gian thông báo trước: ít nhất 3 ngày.</li>
+                <li>Yêu cầu về hồ sơ: Đơn xin nghỉ viết tay hoặc trực tuyến, Giấy tờ chứng minh (nếu có).</li>
+                <li>Thời gian xử lý đơn: Trong vòng 2 ngày.</li>
+            </ul>
+        </div> *@
+        @* ====================================================== *@
+        <h1 id="User" class="title_chiMuc">Quản lý người dùng</h1>
+        <iframe width="100%"
+                style="max-height: 850px; min-height: 500px; overflow-y: auto;"
+                src="https://localhost:7142/Admin/Home/PhanQuyen"
+                frameborder="0">
+        </iframe>
+        @* ====================================================== *@
+        <h1 id="Post" class="title_chiMuc">Quản lý truyền thông</h1>
+        <iframe width="100%"
+                style="max-height: 850px; min-height: 500px; overflow-y: auto;"
+                src="https://localhost:7142/Admin/Home/DSbaipost"
+                frameborder="0">
+        </iframe>
+
+        @* ====================================================== *@
+        <h1 id="Rubric" class="title_chiMuc">Quản lý Rubric</h1>
+        <div class="rubric-search">
+            <form action="#">
+                <div class="form-container_admin">
+                    <input required=""
+                           class="input-field_admin"
+                           id="ClassRoomId"
+                           type="text" />
+                    <label class="input-label_admin" for="ClassRoomId">Tìm mã lớp</label>
+                </div>
+            </form>
+        </div>
+        <div class="rubric_container_admin">
+            @{
+                foreach (var item in ViewBag.ListRubrics as List<Rubric>)
+                {
+                    <a href="/Rubrics/Details/@item.Id?classRoomId=@item.ClassRoomId&isowner=false" style="color: #000000; text-decoration: none">
+                        <div class="Rubric-info_admin">
+                            <div class="Rubric-info-head_admin">
+                                <h6 class="Rubric-info-head-title_admin">@item.Name</h6>
+                            </div>
+                            <div class="Rubric-info-body_admin">
+                                <div class="info-container_admin">
+                                    <div><p class="Rubric-info-body-infomation_admin">
+                                        Lớp: @item.ClassRoom.Name - @item.ClassRoomId
+                                    </p>
+                                    </div>
+                                    <div><a style="float: right;" href="@Url.Action("Edit","Rubrics",new {id = item.Id})"><i class="fa-regular fa-pen-to-square" style="color: #000000;"></i></a></div>
+                                </div>
+                                <hr />
+                                @if (item?.Id != null && item.ClassRoomId != null)
+                                {
+                                    <iframe width="100%"
+                                            height="auto"
+                                            src="@Url.Action("Details", "Rubrics", new { id = item.Id, classRoomId = item.ClassRoomId, isowner = false })"
+                                            frameborder="0"
+                                            class="iframe-custom_admin myIframe"
+                                            ></iframe>
+                                }
+                                else
+                                {
+                                    <img src="https://halfbaked.education/wp-content/uploads/2020/11/Rubric-960x832.jpg"
+                                         alt="Rubric Placeholder"
+                                         style="width: 300px; height: 151px;">
+                                }
+
                             </div>
                         </div>
-                        
-                    }
+                    </a>
                 }
-            </tbody>
-        </table>
+            }
+        </div>
+        <!-- QL đơn xin nghỉ phép -->
+        <h1 id="ChangeSchedule" class="title_chiMuc">
+            Quản lý đơn xin đổi lịch học
+        </h1>
+        <div class="rubric-search">
+            <form action="#">
+                <div class="form-container_admin">
+                    <input required=""
+                           class="input-field_admin"
+                           id="DoiLichId"
+                           type="text" />
+                    <label class="input-label_admin" for="DoiLichId">Tìm mã đơn</label>
+                </div>
+            </form>
+        </div>
+        <div class="table-changeSchedule">
+            <table id="QLChangeSchedule"
+                   class="table table-bordered custom-table_admin text-center">
+                <thead>
+                    <tr>
+                        <th>Mã đơn</th>
+                        <th>Mã lớp</th>
+                        <th>Ngày học</th>
+                        <th>Dời sang ngày</th>
+                        <th>Lý do</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>abcxyz</td>
+                        <td>abc123</td>
+                        <td>14/11/2024</td>
+                        <td>16/11/2024</td>
+                        <td>Vướng lịch IT Open Day của khoa CNTT</td>
+                        <td>✔️ &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ✖️</td>
+                    </tr>
+                    <tr>
+                        <td>abcxyz</td>
+                        <td>abc123</td>
+                        <td>14/11/2024</td>
+                        <td>16/11/2024</td>
+                        <td>Vướng lịch IT Open Day của khoa CNTT</td>
+                        <td>✔️ &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ✖️</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
     </div>
 </div>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
+        crossorigin="anonymous"></script>
 
-<div class="chart-admin">
-    <canvas id="leaveChart" width="600" height="300"></canvas>
-</div>
-
-<div class="box-admin">
-    <h2>Rubrik Cho Giáo Viên</h2>
-    <ul>
-        <li>Lý do nghỉ phép: Nghỉ bệnh, Nghỉ thai sản, Nghỉ cá nhân, Nghỉ chăm sóc gia đình.</li>
-        <li>Thời gian nghỉ tối thiểu: 1 ngày.</li>
-        <li>Thời gian thông báo trước: ít nhất 3 ngày.</li>
-        <li>Yêu cầu về hồ sơ: Đơn xin nghỉ viết tay hoặc trực tuyến, Giấy tờ chứng minh (nếu có).</li>
-        <li>Thời gian xử lý đơn: Trong vòng 2 ngày.</li>
-    </ul>
-</div>
-
-<footer>
+@* <footer>
     <p>&copy; 2024 Hệ Thống Quản Lý Nghỉ Phép Giáo Viên</p>
-</footer>
+</footer> *@
 <!-- Thêm jQuery từ CDN -->
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <!-- Hàm xử lý phê duyệt hoặc từ chối đơn -->
@@ -232,6 +616,80 @@
 </script>
 <!-- Tạo biểu đồ -->
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+    document.querySelectorAll(".itemChiMuc").forEach((item) => {
+        item.addEventListener("click", function () {
+            // Xóa lớp "active" và ẩn các thanh chỉ báo ở tất cả các mục
+            document.querySelectorAll(".itemChiMuc").forEach((el) => {
+                el.classList.remove("active");
+                el.nextElementSibling.style.display = "none";
+            });
+
+            // Thêm lớp "active" và hiển thị thanh chỉ báo cho mục được nhấp
+            this.classList.add("active");
+            this.nextElementSibling.style.display = "block";
+        });
+    });
+</script>
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        // Lấy tất cả các iframe có class 'myIframe'
+        var iframes = document.querySelectorAll('iframe.myIframe');
+
+        iframes.forEach(function (iframe) {
+            iframe.addEventListener('load', function () {
+
+                try {
+                    var iframeDocument = iframe.contentDocument || iframe.contentWindow.document;
+
+                    // Áp dụng CSS scale cho nội dung bên trong iframe
+                    var body = iframeDocument.body;
+                    if (body) {
+                        console.log("Applying styles to iframe: " + iframe.id);  // Kiểm tra khi áp dụng style
+
+                        body.style.transform = "scale(0.6)";
+                        body.style.transformOrigin = "0 0";
+                        body.style.width = "auto";  // Điều chỉnh chiều rộng để bù cho việc thu nhỏ
+                        body.style.height = "125%";
+                        body.style.overflow = "hidden";
+                    }
+                } catch (e) {
+                    console.error(`Không thể truy cập nội dung iframe ${iframe.id} do chính sách bảo mật:`, e);
+                }
+            });
+        });
+    });
+</script>
+
+
+<script>
+    jq(document).ready(function () {
+        let debounceTimer; // Khai báo debounceTimer ở đây để nó có phạm vi toàn cục trong hàm ready
+        jq('#ClassRoomId').on('input', function () {
+            clearTimeout(debounceTimer); // Xoá bộ đếm thời gian trước đó
+            const classRoomId = jq(this).val(); // Lấy giá trị nhập vào
+
+            debounceTimer = setTimeout(function () {
+                // Gửi yêu cầu AJAX sau 300ms
+                jq.ajax({
+                    url: '/Admin/Home/SearchRubrics',
+                    type: 'GET',
+                    data: { classRoomId: classRoomId },
+                    success: function (data) {
+                        jq('.rubric_container_admin').html(data); // Cập nhật danh sách
+                    },
+                    error: function () {
+                        alert('Có lỗi xảy ra khi tìm kiếm!');
+                    }
+                });
+            }, 300); // Thời gian chờ (300ms)
+        });
+    });
+</script>
+
+
+
+
 @section Scripts {
     <script>
         // Create the chart

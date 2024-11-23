@@ -12,6 +12,7 @@ namespace DoAnMon.Models
 		public bool HasSubmittedFile { get; set; }
 		public DateTime CreatedAt { get; set; }
 		public string? ClassRoomId { get; set; }
+		public int? MaxSize { get; set; }
 		
 		public DateTime? Deadline { get; set; }
 		[ValidateNever]

@@ -15,6 +15,19 @@
 	<link href="https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300..800;1,300..800&family=Roboto+Slab:wght@100..900&display=swap" rel="stylesheet">
 	<link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&family=Open+Sans:ital,wght@0,300..800;1,300..800&family=Roboto+Slab:wght@100..900&family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap" rel="stylesheet">
 	<link href="/assets/css/color.css" rel="stylesheet" />
+	<style>
+		#ClassPeriodContainer {
+			display: flex;
+			flex-wrap: wrap;
+			gap: 10px; /* Khoảng cách giữa các cột */
+		}
+
+			#ClassPeriodContainer .form-check {
+				flex: 1 1 calc(50% - 10px); /* Chia đều thành 2 cột */
+				min-width: 200px; /* Đảm bảo kích thước tối thiểu */
+			}
+
+	</style>
 </head>
 <body>
 	<!-- Navbar -->
@@ -41,7 +54,7 @@
 				</div>
 
 				<div id="addRoomModal" class="modal" tabindex="-1">
-					<div class="modal-dialog">
+					<div class="modal-dialog" style="max-width: 800px;">
 						<div class="modal-content">
 							<div class="modal-header">
 								<h5 class="modal-title" style="font-size:30px;font-weight:bold; color: #FA7070">THÊM PHÒNG HỌC</h5>
@@ -73,7 +86,7 @@
 											<label for="EndDate" class="control-label">Ngày kết thúc:</label>
 											<input type="date" name="EndDate" id="EndDate" class="form-control" required />
 										</div>
-										<div class="form-group">
+										@* <div class="form-group">
 											<label for="DaysOfWeek" class="control-label">Chọn ngày học:</label>
 											<select name="DaysOfWeek" id="DaysOfWeek" multiple class="form-control" required>
 												<option value="Monday">Thứ 2</option>
@@ -84,14 +97,134 @@
 												<option value="Saturday">Thứ 7</option>
 												<option value="Sunday">Chủ nhật</option>
 											</select>
-										</div>
+										</div> *@
 										<div class="form-group">
-											<label for="StartTime" class="control-label">Giờ bắt đầu:</label>
-											<input type="time" name="StartTime" id="StartTime" class="form-control" required />
+											<label for="DaysOfWeek" class="control-label">Chọn ngày học:</label>
+											<div id="DaysOfWeek" class="checkbox-group" style="display: flex; justify-content: space-between;">
+												<div class="form-check">
+													<input type="checkbox" id="Monday" name="DaysOfWeek" value="Monday" class="form-check-input" />
+													<label for="Monday" class="form-check-label">Thứ 2</label>
+												</div>
+												<div class="form-check">
+													<input type="checkbox" id="Tuesday" name="DaysOfWeek" value="Tuesday" class="form-check-input" />
+													<label for="Tuesday" class="form-check-label">Thứ 3</label>
+												</div>
+												<div class="form-check">
+													<input type="checkbox" id="Wednesday" name="DaysOfWeek" value="Wednesday" class="form-check-input" />
+													<label for="Wednesday" class="form-check-label">Thứ 4</label>
+												</div>
+												<div class="form-check">
+													<input type="checkbox" id="Thursday" name="DaysOfWeek" value="Thursday" class="form-check-input" />
+													<label for="Thursday" class="form-check-label">Thứ 5</label>
+												</div>
+												<div class="form-check">
+													<input type="checkbox" id="Friday" name="DaysOfWeek" value="Friday" class="form-check-input" />
+													<label for="Friday" class="form-check-label">Thứ 6</label>
+												</div>
+												<div class="form-check">
+													<input type="checkbox" id="Saturday" name="DaysOfWeek" value="Saturday" class="form-check-input" />
+													<label for="Saturday" class="form-check-label">Thứ 7</label>
+												</div>
+												<div class="form-check">
+													<input type="checkbox" id="Sunday" name="DaysOfWeek" value="Sunday" class="form-check-input" />
+													<label for="Sunday" class="form-check-label">Chủ nhật</label>
+												</div>
+											</div>
 										</div>
+
 										<div class="form-group">
-											<label for="EndTime" class="control-label">Giờ kết thúc:</label>
-											<input type="time" name="EndTime" id="EndTime" class="form-control" required />
+											<label class="control-label">Ca học:</label>
+											<div id="ClassPeriodContainer" style="overflow-y: auto;">
+												<div class="form-check">
+													<input type="checkbox" class="form-check-input" id="Period1" value="1" onchange="setClassTimes()">
+													<label class="form-check-label" for="Period1">Ca 1 - Tiết 2, 3: 07:30 đến 09:00</label>
+												</div>
+												<div class="form-check">
+													<input type="checkbox" class="form-check-input" id="Period7" value="7" onchange="setClassTimes()">
+													<label class="form-check-label" for="Period7">Tiết 1: 06:45 đến 07:30</label>
+												</div>
+												<div class="form-check">
+													<input type="checkbox" class="form-check-input" id="Period2" value="2" onchange="setClassTimes()">
+													<label class="form-check-label" for="Period2">Ca 2 - Tiết 4, 5, 6: 09:20 đến 11:35</label>
+												</div>
+												<div class="form-check">
+													<input type="checkbox" class="form-check-input" id="Period8" value="8" onchange="setClassTimes()">
+													<label class="form-check-label" for="Period8">Tiết 2: 07:30 đến 08:15</label>
+												</div>
+												<div class="form-check">
+													<input type="checkbox" class="form-check-input" id="Period3" value="3" onchange="setClassTimes()">
+													<label class="form-check-label" for="Period3">Ca 3 - Tiết 7, 8, 9: 12:30 đến 14:45</label>
+												</div>
+												<div class="form-check">
+													<input type="checkbox" class="form-check-input" id="Period9" value="9" onchange="setClassTimes()">
+													<label class="form-check-label" for="Period9">Tiết 3: 08:15 đến 09:00</label>
+												</div>
+												<div class="form-check">
+													<input type="checkbox" class="form-check-input" id="Period4" value="4" onchange="setClassTimes()">
+													<label class="form-check-label" for="Period4">Ca 4 - Tiết 10, 11: 15:05 đến 16:20</label>
+												</div>
+												<div class="form-check">
+													<input type="checkbox" class="form-check-input" id="Period10" value="10" onchange="setClassTimes()">
+													<label class="form-check-label" for="Period10">Tiết 4: 09:20 đến 10:05</label>
+												</div>
+												<div class="form-check">
+													<input type="checkbox" class="form-check-input" id="Period5" value="5" onchange="setClassTimes()">
+													<label class="form-check-label" for="Period5">Ca 5 - Tiết 13, 14, 15: 18:00 đến 20:15</label>
+												</div>
+												<div class="form-check">
+													<input type="checkbox" class="form-check-input" id="Period11" value="11" onchange="setClassTimes()">
+													<label class="form-check-label" for="Period11">Tiết 5: 10:05 đến 10:50</label>
+												</div>
+												<div class="form-check">
+													<input type="checkbox" class="form-check-input" id="Period19" value="19" onchange="setClassTimes()">
+													<label class="form-check-label" for="Period19">Ca sáng: 07:30 đến 11:35</label>
+												</div>
+												<div class="form-check">
+													<input type="checkbox" class="form-check-input" id="Period12" value="12" onchange="setClassTimes()">
+													<label class="form-check-label" for="Period12">Tiết 6: 10:50 đến 11:35</label>
+												</div>
+												<div class="form-check">
+													<input type="checkbox" class="form-check-input" id="Period20" value="20" onchange="setClassTimes()">
+													<label class="form-check-label" for="Period20">Ca chiều: 12:30 đến 16:35</label>
+												</div>
+												<div class="form-check">
+													<input type="checkbox" class="form-check-input" id="Period13" value="13" onchange="setClassTimes()">
+													<label class="form-check-label" for="Period13">Tiết 7: 12:30 đến 13:10</label>
+												</div>
+												<div class="form-check">
+													<input type="checkbox" class="form-check-input" id="Period21" value="21" onchange="setClassTimes()">
+													<label class="form-check-label" for="Period21">Ca tối: 18:00 đến 20:15</label>
+												</div>
+												<div class="form-check">
+													<input type="checkbox" class="form-check-input" id="Period14" value="14" onchange="setClassTimes()">
+													<label class="form-check-label" for="Period14">Tiết 8: 12:30 đến 13:10</label>
+												</div>
+												<div class="form-check">
+													<input type="checkbox" class="form-check-input" id="Period15" value="15" onchange="setClassTimes()">
+													<label class="form-check-label" for="Period15">Tiết 9: 13:10 đến 14:45</label>
+												</div>
+												<div class="form-check">
+													<input type="checkbox" class="form-check-input" id="Period16" value="16" onchange="setClassTimes()">
+													<label class="form-check-label" for="Period16">Tiết 10: 15:05 đến 15:50</label>
+												</div>
+												<div class="form-check">
+													<input type="checkbox" class="form-check-input" id="Period17" value="17" onchange="setClassTimes()">
+													<label class="form-check-label" for="Period17">Tiết 11: 15:50 đến 16:35</label>
+												</div>
+												<div class="form-check">
+													<input type="checkbox" class="form-check-input" id="Period18" value="18" onchange="setClassTimes()">
+													<label class="form-check-label" for="Period18">Tiết 12: 16:35 đến 17:10</label>
+												</div>
+
+											</div>
+										</div>
+										<!-- Hidden time fields to store start and end times -->
+										<input type="hidden" name="StartTime" id="StartTime" />
+										<input type="hidden" name="EndTime" id="EndTime" />
+										<div class="form-group" style="border: none;">
+											<label for="haveRubric" class="control-label">Sử dụng bảng đánh giá mặc định:</label>
+											<input type="checkbox" id="haveRubric" name="haveRubric" value="true" class="form-control" />
+											@Html.Hidden("haveRubric", "false")
 										</div>
 									</div>
 								</div>
@@ -100,8 +233,6 @@
 									<input type="submit" value="Tạo phòng" class="btn btn-primary" />
 								</div>
 							</form>
-
-
 						</div>
 					</div>
 				</div>
@@ -217,5 +348,62 @@
 				return;
 			}
 		});
+	</script>
+	<script>
+		function setClassTimes() {
+			const classTimes = {
+				"1": { start: "07:30", end: "09:00" },
+				"2": { start: "09:20", end: "11:35" },
+				"3": { start: "12:30", end: "14:45" },
+				"4": { start: "15:05", end: "16:20" },
+				"5": { start: "18:00", end: "20:15" },
+				"7": { start: "06:45", end: "07:30" },
+				"8": { start: "07:30", end: "08:15" },
+				"9": { start: "08:15", end: "09:00" },
+				"10": { start: "09:20", end: "10:05" },
+				"11": { start: "10:05", end: "10:50" },
+				"12": { start: "10:50", end: "11:35" },
+				"13": { start: "12:30", end: "13:10" },
+				"14": { start: "12:30", end: "13:10" },
+				"15": { start: "13:10", end: "14:45" },
+				"16": { start: "15:05", end: "15:50" },
+				"17": { start: "15:50", end: "16:35" },
+				"18": { start: "16:35", end: "17:10" },
+				"19": { start: "07:30", end: "11:35" },
+				"20": { start: "12:30", end: "16:35" },
+				"21": { start: "18:00", end: "20:15" }
+			};
+
+			// Lấy tất cả checkbox trong container
+			const checkboxes = document.querySelectorAll('#ClassPeriodContainer input[type="checkbox"]');
+
+			// Lọc các checkbox được chọn
+			const selectedPeriods = Array.from(checkboxes)
+				.filter(checkbox => checkbox.checked)
+				.map(checkbox => checkbox.value);
+
+			if (selectedPeriods.length > 0) {
+				let minStartTime = "23:59"; // Giờ lớn nhất để tìm giờ nhỏ nhất
+				let maxEndTime = "00:00";  // Giờ nhỏ nhất để tìm giờ lớn nhất
+
+				selectedPeriods.forEach(period => {
+					if (classTimes[period]) {
+						if (classTimes[period].start < minStartTime) {
+							minStartTime = classTimes[period].start;
+						}
+						if (classTimes[period].end > maxEndTime) {
+							maxEndTime = classTimes[period].end;
+						}
+					}
+				});
+
+				document.getElementById("StartTime").value = minStartTime;
+				document.getElementById("EndTime").value = maxEndTime;
+			} else {
+				// Nếu không chọn ca nào, đặt giá trị mặc định
+				document.getElementById("StartTime").value = "";
+				document.getElementById("EndTime").value = "";
+			}
+		}
 	</script>
 </body>

@@ -660,9 +660,156 @@
 .btn:hover{
 			background-color: lightgray;
 }
+</style>
 
-	
-	
+<style>
+	.button_btnBaiGiang {
+  position: relative;
+  width: 10rem;
+  height: 3rem;
+  cursor: pointer;
+  border: none;
+  background: none;
+}
+
+.button_btnBaiGiang svg {
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+}
+
+.border_btnBaiGiang {
+  width: 100%;
+  height: 100%;
+  stroke: black;
+  stroke-width: 2px;
+  fill: #0000;
+  rx: 1em;
+  ry: 1em;
+  stroke-dasharray: 25;
+  transition: fill 0.25s;
+  animation: 4s linear infinite stroke-animation_btnBaiGiang;
+}
+
+.button_btnBaiGiang:hover .border_btnBaiGiang {
+  fill: #0001;
+}
+
+.button_btnBaiGiang:focus .border_btnBaiGiang {
+  transition: fill 0.25s 7.75s;
+  fill: #0000;
+}
+
+@@keyframes stroke-animation_btnBaiGiang {
+  0% {
+    stroke-dashoffset: 100;
+  }
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+
+.txt-upload_btnBaiGiang {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.txt-upload_btnBaiGiang::after {
+  content: "";
+}
+
+.button_btnBaiGiang:focus .rect_btnBaiGiang {
+  stroke-dasharray: 50;
+}
+
+.button_btnBaiGiang:focus .border_btnBaiGiang {
+  stroke: #0000;
+}
+
+.button_btnBaiGiang:focus .txt-upload_btnBaiGiang {
+  opacity: 0;
+  transition: opacity 0.25s 8s;
+}
+
+.button_btnBaiGiang:focus .txt-upload_btnBaiGiang::after {
+  animation: 0.66666s anim_btnBaiGiang step-end forwards,
+    1.33333s 0.6666s anim2_btnBaiGiang linear infinite alternate;
+}
+
+@@keyframes anim_btnBaiGiang {
+  0% {
+    content: "i";
+  }
+  50% {
+    content: "in";
+  }
+  to {
+    content: "ing";
+  }
+}
+
+@@keyframes anim2_btnBaiGiang {
+  0% {
+    content: "ing";
+  }
+  33% {
+    content: "ing.";
+  }
+  66% {
+    content: "ing..";
+  }
+  to {
+    content: "ing...";
+  }
+}
+
+.loading_btnBaiGiang {
+  width: 100%;
+  height: 100%;
+  stroke: #0055d4;
+  stroke-width: 2px;
+  fill: none;
+  rx: 1em;
+  ry: 1em;
+  stroke-dasharray: 0 100;
+  transition: stroke-dasharray 0.25s ease-out;
+}
+
+.button_btnBaiGiang:focus .loading_btnBaiGiang {
+  transition: stroke 0.5s 7.5s, stroke-dasharray 8s 0.5s ease-out;
+  stroke: #08ca08;
+  stroke-dasharray: 100 0;
+}
+
+.done_btnBaiGiang {
+  fill: none;
+  stroke: #000;
+  stroke-dasharray: 0 100;
+}
+
+.button_btnBaiGiang:focus .done-cloud_btnBaiGiang {
+  transition: stroke-dasharray 0.75s 8.5s ease-out;
+  stroke-dasharray: 100 0;
+}
+
+.button_btnBaiGiang:focus .done-check_btnBaiGiang {
+  transition: stroke-dasharray 0.5s 9.2s ease-out;
+  stroke: #08ca08;
+  stroke-dasharray: 100 0;
+}
+
+/* Trạng thái focus của button */
+.button_btnBaiGiang.focus .txt-upload_btnBaiGiang {
+	opacity: 0; /* Ẩn text Upload khi trong trạng thái focus */
+}
+
+.button_btnBaiGiang.focus .loading_btnBaiGiang {
+	stroke-dasharray: 100 0; /* Hiển thị thanh tiến trình */
+}
+
 </style>
 
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
@@ -670,6 +817,26 @@
 <style>
 	.material-symbols-outlined {
 		font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 16
+	}
+</style>
+<style>
+	.custom-file-upload {
+		display: inline-block;
+		padding: 10px 20px;
+		cursor: pointer;
+		background-color: #007bff;
+		color: white;
+		border: none;
+		border-radius: 5px;
+		font-size: 14px;
+	}
+
+		.custom-file-upload:hover {
+			background-color: #0056b3;
+		}
+
+	#fileInput {
+		display: none; /* Ẩn thẻ input gốc */
 	}
 </style>
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -685,15 +852,15 @@
 	@{
 		if (Model.isOwner)
 		{
-								<form id="changeBG" action="/ClassRooms/changeBackground" method="POST" enctype="multipart/form-data" style="position: absolute; bottom: 10px; right: 10px;">
-									<input type="hidden" name="classId" value="@Model.ClassRoom.Id" />
-									<label for="file-upload" class="custom-file-upload">
-										<i class="fa-solid fa-camera"></i>
-										Thay đổi ảnh bìa
-									</label>
-									<input id="file-upload" type="file" name="image" accept="image/*" required
-									   	onchange="document.getElementById('changeBG').submit();" style="display:none;" />
-								</form>
+					<form id="changeBG" action="/ClassRooms/changeBackground" method="POST" enctype="multipart/form-data" style="position: absolute; bottom: 10px; right: 10px;">
+						<input type="hidden" name="classId" value="@Model.ClassRoom.Id" />
+						<label for="file-upload" class="custom-file-upload">
+							<i class="fa-solid fa-camera"></i>
+							Thay đổi ảnh bìa
+						</label>
+						<input id="file-upload" type="file" name="image" accept="image/*" required
+							onchange="document.getElementById('changeBG').submit();" style="display:none;" />
+					</form>
 		}
 	}
 	
@@ -768,7 +935,17 @@
 	<div class="tab" onclick="openTab(event, 'assignments')" style="font-family: Poppins, sans-serif;font-weight: 600">Bài tập</div>
 	<div class="tab" onclick="openTab(event, 'discussion')" style="font-family: Poppins, sans-serif;font-weight: 600">Thảo luận</div>
 	<div class="tab" onclick="openTab(event, 'listsv')" style="font-family: Poppins, sans-serif;font-weight: 600">Danh sách sinh viên</div>
-	<div class="tab" onclick="openTab(event, 'bangdiem')" style="font-family: Poppins, sans-serif;font-weight: 600">Bảng điểm</div>
+
+	@{
+		if (Model.CustomRubric == false)
+		{
+					<div class="tab" onclick="openTab(event, 'bangdiem')" style="font-family: Poppins, sans-serif;font-weight: 600">Bảng điểm</div>
+		}
+		else
+		{
+					<div class="tab" onclick="openTab(event, 'bangdiemCustom')" style="font-family: Poppins, sans-serif;font-weight: 600">Bảng điểm</div>
+		}
+	}
 	<div class="tab" onclick="openTab(event, 'padlet')" style="font-family: Poppins, sans-serif;font-weight: 600">Padlet</div>
 	<div class="tab" onclick="openTab(event, 'letter')" style="font-family: Poppins, sans-serif;font-weight: 600">Đơn từ</div>
 	<div class="tab" onclick="openTab(event, 'setting')" style="font-family: Poppins, sans-serif;font-weight: 600">Settings</div>
@@ -792,11 +969,26 @@
 	@{
 		if (Model.isOwner)
 		{
-								<div>
-									<button id="browseBaiGiang">Chọn File BAIGIANG</button>
-									<div id="progressBar"></div>
-								</div>
+					<div>
+						<button id="browseBaiGiang" class="button_btnBaiGiang">
+							<svg xmlns="http://www.w3.org/2000/svg">
+								<rect class="border_btnBaiGiang" pathLength="100"></rect>
+								<rect class="loading_btnBaiGiang" id="progressBar_btnBaiGiang" pathLength="100"></rect>
 
+								<svg class="done-svg_btnBaiGiang"
+										xmlns="http://www.w3.org/2000/svg"
+										viewBox="0 0 24 24">
+									<path class="done_btnBaiGiang done-cloud_btnBaiGiang"
+											pathLength="100"
+											d="M 6.5,20 Q 4.22,20 2.61,18.43 1,16.85 1,14.58 1,12.63 2.17,11.1 3.35,9.57 5.25,9.15 5.88,6.85 7.75,5.43 9.63,4 12,4 14.93,4 16.96,6.04 19,8.07 19,11 q 1.73,0.2 2.86,1.5 1.14,1.28 1.14,3 0,1.88 -1.31,3.19 Q 20.38,20 18.5,20 Z"></path>
+									<path class="done_btnBaiGiang done-check_btnBaiGiang"
+											pathLength="100"
+											d="M 7.515,12.74 10.34143,15.563569 15.275,10.625"></path>
+								</svg>
+							</svg>
+							<div class="txt-upload_btnBaiGiang">Upload</div>
+						</button>
+					</div>
 		}
 	}
 	<div class="posts" id="lectureContainer">
@@ -808,78 +1000,79 @@
 	@{
 		if (Model.isOwner)
 		{
-													<button id="uploadButton" onclick="Showtaobaitap()"
-															style="
-																								background-color: #3498db;
-																								font-family: Poppins, sans-serif;
-																								color: #ffffff;
-																								padding: 10px 20px;
-																								border: none;
-																								border-radius: 5px;
-																								cursor: pointer;
-																								transition: background-color 0.3s;
-																								font-size: 15px;
-																								font-weight: bold;">
-														Tạo bài tập mới
-													</button>
-													<form id="uploadbaitap" action="/ClassRooms/CreateBaitap" method="POST" style="display: none;">
-														<div class="form-section">
-															<!-- Ph?n nh?p tiêu d? -->
-															<input type="text" name="Title" id="titleInput" class="form-control" placeholder="Nhập tiêu đề">
-															<!-- G?ch ngang -->
-															<hr>
-															<!-- Ph?n nh?p mô t? -->
-															<textarea name="Content" id="descriptionInput" class="form-control" placeholder="Nhập mô tả"></textarea>
-															<label for="deadlineInput">Hạn nộp:</label>
-															<input type="datetime-local" name="Deadline" id="deadlineInput" class="form-control">
-
-															<label for="fileFormatSelect">Chọn định dạng file cần nộp:</label>
-															<select name="FileFormat" id="fileFormatSelect">
-																<option value="pdf">pdf</option>
-																<option value="docx">docx</option>
-																<option value="xlsx">xls</option>
-																<option value="allfile">all file</option>
-																<!-- Thêm các lo?i d?nh d?ng khác n?u c?n -->
-															</select>
-
-														</div>
-									<input type="hidden" name="ClassId" id="classIdInput" value="@Model.ClassRoom.Id">
-									<label for="fileInput">Hướng dẫn (Nếu có): </label>
-									<input type="file" name="FileUpLoad" id="fileInput" /> <!-- ?n input file -->
-									<input type="hidden" name="AttactURL" id="attactURL">
-									<button type="button" onclick="uploadFile()">Upload</button>
-
-									<div class="modal" id="uploadModal" style="background-color: transparent;">
-										<div class="modal-content">
-											<div class="modal-header">
-												<h5 class="modal-title">Uploading File</h5>
-											</div>
-											<div class="modal-body text-center">
-												<div class="loader" id="loader" style="display: block;"></div>
-												<progress id="progressBar" value="0" max="100" style="display: none;"></progress>
-												<div id="progressText" style="display: block;" class="mt-3">0%</div>
-												<div id="successText" class="mt-3" style="display: none;">Upload thành công</div>
-											</div>
-										</div>
-									</div>
-
-									<div class="modal-backdrop" id="modalBackdrop"></div>
+					<button id="uploadButton" onclick="Showtaobaitap()"
+							style="
+									background-color: #3498db;
+									font-family: Poppins, sans-serif;
+									color: #ffffff;
+									padding: 10px 20px;
+									border: none;
+									border-radius: 5px;
+									cursor: pointer;
+									transition: background-color 0.3s;
+									font-size: 15px;
+									font-weight: bold;">
+						Tạo bài tập mới
+					</button>
+					<form id="uploadbaitap" action="/ClassRooms/CreateBaitap" method="POST" style="display: none;">
+						<div class="form-section">
+							<label for="titleInput">Tiêu đề bài tập:</label>
+							<input type="text" name="Title" id="titleInput" class="form-control" placeholder="Nhập tiêu đề">
+							<label for="descriptionInput">Mô tả bài tập:</label>
+							<textarea name="Content" id="descriptionInput" class="form-control" placeholder="Nhập mô tả"></textarea>
+							<label for="deadlineInput">Hạn nộp:</label>
+							<input type="datetime-local" name="Deadline" id="deadlineInput" class="form-control">
+							<label for="fileFormatSelect">Chọn định dạng file cần nộp:</label>
+							<select name="FileFormat" id="fileFormatSelect">
+								<option value="pdf">pdf</option>
+								<option value="docx">docx</option>
+								<option value="xlsx">xls</option>
+								<option value="allfile">all file</option>
+							</select>
+							<div></div>
+							<label for="maxSize">Dung lượng tối đa:</label>
+							<input type="number" name="MaxSize" id="maxSize" class="form-control" placeholder="Dung lượng tối đa cho phép nộp (MB)" />
+						</div>
+						<input type="hidden" name="ClassId" id="classIdInput" value="@Model.ClassRoom.Id">
+						<label for="fileInput">Hướng dẫn (Nếu có): </label>
+						<input type="hidden" name="AttactURL" id="attactURL">
+						<label for="fileInput" class="custom-file-upload">
+							Upload file HD
+						</label>
+						<input type="file" name="FileUpLoad" id="fileInput" onchange="uploadFile()" />
 
 
-														<input type="submit" value="Giao bài" class="btn btn-primary"></input> <!-- Nút giao bài -->
-													</form>
+						<div class="modal" id="uploadModal" style="background-color: transparent;">
+						<div class="modal-content">
+							<div class="modal-header">
+								<h5 class="modal-title">Uploading File...</h5>
+							</div>
+							<div class="modal-body text-center">
+								<div class="loader" id="loader" style="display: block;"></div>
+								<progress id="progressBar" value="0" max="100" style="display: none;"></progress>
+								<div id="progressText" style="display: block;" class="mt-3">0%</div>
+								<div id="successText" class="mt-3" style="display: none;">Upload thành công</div>
+							</div>
+						</div>
+						</div>
+
+						<div class="modal-backdrop" id="modalBackdrop"></div>
+						<div id="TenFile" style="display: inline;"></div>
+						<div></div>
+						<input type="submit" value="Giao bài" class="btn btn-primary"></input> <!-- Nút giao bài -->
+					</form>
 		}
 	}
 	<div class="assignments">
 		<h2 style="font-family: Poppins, sans-serif;">Danh sách bài tập</h2>
 		@foreach (var assignment in Model.Homework.ToList())
 		{
-			<div class="assignment" style="height: 30vh;">
+			<div class="assignment" style="height: 35vh;">
 				<div class="assignment-content" style="border-right: 1px solid black; height: 100%; width: 100%; margin: 50px; ">
 					@{
 						if (Model.isOwner)
 						{
-																	<a class="btn btn-info" style="float: left; max-width: 50px; padding: 5px;" asp-action="DeleteBT" asp-controller="ClassRooms" asp-route-id="@assignment.Id" asp-route-classId="@assignment.ClassRoomId" onclick="return confirm('B?n có ch?c mu?n xóa không ?')">Xóa</a>
+									<a class="btn btn-info" style="float: left; max-width: 50px; padding: 5px;" asp-action="DeleteBT" asp-controller="ClassRooms" asp-route-id="@assignment.Id" asp-route-classId="@assignment.ClassRoomId" onclick="return confirm('Bạn có chắc muốn xoá không ?')">Xóa</a>
 						}
 					}
 					<h3 class="text-center">@assignment.Title</h3>
@@ -887,17 +1080,16 @@
 					@{
 						if (assignment.Deadline.HasValue)
 						{
-							<p class="assignment-description">Hạn nộp: @assignment.Deadline</p>
+									<p class="assignment-description">Hạn nộp: @assignment.Deadline</p>
 						}
 						else
 						{
-																	<p class="assignment-description">Hạn nộp: Vô thời hạn</p>
+									<p class="assignment-description">Hạn nộp: Vô thời hạn</p>
 						}
 					}
 
-					<!-- Hi?n th? lo?i d?nh d?ng dã ch?n -->
 					<p class="assignment-file-format">Yêu cầu nộp file: @assignment.FileFormat</p>
-					<!-- Hi?n th? t?p dính kèm -->
+					<p class ="assignment-description">Dung lượng file tối đa: @assignment.MaxSize MB</p>
 					@if (!string.IsNullOrEmpty(assignment.attractUrl))
 					{
 						<a href="/Uploads/BAITAP/@assignment.attractUrl" target="_blank" style="text-decoration:none; color: deepskyblue!important;">@assignment.attractUrl</a>
@@ -920,65 +1112,67 @@
 						@{
 							if (!Model.isOwner)
 							{
-																		<label for="file-upload" class="file-label1" style="white-space: nowrap;">Bài tập của bạn</label>
-																		<div class="file-input-wrapper">
-																			@{
-										if (hasSubmitted)
+										<label for="file-upload" class="file-label1" style="white-space: nowrap;">Bài tập của bạn</label>
+										<div class="file-input-wrapper">
+										@{
+									if (hasSubmitted)
+									{
+														<p style="text-align: center; margin-left: 15px;">Đã nộp bài</p>
+									}
+									else
+									{
+										// Ki?m tra deadline
+										if (assignment != null && assignment.Deadline.HasValue)
 										{
-																											<p style="text-align: center; margin-left: 15px;">Đã nộp bài</p>
-										}
-										else
-										{
+											// L?y ngày deadline
+											DateTime deadline = assignment.Deadline.Value;
 
-											// Ki?m tra deadline
-											if (assignment != null && assignment.Deadline.HasValue)
+											// Ki?m tra xem deadline dã qua hay chua
+											if (DateTime.Now > deadline)
 											{
-												// L?y ngày deadline
-												DateTime deadline = assignment.Deadline.Value;
-
-												// Ki?m tra xem deadline dã qua hay chua
-												if (DateTime.Now > deadline)
-												{
-													// X? lý khi deadline dã qua
-													// Ví d?: hi?n th? thông báo cho ngu?i dùng
-																																	<p>Deadline dã qua. Không thể nộp bài tập nữa.</p>
-												}
-												else
-												{
-													// X? lý khi deadline chua qua
-													// Ví d?: cho phép ngu?i dùng n?p bài t?p
-																																	<p>Thiếu</p>
-																																	<input id="FileInput_@assignment.Id" type="file" name="FileNopbai">
-																																	<input type="hidden" name="ClassId" id="classIdInput" value="@Model.ClassRoom.Id">
-																																	<input type="hidden" name="BaitapId" id="baitapinput" value="@assignment.Id">
-
-																																	<button type="submit">Nộp bài</button>
-																																	<button type="button" onclick="previewFile('@assignment.Id')">Xem trước</button>
-												}
+												// X? lý khi deadline dã qua
+												// Ví d?: hi?n th? thông báo cho ngu?i dùng
+																<p>Deadline dã qua. Không thể nộp bài tập nữa.</p>
 											}
 											else
 											{
-												// X? lý khi không có deadline du?c d?t
+												// X? lý khi deadline chua qua
+												// Ví d?: cho phép ngu?i dùng n?p bài t?p
+														<p>Thiếu</p>
+														<input id="FileInput_@assignment.Id" type="file" name="FileNopbai" accept="@(assignment.FileFormat == "allfile" ? "*/*" : assignment.FileFormat)" onchange="checkFileSize(this, @assignment.MaxSize)">
 
-																																<p>Thiếu</p>
-																																<input id="FileInput_@assignment.Id" type="file" name="FileNopbai">
-																																<input type="hidden" name="ClassId" id="classIdInput" value="@Model.ClassRoom.Id">
-																																<input type="hidden" name="BaitapId" id="baitapinput" value="@assignment.Id">
-
-																																<button type="submit">Nộp bài</button>
-																																<button type="button" onclick="previewFile('@assignment.Id')">Xem trước</button>
+														<input type="hidden" name="ClassId" id="classIdInput" value="@Model.ClassRoom.Id">
+														<input type="hidden" name="BaitapId" id="baitapinput" value="@assignment.Id">
+														<input type="hidden" id="uploadedFilePath" name="UploadedFilePath">
+														<p id="uploadStatus_@assignment.Id"></p>
+														<button type="submit" id="uploadButton_@assignment.Id">Nộp bài</button>
+														<button type="button" onclick="previewFile('@assignment.Id')">Xem trước</button>
 											}
 										}
-																			}
-																		</div>
-																		<div id="previewContainer_@assignment.Id"></div>
+										else
+										{
+											// X? lý khi không có deadline du?c d?t
+
+													<p>Thiếu</p>
+													<input id="FileInput_@assignment.Id" type="file" name="FileNopbai" accept="@(assignment.FileFormat == "allfile" ? "*/*" : assignment.FileFormat)" onchange="checkFileSize(this, @assignment.MaxSize)">
+
+													<input type="hidden" name="ClassId" id="classIdInput" value="@Model.ClassRoom.Id">
+													<input type="hidden" name="BaitapId" id="baitapinput" value="@assignment.Id">
+													<input type="hidden" id="uploadedFilePath" name="UploadedFilePath">
+													<p id="uploadStatus_@assignment.Id"></p>
+													<button type="submit" id="uploadButton_@assignment.Id">Nộp bài</button>
+													<button type="button" onclick="previewFile('@assignment.Id')">Xem trước</button>
+										}
+									}
+										}
+									</div>
+									<div id="previewContainer_@assignment.Id"></div>
 							}
 							else
 							{
-																		<a asp-action="GetAllBTStu" asp-controller="ClassRooms" asp-route-classid="@Model.ClassRoom.Id" asp-route-baitapID="@assignment.Id" class="btn btn-info ">Xem bài tập đã nộp</a>
+										<a asp-action="GetAllBTStu" asp-controller="ClassRooms" asp-route-classid="@Model.ClassRoom.Id" asp-route-baitapID="@assignment.Id" class="btn btn-info ">Xem bài tập đã nộp</a>
 							}
 						}
-
 					</div>
 				</form>
 			</div>
@@ -1035,69 +1229,77 @@
 		</div>
 	</div>
 </div>
-
-
-
 <div id="listsv" class="tabcontent">
 	@{
 		if (Model.isOwner)
 		{
-													<div style="margin-bottom: -35px;">
-														<form asp-controller="ClassRooms" asp-action="ExportDSSV" asp-route-classID="@Model.ClassRoom.Id" method="post">
-															<button type="submit" class="btn btn-info">Xuất danh sách sinh viên</button>
-														</form>
-													</div>
+					<div style="margin-bottom: -35px;">
+						<form asp-controller="ClassRooms" asp-action="ExportDSSV" asp-route-classID="@Model.ClassRoom.Id" method="post">
+							<button type="submit" class="btn btn-info">Xuất danh sách sinh viên</button>
+						</form>
+					</div>
 		}
 	}
 	<div id="listsv1">
 	</div>
 </div>
-<div id="bangdiem" class="tabcontent">
-	@{
-		List<BaiTap> bt = ViewBag.ListBT as List<BaiTap>;
-		List<DiemViewModel> diems = ViewBag.ListDiem as List<DiemViewModel>;
-	}
-	<div class="container-bangdiem">
-		<table id="user">
-			<thead>
-				<tr class="first-column">
-					<th style="text-align: center;" rowspan="2">Họ và tên</th>
-					<th style="text-align: center;" rowspan="2">MSSV</th>
-					<th style="text-align: center;" colspan="@bt.Count">Bài Tập</th>
-					<th style="text-align: center;" rowspan="2">ÐTB</th>
-				</tr>
-				<tr>
-					@foreach (var item in bt)
-					{
-						<th style="text-align: center;">@item.Title</th>
+@{
+	if (Model.CustomRubric == false)
+	{
+				<div id="bangdiem" class="tabcontent">
+					@{
+				List<BaiTap> bt = ViewBag.ListBT as List<BaiTap>;
+				List<DiemViewModel> diems = ViewBag.ListDiem as List<DiemViewModel>;
 					}
-				</tr>
-			</thead>
-			<tbody>
-				@foreach (var item in diems)
-				{
-					<tr>
-						<td>@item.HoVaTen</td>
-						<td>@item.MSSV</td>
-
-						@if (bt.Count <= 0)
-						{
-							<td> </td>
-						}
-						else
-						{
-							@foreach (var d in @item.listDiemBT)
+					<div class="container-bangdiem">
+						<table id="user">
+							<thead>
+								<tr class="first-column">
+									<th style="text-align: center;" rowspan="2">Họ và tên</th>
+									<th style="text-align: center;" rowspan="2">MSSV</th>
+									<th style="text-align: center;" colspan="@bt.Count">Bài Tập</th>
+									<th style="text-align: center;" rowspan="2">ÐTB</th>
+								</tr>
+								<tr>
+									@foreach (var item in bt)
 							{
-								<td style="text-align: center;">@d</td>
+										<th style="text-align: center;">@item.Title</th>
 							}
+								</tr>
+							</thead>
+							<tbody>
+								@foreach (var item in diems)
+						{
+									<tr>
+										<td>@item.HoVaTen</td>
+										<td>@item.MSSV</td>
+
+										@if (bt.Count <= 0)
+								{
+											<td> </td>
+								}
+								else
+								{
+											@foreach (var d in @item.listDiemBT)
+									{
+												<td style="text-align: center;">@d</td>
+									}
+								}
+										<td>@item.DTB</td>
+									</tr>
 						}
-						<td>@item.DTB</td>
-					</tr>
-				}
-			</tbody>
-		</table>
-	</div>
-</div>
+							</tbody>
+						</table>
+					</div>
+				</div>
+	}
+	else
+	{
+				<div id="bangdiemCustom" class="tabcontent">
+					<iframe style="border: none;" src="@Url.Action("Details", "Rubrics", new { id = Model.Rubric.Id, classRoomId = Model.ClassRoom.Id, isowner = Model.isOwner})" width="100%" height="600px"></iframe>
+				</div>
+	}
+}
 <div id="padlet" class="tabcontent">
 	<div class="padlet-embed" style="border:1px solid rgba(0,0,0,0.1);border-radius:2px;box-sizing:border-box;overflow:hidden;position:relative;width:100%;background:#F4F4F4"><p style="padding:0;margin:0"><iframe src="https://padlet.com/embed/lup9um2r33899yju" frameborder="0" allow="camera;microphone;geolocation" style="width:100%;height:608px;display:block;padding:0;margin:0"></iframe></p><div style="display:flex;align-items:center;justify-content:end;margin:0;height:28px"><a href="https://padlet.com?ref=embed" style="display:block;flex-grow:0;margin:0;border:none;padding:0;text-decoration:none" target="_blank"><div style="display:flex;align-items:center;"><img src="https://padlet.net/embeds/made_with_padlet_2022.png" width="114" height="28" style="padding:0;margin:0;background:0 0;border:none;box-shadow:none" alt="Made with Padlet"></div></a></div></div>
 </div>
@@ -1143,8 +1345,6 @@
 		</div>
 	</div>
 
-
-
 </div>
 
 <div id="setting" class="tabcontent">
@@ -1156,88 +1356,88 @@
 		<p id="currentDateTime" style="font-family: 'Poppins', sans-serif"></p>
 	</div>
 	@{
-	       if (Model.isOwner)
-	       {
-			<div class="create-content"
-				 style="border: 1px solid rgb(145, 137, 137);
-			border-radius: 8px;
-			padding: 10px;
-			height: 100%;
-			margin: 20px;
-			display: flex;
-			align-items: center;">
+	    if (Model.isOwner)
+	    {
+					<div class="create-content"
+					 	style="border: 1px solid rgb(145, 137, 137);
+						border-radius: 8px;
+						padding: 10px;
+						height: 100%;
+						margin: 20px;
+						display: flex;
+						align-items: center;">
 
-				<!-- Icon hình tròn với SVG bên trong -->
-				<div class="circle-icon" style="background-color: rgb(66, 133, 244); border-radius: 50%; width: 40px; height: 40px; display: flex; align-items: center; justify-content: center; margin-right: 10px; margin-left: 20px;">
-					<svg focusable="false" width="24" height="24" viewBox="0 0 24 24" class="NMm5M hhikbc" style="fill: white;">
-						<path d="M7 15h7v2H7zm0-4h10v2H7zm0-4h10v2H7z"></path>
-						<path d="M19 3h-4.18C14.4 1.84 13.3 1 12 1c-1.3 0-2.4.84-2.82 2H5c-.14 0-.27.01-.4.04a2.008 2.008 0 0 0-1.44 1.19c-.1.23-.16.49-.16.77v14c0 .27.06.54.16.78s.25.45.43.64c.27.27.62.47 1.01.55.13.02.26.03.4.03h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-7-.25c.41 0 .75.34.75.75s-.34.75-.75.75-.75-.34-.75-.75.34-.75.75-.75zM19 19H5V5h14v14z"></path>
-					</svg>
-				</div>
-
-				<!-- Văn bản thông báo với sự kiện onclick -->
-				<h3 class="notify-text" style="cursor: pointer; margin-left: 20px;" onclick="expandContent()">Thông báo nội dung nào đó cho lớp học của bạn</h3>
-
-				<!-- Phần form ẩn -->
-				<form id="uploadpost" action="/ClassRooms/CreatePost" method="POST" style="width: 100%; display: none;">
-					<div id="expandable-form" style="display: none; width: 100%;">
-						<input type="text" name="Title" id="titleInput" class="form-control" placeholder="Nhập tiêu đề" style="margin-bottom: 10px; width: 100%; border-radius: 5px; padding: 10px;" />
-						<textarea name="Content" id="inputText" rows="4" class="input-textarea" oninput="checkInput()" style="width: 100%; border-radius: 5px; margin-top: 10px; padding: 10px;" placeholder="Nhập nội dung..."></textarea>
-						<div style="display: flex; justify-content: flex-end; margin-top: 10px;">
-							<button type="button" onclick="cancelInput()" style="margin-right: 10px; padding: 5px 10px;">Hủy</button>
-							<button id="submitButton" class="disabled-button" onclick="submitInput()" style="padding: 5px 10px;" disabled>Đăng</button>
+						<!-- Icon hình tròn với SVG bên trong -->
+						<div class="circle-icon" style="background-color: rgb(66, 133, 244); border-radius: 50%; width: 40px; height: 40px; display: flex; align-items: center; justify-content: center; margin-right: 10px; margin-left: 20px;">
+							<svg focusable="false" width="24" height="24" viewBox="0 0 24 24" class="NMm5M hhikbc" style="fill: white;">
+								<path d="M7 15h7v2H7zm0-4h10v2H7zm0-4h10v2H7z"></path>
+								<path d="M19 3h-4.18C14.4 1.84 13.3 1 12 1c-1.3 0-2.4.84-2.82 2H5c-.14 0-.27.01-.4.04a2.008 2.008 0 0 0-1.44 1.19c-.1.23-.16.49-.16.77v14c0 .27.06.54.16.78s.25.45.43.64c.27.27.62.47 1.01.55.13.02.26.03.4.03h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-7-.25c.41 0 .75.34.75.75s-.34.75-.75.75-.75-.34-.75-.75.34-.75.75-.75zM19 19H5V5h14v14z"></path>
+							</svg>
 						</div>
-					</div>
-					<input type="hidden" name="ClassId" id="classIdInput" value="@Model.ClassRoom.Id" />
-					<input type="hidden" name="UserId" id="UserIdInput" value="@Model.ClassRoom.UserId" />
-				</form>
-				@{
+
+						<!-- Văn bản thông báo với sự kiện onclick -->
+						<h3 class="notify-text" style="cursor: pointer; margin-left: 20px;" onclick="expandContent()">Thông báo nội dung nào đó cho lớp học của bạn</h3>
+
+						<!-- Phần form ẩn -->
+						<form id="uploadpost" action="/ClassRooms/CreatePost" method="POST" style="width: 100%; display: none;">
+							<div id="expandable-form" style="display: none; width: 100%;">
+								<input type="text" name="Title" id="titleInput" class="form-control" placeholder="Nhập tiêu đề" style="margin-bottom: 10px; width: 100%; border-radius: 5px; padding: 10px;" />
+								<textarea name="Content" id="inputText" rows="4" class="input-textarea" oninput="checkInput()" style="width: 100%; border-radius: 5px; margin-top: 10px; padding: 10px;" placeholder="Nhập nội dung..."></textarea>
+								<div style="display: flex; justify-content: flex-end; margin-top: 10px;">
+									<button type="button" onclick="cancelInput()" style="margin-right: 10px; padding: 5px 10px;">Hủy</button>
+									<button id="submitButton" class="disabled-button" onclick="submitInput()" style="padding: 5px 10px;" disabled>Đăng</button>
+								</div>
+							</div>
+							<input type="hidden" name="ClassId" id="classIdInput" value="@Model.ClassRoom.Id" />
+							<input type="hidden" name="UserId" id="UserIdInput" value="@Model.ClassRoom.UserId" />
+						</form>
+						@{
 					if (Model.isOwner)
 					{
-						<div style="background-color: none; color: white; border-radius: 50%; width: 40px; height: 40px; display: flex; align-items: center; justify-content: center; margin-left: auto;">
-							<button onclick="toggleClassSelection()" class="icon">
-								<svg focusable="false" width="24" height="24" viewBox="0 0 24 24" class=" NMm5M">
-									<path d="M19 5H4v6h2V7h13M5 19h15v-6h-2v4H5"></path>
-									<path d="M16.29 10.71l-1.41-1.42L18.17 6l-3.29-3.29 1.41-1.42L21 6zm-8.58 12L3 18l4.71-4.71 1.41 1.42L5.83 18l3.29 3.29z"></path>
-								</svg>
-							</button>
-						</div>
+										<div style="background-color: none; color: white; border-radius: 50%; width: 40px; height: 40px; display: flex; align-items: center; justify-content: center; margin-left: auto;">
+											<button onclick="toggleClassSelection()" class="icon">
+												<svg focusable="false" width="24" height="24" viewBox="0 0 24 24" class=" NMm5M">
+													<path d="M19 5H4v6h2V7h13M5 19h15v-6h-2v4H5"></path>
+													<path d="M16.29 10.71l-1.41-1.42L18.17 6l-3.29-3.29 1.41-1.42L21 6zm-8.58 12L3 18l4.71-4.71 1.41 1.42L5.83 18l3.29 3.29z"></path>
+												</svg>
+											</button>
+										</div>
 
 					}
-				}
-			</div>
-			<div id="postContainer" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0, 0, 0, 0.7); z-index: 1000;">
-				<div style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); background-color: #fff; color: black; border-radius: 8px; padding: 20px; width: 500px; height: 300px; overflow: auto;">
-					<button onclick="closePostContainer()" style="float: right;margin_bottom:10%;margin-left:20px ;background-color: red; color: white; border: none; cursor: pointer; border-radius: 4px;">
-						<i class="fas fa-times" style="font-size: 20px;"></i> <!-- Biểu tượng dấu X -->
-					</button>
-					<div class="mainList" style="margin-top:40px;">
-						@foreach (var post in ViewBag.UserPosts)
-						{
-							<div style="margin-bottom: 10px; display: flex; justify-content: space-between; align-items: center;">
-								<span style="text-align: left;">@post.Title</span>
-								<button type="button" style="color: black;" onclick="showPostContent('@post.Id')">Sử dụng lại</button>
-							</div>
 						}
 					</div>
+					<div id="postContainer" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0, 0, 0, 0.7); z-index: 1000;">
+						<div style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); background-color: #fff; color: black; border-radius: 8px; padding: 20px; width: 500px; height: 300px; overflow: auto;">
+							<button onclick="closePostContainer()" style="float: right;margin_bottom:10%;margin-left:20px ;background-color: red; color: white; border: none; cursor: pointer; border-radius: 4px;">
+								<i class="fas fa-times" style="font-size: 20px;"></i> <!-- Biểu tượng dấu X -->
+							</button>
+							<div class="mainList" style="margin-top:40px;">
+								@foreach (var post in ViewBag.UserPosts)
+						{
+									<div style="margin-bottom: 10px; display: flex; justify-content: space-between; align-items: center;">
+										<span style="text-align: left;">@post.Title</span>
+										<button type="button" style="color: black;" onclick="showPostContent('@post.Id')">Sử dụng lại</button>
+									</div>
+						}
+							</div>
 
-					@foreach (var post in ViewBag.UserPosts)
+							@foreach (var post in ViewBag.UserPosts)
 					{
-						<div id="postList-@post.Id" class="postList" style="display: none; margin-top: 40px;">
-							<form method="post" asp-action="ReusePost" asp-controller="ClassRooms" style="display: inline;">
-								<input type="hidden" name="postId" value="@post.Id" />
-								<input type="hidden" name="ClassId" id="classIdInput" value="@Model.ClassRoom.Id" />
-								<input type="hidden" name="UserId" id="UserIdInput" value="@Model.ClassRoom.UserId" />
-								<!-- Cho phép chỉnh sửa tiêu đề và nội dung -->
-								<input type="text" name="Title" class="form-control" value="@post.Title" />
-								<textarea name="Content" class="input-textarea" style="width: 100%; border-radius: 5px; margin-top: 10px; padding: 10px;">@post.Content</textarea>
-								<button type="submit" style="color: black;">Đăng</button>
-								<button type="button" onclick="cancelReuse('@post.Id')" style="color: black; margin-left: 10px;">Hủy</button>
-							</form>
-						</div>
+								<div id="postList-@post.Id" class="postList" style="display: none; margin-top: 40px;">
+									<form method="post" asp-action="ReusePost" asp-controller="ClassRooms" style="display: inline;">
+										<input type="hidden" name="postId" value="@post.Id" />
+										<input type="hidden" name="ClassId" id="classIdInput" value="@Model.ClassRoom.Id" />
+										<input type="hidden" name="UserId" id="UserIdInput" value="@Model.ClassRoom.UserId" />
+										<!-- Cho phép chỉnh sửa tiêu đề và nội dung -->
+										<input type="text" name="Title" class="form-control" value="@post.Title" />
+										<textarea name="Content" class="input-textarea" style="width: 100%; border-radius: 5px; margin-top: 10px; padding: 10px;">@post.Content</textarea>
+										<button type="submit" style="color: black;">Đăng</button>
+										<button type="button" onclick="cancelReuse('@post.Id')" style="color: black; margin-left: 10px;">Hủy</button>
+									</form>
+								</div>
 					}
-				</div>
-			</div>
+						</div>
+					</div>
 				
 		}
 	}	
@@ -1301,7 +1501,22 @@
 
 				@if (item.Type == "Post")
 				{
-					<p style="font-size: 16px; margin-bottom: 0px;">@item.Content</p>
+					string content = item.Content;
+					string pattern = @"(https?://[a-zA-Z0-9.-]+(?:/[^\s]*)?)"; // Regex nhận diện URL đầy đủ với đường dẫn
+					var parts = System.Text.RegularExpressions.Regex.Split(content, pattern); // Tách nội dung
+					<p style="font-size: 16px; margin-bottom: 0px;">
+						@foreach (var part in parts)
+						{
+							if (System.Text.RegularExpressions.Regex.IsMatch(part, pattern)) // Nếu là link hợp lệ
+							{
+								<a href="@part" target="_blank" style="color: #007bff; text-decoration: none;">@part</a>
+							}
+							else // Nếu không phải là link
+							{
+								@part
+							}
+						}
+					</p>
 				}
 				<p class="post-created-at" style="font-size: 14px; color: gray; margin-top: 0px;">@item.CreatedAt.ToString("dd/MM/yyyy - HH:mm:ss")</p>
 			</div>
@@ -1309,33 +1524,33 @@
 			@{
 				if (Model.isOwner && item.Type == "Post")
 				{
-					<div id="post-options-@item.Id" style="margin-left: auto; cursor: pointer; display: flex; align-items: center; height: 100%;">
-						<button id="post-options-@item.Id" class="icon">
-							<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-								<circle cx="12" cy="5" r="2" fill="gray"></circle>
-								<circle cx="12" cy="12" r="2" fill="gray"></circle>
-								<circle cx="12" cy="19" r="2" fill="gray"></circle>
-							</svg>
-						</button>
-						<div class="options-menu" style="display: none;padding:10px; top: 85px; right:40px; position: absolute; background-color: white; border: 1px solid gray; border-radius: 5px; z-index: 10;">
-							<a class="btn" href="javascript:void(0);" onclick="showEditForm('@item.Id')">Sửa</a>
-							<a class="btn" asp-action="Delete" asp-controller="Posts" asp-route-id="@item.Id" asp-route-classId="@item.ClassRoomId" onclick="return confirm('Bạn có chắc muốn xóa không ?')">Xóa</a>
-						</div>
-					</div>
-					<!-- Form ẩn để chỉnh sửa bài viết -->
-					<div id="editForm-@item.Id" style="display: none; margin-top: 10px; width: 100%;">
-						<form action="/Posts/Editpost" method="POST">
-							<input type="hidden" name="Id" value="@item.Id" />
-							<input type="text" name="Title" value="@item.Title" class="form-control" placeholder="Nhập tiêu đề" style="margin-bottom: 10px;" />
-							<textarea name="Content" rows="4" class="input-textarea" style="width: 100%; border-radius: 5px; margin-top: 10px; padding: 10px;" placeholder="Nhập nội dung">@item.Content</textarea>
-							<div style="display: flex; justify-content: flex-end; margin-top: 10px;">
-								<button type="button" onclick="hideEditForm('@item.Id')" style="margin-right: 10px;">Hủy</button>
-								<button type="submit" class="btn btn-success">Lưu</button>
+							<div id="post-options-@item.Id" style="margin-left: auto; cursor: pointer; display: flex; align-items: center; height: 100%;">
+								<button id="post-options-@item.Id" class="icon">
+									<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+										<circle cx="12" cy="5" r="2" fill="gray"></circle>
+										<circle cx="12" cy="12" r="2" fill="gray"></circle>
+										<circle cx="12" cy="19" r="2" fill="gray"></circle>
+									</svg>
+								</button>
+								<div class="options-menu" style="display: none;padding:10px; top: 85px; right:40px; position: absolute; background-color: white; border: 1px solid gray; border-radius: 5px; z-index: 10;">
+									<a class="btn" href="javascript:void(0);" onclick="showEditForm('@item.Id')">Sửa</a>
+									<a class="btn" asp-action="Delete" asp-controller="Posts" asp-route-id="@item.Id" asp-route-classId="@item.ClassRoomId" onclick="return confirm('Bạn có chắc muốn xóa không ?')">Xóa</a>
+								</div>
 							</div>
-							<input type="hidden" name="ClassId" id="classIdInput" value="@Model.ClassRoom.Id" />
-							<input type="hidden" name="UserId" id="UserIdInput" value="@Model.ClassRoom.UserId" />
-						</form>
-					</div>
+							<!-- Form ẩn để chỉnh sửa bài viết -->
+							<div id="editForm-@item.Id" style="display: none; margin-top: 10px; width: 100%;">
+								<form action="/Posts/Editpost" method="POST">
+									<input type="hidden" name="Id" value="@item.Id" />
+									<input type="text" name="Title" value="@item.Title" class="form-control" placeholder="Nhập tiêu đề" style="margin-bottom: 10px;" />
+									<textarea name="Content" rows="4" class="input-textarea" style="width: 100%; border-radius: 5px; margin-top: 10px; padding: 10px;" placeholder="Nhập nội dung">@item.Content</textarea>
+									<div style="display: flex; justify-content: flex-end; margin-top: 10px;">
+										<button type="button" onclick="hideEditForm('@item.Id')" style="margin-right: 10px;">Hủy</button>
+										<button type="submit" class="btn btn-success">Lưu</button>
+									</div>
+									<input type="hidden" name="ClassId" id="classIdInput" value="@Model.ClassRoom.Id" />
+									<input type="hidden" name="UserId" id="UserIdInput" value="@Model.ClassRoom.UserId" />
+								</form>
+							</div>
 				}
 			}
 		</div>
@@ -1380,23 +1595,6 @@
 	}
 
 </script>
-@*<script>
-	function populatePostForm(title, content, postId) {
-		Điền tiêu đề và nội dung vào form
-		document.getElementById('postTitle').value = title;
-		document.getElementById('postContent').value = content;
-		document.getElementById('postIdInput').value = postId;
-
-		Ẩn danh sách bài viết và hiển thị form sử dụng lại
-		document.getElementById('postList').style.display = 'none'; Ẩn postList
-		document.getElementById('reuseForm').style.display = 'block'; Hiển thị reuseForm
-	}
-	function cancelReuse() {
-		Ẩn form sử dụng lại và hiển thị lại danh sách bài viết
-		document.getElementById('reuseForm').style.display = 'none'; Ẩn reuseForm
-		document.getElementById('postList').style.display = 'block'; Hiển thị lại postList
-	}
-</script>*@
 <script>
 	function toggleClassSelection() {
 		var form = document.getElementById("postContainer");
@@ -1465,7 +1663,6 @@
 		}
 	}
 </script>@*form sửa*@
-
 <script>
 	const iconButtons = document.querySelectorAll('.icon'); // Chọn tất cả các phần tử có class "icon"
 
@@ -1493,7 +1690,6 @@
 		});
 	});
 </script>@*option xóa & sửa*@
-
 <script>
 	function expandContent() {
 		const expandableForm = document.getElementById('expandable-form');
@@ -1600,8 +1796,7 @@
 <script src="https://apis.google.com/js/api.js"></script>
 <script>
 	function validateAndSubmit(requiredFormat, assignmentId, event) {
-		event.preventDefault(); // Ngan ch?n hành d?ng m?c d?nh c?a s? ki?n submit form
-
+		event.preventDefault(); 
 		var form = event.target; // L?y bi?u m?u t? s? ki?n
 		var fileInput = form.querySelector("input[type='file']");
 		var fileName = fileInput.value;
@@ -1610,7 +1805,7 @@
 			// N?u tùy ch?n "allfile" du?c ch?n, không c?n ki?m tra d?nh d?ng file
 			if (fileName === '') {
 				// N?u không ch?n file, hi?n th? thông báo l?i
-				alert("Vui lòng ch?n m?t file d? n?p.");
+				alert("Vui lòng chọn 1 file để nộp.");
 				return false; // Ngan form du?c g?i di
 			}
 			// N?u dã ch?n file, cho phép form du?c g?i di
@@ -1801,9 +1996,10 @@
 				if (xhr.status === 200) {
 					attactURL.value = fileName;
 
-						showSuccessMessage();
-						setTimeout(hideModal, 2000);
-						setTimeout(resetProgress, 3000);
+					showSuccessMessage();
+					setTimeout(hideModal, 2000);
+					setTimeout(resetProgress, 3000);
+					document.getElementById('TenFile').innerHTML = `<a href="/Uploads/BAITAP/${fileName}" target="_blank" >${fileName}</a>`
 
 				} else {
 					console.error('Error completing upload:', xhr.responseText);
@@ -2213,6 +2409,14 @@
 
 		// Lắng nghe sự kiện khi file được thêm và bắt đầu upload
 		r.on('fileAdded', function (file) {
+			// Kiểm tra định dạng file
+			var fileExtension = file.fileName.split('.').pop().toLowerCase();
+			if (fileExtension !== 'pdf') {
+				alert("Chỉ được phép upload file PDF. Upload bị hủy.");
+				r.removeFile(file); // Loại bỏ file không hợp lệ khỏi danh sách
+				return;
+			}
+
 			console.log('Bắt đầu upload file:', file.fileName);
 			r.upload(); // Bắt đầu upload
 		});
@@ -2232,15 +2436,50 @@
 
 	// Lắng nghe tiến trình upload
 	r.on('fileProgress', function (file) {
-		var progress = Math.floor(file.progress() * 100); // Sử dụng file.progress() thay vì r.progress()
+		var progress = Math.floor(file.progress() * 100);
 		document.getElementById('progressBar').innerText = 'Tiến trình: ' + progress + '%';
+		const progressBar = document.getElementById('progressBar_btnBaiGiang');
+		const txtUpload = document.querySelector('.txt-upload_btnBaiGiang');
+		const borderbtn = document.querySelector('.border_btnBaiGiang');
+
+		setTimeout(() => {
+			txtUpload.innerText = 'Uploading...';
+		}, 1000);
+		// Cập nhật viền xanh theo tiến trình
+		if (progressBar) {
+			borderbtn.style.display = 'none';
+			progressBar.style.strokeDasharray = `${progress} ${100 - progress}`;
+			txtUpload.innerText = progress + '%';
+		}
 	});
 
 	// Xử lý khi hoàn thành upload
 	r.on('fileSuccess', function (file, message) {
 		console.log('Hoàn thành upload file:', file.fileName);
+		const progressBar = document.getElementById('progressBar_btnBaiGiang');
+		const button = document.querySelector('.button_btnBaiGiang');
+		const txtUpload = document.querySelector('.txt-upload_btnBaiGiang');
+		const borderbtn = document.querySelector('.border_btnBaiGiang');
+
+		// Đặt stroke-dasharray thành 100% khi hoàn thành
+		if (progressBar) {
+			progressBar.style.strokeDasharray = `100 0`;
+			txtUpload.innerText = 'Hoàn thành';
+		}
+		
 		resetFileName()
-		reloadLecture()
+		// Chờ 2 giây trước khi reload lecture
+		setTimeout(() => {
+			reloadLecture();
+			// Đặt lại trạng thái button về mặc định
+			if (button && txtUpload) {
+				button.classList.remove('focus'); // Xóa trạng thái focus nếu có
+				borderbtn.style.display = 'block';
+				txtUpload.innerText = 'Upload';
+				txtUpload.style.opacity = '1'; // Hiển thị lại text "Upload"
+				progressBar.style.strokeDasharray = `0 100`; // Reset progress bar
+			}
+		}, 2000); 
 	});
 
 	// Xử lý lỗi
@@ -2492,8 +2731,6 @@ function submitLeaveRequest(event) {
 			});
 	}
 
-
-
 	document.addEventListener('DOMContentLoaded', function () {
 		getAllLeaveRequests(); // Call function when the page loads
 	});
@@ -2516,5 +2753,50 @@ function submitLeaveRequest(event) {
 
 
 </script> @* Gửi đơn xin nghỉ phép*@
+<script>
+	function setupResumable(assignmentId) {
+		const r = new Resumable({
+			target: '/upload/UploadFileResumable',
+			chunkSize: 1 * 1024 * 1024,  // 1MB
+			simultaneousUploads: 3,
+			testChunks: true,
+			throttleProgressCallbacks: 1
+		});
+
+		r.assignBrowse(document.getElementById(`FileInput_${assignmentId}`));
+
+		r.on('fileAdded', function (file) {
+			document.getElementById(`uploadStatus_${assignmentId}`).textContent = 'Đang upload...';
+			r.upload();  // Upload ngay khi file được thêm vào
+		});
+
+		r.on('fileProgress', function (file) {
+			const progress = Math.floor(file.progress() * 100);
+			document.getElementById(`uploadStatus_${assignmentId}`).textContent = `Đang upload: ${progress}%`;
+		});
+
+		r.on('fileSuccess', function (file, response) {
+			const data = JSON.parse(response);
+			document.getElementById(`uploadedFilePath`).value = data.filePath;
+			document.getElementById(`uploadStatus_${assignmentId}`).textContent = "Upload thành công!";
+		});
+
+		r.on('fileError', function (file, message) {
+			document.getElementById(`uploadStatus_${assignmentId}`).textContent = `Lỗi upload: ${message}`;
+		});
+	}
+
+	function checkFileSize(input, maxFileSize) {
+		const file = input.files[0]; // Lấy file đầu tiên người dùng chọn
+		const max_size = maxFileSize * 1024 * 1024;
+		if (file) {
+			// Kiểm tra dung lượng file
+			if (file.size > max_size) {
+				alert("File quá lớn, vui lòng chọn file có dung lượng nhỏ hơn " + (max_size / (1024 * 1024)) + " MB.");
+				input.value = ''; // Xóa giá trị của input nếu file vượt quá dung lượng
+			}
+		}
+	}
+</script>
 
 

@@ -31,7 +31,9 @@ namespace DoAnMon.Areas.Admin.Controllers
 
             // Get leave requests where UserID is in the list of UserIds
             List<LeaveRequest> leaveRequests = _context.leaveRequest
-                .Where(p => listUser.Contains(p.UserID)) // Corrected this line
+                .Where(p => listUser.Contains(p.UserID))// Corrected this line
+				.Include(p => p.ClassRoom)
+				.OrderByDescending(p => p.ThoiGianYeuCau)
                 .ToList();
 
             // Prepare data for the chart: count leave requests per UserID
@@ -43,6 +45,16 @@ namespace DoAnMon.Areas.Admin.Controllers
 				})
 				.ToList();
             ViewData["LeaveCounts"] = leaveCounts;
+			List<Rubric> listRubrics = _context.Rubric.Include(p => p.ClassRoom).ToList();
+            foreach (var rubric in listRubrics)
+            {
+                if (rubric.ClassRoom == null)
+                {
+                    // Xử lý khi ClassRoom không có dữ liệu, ví dụ gán một giá trị mặc định
+                    rubric.ClassRoom = new ClassRoom { Name = "Chưa có lớp học" };
+                }
+            }
+			ViewBag.ListRubrics = listRubrics;
 
             // Pass the leaveRequests to the view
             return View(leaveRequests);
@@ -150,7 +162,29 @@ namespace DoAnMon.Areas.Admin.Controllers
 			return View();
 		}
 
+        [HttpGet]
+        public IActionResult SearchRubrics(string classRoomId)
+        {
+            List<Rubric> filteredRubrics;
 
-	}
+            if (string.IsNullOrWhiteSpace(classRoomId))
+            {
+                // Lấy toàn bộ danh sách nếu input rỗng
+                filteredRubrics = _context.Rubric.Where(p => p.ClassRoomId != "").Include(p => p.ClassRoom).ToList();
+            }
+            else
+            {
+                // Lọc theo mã lớp
+                filteredRubrics = _context.Rubric
+                    .Where(r => r.ClassRoomId.Contains(classRoomId))
+                    .Include(p => p.ClassRoom)
+                    .ToList();
+            }
+
+            return PartialView("_RubricListPartial", filteredRubrics);
+        }
+
+
+    }
 }
 
