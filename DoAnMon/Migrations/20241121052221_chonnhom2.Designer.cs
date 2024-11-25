@@ -4,6 +4,7 @@ using DoAnMon.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DoAnMon.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20241121052221_chonnhom2")]
+    partial class chonnhom2
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -295,8 +298,8 @@ namespace DoAnMon.Migrations
                         .HasColumnType("nvarchar(450)")
                         .HasColumnOrder(0);
 
-                    b.Property<string>("GroupId")
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<int?>("GroupId")
+                        .HasColumnType("int");
 
                     b.Property<string>("RoleId")
                         .IsRequired()
@@ -337,38 +340,6 @@ namespace DoAnMon.Migrations
                     b.HasIndex("UserId");
 
                     b.ToTable("diemDanh");
-                });
-
-            modelBuilder.Entity("DoAnMon.Models.GroupInvitation", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<string>("ClassRoomId")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("FromUserId")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Status")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("ToUserId")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("GroupInvitations");
                 });
 
             modelBuilder.Entity("DoAnMon.Models.LeaveRequest", b =>
@@ -442,35 +413,6 @@ namespace DoAnMon.Migrations
                     b.HasIndex("UserId");
 
                     b.ToTable("Messages");
-                });
-
-            modelBuilder.Entity("DoAnMon.Models.Notify", b =>
-                {
-                    b.Property<string>("Id")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<string>("ClassID")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Content")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("ReceiverId")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("SenderId")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime>("SentTime")
-                        .HasColumnType("datetime2");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("notify");
                 });
 
             modelBuilder.Entity("DoAnMon.Models.Post", b =>

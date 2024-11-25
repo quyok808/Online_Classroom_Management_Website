@@ -19,6 +19,7 @@ namespace DoAnMon.Models
 
 			public List<ClassDate>? ClassDates { get; set; }
 			
+			
 		}
 
 	}

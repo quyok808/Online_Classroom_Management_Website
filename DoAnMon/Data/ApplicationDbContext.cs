@@ -27,6 +27,7 @@ namespace DoAnMon.Data
         public DbSet<DiemDanh> diemDanh { get; set; }        
         public DbSet<Post> posts { get; set; }
         public DbSet<LeaveRequest> leaveRequest { get; set; }
+  
 		protected override void OnModelCreating(ModelBuilder modelBuilder) 
         { 
 

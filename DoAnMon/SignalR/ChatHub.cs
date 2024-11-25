@@ -44,6 +44,6 @@ namespace DoAnMon.SignalR
 
 			_context.Messages.Add(newMessage);
 			await _context.SaveChangesAsync();
-		}
+		}	
 	}
 }

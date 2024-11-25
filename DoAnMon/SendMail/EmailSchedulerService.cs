@@ -77,12 +77,20 @@ public class EmailSchedulerService : IHostedService, IDisposable
     private async Task<List<ClassRoom>> GetClassesWithUpcomingSessionsAsync(ApplicationDbContext context)
     {
         var now = DateTime.Now;
+
+        // Tính giá trị endTime nhưng giới hạn tối đa là 23:59:59.9999999
+        var endTime = now.TimeOfDay.Add(TimeSpan.FromMinutes(30));
+        if (endTime > TimeSpan.FromHours(24))
+        {
+            endTime = TimeSpan.FromHours(24) - TimeSpan.FromMilliseconds(1);
+        }
+
         return await context.classRooms
-            .Include(c => c.User) // Nạp thêm User vào ClassRoom
+            .Include(c => c.User)
             .Where(c =>
                 c.StartDate.Date == now.Date &&
                 c.StartTime > now.TimeOfDay &&
-                c.StartTime <= now.TimeOfDay.Add(TimeSpan.FromMinutes(30)))
+                c.StartTime <= endTime)
             .ToListAsync();
     }
 

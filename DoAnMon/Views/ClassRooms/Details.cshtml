@@ -138,57 +138,6 @@
 			color: #666;
 		}
 
-	/* CHAT - Th?o lu?n */
-
-	.chat-container {
-		max-width: 100%;
-		margin: 20px auto;
-		padding: 20px;
-		border: 1px solid #ccc;
-		border-radius: 10px;
-	}
-
-	.chat-messages {
-		max-height: 100%;
-		/* Chi?u cao t?i da c?a ph?n hi?n th? tin nh?n */
-		overflow-y: auto;
-		/* T?o thanh cu?n khi c?n thi?t */
-		padding: 10px;
-		border-bottom: 1px solid #ccc;
-	}
-
-	.message-form-container {
-		margin-top: 10px;
-		/* Kho?ng cách gi?a ph?n hi?n th? và ph?n nh?p */
-	}
-
-	.message-form {
-		display: flex;
-		align-items: center;
-	}
-
-	.message-input {
-		flex: 1;
-		padding: 10px;
-		border: 1px solid #ccc;
-		border-radius: 5px 0 0 5px;
-		outline: none;
-	}
-
-	.send-button {
-		background-color: #007bff;
-		color: white;
-		border: none;
-		border-radius: 0 5px 5px 0;
-		padding: 10px 20px;
-		cursor: pointer;
-		transition: background-color 0.3s;
-	}
-
-		.send-button:hover {
-			background-color: #0056b3;
-		}
-
 	/* THÔNG TIN GI?NG VIÊN */
 	.teacher-info {
 		background-color: #f9f9f9;
@@ -480,54 +429,6 @@
   }
 }
 
-/*      css record và add file  */
-	#recordButton, .file-label {
-		font-family: Poppins, sans-serif;
-		font-size: 16px;
-		color: #007bff;
-		border: 1px solid #007bff;
-		border-radius: 50%;
-		padding: 10px;
-		width: 50px;
-		height: 50px;
-		display: flex;
-		align-items: center;
-		justify-content: center;
-		transition: background-color 0.3s ease, color 0.3s ease;
-		margin-right: 15px; /* Tạo khoảng cách giữa các nút và trường nhập */
-	}
-
-	#messageInput {
-		font-family: Poppins, sans-serif;
-		margin-right: 15px; /* Tạo khoảng cách giữa input và các biểu tượng */
-		padding: 10px; /* Tăng padding cho khung nhập để dễ thao tác hơn */
-		font-size: 16px;
-		margin-bottom: 10px;
-	}
-		#recordButton:hover, .file-label:hover {
-			background-color: #007bff;
-			color: #fff;
-		}
-
-	#sendButton {
-		font-family: Poppins, sans-serif;
-		font-size: 16px;
-		font-weight: 700;
-	}
-
-	.file-name {
-		font-family: Poppins, sans-serif;
-		font-size: 14px;
-		margin-left: 10px;
-		color: #6c757d;
-		display: inline-block;
-		max-width: 350px;
-		white-space: nowrap;
-		overflow: hidden;
-		text-overflow: ellipsis;
-		margin-top: 15px;
-	}
-
 	.d-flex {
 		display: flex;
 	}
@@ -638,31 +539,364 @@
 		background-color: rgba(145, 137, 137, 0.2);
 	}
 
-	/*.option-button {
-	    width: 100%;
-	    padding: 8px;
-	    text-align: center;
-	    border: none;
-	    background-color: transparent;
-	    cursor: pointer;
-	    transition: background-color 0.3s ease;
+	.discussion-container {
+		display: flex;
+		width: 100%;
+		height:600px;
+		font-family: 'JetBrains Mono', serif;
 	}
 
-	.option-button:hover {
-	    border-radius:5px;
-	    padding:8px;
-	    background-color: lightgray;*/
+	/* Khung bên trái (kích thước cố định) */
+	.left-panel {
+		flex: 0 0 400px;
+		padding: 20px;
+		border: 1px solid #ddd;
+		border-radius: 20px;
+		box-sizing: border-box;
+		margin-right: 20px;
+	}
 
-.btn{
-	color: black;
+	/* Khung bên phải (co giãn) */
+	.right-panel {
+		flex: 1;
+		display: flex;
+		border: 1px solid #ddd;
+		border-radius: 20px;
+		box-sizing: border-box;
+		flex-direction: column;
+		position: relative;
+	}
+
+	/* Thiết lập form và các thành phần bên trong */
+	.input-hidden {
+		display: none;
+	}
+
+	.message-input-group {
+		display: flex;
+		align-items: center;
+		gap: 10px;
+		background-color: #FBEAF0;
+		padding: 10px;
+		border-bottom-left-radius: 20px;
+		border-bottom-right-radius: 20px;
+		height: 70px;
+	}
+
+
+	#messageInput {
+		flex: 1;
+		border-radius: 30px;
+		height: 45px;
+		padding-left: 10px;
+		font-size: 17px;
+		border: none;
+		outline: none;
+	}
+
+	.record {
+		background-color: transparent; /* Bỏ màu nền */
+		border: none; /* Bỏ đường viền */
+		padding: 0; /* Loại bỏ khoảng cách xung quanh */
+		cursor: pointer; /* Thêm hiệu ứng con trỏ tay khi hover */
+		display: flex;
+		align-items: center;
+	}
+
+
+	/* Khung tin nhắn */
+	.message-list {		
+		list-style-type: none; 
+		margin: 0;
+		height: calc(100% - 70px); 
+		width: 100%; 
+		overflow-y: auto; /* Hiển thị thanh cuộn dọc nếu nội dung vượt quá chiều cao */
+		box-sizing: border-box; /* Đảm bảo padding không tăng kích thước phần tử */
+		
+	}
+	#messagesList {
+		list-style-type: none;
+		margin: 0;
+		height: calc(100% - 70px); /* Chiều cao tối đa của khung */
+		overflow-y: auto; /* Cuộn dọc khi nội dung vượt quá khung */
+		
+	}
+	.message-form {
+		position: absolute;
+		bottom: 0;
+		width: 100%;
+	}
+
+	.send-button_discuss {
+		background: none;
+		border: none;
+		cursor: pointer;
+		outline: none;
+		display: flex;
+		align-items: center;
+	}
+
+	.send-icon_discuss {
+		fill: #ff397f; /* Màu biểu tượng */
+		width: 20px;
+		height: 20px;
+	}
+
+	.image-icon_discuss {
+		display: flex;
+		align-items: center; /* Canh giữa icon theo chiều dọc */
+	}
+
+	.file-label {
+		background-color: transparent; /* Bỏ màu nền */
+		border: none; /* Bỏ đường viền */
+		padding: 0; /* Loại bỏ khoảng cách xung quanh */
+		/*cursor: pointer;  Thêm hiệu ứng con trỏ tay khi hover */
+		display: flex;
+		align-items: center;
+		margin:0;
+	}
+
+	.file-name {
+		font-family: Poppins, sans-serif;
+		font-size: 14px;
+		margin-left: 10px;
+		color: #6c757d;
+		display: inline-block;
+		max-width: 350px;
+		white-space: nowrap;
+		overflow: hidden;
+		text-overflow: ellipsis;
+		margin-top: 15px;
+	}
+
+	.message-box{
+		display: inline-block;
+		max-width: 763px;
+		border-radius: 10px;
+		padding: 10px;
+		background-color: #FBEAF0;
+		margin-left:15px
+	}
+
+	.current-user {
+		justify-content: flex-end; /* Hiển thị bên phải cho người khác */
+		align-items: flex-end;
+		margin-left: auto;	
+	}
+
+	/* Tin nhắn từ người khác */
+	.other-user{
+		justify-content: flex-start; /* Hiển thị bên trái cho người hiện tại */
+		align-items: flex-start;
+
+	}
+
+	.search-box_discuss {
+		width: 100%;
+		max-width: 400px;
+		margin: 0 auto;
+		position: relative;
+		font-family: Arial, sans-serif;
+	}
+
+	.search-input_discuss {
+		width: 90%;
+		padding: 10px 15px;
+		padding-left: 40px; /* Để chừa chỗ cho biểu tượng tìm kiếm */
+		font-size: 16px;
+		border: 1px solid #ccc;
+		border-radius: 20px;
+		outline: none;
+		transition: border 0.3s ease;
+		margin-top: 20px;
+		margin-left: 20px;
+		margin-right: 20px;
+	}
+
+		.search-input_discuss:focus {
+			border-color: #0078ff;
+		}
+
+	/* Biểu tượng tìm kiếm */
+	.search-icon_discuss {
+		position: absolute;
+		top: 65%;
+		left: 30px;
+		transform: translateY(-50%);
+		color: #888;
+		font-size: 18px;
+		pointer-events: none;
+	}
+
+	.account-info-container_discuss {
+		overflow-y: auto;
+		height: 530px;
+		width: 400px;
+		border-bottom-left-radius: 35px;
+		border-bottom-right-radius: 35px;
+	}
+
+	.circle-text-container_discuss {
+		display: flex; 
+		align-items: center; 
+		width:100%;
+		padding: 15px; 
+		border: none; 
+		border-radius: 10px;
+		background-color: none; 
+		position: relative;
+		transition: background-color 0.3s;
+	}
+
+		.circle-text-container_discuss:hover {
+			background-color: #E1E1E1;
+		}
+
+	.circle_discuss {
+		display:flex;
+		width: 90px; /* Đường kính của hình tròn */
+		height: 90px; /* Đường kính của hình tròn */
+		border-radius: 50%; /* Để tạo hình tròn */
+		margin-right: 10px; /* Khoảng cách giữa hình tròn và chữ */
+		overflow: hidden;
+		align-items: center;
+		justify-content: center;
+	}
+
+		.circle_discuss img {
+			width: 90px;
+			height: 90px;
+			object-fit: fill;
+		}
+
+	#listsv2 {
+		display: flex;
+		flex-wrap: wrap;
+		gap: 20px;
+	}
+
+	.student-card {
+		border: 1px solid #ddd;
+		border-radius: 8px;
+		padding: 10px;
+		width: 200px;
+		text-align: center;
+		box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+	}
+
+	.three-dots-icon_discuss {
+		position: absolute;
+		top: 10px; /* Đặt ở đầu container */
+		right: 10px; /* Khoảng cách từ bên phải */
+		cursor: pointer; /* Con trỏ chuột khi hover */
+		color: #000000; /* Màu cho biểu tượng ba chấm */
+	}
+
+	.star-icon_discuss {
+		position: absolute;
+		bottom: 10px; /* Khoảng cách từ trên xuống */
+		right: 10px; /* Khoảng cách từ bên phải */
+		cursor: pointer; /* Con trỏ chuột khi hover */
+		color: lightgray; /* Màu vàng cho biểu tượng ngôi sao */
+	}
+
+	.popup {
+		display: none;
+		position: fixed;
+		z-index: 1;
+		left: 0;
+		top: 0;
+		width: 100%;
+		height: 100%;
+		background-color: rgba(0, 0, 0, 0.4);
+		overflow: auto;
+		padding-top: 60px;
+	}
+
+	/* Nội dung của popup */
+	.popup-content {
+		background-color: #c7ffd0;
+		margin: 5% auto;
+		padding: 20px;
+		border: 1px solid #888;
+		width: 600px;
+		border-radius:20px;
+		display:flex;
+	}
+
+	/* Nút đóng */
+	.popup-close {
+		color: black;
+		float: right;
+		font-size: 30px;
+		font-weight: bold;
+		margin-left:auto;
+		margin-top: -10px;
+	}
+
+		.popup-close:hover,
+		.popup-close:focus {
+			color: red;
+			text-decoration: none;
+			cursor: pointer;
+		}
+
+	.popup-image {
+		width: 150px;
+		height: 200px;
+		margin-right: 40px;
+		display: flex;
+		justify-content: center;
+		align-items: center;
+		border-radius: 20px;
+		overflow: hidden;
+		background-color: #f0f0f0;
+		flex-shrink: 0;
+	}
+
+	.popup-details p {
+		margin: 5px 0;
+		line-height: 1.5; 
+		font-size: 18px;
+		font-weight: 600;
+	}
+
+
+	.notification-box {
+		display: none; /* Ẩn thông báo mặc định */
+		position: fixed; /* Đặt vị trí cố định trên màn hình */
+		top: 50%; /* Căn giữa theo trục dọc */
+		left: 50%; /* Căn giữa theo trục ngang */
+		transform: translate(-50%, -50%); /* Dịch chuyển để khung nằm chính giữa */
+		padding: 20px;
+		margin: 0; /* Xóa margin để không ảnh hưởng đến vị trí */
+		border: 1px solid #ccc;
+		background-color: #e0f7fa;
+		border-radius: 5px;
+		width: 50%; /* Độ rộng bằng 50% màn hình, có thể tùy chỉnh */
+		max-width: 400px; /* Giới hạn độ rộng tối đa */
+		box-sizing: border-box;
+		box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Tạo hiệu ứng đổ bóng */
+		z-index: 1000; /* Đảm bảo khung nằm trên các thành phần khác */
+        }
+
+#notificationBox {
+    max-height: 300px;
+    overflow-y: auto;
+    padding: 10px;
+    border: 1px solid #ccc;
+    background-color: #f9f9f9;
 }
 
-.btn:hover{
-			background-color: lightgray;
+.notify-item {
+    margin-bottom: 10px;
+    padding: 5px 10px;
+    border-radius: 5px;
+    background-color: #e6f7ff;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
 }
 
-	
-	
 </style>
 
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
@@ -685,15 +919,15 @@
 	@{
 		if (Model.isOwner)
 		{
-								<form id="changeBG" action="/ClassRooms/changeBackground" method="POST" enctype="multipart/form-data" style="position: absolute; bottom: 10px; right: 10px;">
-									<input type="hidden" name="classId" value="@Model.ClassRoom.Id" />
-									<label for="file-upload" class="custom-file-upload">
-										<i class="fa-solid fa-camera"></i>
-										Thay đổi ảnh bìa
-									</label>
-									<input id="file-upload" type="file" name="image" accept="image/*" required
-									   	onchange="document.getElementById('changeBG').submit();" style="display:none;" />
-								</form>
+									<form id="changeBG" action="/ClassRooms/changeBackground" method="POST" enctype="multipart/form-data" style="position: absolute; bottom: 10px; right: 10px;">
+										<input type="hidden" name="classId" value="@Model.ClassRoom.Id" />
+										<label for="file-upload" class="custom-file-upload">
+											<i class="fa-solid fa-camera"></i>
+											Thay đổi ảnh bìa
+										</label>
+										<input id="file-upload" type="file" name="image" accept="image/*" required
+										   	onchange="document.getElementById('changeBG').submit();" style="display:none;" />
+									</form>
 		}
 	}
 	
@@ -773,12 +1007,12 @@
 	<div class="tab" onclick="openTab(event, 'letter')" style="font-family: Poppins, sans-serif;font-weight: 600">Đơn từ</div>
 	<div class="tab" onclick="openTab(event, 'setting')" style="font-family: Poppins, sans-serif;font-weight: 600">Settings</div>
 	<div class="tab" onclick="openTab(event, 'mainload')" style="font-family: Poppins, sans-serif;font-weight: 600" hidden>MainLoad</div>
+	<div class="tab" onclick="openNotification()" style="font-family: Poppins, sans-serif;font-weight: 600">Thông báo</div>
 </div>
 <div id="teacher" class="tabcontent">
 	<div class="teacher-info" style="background-color: #fdffe0">
 		<h2 style="font-family: Poppins, sans-serif;">Thông tin giáo viên</h2>
-		<div class="teacher-details">
-			
+		<div class="teacher-details">			
 			<img src="/Imgs_avtUser/@Model.Owner.UrlAvt" alt="Teacher image" class="teacher-image" />
 			<div class="teacher-text">
 				<p style="font-family: Poppins, sans-serif;"><strong>Mã giảng viên:</strong> @Model.Owner.Mssv</p>
@@ -792,10 +1026,10 @@
 	@{
 		if (Model.isOwner)
 		{
-								<div>
-									<button id="browseBaiGiang">Chọn File BAIGIANG</button>
-									<div id="progressBar"></div>
-								</div>
+									<div>
+										<button id="browseBaiGiang">Chọn File BAIGIANG</button>
+										<div id="progressBar"></div>
+									</div>
 
 		}
 	}
@@ -808,66 +1042,66 @@
 	@{
 		if (Model.isOwner)
 		{
-													<button id="uploadButton" onclick="Showtaobaitap()"
-															style="
-																								background-color: #3498db;
-																								font-family: Poppins, sans-serif;
-																								color: #ffffff;
-																								padding: 10px 20px;
-																								border: none;
-																								border-radius: 5px;
-																								cursor: pointer;
-																								transition: background-color 0.3s;
-																								font-size: 15px;
-																								font-weight: bold;">
-														Tạo bài tập mới
-													</button>
-													<form id="uploadbaitap" action="/ClassRooms/CreateBaitap" method="POST" style="display: none;">
-														<div class="form-section">
-															<!-- Ph?n nh?p tiêu d? -->
-															<input type="text" name="Title" id="titleInput" class="form-control" placeholder="Nhập tiêu đề">
-															<!-- G?ch ngang -->
-															<hr>
-															<!-- Ph?n nh?p mô t? -->
-															<textarea name="Content" id="descriptionInput" class="form-control" placeholder="Nhập mô tả"></textarea>
-															<label for="deadlineInput">Hạn nộp:</label>
-															<input type="datetime-local" name="Deadline" id="deadlineInput" class="form-control">
+					<button id="uploadButton" onclick="Showtaobaitap()"
+							style="
+																background-color: #3498db;
+																font-family: Poppins, sans-serif;
+																color: #ffffff;
+																padding: 10px 20px;
+																border: none;
+																border-radius: 5px;
+																cursor: pointer;
+																transition: background-color 0.3s;
+																font-size: 15px;
+																font-weight: bold;">
+						Tạo bài tập mới
+					</button>
+					<form id="uploadbaitap" action="/ClassRooms/CreateBaitap" method="POST" style="display: none;">
+						<div class="form-section">
+							<!-- Ph?n nh?p tiêu d? -->
+							<input type="text" name="Title" id="titleInput" class="form-control" placeholder="Nhập tiêu đề">
+							<!-- G?ch ngang -->
+							<hr>
+							<!-- Ph?n nh?p mô t? -->
+							<textarea name="Content" id="descriptionInput" class="form-control" placeholder="Nhập mô tả"></textarea>
+							<label for="deadlineInput">Hạn nộp:</label>
+							<input type="datetime-local" name="Deadline" id="deadlineInput" class="form-control">
 
-															<label for="fileFormatSelect">Chọn định dạng file cần nộp:</label>
-															<select name="FileFormat" id="fileFormatSelect">
-																<option value="pdf">pdf</option>
-																<option value="docx">docx</option>
-																<option value="xlsx">xls</option>
-																<option value="allfile">all file</option>
-																<!-- Thêm các lo?i d?nh d?ng khác n?u c?n -->
-															</select>
+							<label for="fileFormatSelect">Chọn định dạng file cần nộp:</label>
+							<select name="FileFormat" id="fileFormatSelect">
+								<option value="pdf">pdf</option>
+								<option value="docx">docx</option>
+								<option value="xlsx">xls</option>
+								<option value="allfile">all file</option>
+								<!-- Thêm các lo?i d?nh d?ng khác n?u c?n -->
+							</select>
 
-														</div>
-									<input type="hidden" name="ClassId" id="classIdInput" value="@Model.ClassRoom.Id">
-									<label for="fileInput">Hướng dẫn (Nếu có): </label>
-									<input type="file" name="FileUpLoad" id="fileInput" /> <!-- ?n input file -->
-									<input type="hidden" name="AttactURL" id="attactURL">
-									<button type="button" onclick="uploadFile()">Upload</button>
+						</div>
+										<input type="hidden" name="ClassId" id="classIdInput" value="@Model.ClassRoom.Id">
+										<label for="fileInput">Hướng dẫn (Nếu có): </label>
+										<input type="file" name="FileUpLoad" id="fileInput" /> <!-- ?n input file -->
+										<input type="hidden" name="AttactURL" id="attactURL">
+										<button type="button" onclick="uploadFile()">Upload</button>
 
-									<div class="modal" id="uploadModal" style="background-color: transparent;">
-										<div class="modal-content">
-											<div class="modal-header">
-												<h5 class="modal-title">Uploading File</h5>
-											</div>
-											<div class="modal-body text-center">
-												<div class="loader" id="loader" style="display: block;"></div>
-												<progress id="progressBar" value="0" max="100" style="display: none;"></progress>
-												<div id="progressText" style="display: block;" class="mt-3">0%</div>
-												<div id="successText" class="mt-3" style="display: none;">Upload thành công</div>
+										<div class="modal" id="uploadModal" style="background-color: transparent;">
+											<div class="modal-content">
+												<div class="modal-header">
+													<h5 class="modal-title">Uploading File</h5>
+												</div>
+												<div class="modal-body text-center">
+													<div class="loader" id="loader" style="display: block;"></div>
+													<progress id="progressBar" value="0" max="100" style="display: none;"></progress>
+													<div id="progressText" style="display: block;" class="mt-3">0%</div>
+													<div id="successText" class="mt-3" style="display: none;">Upload thành công</div>
+												</div>
 											</div>
 										</div>
-									</div>
 
-									<div class="modal-backdrop" id="modalBackdrop"></div>
+										<div class="modal-backdrop" id="modalBackdrop"></div>
 
 
-														<input type="submit" value="Giao bài" class="btn btn-primary"></input> <!-- Nút giao bài -->
-													</form>
+															<input type="submit" value="Giao bài" class="btn btn-primary"></input> <!-- Nút giao bài -->
+														</form>
 		}
 	}
 	<div class="assignments">
@@ -879,7 +1113,7 @@
 					@{
 						if (Model.isOwner)
 						{
-																	<a class="btn btn-info" style="float: left; max-width: 50px; padding: 5px;" asp-action="DeleteBT" asp-controller="ClassRooms" asp-route-id="@assignment.Id" asp-route-classId="@assignment.ClassRoomId" onclick="return confirm('B?n có ch?c mu?n xóa không ?')">Xóa</a>
+																		<a class="btn btn-info" style="float: left; max-width: 50px; padding: 5px;" asp-action="DeleteBT" asp-controller="ClassRooms" asp-route-id="@assignment.Id" asp-route-classId="@assignment.ClassRoomId" onclick="return confirm('B?n có ch?c mu?n xóa không ?')">Xóa</a>
 						}
 					}
 					<h3 class="text-center">@assignment.Title</h3>
@@ -887,11 +1121,11 @@
 					@{
 						if (assignment.Deadline.HasValue)
 						{
-							<p class="assignment-description">Hạn nộp: @assignment.Deadline</p>
+								<p class="assignment-description">Hạn nộp: @assignment.Deadline</p>
 						}
 						else
 						{
-																	<p class="assignment-description">Hạn nộp: Vô thời hạn</p>
+																		<p class="assignment-description">Hạn nộp: Vô thời hạn</p>
 						}
 					}
 
@@ -920,12 +1154,12 @@
 						@{
 							if (!Model.isOwner)
 							{
-																		<label for="file-upload" class="file-label1" style="white-space: nowrap;">Bài tập của bạn</label>
-																		<div class="file-input-wrapper">
-																			@{
+																			<label for="file-upload" class="file-label1" style="white-space: nowrap;">Bài tập của bạn</label>
+																			<div class="file-input-wrapper">
+																				@{
 										if (hasSubmitted)
 										{
-																											<p style="text-align: center; margin-left: 15px;">Đã nộp bài</p>
+																													<p style="text-align: center; margin-left: 15px;">Đã nộp bài</p>
 										}
 										else
 										{
@@ -941,41 +1175,41 @@
 												{
 													// X? lý khi deadline dã qua
 													// Ví d?: hi?n th? thông báo cho ngu?i dùng
-																																	<p>Deadline dã qua. Không thể nộp bài tập nữa.</p>
+																																			<p>Deadline dã qua. Không thể nộp bài tập nữa.</p>
 												}
 												else
 												{
 													// X? lý khi deadline chua qua
 													// Ví d?: cho phép ngu?i dùng n?p bài t?p
-																																	<p>Thiếu</p>
-																																	<input id="FileInput_@assignment.Id" type="file" name="FileNopbai">
-																																	<input type="hidden" name="ClassId" id="classIdInput" value="@Model.ClassRoom.Id">
-																																	<input type="hidden" name="BaitapId" id="baitapinput" value="@assignment.Id">
+																																			<p>Thiếu</p>
+																																			<input id="FileInput_@assignment.Id" type="file" name="FileNopbai">
+																																			<input type="hidden" name="ClassId" id="classIdInput" value="@Model.ClassRoom.Id">
+																																			<input type="hidden" name="BaitapId" id="baitapinput" value="@assignment.Id">
 
-																																	<button type="submit">Nộp bài</button>
-																																	<button type="button" onclick="previewFile('@assignment.Id')">Xem trước</button>
+																																			<button type="submit">Nộp bài</button>
+																																			<button type="button" onclick="previewFile('@assignment.Id')">Xem trước</button>
 												}
 											}
 											else
 											{
 												// X? lý khi không có deadline du?c d?t
 
-																																<p>Thiếu</p>
-																																<input id="FileInput_@assignment.Id" type="file" name="FileNopbai">
-																																<input type="hidden" name="ClassId" id="classIdInput" value="@Model.ClassRoom.Id">
-																																<input type="hidden" name="BaitapId" id="baitapinput" value="@assignment.Id">
+																																		<p>Thiếu</p>
+																																		<input id="FileInput_@assignment.Id" type="file" name="FileNopbai">
+																																		<input type="hidden" name="ClassId" id="classIdInput" value="@Model.ClassRoom.Id">
+																																		<input type="hidden" name="BaitapId" id="baitapinput" value="@assignment.Id">
 
-																																<button type="submit">Nộp bài</button>
-																																<button type="button" onclick="previewFile('@assignment.Id')">Xem trước</button>
+																																		<button type="submit">Nộp bài</button>
+																																		<button type="button" onclick="previewFile('@assignment.Id')">Xem trước</button>
 											}
 										}
-																			}
-																		</div>
-																		<div id="previewContainer_@assignment.Id"></div>
+																				}
+																			</div>
+																			<div id="previewContainer_@assignment.Id"></div>
 							}
 							else
 							{
-																		<a asp-action="GetAllBTStu" asp-controller="ClassRooms" asp-route-classid="@Model.ClassRoom.Id" asp-route-baitapID="@assignment.Id" class="btn btn-info ">Xem bài tập đã nộp</a>
+																			<a asp-action="GetAllBTStu" asp-controller="ClassRooms" asp-route-classid="@Model.ClassRoom.Id" asp-route-baitapID="@assignment.Id" class="btn btn-info ">Xem bài tập đã nộp</a>
 							}
 						}
 
@@ -987,53 +1221,94 @@
 </div>
 <div id="discussion" class="tabcontent">
 	<div class="discussion">
-		<div class="container-fluid">
-			<form id="uploadForm" enctype="multipart/form-data">
-				<div class="row p-1" hidden>
-					<div class="col-5">
-						<input type="text" id="userInput" class="form-control" />
-					</div>
-					<div class="col-5">
-						<input type="text" id="classId" class="form-control" value="@Model.ClassRoom.Id" />
-					</div>
+		<div class="discussion-container">
+			<!-- Khung bên trái nhỏ hơn -->
+			<div class="left-panel">
+				<div class="search-box_discuss" style="margin-bottom: 20px;">
+					<!-- Biểu tượng tìm kiếm -->
+					<span class="search-icon_discuss">🔍</span>
+					<!-- Thanh tìm kiếm -->
+					<input type="search"
+						   class="search-input_discuss"
+						   placeholder="Tìm kiếm trên Messenger"
+						   aria-label="Tìm kiếm trên Messenger"
+						   dir="ltr"
+						   autocomplete="off"
+						   spellcheck="false">
 				</div>
-				<div class="row p-1">
-					<div class="col-1" style="font-family: Poppins, sans-serif; font-weight: 500; font-size: 16px;">
-						Tin nhắn:
+				<div class="account-info-container_discuss">
+					<div class="popup" id="popup" style="display: none;">
+						<div class="popup-content">					
+							<div class="popup-image">
+								<img id="student-image" src="" alt="Student Avatar" style="width: 100%; height: 100%; object-fit:cover" />
+							</div>
+							<div class="popup-details">
+								<h3 style="margin-top:-5px; font-weight:600;">Thông tin sinh viên</h3>
+								<p id="student-mssv"></p>
+								<p id="student-name"></p>
+								<p id="student-email"></p>
+							</div>	
+							<span class="popup-close" onclick="closePopup()">×</span>
+						</div>
 					</div>
-					<div class="col-4">
-						<input style="font-family: Poppins, sans-serif;" type="text" class="form-control" id="messageInput" />
+					<div id="listsv2"></div>
+					<div class="circle-text-container_discuss" id="student-template" style="display: none;">
+						<div class="circle_discuss ">
+							<img src="" alt="No Image" class="student-avatar" />
+						</div>
+						<h3 style="font-size: 18px; margin: 0; font-weight: 600;" class="student-info"></h3>
+						<span class="three-dots-icon_discuss">
+							<svg xmlns="http:www.w3.org/2000/svg" width="30" height="30" fill="currentColor" class="bi bi-three-dots-vertical" viewBox="0 0 16 16">
+								<path d="M9.5 13a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0m0-5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0m0-5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0" />
+							</svg>
+						</span>
+						<span class="star-icon_discuss">
+							<button type="button" class="send-notify-btn">★</button>
+						</span>
 					</div>
-					<div class="col-2 d-flex align-items-center gap-2">
-						<button type="button" onclick="startSpeechRecognition()" id="recordButton" class="btn btn-light" title="Bắt đầu ghi âm">
-							<i class="fas fa-microphone"></i>
-						</button>
-						<label class="btn btn-light file-label" for="FileInput" title="Chọn tệp">
-							<i class="fas fa-paperclip"></i>
-						</label>
-						<input type="file" id="FileInput" style="display: none;">
-						<span id="fileName" class="file-name">Không có tệp nào được chọn</span>
-					</div>
-					<div class="col-2 text-end">
-						<input style="font-family: Poppins, sans-serif; font-size: 16px; font-weight: 700;" type="button" id="sendButton" class="btn btn-primary" value="Gửi" />
-					</div>
-				</div>
-			</form>
-
-			<div class="row p-1">
-				<div class="col-6">
-					<hr />
+							
 				</div>
 			</div>
-			<div class="row p-1">
-				<div class="col-6">
-					<ul id="messagesList" class="list-group" style="text-decoration: none; overflow: auto; max-height: 500px;">
-						<partial name="_MessagePartial" model="Model.Message" />
-					</ul>
+			<div class="right-panel">
+				<div id="messagesList" class="message-list">
+					<partial name="_MessagePartial" model="Model.Message" />
 				</div>
+				<form id="uploadForm" enctype="multipart/form-data" class="message-form">
+					<div class="input-hidden">
+						<input type="text" id="userInput" class="form-control"  />
+						<input type="text" id="classId" class="form-control" value="@Model.ClassRoom.Id" />
+					</div>
+					<div class="message-input-group">
+						<button type="button" onclick="startSpeechRecognition()" id="recordButton" class="record" title="Bắt đầu ghi âm">
+							<svg class="microphone-icon" height="25px" viewBox="0 0 24 24" width="25px">
+								<title>Nhấn để ghi âm</title>
+								<path d="M5 4a4 4 0 018 0v5.5a4 4 0 01-8 0V4z" fill="#ff397f"></path>
+								<path d="M3.5 20.5a1 1 0 011-1h2.75a.5.5 0 00.5-.5v-.66a.52.52 0 00-.43-.5A8.5 8.5 0 01.5 9.5V9a1 1 0 011-1H2a1 1 0 011 1v.5a6 6 0 0012 0V9a1 1 0 011-1h.5a1 1 0 011 1v.5a8.5 8.5 0 01-6.82 8.33.52.52 0 00-.43.51V19c0 .28.22.5.5.5h2.75a1 1 0 011 1v.5a1 1 0 01-1 1h-9a1 1 0 01-1-1v-.5z" fill="#ff397f"></path>
+							</svg>
+						</button>
+						<label class="file-label" for="FileInput" title="Chọn tệp">
+							<span class="image-icon_discuss">
+								<svg xmlns="http://www.w3.org/2000/svg" width="25px" height="25px" fill="#ff397f" class="bi bi-paperclip" viewBox="0 0 16 16">
+									<path d="M4.5 3a2.5 2.5 0 0 1 5 0v9a1.5 1.5 0 0 1-3 0V5a.5.5 0 0 1 1 0v7a.5.5 0 0 0 1 0V3a1.5 1.5 0 1 0-3 0v9a2.5 2.5 0 0 0 5 0V5a.5.5 0 0 1 1 0v7a3.5 3.5 0 1 1-7 0z" />
+								</svg>
+							</span>
+						</label>
+						<input type="file" id="FileInput" style="display: none;">
+						@*<span id="fileName" class="file-name">Không có tệp nào được chọn</span> *@
+						<input type="text" class="form-control" id="messageInput" placeholder="Nhập tin nhắn" />
+						<button type="button" id="sendButton" class="send-button_discuss" aria-label="Nhấn Enter để gửi">
+							<svg class="send-icon_discuss" height="25px" viewBox="0 0 24 24" width="25px">
+								<title>Nhấn Enter để gửi</title>
+								<path d="M16.6915026,12.4744748 L3.50612381,13.2599618 C3.19218622,13.2599618 3.03521743,13.4170592 3.03521743,13.5741566 L1.15159189,20.0151496 C0.8376543,20.8006365 0.99,21.89 1.77946707,22.52 C2.41,22.99 3.50612381,23.1 4.13399899,22.8429026 L21.714504,14.0454487 C22.6563168,13.5741566 23.1272231,12.6315722 22.9702544,11.6889879 C22.8132856,11.0605983 22.3423792,10.4322088 21.714504,10.118014 L4.13399899,1.16346272 C3.34915502,0.9 2.40734225,1.00636533 1.77946707,1.4776575 C0.994623095,2.10604706 0.8376543,3.0486314 1.15159189,3.99121575 L3.03521743,10.4322088 C3.03521743,10.5893061 3.34915502,10.7464035 3.50612381,10.7464035 L16.6915026,11.5318905 C16.6915026,11.5318905 17.1624089,11.5318905 17.1624089,12.0031827 C17.1624089,12.4744748 16.6915026,12.4744748 16.6915026,12.4744748 Z" fill="var(--chat-composer-button-color)"></path>
+							</svg>
+						</button>
+					</div>
+				</form>
 			</div>
 		</div>
 	</div>
+	
+	
 </div>
 
 
@@ -1042,11 +1317,11 @@
 	@{
 		if (Model.isOwner)
 		{
-													<div style="margin-bottom: -35px;">
-														<form asp-controller="ClassRooms" asp-action="ExportDSSV" asp-route-classID="@Model.ClassRoom.Id" method="post">
-															<button type="submit" class="btn btn-info">Xuất danh sách sinh viên</button>
-														</form>
-													</div>
+				<div style="margin-bottom: -35px;">
+					<form asp-controller="ClassRooms" asp-action="ExportDSSV" asp-route-classID="@Model.ClassRoom.Id" method="post">
+						<button type="submit" class="btn btn-info">Xuất danh sách sinh viên</button>
+					</form>
+				</div>
 		}
 	}
 	<div id="listsv1">
@@ -1158,86 +1433,86 @@
 	@{
 	       if (Model.isOwner)
 	       {
-			<div class="create-content"
-				 style="border: 1px solid rgb(145, 137, 137);
-			border-radius: 8px;
-			padding: 10px;
-			height: 100%;
-			margin: 20px;
-			display: flex;
-			align-items: center;">
+				<div class="create-content"
+				 	style="border: 1px solid rgb(145, 137, 137);
+				border-radius: 8px;
+				padding: 10px;
+				height: 100%;
+				margin: 20px;
+				display: flex;
+				align-items: center;">
 
-				<!-- Icon hình tròn với SVG bên trong -->
-				<div class="circle-icon" style="background-color: rgb(66, 133, 244); border-radius: 50%; width: 40px; height: 40px; display: flex; align-items: center; justify-content: center; margin-right: 10px; margin-left: 20px;">
-					<svg focusable="false" width="24" height="24" viewBox="0 0 24 24" class="NMm5M hhikbc" style="fill: white;">
-						<path d="M7 15h7v2H7zm0-4h10v2H7zm0-4h10v2H7z"></path>
-						<path d="M19 3h-4.18C14.4 1.84 13.3 1 12 1c-1.3 0-2.4.84-2.82 2H5c-.14 0-.27.01-.4.04a2.008 2.008 0 0 0-1.44 1.19c-.1.23-.16.49-.16.77v14c0 .27.06.54.16.78s.25.45.43.64c.27.27.62.47 1.01.55.13.02.26.03.4.03h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-7-.25c.41 0 .75.34.75.75s-.34.75-.75.75-.75-.34-.75-.75.34-.75.75-.75zM19 19H5V5h14v14z"></path>
-					</svg>
-				</div>
-
-				<!-- Văn bản thông báo với sự kiện onclick -->
-				<h3 class="notify-text" style="cursor: pointer; margin-left: 20px;" onclick="expandContent()">Thông báo nội dung nào đó cho lớp học của bạn</h3>
-
-				<!-- Phần form ẩn -->
-				<form id="uploadpost" action="/ClassRooms/CreatePost" method="POST" style="width: 100%; display: none;">
-					<div id="expandable-form" style="display: none; width: 100%;">
-						<input type="text" name="Title" id="titleInput" class="form-control" placeholder="Nhập tiêu đề" style="margin-bottom: 10px; width: 100%; border-radius: 5px; padding: 10px;" />
-						<textarea name="Content" id="inputText" rows="4" class="input-textarea" oninput="checkInput()" style="width: 100%; border-radius: 5px; margin-top: 10px; padding: 10px;" placeholder="Nhập nội dung..."></textarea>
-						<div style="display: flex; justify-content: flex-end; margin-top: 10px;">
-							<button type="button" onclick="cancelInput()" style="margin-right: 10px; padding: 5px 10px;">Hủy</button>
-							<button id="submitButton" class="disabled-button" onclick="submitInput()" style="padding: 5px 10px;" disabled>Đăng</button>
-						</div>
+					<!-- Icon hình tròn với SVG bên trong -->
+					<div class="circle-icon" style="background-color: rgb(66, 133, 244); border-radius: 50%; width: 40px; height: 40px; display: flex; align-items: center; justify-content: center; margin-right: 10px; margin-left: 20px;">
+						<svg focusable="false" width="24" height="24" viewBox="0 0 24 24" class="NMm5M hhikbc" style="fill: white;">
+							<path d="M7 15h7v2H7zm0-4h10v2H7zm0-4h10v2H7z"></path>
+							<path d="M19 3h-4.18C14.4 1.84 13.3 1 12 1c-1.3 0-2.4.84-2.82 2H5c-.14 0-.27.01-.4.04a2.008 2.008 0 0 0-1.44 1.19c-.1.23-.16.49-.16.77v14c0 .27.06.54.16.78s.25.45.43.64c.27.27.62.47 1.01.55.13.02.26.03.4.03h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-7-.25c.41 0 .75.34.75.75s-.34.75-.75.75-.75-.34-.75-.75.34-.75.75-.75zM19 19H5V5h14v14z"></path>
+						</svg>
 					</div>
-					<input type="hidden" name="ClassId" id="classIdInput" value="@Model.ClassRoom.Id" />
-					<input type="hidden" name="UserId" id="UserIdInput" value="@Model.ClassRoom.UserId" />
-				</form>
-				@{
+
+					<!-- Văn bản thông báo với sự kiện onclick -->
+					<h3 class="notify-text" style="cursor: pointer; margin-left: 20px;" onclick="expandContent()">Thông báo nội dung nào đó cho lớp học của bạn</h3>
+
+					<!-- Phần form ẩn -->
+					<form id="uploadpost" action="/ClassRooms/CreatePost" method="POST" style="width: 100%; display: none;">
+						<div id="expandable-form" style="display: none; width: 100%;">
+							<input type="text" name="Title" id="titleInput" class="form-control" placeholder="Nhập tiêu đề" style="margin-bottom: 10px; width: 100%; border-radius: 5px; padding: 10px;" />
+							<textarea name="Content" id="inputText" rows="4" class="input-textarea" oninput="checkInput()" style="width: 100%; border-radius: 5px; margin-top: 10px; padding: 10px;" placeholder="Nhập nội dung..."></textarea>
+							<div style="display: flex; justify-content: flex-end; margin-top: 10px;">
+								<button type="button" onclick="cancelInput()" style="margin-right: 10px; padding: 5px 10px;">Hủy</button>
+								<button id="submitButton" class="disabled-button" onclick="submitInput()" style="padding: 5px 10px;" disabled>Đăng</button>
+							</div>
+						</div>
+						<input type="hidden" name="ClassId" id="classIdInput" value="@Model.ClassRoom.Id" />
+						<input type="hidden" name="UserId" id="UserIdInput" value="@Model.ClassRoom.UserId" />
+					</form>
+					@{
 					if (Model.isOwner)
 					{
-						<div style="background-color: none; color: white; border-radius: 50%; width: 40px; height: 40px; display: flex; align-items: center; justify-content: center; margin-left: auto;">
-							<button onclick="toggleClassSelection()" class="icon">
-								<svg focusable="false" width="24" height="24" viewBox="0 0 24 24" class=" NMm5M">
-									<path d="M19 5H4v6h2V7h13M5 19h15v-6h-2v4H5"></path>
-									<path d="M16.29 10.71l-1.41-1.42L18.17 6l-3.29-3.29 1.41-1.42L21 6zm-8.58 12L3 18l4.71-4.71 1.41 1.42L5.83 18l3.29 3.29z"></path>
-								</svg>
-							</button>
-						</div>
+								<div style="background-color: none; color: white; border-radius: 50%; width: 40px; height: 40px; display: flex; align-items: center; justify-content: center; margin-left: auto;">
+									<button onclick="toggleClassSelection()" class="icon">
+										<svg focusable="false" width="24" height="24" viewBox="0 0 24 24" class=" NMm5M">
+											<path d="M19 5H4v6h2V7h13M5 19h15v-6h-2v4H5"></path>
+											<path d="M16.29 10.71l-1.41-1.42L18.17 6l-3.29-3.29 1.41-1.42L21 6zm-8.58 12L3 18l4.71-4.71 1.41 1.42L5.83 18l3.29 3.29z"></path>
+										</svg>
+									</button>
+								</div>
 
 					}
-				}
-			</div>
-			<div id="postContainer" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0, 0, 0, 0.7); z-index: 1000;">
-				<div style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); background-color: #fff; color: black; border-radius: 8px; padding: 20px; width: 500px; height: 300px; overflow: auto;">
-					<button onclick="closePostContainer()" style="float: right;margin_bottom:10%;margin-left:20px ;background-color: red; color: white; border: none; cursor: pointer; border-radius: 4px;">
-						<i class="fas fa-times" style="font-size: 20px;"></i> <!-- Biểu tượng dấu X -->
-					</button>
-					<div class="mainList" style="margin-top:40px;">
-						@foreach (var post in ViewBag.UserPosts)
-						{
-							<div style="margin-bottom: 10px; display: flex; justify-content: space-between; align-items: center;">
-								<span style="text-align: left;">@post.Title</span>
-								<button type="button" style="color: black;" onclick="showPostContent('@post.Id')">Sử dụng lại</button>
-							</div>
-						}
-					</div>
-
-					@foreach (var post in ViewBag.UserPosts)
-					{
-						<div id="postList-@post.Id" class="postList" style="display: none; margin-top: 40px;">
-							<form method="post" asp-action="ReusePost" asp-controller="ClassRooms" style="display: inline;">
-								<input type="hidden" name="postId" value="@post.Id" />
-								<input type="hidden" name="ClassId" id="classIdInput" value="@Model.ClassRoom.Id" />
-								<input type="hidden" name="UserId" id="UserIdInput" value="@Model.ClassRoom.UserId" />
-								<!-- Cho phép chỉnh sửa tiêu đề và nội dung -->
-								<input type="text" name="Title" class="form-control" value="@post.Title" />
-								<textarea name="Content" class="input-textarea" style="width: 100%; border-radius: 5px; margin-top: 10px; padding: 10px;">@post.Content</textarea>
-								<button type="submit" style="color: black;">Đăng</button>
-								<button type="button" onclick="cancelReuse('@post.Id')" style="color: black; margin-left: 10px;">Hủy</button>
-							</form>
-						</div>
 					}
 				</div>
-			</div>
+				<div id="postContainer" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0, 0, 0, 0.7); z-index: 1000;">
+					<div style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); background-color: #fff; color: black; border-radius: 8px; padding: 20px; width: 500px; height: 300px; overflow: auto;">
+						<button onclick="closePostContainer()" style="float: right;margin_bottom:10%;margin-left:20px ;background-color: red; color: white; border: none; cursor: pointer; border-radius: 4px;">
+							<i class="fas fa-times" style="font-size: 20px;"></i> <!-- Biểu tượng dấu X -->
+						</button>
+						<div class="mainList" style="margin-top:40px;">
+							@foreach (var post in ViewBag.UserPosts)
+						{
+								<div style="margin-bottom: 10px; display: flex; justify-content: space-between; align-items: center;">
+									<span style="text-align: left;">@post.Title</span>
+									<button type="button" style="color: black;" onclick="showPostContent('@post.Id')">Sử dụng lại</button>
+								</div>
+						}
+						</div>
+
+						@foreach (var post in ViewBag.UserPosts)
+					{
+							<div id="postList-@post.Id" class="postList" style="display: none; margin-top: 40px;">
+								<form method="post" asp-action="ReusePost" asp-controller="ClassRooms" style="display: inline;">
+									<input type="hidden" name="postId" value="@post.Id" />
+									<input type="hidden" name="ClassId" id="classIdInput" value="@Model.ClassRoom.Id" />
+									<input type="hidden" name="UserId" id="UserIdInput" value="@Model.ClassRoom.UserId" />
+									<!-- Cho phép chỉnh sửa tiêu đề và nội dung -->
+									<input type="text" name="Title" class="form-control" value="@post.Title" />
+									<textarea name="Content" class="input-textarea" style="width: 100%; border-radius: 5px; margin-top: 10px; padding: 10px;">@post.Content</textarea>
+									<button type="submit" style="color: black;">Đăng</button>
+									<button type="button" onclick="cancelReuse('@post.Id')" style="color: black; margin-left: 10px;">Hủy</button>
+								</form>
+							</div>
+					}
+					</div>
+				</div>
 				
 		}
 	}	
@@ -1309,41 +1584,63 @@
 			@{
 				if (Model.isOwner && item.Type == "Post")
 				{
-					<div id="post-options-@item.Id" style="margin-left: auto; cursor: pointer; display: flex; align-items: center; height: 100%;">
-						<button id="post-options-@item.Id" class="icon">
-							<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-								<circle cx="12" cy="5" r="2" fill="gray"></circle>
-								<circle cx="12" cy="12" r="2" fill="gray"></circle>
-								<circle cx="12" cy="19" r="2" fill="gray"></circle>
-							</svg>
-						</button>
-						<div class="options-menu" style="display: none;padding:10px; top: 85px; right:40px; position: absolute; background-color: white; border: 1px solid gray; border-radius: 5px; z-index: 10;">
-							<a class="btn" href="javascript:void(0);" onclick="showEditForm('@item.Id')">Sửa</a>
-							<a class="btn" asp-action="Delete" asp-controller="Posts" asp-route-id="@item.Id" asp-route-classId="@item.ClassRoomId" onclick="return confirm('Bạn có chắc muốn xóa không ?')">Xóa</a>
-						</div>
-					</div>
-					<!-- Form ẩn để chỉnh sửa bài viết -->
-					<div id="editForm-@item.Id" style="display: none; margin-top: 10px; width: 100%;">
-						<form action="/Posts/Editpost" method="POST">
-							<input type="hidden" name="Id" value="@item.Id" />
-							<input type="text" name="Title" value="@item.Title" class="form-control" placeholder="Nhập tiêu đề" style="margin-bottom: 10px;" />
-							<textarea name="Content" rows="4" class="input-textarea" style="width: 100%; border-radius: 5px; margin-top: 10px; padding: 10px;" placeholder="Nhập nội dung">@item.Content</textarea>
-							<div style="display: flex; justify-content: flex-end; margin-top: 10px;">
-								<button type="button" onclick="hideEditForm('@item.Id')" style="margin-right: 10px;">Hủy</button>
-								<button type="submit" class="btn btn-success">Lưu</button>
+						<div id="post-options-@item.Id" style="margin-left: auto; cursor: pointer; display: flex; align-items: center; height: 100%;">
+							<button id="post-options-@item.Id" class="icon">
+								<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+									<circle cx="12" cy="5" r="2" fill="gray"></circle>
+									<circle cx="12" cy="12" r="2" fill="gray"></circle>
+									<circle cx="12" cy="19" r="2" fill="gray"></circle>
+								</svg>
+							</button>
+							<div class="options-menu" style="display: none;padding:10px; top: 85px; right:40px; position: absolute; background-color: white; border: 1px solid gray; border-radius: 5px; z-index: 10;">
+								<a class="btn" href="javascript:void(0);" onclick="showEditForm('@item.Id')">Sửa</a>
+								<a class="btn" asp-action="Delete" asp-controller="Posts" asp-route-id="@item.Id" asp-route-classId="@item.ClassRoomId" onclick="return confirm('Bạn có chắc muốn xóa không ?')">Xóa</a>
 							</div>
-							<input type="hidden" name="ClassId" id="classIdInput" value="@Model.ClassRoom.Id" />
-							<input type="hidden" name="UserId" id="UserIdInput" value="@Model.ClassRoom.UserId" />
-						</form>
-					</div>
+						</div>
+						<!-- Form ẩn để chỉnh sửa bài viết -->
+						<div id="editForm-@item.Id" style="display: none; margin-top: 10px; width: 100%;">
+							<form action="/Posts/Editpost" method="POST">
+								<input type="hidden" name="Id" value="@item.Id" />
+								<input type="text" name="Title" value="@item.Title" class="form-control" placeholder="Nhập tiêu đề" style="margin-bottom: 10px;" />
+								<textarea name="Content" rows="4" class="input-textarea" style="width: 100%; border-radius: 5px; margin-top: 10px; padding: 10px;" placeholder="Nhập nội dung">@item.Content</textarea>
+								<div style="display: flex; justify-content: flex-end; margin-top: 10px;">
+									<button type="button" onclick="hideEditForm('@item.Id')" style="margin-right: 10px;">Hủy</button>
+									<button type="submit" class="btn btn-success">Lưu</button>
+								</div>
+								<input type="hidden" name="ClassId" id="classIdInput" value="@Model.ClassRoom.Id" />
+								<input type="hidden" name="UserId" id="UserIdInput" value="@Model.ClassRoom.UserId" />
+							</form>
+						</div>
 				}
 			}
 		</div>
 	}
 	
 </div>
+	<div id="notification" class="notification-box">
+		<div id="notificationBox">
+
+		</div>
+		
+	</div>
+
+
 
 @* ==================================SCRIPT======================================================*@
+<script>
+    // Hàm hiển thị thông báo
+    function openNotification() {
+        // Lấy phần tử thông báo
+        var notificationBox = document.getElementById("notification");
+        
+        // Kiểm tra xem khung thông báo đã hiển thị hay chưa
+        if (notification.style.display === "none" || notification.style.display === "") {
+            notification.style.display = "block";  // Hiển thị thông báo
+        } else {
+            notification.style.display = "none";  // Ẩn thông báo
+        }
+    }
+</script>
 <script>
 	function showPostContent(postId) {
 		// Hide all post lists
@@ -1380,23 +1677,6 @@
 	}
 
 </script>
-@*<script>
-	function populatePostForm(title, content, postId) {
-		Điền tiêu đề và nội dung vào form
-		document.getElementById('postTitle').value = title;
-		document.getElementById('postContent').value = content;
-		document.getElementById('postIdInput').value = postId;
-
-		Ẩn danh sách bài viết và hiển thị form sử dụng lại
-		document.getElementById('postList').style.display = 'none'; Ẩn postList
-		document.getElementById('reuseForm').style.display = 'block'; Hiển thị reuseForm
-	}
-	function cancelReuse() {
-		Ẩn form sử dụng lại và hiển thị lại danh sách bài viết
-		document.getElementById('reuseForm').style.display = 'none'; Ẩn reuseForm
-		document.getElementById('postList').style.display = 'block'; Hiển thị lại postList
-	}
-</script>*@
 <script>
 	function toggleClassSelection() {
 		var form = document.getElementById("postContainer");
@@ -1863,7 +2143,7 @@
 	connection.on("ReceiveMessage", function (user, message, fileUrl) {
 		var li = document.createElement("li");
 		var classId = document.getElementById("classId").value;
-
+		
 		const currentTime = new Date();
 		const year = currentTime.getFullYear();
 		const month = currentTime.getMonth() + 1;
@@ -1876,23 +2156,48 @@
 		var encodedUser = encodeHTML(user);
 		var encodedMessage = encodeHTML(message);
 
-		var formattedMessage = `<strong>${encodedUser} (${formatTime}):</strong> ${encodedMessage}`;
+		var nameElement = document.createElement("h3");
+		nameElement.style.cssText = "font-size: 18px; font-weight: 600; margin: 0;";
+		nameElement.textContent = encodedUser;
 
-		// Nếu có file, thêm liên kết tải file vào tin nhắn
+		var messageElement = document.createElement("p");
+		messageElement.style.cssText = "font-size: 17px; margin: 0;";
+		messageElement.textContent = encodedMessage;
+
+		var timeElement = document.createElement("p");
+		timeElement.style.cssText = "font-size: 13px; margin-top: 5px; margin: 0;";
+		timeElement.textContent = `(${formatTime})`;
+
 		if (fileUrl) {
-			formattedMessage += ` <a href="${fileUrl}" target="_blank">[Open File]</a>`;
+			var fileLink = document.createElement("a");
+			fileLink.href = fileUrl;
+			fileLink.target = "_blank";
+			fileLink.textContent = "[Open File]";
+			messageElement.appendChild(fileLink);
 		}
 
-		li.innerHTML = formattedMessage;
+		var messageBox = document.createElement("div");
+		messageBox.classList.add("message-box");
+		messageBox.appendChild(nameElement);
+		messageBox.appendChild(messageElement);
+		messageBox.appendChild(timeElement);
+
+		var userInput = document.getElementById("userInput").value;
+		if (encodedUser === userInput) {
+			// Nếu người gửi là người hiện tại, hiển thị bên trái (current-user)
+			messageBox.classList.add("current-user");
+		} else {
+			// Nếu người gửi là người khác, hiển thị bên phải (other-user)
+			messageBox.classList.add("other-user");
+		}
+
+		li.appendChild(messageBox);
 
 		var messagesList = document.getElementById("messagesList");
-		if (messagesList.firstChild) {
-			messagesList.insertBefore(li, messagesList.firstChild); // Thêm tin nhắn mới vào đầu danh sách
-		} else {
-			messagesList.appendChild(li); // Nếu danh sách trống, thêm tin nhắn vào cuối danh sách
-		}
-	});
+		messagesList.appendChild(li);
 
+		messagesList.scrollTop = messagesList.scrollHeight;
+	});
 	function getCurrentTime() {
 		const currentTime = new Date();
 		const year = currentTime.getFullYear();
@@ -1912,7 +2217,7 @@
 		var user = document.getElementById("userInput").value;
 		var message = document.getElementById("messageInput").value;
 		var classId = document.getElementById("classId").value;
-		var formatTime = getCurrentTime();
+		var formatTime = getCurrentTime(); 
 		var FileInput = document.getElementById("FileInput");
 		var fileUrl = null;
 
@@ -1949,7 +2254,7 @@
 				});
 
 				// Xóa nội dung sau khi gửi
-				document.getElementById("messageInput").value = '';
+					document.getElementById("messageInput").value = '';
 				fileInput.value = '';
 				document.getElementById("fileName").textContent = 'Không có tệp nào được chọn';  // Cập nhật tên file sau khi gửi
 			} catch (err) {
@@ -1960,16 +2265,22 @@
 
 	document.getElementById('FileInput').addEventListener('change', function () {
 		var fileInput = document.getElementById('FileInput');
-		var fileNameSpan = document.getElementById('fileName');
+			var fileNameSpan = document.getElementById('messageInput');
 
 		console.log(fileInput);
 
 		if (fileInput.files.length > 0) {
-			fileNameSpan.textContent = fileInput.files[0].name; // Hiển thị tên tệp đã chọn
-			console.log('File đã được chọn:', fileInput.files[0]);
+        const fileName = fileInput.files[0].name; // Lấy tên file
+        console.log('File đã được chọn:', fileName);
+
+        // Hiển thị tên file trong khung nhập tin nhắn
+			if (messageInput.value.trim() === '') {
+				messageInput.value = fileName; // Nếu khung trống, hiển thị tên file
+			} else {
+				messageInput.value += ` [${fileName}]`; // Nếu có nội dung, thêm tên file vào sau
+			}
 		} else {
 			console.log('Không có file nào được chọn.');
-			fileNameSpan.textContent = 'Không có tệp được chọn'; 
 		}
 	});
 
@@ -1982,7 +2293,7 @@
 		if (event.key == 'Enter' && !event.shiftKey) {
 			event.preventDefault();
 			var user = document.getElementById("userInput").value;
-			var message = document.getElementById("messageInput").value;
+				var message = document.getElementById("messageInput").value;
 
 			const currentTime = new Date();
 			const year = currentTime.getFullYear();
@@ -1998,8 +2309,8 @@
 				await connection.invoke("SendMessage", user, message, formatTime, classId).catch(function (err) {
 					return console.error(err.toString());
 				});
-				document.getElementById("messageInput").value = '';  
-				document.getElementById("messageInput").focus();
+					document.getElementById("messageInput").value = '';
+					document.getElementById("messageInput").focus();
 			}
 
 			await sendFile();
@@ -2011,9 +2322,86 @@
 		var formattedMessage = `<strong>${user}:</strong> <a href="${fileUrl}" download>${downloadText}</a>`;
 		li.innerHTML = formattedMessage;
 		document.getElementById("messagesList").appendChild(li);
+
 	});
+		
 
 </script> @* G?i tin nh?n *@
+<script>
+		function getListSV() {
+		var classId = document.getElementById("classId").value;
+		$.ajax({
+			url: '/ClassRooms/GetListSV?classId=' + classId,
+			type: 'GET',
+			dataType: 'json',
+			success: function (response) {
+				if (response.success) {
+					displaySV(response.students);
+				} else {
+					console.error('Error fetching student list:', response.error);
+				}
+			},
+			error: function (xhr, status, error) {
+				console.error('Error fetching student list:', error);
+			}
+		});
+	}
+
+	function displaySV(students) {
+		const listContainer = document.getElementById("listsv2");
+		const template = document.getElementById("student-template");
+
+		// Duyệt qua danh sách sinh viên
+		students.forEach(function (student) {
+			// Clone template
+			const studentCard = template.cloneNode(true);
+			studentCard.style.display = "flex"; // Hiển thị
+			studentCard.id = ""; // Xóa ID để tránh trùng lặp
+
+			// Điền thông tin sinh viên
+			studentCard.querySelector(".student-avatar").src = `/Imgs_avtUser/${student.urlAvt}`;
+			studentCard.querySelector(".student-avatar").alt = `Avatar của ${student.name}`;
+			studentCard.querySelector(".student-info").textContent = `${student.name} - ${student.mssv}`;
+
+			// Gắn sự kiện cho biểu tượng ba chấm
+			studentCard.querySelector(".three-dots-icon_discuss").setAttribute(
+				"onclick",
+				`openPopup('${student.name}', '${student.mssv}', '${student.email}', '${student.urlAvt}')`
+			);
+
+			// Thêm sinh viên vào danh sách
+			listContainer.appendChild(studentCard);
+		});
+	}
+
+	
+	$(document).ready(function () {
+		getListSV();
+	});
+
+	function openPopup(name, mssv, email, urlAvt) {
+		document.getElementById("student-name").textContent = name;
+		document.getElementById("student-mssv").textContent = mssv;
+		document.getElementById("student-email").textContent = email;
+
+		const imageElement = document.getElementById("student-image");
+		imageElement.src = `/Imgs_avtUser/${urlAvt}`;
+		imageElement.alt = `Image of ${name}`;
+
+		document.getElementById("popup").style.display = "block";
+	}
+	
+
+	// Hàm đóng popup khi nhấn vào nút "X"
+	function closePopup() {
+		document.getElementById("popup").style.display = "none";
+	}
+
+
+
+	
+</script>@*chọn nhóm*@
+
 <script>
 	// Sự kiện khi trang được kích hoạt lại (quay lại tab)
 	document.addEventListener('visibilitychange', function () {
