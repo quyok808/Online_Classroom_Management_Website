@@ -28,7 +28,8 @@
          justify-content: flex-start;
          align-items: flex-start;
         
-     } 
+     }
+
     
 </style>
 @{
@@ -46,6 +47,14 @@
         var alignmentClass = chat.UserId == currentUserId ? "current-user" : "other-user";
 
         <li class="@alignmentClass" style="font-family: 'JetBrains Mono', serif; ">
+            @if (alignmentClass == "other-user")
+            {
+                <div class="avatar" style="width: 75px; height: 75px; background-color: #ddd; border-radius: 50%; text-align: center; line-height: 40px; margin-left: 10px; font-size: 18px; font-weight: bold; color: #555;">
+                    <img src="/Imgs_avtUser/@chattinguser.UrlAvt"
+                         alt="Avatar"
+                         style="width: 100%; height: 100%; object-fit: cover;border-radius: 50%">
+                </div>
+            }
             <div class="message-box">
                 <h3 style="font-size: 18px;font-weight:600;margin:0;">@chattinguser.Mssv - @chattinguser.Name</h3>
                 <p style="font-size: 17px;margin:0;">@chat.Noidung</p>

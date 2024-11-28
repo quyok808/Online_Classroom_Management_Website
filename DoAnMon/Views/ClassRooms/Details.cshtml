@@ -881,21 +881,6 @@
 		z-index: 1000; /* Đảm bảo khung nằm trên các thành phần khác */
         }
 
-#notificationBox {
-    max-height: 300px;
-    overflow-y: auto;
-    padding: 10px;
-    border: 1px solid #ccc;
-    background-color: #f9f9f9;
-}
-
-.notify-item {
-    margin-bottom: 10px;
-    padding: 5px 10px;
-    border-radius: 5px;
-    background-color: #e6f7ff;
-    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
-}
 
 </style>
 
@@ -1617,12 +1602,6 @@
 	}
 	
 </div>
-	<div id="notification" class="notification-box">
-		<div id="notificationBox">
-
-		</div>
-		
-	</div>
 
 
 
@@ -1631,13 +1610,13 @@
     // Hàm hiển thị thông báo
     function openNotification() {
         // Lấy phần tử thông báo
-        var notificationBox = document.getElementById("notification");
+		var notificationBox = document.getElementById("notificationBox");
         
         // Kiểm tra xem khung thông báo đã hiển thị hay chưa
-        if (notification.style.display === "none" || notification.style.display === "") {
-            notification.style.display = "block";  // Hiển thị thông báo
+		if (notificationBox.style.display === "none" || notificationBox.style.display === "") {
+			notificationBox.style.display = "block";  // Hiển thị thông báo
         } else {
-            notification.style.display = "none";  // Ẩn thông báo
+			notificationBox.style.display = "none";  // Ẩn thông báo
         }
     }
 </script>
@@ -2187,8 +2166,21 @@
 			// Nếu người gửi là người hiện tại, hiển thị bên trái (current-user)
 			messageBox.classList.add("current-user");
 		} else {
-			// Nếu người gửi là người khác, hiển thị bên phải (other-user)
 			messageBox.classList.add("other-user");
+
+			// Add the avatar element for other users
+			// var avatarDiv = document.createElement("div");
+			// avatarDiv.classList.add("avatar");
+			// avatarDiv.style.cssText = "width: 75px; height: 75px; background-color: #ddd; border-radius: 50%; text-align: center; line-height: 40px; font-size: 18px; font-weight: bold; color: #555; margin-right: 10px;";  Adjusted margin to position it on the left
+
+			// You can replace the URL here with a dynamic one if needed
+			// var img = document.createElement("img");
+			// img.src = `/Imgs_avtUser/${encodedUser}`;  Assuming `user` is the user ID or URL for the avatar
+			// img.alt = "Avatar";
+			// img.style.cssText = "width: 100%; height: 100%; object-fit: cover; border-radius: 50%";
+			// avatarDiv.appendChild(img);
+
+			// li.appendChild(avatarDiv);
 		}
 
 		li.appendChild(messageBox);
@@ -2255,7 +2247,7 @@
 
 				// Xóa nội dung sau khi gửi
 					document.getElementById("messageInput").value = '';
-				fileInput.value = '';
+				FileInput.value = '';
 				document.getElementById("fileName").textContent = 'Không có tệp nào được chọn';  // Cập nhật tên file sau khi gửi
 			} catch (err) {
 				console.error("Lỗi khi gửi tin nhắn:", err.toString());
@@ -2349,8 +2341,7 @@
 
 	function displaySV(students) {
 		const listContainer = document.getElementById("listsv2");
-		const template = document.getElementById("student-template");
-
+		const template = document.getElementById("student-template")
 		// Duyệt qua danh sách sinh viên
 		students.forEach(function (student) {
 			// Clone template

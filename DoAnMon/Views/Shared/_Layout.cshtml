@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>@ViewData["Title"] - Only A</title>
     <link rel="icon" type="image/x-icon" href="/images/Logo_Web.png" />
-
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css" rel="stylesheet">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
@@ -25,76 +25,55 @@
     <style>
         @@import url('https://fonts.googleapis.com/css2?family=Lobster&display=swap');
         @@import url('https://fonts.googleapis.com/css2?family=Great+Vibes&family=Platypi:ital,wght@0,300..800;1,300..800&display=swap');
-        /*PHẦN BANNER*/
-        .banner {
-            background-color: #f2f2f2; /* Màu nền của khung banner */
-            height: 150px; /* Chiều cao của khung banner */
-            width: 100%; /* Độ rộng của khung banner sẽ bằng với độ rộng của màn hình */
-            text-align: center;
-            padding: 25px 14px;
-            font-family: Georgia, 'Times New Roman', Times, serif;
+
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
         }
-        /*PHẦN MENU*/
-        nav {
+        /*PHẦN MENU CHÍNH*/
+        .menu-container {
+            background-color: white; 
+            border-bottom: 1px solid #ddd;
             display: flex;
-            justify-content: space-between;
-            background-color: #333;
-            height: 60px;
-            align-items: center;
-            padding: 0 20px;
+            justify-content: center;
+            align-items: center; 
+            height: 80px; 
         }
 
         .menu {
-            list-style-type: none;
-            margin-bottom: 0;
-            padding: 0;
             display: flex;
-            justify-content: flex-end;
-            align-items: center;
-            /*  margin-left: 500px; */
+            list-style: none;
+            margin: 0;
+            padding: 0;
+            margin-left: 500px;
+            gap: 80px; /* Khoảng cách giữa các mục */
         }
-
-
-            .menu li {
-                display: flex;
-                margin-right: 50px;
-            }
-
-                .menu li:nth-child(1) {
-                    margin-left: 360px;
-                }
-
-                .menu li a {
-                    display: block;
-                    color: rgb(224, 215, 215);
-                    text-align: center;
-                    padding: 16px;
-                    font-size: 20px;
-                    text-decoration: none;
-                    white-space: nowrap;
-                }
-
-
-
-                    .menu li a.selected {
-                        background-color: #017b48!important;
-                        color: hsl(0, 0%, 100%);
-                    }
 
         .login-item {
+            display: flex;
+            list-style: none;
             margin-left: auto;
-            display: block;
-            text-align: center;
-            padding: 16px;
-            font-size: 20px;
-            text-decoration: none;
-            white-space: nowrap;
+            padding: 0;
         }
 
-            .login-item a {
-                color: rgb(224, 215, 215);
+            .menu li a, .login-item li a {
+                text-decoration: none;
+                color: rgb(74, 113, 255);
+                font-size: 32px; /* Kích thước icon */
+                padding: 10px;
+                display: inline-flex;
+                align-items: center;
+                transition: all 0.3s;
             }
 
+                .menu li a:hover, .login-item li a:hover {
+                    color: #a12af7;
+                }
+
+                .menu li a.active {
+                    border-bottom: 5px solid rgb(74, 113, 255); 
+                    padding-bottom: 10px;
+                }
         /* Menu dọc */
         .vertical-menu {
             display: none; /* Ẩn menu dọc mặc định */
@@ -134,18 +113,18 @@
             }
 
         /* Biểu tượng menu */
-        .menu-icon {
+       /*  .menu-icon {
             display: none;
             font-size: 24px;
             color: white;
             cursor: pointer;
-        }
+        } */
 
-        body, html {
-            margin: 0;
-            padding: 0;
-            font-family: Arial, sans-serif;
-        }
+       /*   body, html {
+             margin: 0;
+             padding: 0;
+             font-family: Arial, sans-serif;
+         } */
 
         .container {
             display: flex;
@@ -683,10 +662,19 @@
 <body>
     <div class="wrapper">
         <header>
-            <div class="banner">
-                <h1>LEARN WITH ONLY A</h1>
+            <div class="menu-container">
+                <ul class="menu">
+                    <li><a href="/Home/Index" class="@(ViewContext.RouteData.Values["action"].ToString() == "Index" && ViewContext.RouteData.Values["controller"].ToString() == "Home" ? "active" : "")"><i class="fas fa-home"></i></a></li> <!-- Trang chủ -->
+                    <li><a href="/ClassRooms" class="@(ViewContext.RouteData.Values["controller"].ToString() == "ClassRooms" ? "active" : "")"><i class="fas fa-chalkboard"></i></a></li> <!-- Lớp học -->
+                    <li><a href="/BaiTaps" class="@(ViewContext.RouteData.Values["controller"].ToString() == "BaiTaps" ? "active" : "")"><i class="fas fa-book"></i></a></li> <!-- Bài tập -->
+                    <li><a href="/Schedule" class="@(ViewContext.RouteData.Values["controller"].ToString() == "Schedule" ? "active" : "")"><i class="fas fa-calendar-alt"></i></a></li> <!-- Thời khoá biểu -->
+                </ul>
+                <ul class="login-item">
+                    @* <li><a href="/Account/Login"><i class="fas fa-user"></i></a></li> *@ <!-- Đăng nhập -->
+                    <partial name="_LoginPartial" />
+                </ul>
             </div>
-            <nav>
+            @* <nav>
                 <div class="menu-icon" onclick="toggleMenu()">
                     &#9776;
                 </div>
@@ -699,7 +687,7 @@
                 <div class="login-item">
                     <partial name="_LoginPartial" />
                 </div>
-            </nav>
+            </nav> *@
             <!-- Menu dọc sẽ hiển thị khi responsive -->
             <div class="vertical-menu" id="verticalMenu">
                 <a href="javascript:void(0)" class="close-btn" onclick="toggleMenu()">&times;</a>
