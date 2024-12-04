@@ -29,9 +29,10 @@
         @@import url('https://fonts.googleapis.com/css2?family=Lobster&display=swap');
         @@import url('https://fonts.googleapis.com/css2?family=Great+Vibes&family=Platypi:ital,wght@0,300..800;1,300..800&display=swap');
 
-        body {
+        html, body {
             margin: 0;
             font-family: Arial, Helvetica, sans-serif;
+            height: 100%;
         }
         /*PHẦN MENU CHÍNH*/
         .menu-container {
@@ -82,452 +83,41 @@
                     border-bottom: 5px solid rgb(74, 113, 255); 
                     padding-bottom: 10px;
                 }
-        /* Menu dọc */
-        /* .vertical-menu {
-            display: none;
-            background-color: rgba(51, 51, 51, 0.8); 
-            width: 250px;
-            position: fixed;
-            top: 10px;
-            left: 0;
-            padding-top: 60px;
-            z-index: 1000;
-            overflow-y: auto;
-        }
-
-            .vertical-menu a {
-                padding: 16px;
-                text-decoration: none;
-                font-size: 16px;
-                color: white;
-                display: block;
-                transition: 0.3s;
-            }
-
-            .vertical-menu .login-item {
-                margin-top: auto;
-            }
-
-            .vertical-menu a:hover {
-                background-color: rgba(255, 255, 255, 0.1); 
-            }
-
-            .vertical-menu .close-btn {
-                position: absolute;
-                top: 0;
-                right: 0;
-                font-size: 36px;
-            } */
-
-        /* Biểu tượng menu */
-       /*  .menu-icon {
-            display: none;
-            font-size: 24px;
-            color: white;
-            cursor: pointer;
-        } */
-
-       /*   body, html {
-             margin: 0;
-             padding: 0;
-             font-family: Arial, sans-serif;
-         } */
-/* 
-        .container {
-            display: flex;
-            width: 1100px;
-            justify-content: center; 
-        }
-
-        .sidebar,
-        .main-content,
-        .sidebar-right {
-            padding: 20px;
-        } */
-        /* PHẦN NỘI DUNG BÊN TRÁI*/
-        /* .sidebar {
-            width: 200px;
-            background-color: #E3E1D9;
-            margin-top: 20px;
-            right: 0;
-        }
-
-            .sidebar ul {
-                list-style-type: none;
-                padding: 0;
-                margin: 0;
-                display: block;
-            }
-
-                .sidebar ul li {
-                    border-bottom: 1px solid #949191;
-                    width: 100%;
-                    display: block;
-                }
-
-                    .sidebar ul li:last-child {
-                        border-bottom: none; 
-                    }
-
-                    .sidebar ul li a {
-                       
-                        color: #333;
-                        font-size: 15px;
-                        padding: 5px;
-                        text-align: left;
-                        overflow: hidden;
-                        white-space: wrap;
-                        text-overflow: ellipsis;
-                    }
-
-                        .sidebar ul li a:hover {
-                            text-decoration: underline;
-                            color: #333;
-                            font-size: 15px;
-                            outline: none;
-                        }
-
-            .sidebar h2 {
-                margin-top: 10px;
-                margin-bottom: 10px; 
-                text-align: center;
-            } */
-        /*PHẦN NỘI DUNG CHÍNH*/
-        /* .main-content {
-            flex-grow: 1;
-            background-color: #F6F5F2;
-           
-            width: 650px;
-            margin-top: 20px;
-          
-        }
-
-            .main-content .post-content {
-                text-overflow: inherit;
-                overflow: auto;
-                display: block;
-                -webkit-line-clamp: initial;
-                -webkit-box-orient: initial;
-            }
-
-            .main-content img {
-                max-height: 300px;
-                max-width: 500px;
-            }
-
-            .main-content h3{
-                font-size: 45px;
-                font-weight: bold;
-            }
- */
-
-        /*PHẦN NỘI DUNG BÊN PHẢI*/
-        /* .sidebar-right {
-            width: 250px; 
-            background-color: #E3E1D9;
-            margin-top: 20px;
-            height: 900px;
-            overflow-y: auto;
-        }
-
-        .post {
-            background-color: #ffffff;
-            border: 1px solid #ccc; 
-            padding: 10px; 
-            border-radius: 5px;
-            margin-bottom: 20px; 
-            text-align: left;
-           
-            width: 100%;
-            height: 250px;
-            display: flex;
-            flex-direction: column;
-            justify-content: normal;
-        }
-
-
-            .post img {
-                margin-bottom: 5px;
-                width: 100%;
-                height: 120px;
-            }
-
-        .post-content {
-            height: auto; 
-           
-            /padding: 10px;
-            box-sizing: border-box;
-            overflow: hidden;
-        } */
-
-        /*  .post-content { */
-        /* overflow: hidden; /* Ẩn bất kỳ nội dung nào vượt quá khung */ */
-        /* text-overflow: ellipsis; /* Thêm dấu ba chấm (...) khi nội dung vượt quá */ */
-        /* display: -webkit-box; /* Sử dụng thuộc tính box để xử lý vấn đề */ */
-        /*  -webkit-line-clamp: 3; /* Số dòng tối đa mà nội dung có thể hiển thị */ */
-        /*  -webkit-box-orient: vertical; */
-        /*  }  */
-        /* .post h3 {
-            margin-top: 0; 
-            font-size: 8px;
-            text-align: center;
-        }
-
-        .post a {
-            display: block; 
-            text-align: center; 
-            padding: 5px 0;
-            background-color: #f0f0f0;
-            color: #333; 
-            text-decoration: none; 
-        }
-
-            .post a:hover {
-                background-color: #e0e0e0;
-            } */
-
-        /* Responsive styles */
-        /* @@media screen and (max-width: 768px) {
-
-            .menu {
-                display: none; 
-            }
-
-            .menu-icon {
-                display: block; 
-            }
-
-            .container {
-                display: flex;
-                width: 100%;
-                justify-content: center; 
-            }
-
-            .sidebar,
-            .main-content,
-            .sidebar-right {
-                padding: 20px;
-            } */
-            /* PHẦN NỘI DUNG BÊN TRÁI*/
-          /*   .sidebar {
-                display: none;
-            } */
-            /*PHẦN NỘI DUNG CHÍNH*/
-            /* .main-content {
-                flex-grow: 1;
-                background-color: #F6F5F2;
-                width: 400px;
-                margin-top: 20px;
-                height: 800px;
-                /* border: 1px solid #949191; */
-            }
-
-               /*  .main-content .post-content {
-                    text-overflow: inherit;
-                    overflow: auto;
-                    display: block;
-                    -webkit-line-clamp: initial;
-                    -webkit-box-orient: initial;
-                }
-
-                .main-content img {
-                    max-height: 300px;
-                    max-width: 500px;
-                }
-
-            .sidebar-right {
-                display: none;
-            }
-        } */ 
-
-        /* STYLE CHO TRANG LỚP HỌC  */
-
-       /*  .left-column {
-            width: 250px; 
-            background-color: #f0f0f0; 
-            padding: 20px; 
-            height: 1500px;
-        }
-
-        .image-frame {
-            border: 1px solid #ccc; 
-            border-radius: 50%;
-            overflow: hidden; 
-            width: 150px;
-            margin-left: 30px;
-        }
-
-            .image-frame img {
-                width: 100%; 
-                height: auto; 
-            } */
-
-        /* chính----------------------------------------------*/
-       /*  .chinh-content {
-            flex-grow: 1; 
-            padding: 20px; 
-            background-color: #c2c0c0;
-            margin-top: 0;
-        }
-
-        .frame-container {
-            display: flex;
-            flex-wrap: wrap; 
-            margin-top: 50px;
-        }
-
-        .frame {
-            flex: 1 0 calc(33.33% - 20px); 
-            margin-right: 20px;
-            margin-bottom: 20px; 
-            border: 1px solid #ccc; 
-            border-radius: 5px;
-            height: 250px;
-        }
-
-            .frame:last-child {
-                margin-right: 0; 
-            }
-
-
-        .frame-header {
-            background-color: #f0f0f0;
-            padding: 10px; 
-            height: 100px;
-            border-radius: 5px 5px 0 0;
-        }
-
-            .frame-header h2 {
-                margin: 0; 
-            }
-
-            .frame-header h3 {
-                margin: 0;
-                font-size: 20px;
-            }
-
-        .frame-body {
-            padding: 20px; 
-        } */
-
-        /*----------------------------------------*/
-
-/*         .plus-button {
-            background: none;
-            border: none;
-            padding: 0;
-            cursor: pointer;
-            position: absolute;
-            margin-right: 20px;
-        }
-
-            .plus-button svg {
-                fill: #ffffff; 
-            }
-
-        .title {
-            background-color: #7bdaf2;
-            color: #fff;
-            border-radius: 5px;
-        }
-
-        .hidden {
-            display: none;
-        }
-
-       
-        .options-frame {
-            background-color: #ffffff;
-            border: 1px solid #ccc;
-            border-radius: 5px;
-            padding: 10px;
-            position: absolute;
-         
-            top: 230px;
-            width: 150px;
-            left: 550px;
-        }
-       
-        .option {
-            cursor: pointer;
-            padding: 10px;
-            
-            border-radius: 4px;
-            margin-bottom: 0;
-        }
-
-            .option:hover {
-                background-color: #e0e0e0;
-            }
-
-        #join-frame {
-            border: 1px solid #ccc;
-            border-radius: 5px;
-            padding: 20px;
-            background-color: #ffffff;
-            margin-top: 20px;
-            z-index: 1000;
-            position: absolute;
-            left: 700px;
-        }
-
-            #join-frame form {
-                margin-top: 10px;
-            }
-
-            #join-frame label {
-                font-weight: bold;
-            }
-
-            #join-frame input[type="text"],
-            #join-frame button {
-                padding: 8px;
-                border-radius: 4px;
-                border: 1px solid #ccc;
-            }
-
-            #join-frame input[type="text"] {
-                width: 200px;
-                margin-bottom: 10px;
-            }
-
-            #join-frame button {
-                background-color: #3c7ec9;
-                color: #fff;
-                cursor: pointer;
-                margin-left: 100px;
-            } */
-
-        footer {
-            background-color: #333;
+        
+        .footer {
+            background-color: rgb(74, 113, 255);
             color: white;
             text-align: center;
             padding: 20px 0;
-            margin-top:auto;
+            margin-top: auto;
+
+        } 
+        .footer-container {
+            
+            text-align: center;
         }
 
         .footer-icons {
             display: flex;
             justify-content: center;
             gap: 20px;
-           
         }
 
             .footer-icons a {
                 color: white;
                 text-decoration: none;
-                font-size: 24px;
+                font-size: 32px;
                 position: relative;
                 display: flex;
                 align-items: center;
                 justify-content: center;
-                width: 40px; /* Adjust the size as needed */
-                height: 40px; /* Adjust the size as needed */
-                transition: margin 0.3s; /* Add transition for smooth animation */
+                width: 60px;
+                height: 50px;
+                transition: margin 0.3s, color 0.3s;
             }
 
                 .footer-icons a .info {
-                    font-size: 18px;
+                    font-size: 14px;
                     display: none;
                     position: absolute;
                     top: 50%;
@@ -538,11 +128,9 @@
                     padding: 5px 10px;
                     border-radius: 5px;
                     white-space: nowrap;
+                    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
                     z-index: 1;
-                    box-shadow: 0 2px 5px rgba(0,0,0,0.2);
                 }
-
-
 
                 .footer-icons a:hover i {
                     display: none;
@@ -554,41 +142,31 @@
 
                 .footer-icons a:hover {
                     color: #ddd;
-                    margin-left: 50px; /* Adjust the margin to push icons to the left */
-                    margin-right: 50px; /* Adjust the margin to push icons to the right */
+                    margin: 0 50px;
                 }
 
-        .last-info {
-            margin-left: 150px; /* Đẩy bảng cuối cùng ra xa các icon bên trái */
+        .footer-container p a{
+            color:white;
+            text-decoration:none;
         }
 
-
-       /*  @@media screen and (max-width: 768px) {
-            .left-column {
-                display: none;
-            }
-
-            .options-frame {
-                left: 0;
-                transform: translateX(-460px);
-                top: 150px; 
-                width: 150px;
-            }
-        } */
-
-        footer p a:hover {
+        .footer-container p a:hover {
             color: white;
+            text-decoration: underline;
         }
 
-        footer p a{
-            color: white;
+        .wrapper {
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
         }
+
+        .content {
+            flex: 1; /* Mở rộng để đẩy footer xuống cuối */
+            padding: 20px;
+        }
+
         
-        footer {
-            background-color: rgb(74, 113, 255);
-                color: white;
-                padding: 20px;
-            } 
     </style>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <script src="https://cdn.jsdelivr.net/npm/jsqr/dist/jsQR.js"></script>
@@ -610,64 +188,45 @@
                     <partial name="_LoginPartial" />
                 </ul>
             </div>
-            <!-- Menu dọc sẽ hiển thị khi responsive -->
-           @*  <div class="vertical-menu" id="verticalMenu">
-                <a href="javascript:void(0)" class="close-btn" onclick="toggleMenu()">&times;</a>
-                <a href="/Home/Index">Trang chủ</a>
-                <a href="/ClassRooms">Lớp học</a>
-                <a class="bt" href="/BaiTaps">Bài tập</a>
-                <a href="/Schedule">Thời khoá biểu</a>
-                <a href="https://sinhvien.hutech.edu.vn/#/sinhvien/login/login">Sinh viên Hutech</a>
-                <a href="https://daotao.hutech.edu.vn/>">Cổng Thông Tin Đào Tạo</a>
-                <a href="https://e-graduate.hutech.edu.vn/">E-Learning Hutech</a>
-
-            </div> *@
         </header>
-     @*    <main> *@
+        <main class="content">
             @RenderBody()
-       @*  </main> *@
-        <footer>
-            <div class="footer-icons">
-                <a href="https://www.facebook.com/profile.php?id=61560499766790" target="_blank">
-                    <i class="fab fa-facebook-f"></i>
-                    <div class="info">Only A Classroom</div>
-                </a>
-                <a href="https://www.instagram.com" target="_blank">
-                    <i class="fab fa-instagram"></i>
-                    <div class="info">Only A</div>
-                </a>
-                <a href="https://github.com/quyok808/DAMH_QLClassroom" target="_blank">
-                    <i class="fab fa-github"></i>
-                    <div class="info">OnlyA Classroom</div>
-                </a>
-                <a href="https://www.linkedin.com" target="_blank">
-                    <i class="fab fa-linkedin-in"></i>
-                    <div class="info">Only A</div>
-                </a>
-                <a href="https://mail.google.com/mail/?view=cm&fs=1&to=quyok8080@gmail.com" target="_blank">
-                    <i class="fas fa-envelope"></i>
-                    <div class="info" style="margin-left: 30px;">quyok8080@gmail.com</div>
-                </a>
-
+        </main>
+        <footer class="footer">
+            <div class="footer-container">
+                <div class="footer-icons">
+                    <a href="https://www.facebook.com/profile.php?id=61560499766790" target="_blank">
+                        <i class="fab fa-facebook-f"></i>
+                        <div class="info">Only A Classroom</div>
+                    </a>
+                    <a href="https://www.instagram.com" target="_blank">
+                        <i class="fab fa-instagram"></i>
+                        <div class="info">Only A</div>
+                    </a>
+                    <a href="https://github.com/quyok808/DAMH_QLClassroom" target="_blank">
+                        <i class="fab fa-github"></i>
+                        <div class="info">OnlyA Classroom</div>
+                    </a>
+                    <a href="https://www.linkedin.com" target="_blank">
+                        <i class="fab fa-linkedin-in"></i>
+                        <div class="info">Only A</div>
+                    </a>
+                    <a href="https://mail.google.com/mail/?view=cm&fs=1&to=quyok8080@gmail.com" target="_blank">
+                        <i class="fas fa-envelope"></i>
+                        <div class="info">quyok8080@gmail.com</div>
+                    </a>
+                </div>
+                <p style="color:white; margin:0;">
+                    © 2024
+                    <a href="https://zalo.me/0358361511" target="_blank" rel="noopener noreferrer">Only A</a>.
+                    All rights reserved.
+                </p>
             </div>
-            <p>
-                © 2024
-                <a href="https://zalo.me/0358361511" target="_blank" rel="noopener noreferrer" >Only A</a>.
-                All rights reserved.
-            </p>
+
         </footer>
+
+        @await RenderSectionAsync("Scripts", required: false)
     </div>
-    @await RenderSectionAsync("Scripts", required: false)
-    <script>
-        function toggleMenu() {
-            var menu = document.getElementById('verticalMenu');
-            if (menu.style.display === 'block') {
-                menu.style.display = 'none';
-            } else {
-                menu.style.display = 'block';
-            }
-        }
-    </script>
 
 </body>
 </html>
