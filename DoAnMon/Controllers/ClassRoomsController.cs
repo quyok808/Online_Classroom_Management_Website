@@ -374,7 +374,7 @@ namespace DoAnMon.Controllers
 					classRoom.Id = GenerateUniqueRandomString(6);
 					classRoom.UserId = currentUser.Id;
 					classRoom.RoomOnline = "https://meeting-room-onlya1.glitch.me?room=" + linkRoom;
-					classRoom.backgroundUrl = "anhclass.png";
+					classRoom.backgroundUrl = "classImage_Default.gif";
 					classRoom.STT = 0;
 
 					// Ghép các ngày học lại thành chuỗi
