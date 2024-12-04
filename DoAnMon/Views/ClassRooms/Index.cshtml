@@ -11,211 +11,52 @@
 	Layout = "~/Views/Shared/_Layout.cshtml";
     var user = await UserManager.GetUserAsync(User);
 }
-<style>
-    <link rel="preconnect" href="https://fonts.googleapis.com" >
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin >
-    <link href="https://fonts.googleapis.com/css2?family=Merriweather:ital,wght@0,300;0,400;0,700;0,900;1,300;1,400;1,700;1,900&display=swap" rel="stylesheet" >
-    <link href="https://fonts.googleapis.com/css2?family=Merriweather:ital,wght@0,300;0,400;0,700;0,900;1,300;1,400;1,700;1,900&family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap" rel="stylesheet" >
-    <link href="https://fonts.googleapis.com/css2?family=Merriweather:ital,wght@0,300;0,400;0,700;0,900;1,300;1,400;1,700;1,900&family=Oswald:wght@200..700&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap" rel="stylesheet" >
-    /*-------------------------------------------------*/
 
-    /* .left-column {
-        display: flex;
-        align-items: center;
-        width: 300px;
-        height:100%;
-      
+<style>
+    .left-column_indexClassroom {
+        width: 20%;
+        border: 1px solid #ddd;
     }
 
-     .image-frame {
-         border: 1px solid #ccc; 
-         border-radius: 50%;
-         overflow: hidden; 
-         width: 150px;
-         margin-left: 30px;
-         margin-bottom: 15px;
-     }
+    .btn-custom-indexControl{
+        width: 85%;
+        border-radius: 0 30px 30px 0;
+        text-align: left;
+        font-family: "Lobster", serif;
+        font-size: 20px;
+        margin-top: 5px;
+    }
 
+    .btn-custom-indexControl:focus, .btn-custom-indexControl:active:focus{
+        outline: 2px solid blue;
+    }
 
-     .image-frame img {
-         width: 100%; 
-         height: 150px; 
-         object-fit: cover;
-     }
+    .QR-container{
+        display: grid;
+        place-content: center;
+        height: 80%;
+    }
 
+    #classroomList {
+        min-height: 500px;
+        overflow-y: auto;
+    }
 
-     .vertical-menu1 {
-         list-style-type: none;
-         padding: 0; 
-     }
-
-     .vertical-menu1 li {
-         margin-bottom: 0; 
-     }
-
-  
-     .vertical-menu1 li a {
-         display: block; 
-         padding: 10px; 
-         text-decoration: none; 
-         color: #333; 
-         background-color: #f0f0f0;
-         border-bottom: 1px solid #ccc;
-     }
-
-                
-     .vertical-menu1 li a:hover {
-         background-color: #ccc; 
-     }
- */
-    /* chính----------------------------------------------*/
     .classrooms-content {
-        padding: 20px; 
-        background-color: #c2c0c0;        
+        padding: 20px;
+        background-color: #c2c0c0;
         height: 100%;
         display: flex;
     }
 
-    /* .frame-container {
-        display: flex;
-        flex-wrap: wrap; 
-        margin-top: 50px;
+    .classroom{
+        height: fit-content;
     }
-
-    .frame {
-        flex: 1 0 calc(33.33% - 20px);
-        margin-right: 20px;
-        margin-bottom: 20px; 
-        border: 1px solid #ccc;
-        border-radius: 5px; 
-        height: 250px;
-    }
-
-        .frame:last-child {
-            margin-right: 0; 
-        }
-
-
-    .frame-header {
-        background-color: #f0f0f0; 
-        padding: 10px; 
-        height: 100px;
-        border-radius: 5px 5px 0 0;
-    }
-
-        .frame-header h2 {
-            margin: 0; 
-        }
-
-        .frame-header h3 {
-            margin: 0;
-            font-size: 20px;
-        }
-
-    .frame-body {
-        padding: 20px; 
-    } */
-
-    /*----------------------------------------*/
-/* 
-    .plus-button {
-        background: none;
-        border: none;
-        padding: 0;
-        cursor: pointer;
-        position: absolute;
-       
-       
-        margin-right: 20px;
-    }
-
-        .plus-button svg {
-            fill: #ffffff; 
-        }
-
-    .title {
-        background-color: #7bdaf2;
-        color: #fff;
-        border-radius: 5px;
-    }
-
-    .hidden {
-        display: none;
-    }
-
-    
-    .options-frame {
-        background-color: #ffffff;
-        border: 1px solid #ccc;
-        border-radius: 5px;
-        padding: 10px;
-        position: absolute;
-        /* left: -150px ; 
-        top: 230px; 
-        width: 150px;
-        left: 550px;
-        z-index:50;
-    }
-   
-    .option {
-        cursor: pointer;
-        padding: 10px;
-        
-        border-radius: 4px;
-        margin-bottom: 0;
-    }
-
-        .option:hover {
-            background-color: #e0e0e0;
-        }
-
-    #join-frame {
-        border: 1px solid #ccc;
-        border-radius: 5px;
-        padding: 20px;
-        background-color: #ffffff;
-        margin-top: 20px;
-        z-index: 1000;
-        position: absolute;
-        left: 700px;
-    }
-
-        #join-frame form {
-            margin-top: 10px;
-        }
-
-        #join-frame label {
-            font-weight: bold;
-        }
-
-        #join-frame input[type="text"],
-        #join-frame button {
-            padding: 8px;
-            border-radius: 4px;
-            border: 1px solid #ccc;
-        }
-
-        #join-frame input[type="text"] {
-            width: 200px;
-            margin-bottom: 10px;
-        }
-
-        #join-frame button {
-            background-color: #3c7ec9;
-            color: #fff;
-            cursor: pointer;
-            margin-left: 100px;
-        }
-
-    #classroomList {
-        max-height: 1216px; 
-        overflow-y: auto; 
-    } */
-
 </style>
-<div class="container-classrooms-trangchinh" style="margin-top: 80px;display: flex;height: 900px;">
-   @*  <div class="left-column">
-        <div class="image-frame">
+
+<div class="container-classrooms-trangchinh" style="margin-top: 80px;display: flex;min-height: 500px;">
+   <div class="left-column_indexClassroom">
+        @* <div class="image-frame">
             <img src="~/Imgs_avtUser/@user.UrlAvt" alt="Hình ảnh">
         </div>
         <center>
@@ -223,10 +64,68 @@
         </center>
         <ul class="vertical-menu1">
             <li><a href="/Identity/Account/Manage/Index">Thông tin cá nhân</a></li>
-        </ul>
-    </div> *@
-    @*<div class="main-content">
-        <!-- Nội dung main content -->
+        </ul> *@
+        <button type="button" class="btn btn-light btn-custom-indexControl" onclick="location.href='/ClassRooms'"><i class="fa-solid fa-house-chimney fa-xl" style="color: #000; margin-right: 30px;"></i> Màn hình chính</button>
+        <button type="button" class="btn btn-light btn-custom-indexControl" onclick="location.href='/Notifications'"><i class="fa-solid fa-bell fa-xl" style="color: #000; margin-right: 35px;"></i> Thông báo mới</button>
+        @if (User.IsInRole("Teacher") || User.IsInRole("Admin"))
+         {
+            <button type="button" class="btn btn-light btn-custom-indexControl" onclick="location.href='/ClassRooms/Create'"><i class="fa-solid fa-plus fa-xl" style="color: #000; margin-right: 35px;"></i> Tạo lớp mới</button>
+         }
+        <button data-toggle="modal" data-target="#JoinModal" type="button" class="btn btn-light btn-custom-indexControl"><img src="https://cdn-icons-png.flaticon.com/512/12366/12366453.png" alt="Alternate Text" width="26.25px" height="30.4" style="margin-right:35px; " /> Tham gia lớp học</button>
+        <hr style="border-top: 2px solid #ddd; margin: 10px auto;" />
+    </div>
+    <!-- Modal join-->
+    <div class="modal fade" id="JoinModal" tabindex="-1" role="dialog" aria-labelledby="JoinModelLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="JoinModelLabel" style="font-family: 'Lobster', serif; letter-spacing: 2px;">Tham gia lớp học</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="container text-center" style="width: 100%;">
+                        <div class="row row-cols-2" style="display: flex;">
+                            <div class="col" style="width: 50%;">
+                                <h4 style="font-family: 'Itim', serif; font-weight: bold;">Tham gia bằng mã lớp học</h4>
+                                <form id="joinRoomForm" action="/ClassRooms/JoinClassV1" method="post">
+                                    <div class="col-md-12" style="width: 100%">
+                                        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                                        <div class="form-group">
+                                            <label for="ClassRoomId" class="control-label" style="color: black; text-align: left; display: block; margin:10px 0; font-family: 'Itim', serif; font-weight: normal;">Mã phòng học:</label>
+                                            <input name="ClassRoomId" id="ClassRoomId" class="form-control custom-input-width" required />
+                                            <span id="ClassRoomIdError" class="text-danger"></span>
+                                        </div>
+                                    </div>
+                                    <div class="modal-footer" style="border-top: 1px solid #e5e5e5; padding-top: 10px">
+                                        <input style="font-size: 16px; font-weight:bold; width: 100%; font-family: 'Lobster', serif; letter-spacing: 2px; background-color: #B3E5BE; color: #52575D" type="submit" value="Tham gia" class="btn btn-primary" />
+                                    </div>
+                                </form>
+                            </div>
+                            <div class="col" style="width: 50%;">
+                                <h4 style="font-family: 'Itim', serif; font-weight: bold;">Tham gia bằng mã QR</h4>
+                                <div class="QR-container">
+                                    <button id="scanButton" class="btn btn-info">Quét Mã QR</button>
+                                    <div id="cameraModal" class="modal">
+                                        <div class="modal-content" style="align-items: center;justify-content: center; width: 100%; height: 100%">
+                                            <span class="close">&times;</span>
+                                            <video id="qrScanner" width="100%" height="90%" autoplay style="align-items: center;justify-content: center; object-fit: cover;"></video>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary" style="font-family: 'Lobster', serif" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="main-content" style="flex: 1;">
+     @* <!-- Nội dung main content -->
          <button class="plus-button" title="Tạo hoặc tham gia lớp học" onclick="toggleOptions()">
             <svg xmlns="http://www.w3.org/2000/svg" width="35" height="35" viewBox="0 0 24 24">
                 <path d="M20 13h-7v7h-2v-7H4v-2h7V4h2v7h7v2z" />
@@ -285,8 +184,8 @@
                 <video id="qrScanner" width="400" height="400" autoplay style="align-items: center;justify-content: center;"></video>
             </div>
         </div>
-        
-        <div id="classroomList" class="content" style="margin-top: 50px;">
+        *@
+        <div id="classroomList" class="classrooms-content">
             @{
                 if (Model != null)
                 {
@@ -308,8 +207,8 @@
                 }
             }
         </div> 
-        
-    </div>*@
+
+    </div>
 </div>
 
 
