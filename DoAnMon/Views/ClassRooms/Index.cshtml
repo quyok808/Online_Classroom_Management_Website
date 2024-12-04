@@ -17,9 +17,8 @@
     <link href="https://fonts.googleapis.com/css2?family=Merriweather:ital,wght@0,300;0,400;0,700;0,900;1,300;1,400;1,700;1,900&display=swap" rel="stylesheet" >
     <link href="https://fonts.googleapis.com/css2?family=Merriweather:ital,wght@0,300;0,400;0,700;0,900;1,300;1,400;1,700;1,900&family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap" rel="stylesheet" >
     <link href="https://fonts.googleapis.com/css2?family=Merriweather:ital,wght@0,300;0,400;0,700;0,900;1,300;1,400;1,700;1,900&family=Oswald:wght@200..700&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap" rel="stylesheet" >
-    /*-------------------------------------------------*/
 
-    /* .left-column {
+ .left-column {
         display: flex;
         align-items: center;
         width: 300px;
@@ -67,16 +66,9 @@
      .vertical-menu1 li a:hover {
          background-color: #ccc; 
      }
- */
-    /* chính----------------------------------------------*/
-    .classrooms-content {
-        padding: 20px; 
-        background-color: #c2c0c0;        
-        height: 100%;
-        display: flex;
-    }
 
-    /* .frame-container {
+    
+.frame-container {
         display: flex;
         flex-wrap: wrap; 
         margin-top: 50px;
@@ -114,10 +106,8 @@
 
     .frame-body {
         padding: 20px; 
-    } */
+    } 
 
-    /*----------------------------------------*/
-/* 
     .plus-button {
         background: none;
         border: none;
@@ -150,7 +140,7 @@
         border-radius: 5px;
         padding: 10px;
         position: absolute;
-        /* left: -150px ; 
+       left: -150px ; 
         top: 230px; 
         width: 150px;
         left: 550px;
@@ -210,11 +200,32 @@
     #classroomList {
         max-height: 1216px; 
         overflow-y: auto; 
-    } */
+    } 
+    .classrooms-content {
+        padding: 20px;
+        background-color: #c2c0c0;
+        height: 100%;
+        display: flex;
+    } 
+    
+    /*----------------------------------------------------*/
+    .container-classrooms{
+        margin-top: 80px;
+        display: flex;
+        height: 900px;
+    }
 
 </style>
-<div class="container-classrooms-trangchinh" style="margin-top: 80px;display: flex;height: 900px;">
-   @*  <div class="left-column">
+
+<div class="container-classrooms">
+    <button class="plus-button" title="Tạo hoặc tham gia lớp học" onclick="toggleOptions()">
+        <svg xmlns="http://www.w3.org/2000/svg" width="35" height="35" viewBox="0 0 24 24">
+            <path d="M20 13h-7v7h-2v-7H4v-2h7V4h2v7h7v2z" />
+        </svg>
+    </button>
+</div>
+@*<div class="container-classrooms-trangchinh" style="margin-top: 80px;display: flex;height: 900px;">
+    <div class="left-column">
         <div class="image-frame">
             <img src="~/Imgs_avtUser/@user.UrlAvt" alt="Hình ảnh">
         </div>
@@ -224,8 +235,8 @@
         <ul class="vertical-menu1">
             <li><a href="/Identity/Account/Manage/Index">Thông tin cá nhân</a></li>
         </ul>
-    </div> *@
-    @*<div class="main-content">
+    </div> 
+    <div class="main-content">
         <!-- Nội dung main content -->
          <button class="plus-button" title="Tạo hoặc tham gia lớp học" onclick="toggleOptions()">
             <svg xmlns="http://www.w3.org/2000/svg" width="35" height="35" viewBox="0 0 24 24">
@@ -309,10 +320,10 @@
             }
         </div> 
         
-    </div>*@
+    </div>
 </div>
 
-
+*@
 
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
