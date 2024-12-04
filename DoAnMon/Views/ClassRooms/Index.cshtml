@@ -18,100 +18,93 @@
     <link href="https://fonts.googleapis.com/css2?family=Merriweather:ital,wght@0,300;0,400;0,700;0,900;1,300;1,400;1,700;1,900&family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap" rel="stylesheet" >
     <link href="https://fonts.googleapis.com/css2?family=Merriweather:ital,wght@0,300;0,400;0,700;0,900;1,300;1,400;1,700;1,900&family=Oswald:wght@200..700&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap" rel="stylesheet" >
     /*-------------------------------------------------*/
-    .container {
-        display: flex; /* Sử dụng flexbox */
-    }
-    /*-------------------------------------------------*/
-    /* bên trái*/
-    .left-column {
-        min-height: 1216px;
-        width: 250px; /* Độ rộng của cột bên trái */
-        background-color: #f0f0f0; /* Màu nền của cột bên trái */
-        padding: 20px; /* Khoảng cách nội dung với viền của cột */
-        height: 500px;
-        /* Định dạng khung hình */
-        
-    }
 
-    .image-frame {
-        border: 1px solid #ccc; /* Viền của khung hình */
-        border-radius: 50%; /* Bo tròn các góc */
-        overflow: hidden; /* Ẩn bất kỳ phần nào của hình ảnh vượt ra ngoài khung */
-        width: 150px;
-        margin-left: 30px;
-        margin-bottom: 15px;
-    }
-
-    /* Định dạng hình ảnh */
-    .image-frame img {
-        width: 100%; /* Đảm bảo hình ảnh chiếm đầy đủ chiều rộng của khung */
-        height: 150px; /* Đảm bảo tỷ lệ khung hình ảnh được duy trì */
-        object-fit: cover;
-    }
-
-    /* Định dạng menu dọc */
-    .vertical-menu1 {
-        list-style-type: none; /* Loại bỏ các dấu hiệu đầu mục của danh sách */
-        padding: 0; /* Xóa khoảng trống trong danh sách */
-    }
-
-    /* Định dạng mỗi mục menu */
-    .vertical-menu1 li {
-        margin-bottom: 0; /* Khoảng cách giữa các mục menu */
-    }
-
-    /* Định dạng liên kết trong mỗi mục menu */
-    .vertical-menu1 li a {
-        display: block; /* Chuyển liên kết thành khối để nó chiếm toàn bộ chiều rộng của mục */
-        padding: 10px; /* Khoảng cách giữa văn bản và viền của mục */
-        text-decoration: none; /* Loại bỏ gạch chân mặc định của liên kết */
-        color: #333; /* Màu chữ */
-        background-color: #f0f0f0; /* Màu nền của mục */
-        border-bottom: 1px solid #ccc; /* Thêm dấu gạch ngang */
-    }
-
-                /* Định dạng mục menu được chọn */
-    .vertical-menu1 li a:hover {
-        background-color: #ccc; /* Màu nền khi rê chuột qua */
-    }
-
-    /* chính----------------------------------------------*/
-    .main-content {
-        flex-grow: 1; /* Main content mở rộng để lấp đầy không gian trống */
-        padding: 20px; /* Khoảng cách nội dung với viền của main content */
-        background-color: #c2c0c0;
-        margin-top: 0;
-    }
-
-    .frame-container {
+    /* .left-column {
         display: flex;
-        flex-wrap: wrap; /* Cho phép tự động xuống hàng */
+        align-items: center;
+        width: 300px;
+        height:100%;
+      
+    }
+
+     .image-frame {
+         border: 1px solid #ccc; 
+         border-radius: 50%;
+         overflow: hidden; 
+         width: 150px;
+         margin-left: 30px;
+         margin-bottom: 15px;
+     }
+
+
+     .image-frame img {
+         width: 100%; 
+         height: 150px; 
+         object-fit: cover;
+     }
+
+
+     .vertical-menu1 {
+         list-style-type: none;
+         padding: 0; 
+     }
+
+     .vertical-menu1 li {
+         margin-bottom: 0; 
+     }
+
+  
+     .vertical-menu1 li a {
+         display: block; 
+         padding: 10px; 
+         text-decoration: none; 
+         color: #333; 
+         background-color: #f0f0f0;
+         border-bottom: 1px solid #ccc;
+     }
+
+                
+     .vertical-menu1 li a:hover {
+         background-color: #ccc; 
+     }
+ */
+    /* chính----------------------------------------------*/
+    .classrooms-content {
+        padding: 20px; 
+        background-color: #c2c0c0;        
+        height: 100%;
+        display: flex;
+    }
+
+    /* .frame-container {
+        display: flex;
+        flex-wrap: wrap; 
         margin-top: 50px;
     }
 
     .frame {
-        flex: 1 0 calc(33.33% - 20px); /* Tối đa 3 khung trên cùng một hàng */
-        margin-right: 20px; /* Khoảng cách giữa các khung */
-        margin-bottom: 20px; /* Khoảng cách giữa các hàng */
-        border: 1px solid #ccc; /* Viền của khung */
-        border-radius: 5px; /* Bo tròn các góc */
+        flex: 1 0 calc(33.33% - 20px);
+        margin-right: 20px;
+        margin-bottom: 20px; 
+        border: 1px solid #ccc;
+        border-radius: 5px; 
         height: 250px;
     }
 
         .frame:last-child {
-            margin-right: 0; /* Loại bỏ khoảng cách bên phải của khung cuối cùng trên hàng */
+            margin-right: 0; 
         }
 
 
     .frame-header {
-        background-color: #f0f0f0; /* Màu nền của phần header */
-        padding: 10px; /* Khoảng cách giữa nội dung và viền */
+        background-color: #f0f0f0; 
+        padding: 10px; 
         height: 100px;
         border-radius: 5px 5px 0 0;
     }
 
         .frame-header h2 {
-            margin: 0; /* Xóa margin mặc định của tiêu đề */
+            margin: 0; 
         }
 
         .frame-header h3 {
@@ -120,44 +113,26 @@
         }
 
     .frame-body {
-        padding: 20px; /* Khoảng cách giữa nội dung và viền */
-    }
+        padding: 20px; 
+    } */
 
     /*----------------------------------------*/
-
+/* 
     .plus-button {
         background: none;
         border: none;
         padding: 0;
         cursor: pointer;
         position: absolute;
-        /* right: 300px; */
-        /* Khoảng cách giữa nút và đỉnh của main content */
+       
+       
         margin-right: 20px;
     }
 
         .plus-button svg {
-            fill: #ffffff; /* Màu sắc của biểu tượng */
+            fill: #ffffff; 
         }
 
-    /* .plus-button:hover svg {
-            fill: #ccc; /* Màu sắc của biểu tượng khi di chuột qua
-          } */
-    /* .plus-button:hover::after {
-            content: attr(aria-label); /* Hiển thị nội dung của aria-label */
-    /* background-color: #3c7ec9; Màu nền của tooltip */
-    /* color: #fff; Màu chữ của tooltip */
-    /* padding: 4px 8px; Khoảng cách giữa nội dung và viền tooltip */
-    /* border-radius: 4px; Bo tròn các góc của tooltip */
-    /* top: 0; Đẩy tooltip xuống phía dưới của nút    */
-    /* white-space: nowrap; Ngăn không cho tooltip xuống dòng */
-    /* font-size: 14px; Kích thước chữ của tooltip */
-    /* opacity: 1; Hiển thị tooltip       */
-    /* left: 0; Đặt left là 50% để căn giữa tooltip     */
-    /* position: absolute; */
-    /* transform: translateX(-200px); Dịch chuyển tooltip sang trái 50% để căn giữa  */
-    /* } */
-    /* Ẩn bảng option mặc định */
     .title {
         background-color: #7bdaf2;
         color: #fff;
@@ -168,24 +143,24 @@
         display: none;
     }
 
-    /* Thiết lập kiểu dáng cho khung chứa options */
+    
     .options-frame {
         background-color: #ffffff;
         border: 1px solid #ccc;
         border-radius: 5px;
         padding: 10px;
         position: absolute;
-        /* left: -150px ; /* Đặt vị trí của khung từ bên trái */
-        top: 230px; /* Đặt vị trí của khung từ phía trên dấu cộng */
+        /* left: -150px ; 
+        top: 230px; 
         width: 150px;
         left: 550px;
         z-index:50;
     }
-    /* Thiết lập kiểu dáng cho các lựa chọn */
+   
     .option {
         cursor: pointer;
         padding: 10px;
-        /* background-color: #f0f0f0; */
+        
         border-radius: 4px;
         margin-bottom: 0;
     }
@@ -233,14 +208,13 @@
         }
 
     #classroomList {
-        max-height: 1216px; /* Điều chỉnh chiều cao tối đa */
-        overflow-y: auto; /* Đảm bảo có thể cuộn theo chiều dọc */
-    }
+        max-height: 1216px; 
+        overflow-y: auto; 
+    } */
 
 </style>
-<div class="container">
-    <div class="left-column">
-        <!-- Nội dung cột bên trái -->
+<div class="container-classrooms-trangchinh" style="margin-top: 80px;display: flex;height: 900px;">
+   @*  <div class="left-column">
         <div class="image-frame">
             <img src="~/Imgs_avtUser/@user.UrlAvt" alt="Hình ảnh">
         </div>
@@ -250,10 +224,10 @@
         <ul class="vertical-menu1">
             <li><a href="/Identity/Account/Manage/Index">Thông tin cá nhân</a></li>
         </ul>
-    </div>
-    <div class="main-content">
+    </div> *@
+    @*<div class="main-content">
         <!-- Nội dung main content -->
-        <button class="plus-button" title="Tạo hoặc tham gia lớp học" onclick="toggleOptions()">
+         <button class="plus-button" title="Tạo hoặc tham gia lớp học" onclick="toggleOptions()">
             <svg xmlns="http://www.w3.org/2000/svg" width="35" height="35" viewBox="0 0 24 24">
                 <path d="M20 13h-7v7h-2v-7H4v-2h7V4h2v7h7v2z" />
             </svg>
@@ -333,9 +307,9 @@
                     }
                 }
             }
-        </div>
+        </div> 
         
-    </div>
+    </div>*@
 </div>
 
 
@@ -353,23 +327,6 @@
     <script>alert('@ViewBag.StatusMessage');</script>
 }
 <script>
-    document.addEventListener("DOMContentLoaded", function () {
-        // Lấy địa chỉ URL hiện tại
-        var url = window.location.href;
-
-        // Lấy tất cả các mục trong thanh menu
-        var menuItems = document.querySelectorAll('nav ul li a');
-
-        // Lặp qua từng mục trong thanh menu
-        menuItems.forEach(function (item) {
-            // Kiểm tra nếu địa chỉ URL chứa đường dẫn của mục đó
-            if (url.indexOf(item.getAttribute('href')) > -1) {
-                // Thêm lớp 'selected' cho mục đó
-                item.classList.add('selected');
-            }
-        });
-    });
-
 
     function toggleOptions() {
         var plusButton = document.getElementById("plus-button");

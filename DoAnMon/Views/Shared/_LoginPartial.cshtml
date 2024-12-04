@@ -7,51 +7,48 @@
 <style>
     .dropdown-menu {
 
-        width: auto; /* Tự động điều chỉnh theo nội dung */
-        min-width: 250px; /* Đặt chiều rộng tối thiểu */
+        width: auto; 
+        min-width: 250px;
         padding: 15px;
         margin-left:-230px;
-        background: #fffacd; /* Màu vàng nhạt */
-        border: 2px solid #f1c40f; /* Viền vàng đậm */
+        background: #dbe2fd; 
+        border: 2px solid #1b0ff1; 
         border-radius: 8px;
-        box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.2); /* Đổ bóng */
         text-align: left;
         font-size: 14px;
         color: #333;
-        margin-top: 10px; /* Khoảng cách giữa icon và dropdown */
+        margin-top: 10px; 
         z-index: 1050;
     }
 
-        /* Mũi nhọn cho dropdown */
         .dropdown-menu::after {
             content: '';
             position: absolute;
-            top: -10px; /* Đặt phía trên khung */
-            left: 90%; /* Căn giữa theo icon */
+            top: -10px; 
+            left: 90%;
             transform: translateX(-50%);
             width: 0;
             height: 0;
             border-style: solid;
-            border-width: 0 10px 10px 10px; /* Kích thước mũi nhọn */
-            border-color: transparent transparent #f1c40f transparent; /* Màu khớp với viền */
+            border-width: 0 10px 10px 10px; 
+            border-color: transparent transparent #1b0ff1 transparent; 
         }
 
-    /* Loại bỏ nền mặc định của Bootstrap */
+    
     .dropdown-item {
         color: black;
-        padding: 0; /* Khoảng cách trong từng mục */
+        padding: 0; 
         font-size: 14px;
         background: transparent;
         border: none;
     }
 
-    /* Tăng khoảng cách và điều chỉnh nút */
     .nav-link {
         padding:0;
     }
 
     button {
-        all: unset; /* Xóa định dạng mặc định */
+        all: unset;
         cursor: pointer;
         font-size: 14px;
     }
@@ -63,7 +60,12 @@
         text-decoration: none;
         font-size:14px;
         padding-left:0;
+        padding-top: 0;
     }
+
+        .dropdown-menu .dropdown-item a:hover {
+            color: #333;
+        }
 
 </style>
 
@@ -75,16 +77,15 @@
     @if (SignInManager.IsSignedIn(User) && user != null)
     {
         <li class="nav-item dropdown">
-            @* Icon dropdown *@
             <a class="nav-link dropdown-toggle text-dark" id="userDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                 <i class="fas fa-user"></i>
             </a>
-            @* Nội dung dropdown *@
             <div class="dropdown-menu" aria-labelledby="userDropdown">
                 <div class="dropdown-item">
+                    <p><i class="fas fa-user"></i> @user.Name</p>
                     <p >MSSV: @user.Mssv</p>
-                    <p style="white-space: nowrap;">Email: @user.Email</p>
-                    <a asp-area="Identity" asp-page="/Account/Manage/ChangePassword" title="Manage">Đổi mật khẩu</a>
+                    <p style="white-space: nowrap;"><i class="fa-solid fa-envelope"></i> @user.Email</p>
+                    <a asp-area="Identity" asp-page="/Account/Manage/ChangePassword" title="Manage"><i class="fa-solid fa-key"></i> Đổi mật khẩu</a>
                 </div>
                 <form class="form-inline dropdown-item" asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Action("Index", "Home", new { area = "" })">
                     <button>

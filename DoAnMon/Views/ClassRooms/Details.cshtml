@@ -2167,20 +2167,6 @@
 			messageBox.classList.add("current-user");
 		} else {
 			messageBox.classList.add("other-user");
-
-			// Add the avatar element for other users
-			// var avatarDiv = document.createElement("div");
-			// avatarDiv.classList.add("avatar");
-			// avatarDiv.style.cssText = "width: 75px; height: 75px; background-color: #ddd; border-radius: 50%; text-align: center; line-height: 40px; font-size: 18px; font-weight: bold; color: #555; margin-right: 10px;";  Adjusted margin to position it on the left
-
-			// You can replace the URL here with a dynamic one if needed
-			// var img = document.createElement("img");
-			// img.src = `/Imgs_avtUser/${encodedUser}`;  Assuming `user` is the user ID or URL for the avatar
-			// img.alt = "Avatar";
-			// img.style.cssText = "width: 100%; height: 100%; object-fit: cover; border-radius: 50%";
-			// avatarDiv.appendChild(img);
-
-			// li.appendChild(avatarDiv);
 		}
 
 		li.appendChild(messageBox);
@@ -2339,6 +2325,19 @@
 		});
 	}
 
+	document.querySelector(".search-input_discuss").addEventListener("input", function () {
+    const query = this.value.toLowerCase(); // Lấy từ khóa tìm kiếm và chuyển về chữ thường
+    const allStudents = document.querySelectorAll("#listsv2 .circle-text-container_discuss");
+		allStudents.forEach(studentCard => { 
+			const studentInfo = studentCard.querySelector(".student-info").textContent.toLowerCase();
+			if (studentInfo.includes(query)) {
+				studentCard.style.display = "flex"; // Hiển thị nếu khớp
+			} else {
+				studentCard.style.display = "none"; // Ẩn nếu không khớp
+			}
+		});
+	});
+
 	function displaySV(students) {
 		const listContainer = document.getElementById("listsv2");
 		const template = document.getElementById("student-template")
@@ -2382,8 +2381,6 @@
 		document.getElementById("popup").style.display = "block";
 	}
 	
-
-	// Hàm đóng popup khi nhấn vào nút "X"
 	function closePopup() {
 		document.getElementById("popup").style.display = "none";
 	}
