@@ -612,15 +612,8 @@
 		width: 100%; 
 		overflow-y: auto; /* Hiển thị thanh cuộn dọc nếu nội dung vượt quá chiều cao */
 		box-sizing: border-box; /* Đảm bảo padding không tăng kích thước phần tử */
-		
 	}
-	#messagesList {
-		list-style-type: none;
-		margin: 0;
-		height: calc(100% - 70px); /* Chiều cao tối đa của khung */
-		overflow-y: auto; /* Cuộn dọc khi nội dung vượt quá khung */
-		
-	}
+	
 	.message-form {
 		position: absolute;
 		bottom: 0;
@@ -1295,9 +1288,6 @@
 	
 	
 </div>
-
-
-
 <div id="listsv" class="tabcontent">
 	@{
 		if (Model.isOwner)
@@ -1406,7 +1396,6 @@
 
 
 </div>
-
 <div id="setting" class="tabcontent">
 	<h1>This is setting class</h1>
 </div>
@@ -2119,7 +2108,7 @@
 		return div.innerHTML;
 	}
 
-	connection.on("ReceiveMessage", function (user, message, fileUrl) {
+	connection.on("ReceiveMessage", function (user, message, fileUrl, urlavt) {
 		var li = document.createElement("li");
 		var classId = document.getElementById("classId").value;
 		
@@ -2155,11 +2144,25 @@
 			messageElement.appendChild(fileLink);
 		}
 
+		var avatarElement = document.createElement("img");
+		avatarElement.style.cssText = "width: 100%; height: 100%; object-fit: cover;border-radius: 50%";
+		avatarElement.src = `/Imgs_avtUser/${urlavt}`;
+		avatarElement.alt = "Avatar";
+
+		var avatarBox = document.createElement("div");
+		avatarBox.classList.add("avatar");
+		avatarBox.style.cssText = "width: 75px; height: 75px; background-color: #ddd; border-radius: 50%; text-align: center; line-height: 40px; margin-left: 10px; font-size: 18px; font-weight: bold; color: #555;";
+		avatarBox.appendChild(avatarElement);
+
 		var messageBox = document.createElement("div");
 		messageBox.classList.add("message-box");
 		messageBox.appendChild(nameElement);
 		messageBox.appendChild(messageElement);
 		messageBox.appendChild(timeElement);
+
+		
+		li.style.cssText = "font-family: 'JetBrains Mono', serif; ";
+		
 
 		var userInput = document.getElementById("userInput").value;
 		if (encodedUser === userInput) {
@@ -2167,15 +2170,31 @@
 			messageBox.classList.add("current-user");
 		} else {
 			messageBox.classList.add("other-user");
+
+			// Add the avatar element for other users
+			// var avatarDiv = document.createElement("div");
+			// avatarDiv.classList.add("avatar");
+			// avatarDiv.style.cssText = "width: 75px; height: 75px; background-color: #ddd; border-radius: 50%; text-align: center; line-height: 40px; font-size: 18px; font-weight: bold; color: #555; margin-right: 10px;";  Adjusted margin to position it on the left
+
+			// You can replace the URL here with a dynamic one if needed
+			// var img = document.createElement("img");
+			// img.src = `/Imgs_avtUser/${encodedUser}`;  Assuming `user` is the user ID or URL for the avatar
+			// img.alt = "Avatar";
+			// img.style.cssText = "width: 100%; height: 100%; object-fit: cover; border-radius: 50%";
+			// avatarDiv.appendChild(img);
+
+			// li.appendChild(avatarDiv);
 		}
-
 		li.appendChild(messageBox);
-
-		var messagesList = document.getElementById("messagesList");
+		const messagesList = document.querySelector(".message-list");
 		messagesList.appendChild(li);
 
-		messagesList.scrollTop = messagesList.scrollHeight;
+		setTimeout(() => {
+			messagesList.scrollTop = messagesList.scrollHeight;
+		}, 0);
+
 	});
+
 	function getCurrentTime() {
 		const currentTime = new Date();
 		const year = currentTime.getFullYear();
@@ -2198,10 +2217,9 @@
 		var formatTime = getCurrentTime(); 
 		var FileInput = document.getElementById("FileInput");
 		var fileUrl = null;
-
+		var Urlavt = "@((await _userManager.GetUserAsync(User))?.UrlAvt)";
 		if (FileInput.files.length > 0) {
 			var file = FileInput.files[0];
-			console.log("File đã được chọn:", file.name);
 
 			var formData = new FormData();
 			formData.append("file", file); 
@@ -2215,7 +2233,6 @@
 
 				if (response.ok) {
 					fileUrl = await response.text(); 
-					console.log("File URL: ", fileUrl);
 				} else {
 					console.error('Lỗi khi upload file.');
 					return;  
@@ -2227,14 +2244,13 @@
 		}
 		if (message.trim() !== "" || fileUrl) {
 			try {
-				await connection.invoke("SendMessage", user, message, formatTime, classId, fileUrl).catch(function (err) {
+				await connection.invoke("SendMessage", user, message, formatTime, classId, Urlavt, fileUrl).catch(function (err) {
 					console.error("Lỗi khi gửi tin nhắn:", err.toString());
 				});
 
 				// Xóa nội dung sau khi gửi
-					document.getElementById("messageInput").value = '';
+				document.getElementById("messageInput").value = '';
 				FileInput.value = '';
-				document.getElementById("fileName").textContent = 'Không có tệp nào được chọn';  // Cập nhật tên file sau khi gửi
 			} catch (err) {
 				console.error("Lỗi khi gửi tin nhắn:", err.toString());
 			}
@@ -2243,13 +2259,10 @@
 
 	document.getElementById('FileInput').addEventListener('change', function () {
 		var fileInput = document.getElementById('FileInput');
-			var fileNameSpan = document.getElementById('messageInput');
-
-		console.log(fileInput);
+		var fileNameSpan = document.getElementById('messageInput');
 
 		if (fileInput.files.length > 0) {
         const fileName = fileInput.files[0].name; // Lấy tên file
-        console.log('File đã được chọn:', fileName);
 
         // Hiển thị tên file trong khung nhập tin nhắn
 			if (messageInput.value.trim() === '') {
@@ -2270,39 +2283,19 @@
 	document.getElementById("messageInput").addEventListener("keydown", async function (event) {
 		if (event.key == 'Enter' && !event.shiftKey) {
 			event.preventDefault();
-			var user = document.getElementById("userInput").value;
-				var message = document.getElementById("messageInput").value;
-
-			const currentTime = new Date();
-			const year = currentTime.getFullYear();
-			const month = currentTime.getMonth() + 1;
-			const day = currentTime.getDate();
-			const hours = currentTime.getHours();
-			const minutes = currentTime.getMinutes();
-			const seconds = currentTime.getSeconds();
-			const formatTime = `${hours}:${minutes}:${seconds} - ${day}/${month}/${year}`;
-			var classId = document.getElementById("classId").value;
-
-			if (message.trim() !== "") {
-				await connection.invoke("SendMessage", user, message, formatTime, classId).catch(function (err) {
-					return console.error(err.toString());
-				});
-					document.getElementById("messageInput").value = '';
-					document.getElementById("messageInput").focus();
-			}
-
-			await sendFile();
+			await sendMessage();
 		}
-	});
+	});	
 
-	connection.on("ReceiveFile", function (user, downloadText, fileUrl) {
-		var li = document.createElement("li");
-		var formattedMessage = `<strong>${user}:</strong> <a href="${fileUrl}" download>${downloadText}</a>`;
-		li.innerHTML = formattedMessage;
-		document.getElementById("messagesList").appendChild(li);
+	window.onload = function () {
+		const messagesList = document.querySelector(".message-list");
 
-	});
-		
+		if (messagesList) {
+			// Cuộn thanh trượt xuống cuối
+			messagesList.scrollTop = messagesList.scrollHeight;
+		}
+	};
+
 
 </script> @* G?i tin nh?n *@
 <script>
@@ -2389,34 +2382,6 @@
 
 	
 </script>@*chọn nhóm*@
-
-<script>
-	// Sự kiện khi trang được kích hoạt lại (quay lại tab)
-	document.addEventListener('visibilitychange', function () {
-		if (document.visibilityState === 'visible') {
-			console.log("Trang đã được kích hoạt lại.");
-			// Thực hiện cập nhật giao diện nếu cần thiết
-		}
-	});
-
-	// Sự kiện khi cửa sổ lấy lại sự tập trung
-	window.addEventListener('focus', function () {
-		console.log("Trang đã được lấy lại sự tập trung.");
-		// Cập nhật lại giao diện nếu cần
-	});
-	window.addEventListener('focus', function () {
-		console.log("Trang đã được lấy lại sự tập trung.");
-		var messagesList = document.getElementById("messagesList");
-		if (messagesList) {
-			// Buộc cập nhật lại danh sách tin nhắn
-			messagesList.style.display = 'none';
-			setTimeout(function () {
-				messagesList.style.display = 'block';
-			}, 10);
-		}
-	});
-
-</script>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 <script>
 	function getListStudents() {
