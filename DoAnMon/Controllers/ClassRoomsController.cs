@@ -964,6 +964,7 @@ namespace DoAnMon.Controllers
 				await _context.SaveChangesAsync();
 
 				return Json(new { success = true, message = "Lớp học đã được cập nhật thành công." });
+				//return RedirectToAction("Details", "ClassRooms", new { id = id });
 			}
 			catch (Exception ex)
 			{

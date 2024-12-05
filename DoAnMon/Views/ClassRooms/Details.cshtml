@@ -12,6 +12,21 @@
 	ViewData["Title"] = tenlop;
 	Layout = "~/Views/Shared/_Layout.cshtml";
 	var user = await _userManager.GetUserAsync(User);
+
+	// T?o đường dẫn cho mã QR
+	var qrData = Model.ClassRoom.Id;
+
+	// Tạo mã QR tới dữ liệu
+	var writer = new ZXing.BarcodeWriterSvg
+			{
+				Format = ZXing.BarcodeFormat.QR_CODE,
+				Options = new ZXing.QrCode.QrCodeEncodingOptions
+				{
+					Width = 100,
+					Height = 100
+				}
+			};
+	var qrCode = writer.Write(qrData);
 }
 <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.0.0/crypto-js.min.js"></script>
 
@@ -31,22 +46,10 @@
 		background-position: center;
 	}
 
-	.class-info {
-		padding: 20px;
-		text-align: center;
-	}
+	
 
-		.class-info h1 {
-			font-size: 30px;
-			margin-bottom: 10px;
-			font-weight: bold;
-			text-transform: uppercase;
-		}
 
-		.class-info p {
-			font-size: 16px;
-			margin-bottom: 15px;
-		}
+		
 
 	/* Menu dropdown Thêm thành viên */
 	.dropdown {
@@ -251,10 +254,6 @@
 		border-radius: 5px;
 		cursor: pointer;
 		transition: background-color 0.3s;
-	}
-
-	.custom-button {
-		background-color: #007bff;
 	}
 
 	.btn:hover {
@@ -496,6 +495,7 @@
 		transition: border-bottom 0.3s ease, background-color 0.3s ease; /* Hiệu ứng chuyển tiếp */
 		border-radius: 5px; /* Bo góc */
 		background-color: rgb(230, 248, 248); /* Màu nền mặc định */
+		resize: none;
 	}
 
 		.input-textarea:hover {
@@ -747,20 +747,14 @@
 		}
 
 	.circle_discuss {
-		display:flex;
-		width: 90px; /* Đường kính của hình tròn */
-		height: 90px; /* Đường kính của hình tròn */
-		border-radius: 50%; /* Để tạo hình tròn */
 		margin-right: 10px; /* Khoảng cách giữa hình tròn và chữ */
-		overflow: hidden;
-		align-items: center;
-		justify-content: center;
 	}
 
 		.circle_discuss img {
 			width: 90px;
 			height: 90px;
-			object-fit: fill;
+			object-fit: cover;
+			border-radius: 50%;
 		}
 
 	#listsv2 {
@@ -877,7 +871,6 @@
 			background-color: lightgray;
 }
 </style>
-
 <style>
 	.button_btnBaiGiang {
   position: relative;
@@ -1026,9 +1019,6 @@
 	stroke-dasharray: 100 0; /* Hiển thị thanh tiến trình */
 }
 </style>
-
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@16,400,0,0" />
 <style>
 	.material-symbols-outlined {
 		font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 16
@@ -1054,744 +1044,777 @@
 		display: none; /* Ẩn thẻ input gốc */
 	}
 </style>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Merriweather:ital,wght@0,300;0,400;0,700;0,900;1,300;1,400;1,700;1,900&display=swap" rel="stylesheet">
-<link href="https://fonts.googleapis.com/css2?family=Merriweather:ital,wght@0,300;0,400;0,700;0,900;1,300;1,400;1,700;1,900&family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap" rel="stylesheet">
-<link href="https://fonts.googleapis.com/css2?family=Merriweather:ital,wght@0,300;0,400;0,700;0,900;1,300;1,400;1,700;1,900&family=Oswald:wght@200..700&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 
 
-<div style="position: relative;">
+<style>
+	.ClassroomDetail-container{
+		display: flex;
+		width: 100%;
+		min-height: 600px;
+	}
+
+	.ClassroomDetail-left-container{
+		margin-left: 20px;
+		width: 20%;
+		font-family: "JetBrains Mono", serif;
+	}
+
+	.list-group-item {
+		border: none; /* Loại bỏ viền */
+	}
+
+	.list-group-item + .list-group-item {
+		border-top: 1px solid #ddd; /* Chỉ giữ lại viền trên */
+	}
+
+	.panel-heading{
+		font-weight: bold;
+		font-size: 15px;
+	}
+
+	.IDClass_list-group-item1{
+		align-content: center;
+		font-size: 25px;
+		font-weight: bold;
+		color: red;
+		padding-left: 5px;
+	}
+
+	.list-group-item1-container{
+		display: flex;
+		width: 100%;
+		height: 100px;
+		justify-content: space-around;
+	}
+
+	.list-group-item{
+		margin: 0;
+		padding: 0;
+	}
+
+	.padding-custom{
+		padding: 10px;
+	}
+
+	.custom-VaoPhong{
+		display: flex;
+		justify-content: center;
+		font-weight:bold;
+		color: #295F98;
+	}
+
+	.custom-VaoPhong:hover{
+		text-decoration: none;
+	}
+
+	.ClassroomDetail-right-container {
+		width: 80%;
+		margin-left: 20px;
+		font-family: "JetBrains Mono", serif;
+	}
+</style>
+<div style="position: relative; width: 100%;">
 	<img class="img-fluid" src="/images/@Model.ClassRoom.backgroundUrl" alt="No Images" style="width: 100%; height: 400px;" />
 	@{
 		if (Model.isOwner)
 		{
-					<form id="changeBG" action="/ClassRooms/changeBackground" method="POST" enctype="multipart/form-data" style="position: absolute; bottom: 10px; right: 10px;">
-						<input type="hidden" name="classId" value="@Model.ClassRoom.Id" />
-						<label for="file-upload" class="custom-file-upload">
-							<i class="fa-solid fa-camera"></i>
-							Thay đổi ảnh bìa
-						</label>
-						<input id="file-upload" type="file" name="image" accept="image/*" required
-							onchange="document.getElementById('changeBG').submit();" style="display:none;" />
-					</form>
+				<form id="changeBG" action="/ClassRooms/changeBackground" method="POST" enctype="multipart/form-data" style="position: absolute; bottom: 10px; right: 10px;">
+					<input type="hidden" name="classId" value="@Model.ClassRoom.Id" />
+					<label for="file-upload" class="custom-file-upload">
+						<i class="fa-solid fa-camera"></i>
+						Thay đổi ảnh bìa
+					</label>
+					<input id="file-upload" type="file" name="image" accept="image/*" required
+						onchange="document.getElementById('changeBG').submit();" style="display:none;" />
+				</form>
 		}
 	}
 	
 </div>
 
-<div class="class-info">
-	<h1 style="font-family: Poppins, sans-serif;font-size: 28px;">@Model.ClassRoom.Name</h1>
-	<p style="font-family: Poppins, sans-serif;font-size: 18px; max-width: 100%; word-wrap: break-word;overflow-wrap: break-word;">@Model.ClassRoom.Description</p>
-	<div class="container">
-		<div class="row">
-			<div class="col-md-6" style="margin-bottom: 10px;">
-				<div class="d-flex justify-content-start">
-					<a href="@Model.ClassRoom.RoomOnline&User=@user.Id&class=@Model.ClassRoom.Id" id="diemDanhBtn" class="btn btn-primary custom-button" id="join-btn"
-					   style="
-							font-family: Poppins, sans-serif;
-							background-color: #2dac66;
-							font-size: 15px;
-							font-weight: bold;">Tham gia phòng học</a>
-				</div>
+
+@* ================================= *@
+<div class="ClassroomDetail-container">
+	<div class="ClassroomDetail-left-container">
+		<div class="panel panel-default" style="width: 100%; margin-top: 15px;">
+			<div class="panel-heading">
+				THÔNG TIN LỚP HỌC
 			</div>
-			<div class="col-md-6">
-				<div class="d-flex justify-content-end">
-					<div class="more-options" style="display: inline;">
-						<div class="dropdown">
-							<button class="btn btn-secondary custom-button"
-									style="
-										background-color: #0365a7">
-								<i style="
-									font-family: Poppins, sans-serif;
-									font-size: 15px;
-									font-weight: bold;">Thêm Thành Viên</i>
+			<ul class="list-group">
+				<li class="list-group-item">
+					<h6 style="text-align: center; font-weight: bold; font-size: 12px;">Mã lớp</h6>
+					<div class="list-group-item1-container">
+						<div class="IDClass_list-group-item1">
+							<input type="hidden" id="contentcopy" value="@Model.ClassRoom.Id" readonly style="border: none; background: transparent; font-size: 14px; width: 60px;" />
+							<button style="border: none; background-color: transparent;font-size: 25px;" id="btnCopy">
+								@Model.ClassRoom.Id
 							</button>
-							<div class="dropdown-content">
-								@{
-									// T?o du?ng d?n cho mã QR
-									var qrData = Model.ClassRoom.Id;
 
-									// T?o mã QR t? d? li?u
-									var writer = new ZXing.BarcodeWriterSvg
-									{
-										Format = ZXing.BarcodeFormat.QR_CODE,
-										Options = new ZXing.QrCode.QrCodeEncodingOptions
-										{
-											Width = 50,
-											Height = 50
-										}
-									};
-									var qrCode = writer.Write(qrData);
-								}
-								<div>
-									@Html.Raw(qrCode) <!-- Hi?n th? mã QR -->
-								</div>
-
-								<a asp-action="AddListSV" asp-route-id="@Model.ClassRoom.Id" style="font-family: Poppins, sans-serif;">Thêm danh sách sinh viên</a>
-								<p style="font-family: Poppins, sans-serif; font-size: 14px;">
-									Mã lớp: <input type="text" id="contentcopy" value="@Model.ClassRoom.Id" readonly style="border: none; background: transparent; font-size: 14px; width: 60px;" />
-									<button style="border: none; background-color: transparent;" id="btnCopy">
-										<span id="icon" style="font-size: 20px;" class="material-symbols-outlined">content_copy</span>
-									</button>
-								</p>
-							</div>
 						</div>
+						@Html.Raw(qrCode)
 					</div>
-				</div>
-			</div>
+				</li>
+				<li class="list-group-item padding-custom" style="font-weight: bold;">@Model.ClassRoom.Name</li>
+				<li class="list-group-item padding-custom">@Model.ClassRoom.Description</li>
+				<li class="list-group-item padding-custom">
+					<a href="@Model.ClassRoom.RoomOnline&User=@user.Id&class=@Model.ClassRoom.Id" id="diemDanhBtn" class="custom-VaoPhong" id="join-btn"><span>Tham gia phòng học</span></a>
+				</li>
+			</ul>
 		</div>
+
 	</div>
-</div>
-<div class="tabs" style="display: flex; justify-content: center;">
-	<div class="tab" onclick="openTab(event, 'teacher')" style="font-family: Poppins, sans-serif;font-weight: 600">Thông tin giáo viên</div>
-	<div class="tab" onclick="openTab(event, 'posts')" style="font-family: Poppins, sans-serif;font-weight: 600">Bài Giảng</div>
-	<div class="tab" onclick="openTab(event, 'assignments')" style="font-family: Poppins, sans-serif;font-weight: 600">Bài tập</div>
-	<div class="tab" onclick="openTab(event, 'discussion')" style="font-family: Poppins, sans-serif;font-weight: 600">Thảo luận</div>
-	<div class="tab" onclick="openTab(event, 'listsv')" style="font-family: Poppins, sans-serif;font-weight: 600">Danh sách sinh viên</div>
+	<div class="ClassroomDetail-right-container">
+		<div class="tabs" style="display: flex; justify-content: center;">
+			<div class="tab" onclick="openTab(event, 'teacher')" style="font-family: Poppins, sans-serif;font-weight: 600">Thông tin giáo viên</div>
+			<div class="tab" onclick="openTab(event, 'posts')" style="font-family: Poppins, sans-serif;font-weight: 600">Bài Giảng</div>
+			<div class="tab" onclick="openTab(event, 'assignments')" style="font-family: Poppins, sans-serif;font-weight: 600">Bài tập</div>
+			<div class="tab" onclick="openTab(event, 'discussion')" style="font-family: Poppins, sans-serif;font-weight: 600">Thảo luận</div>
+			<div class="tab" onclick="openTab(event, 'listsv')" style="font-family: Poppins, sans-serif;font-weight: 600">Danh sách sinh viên</div>
 
-	@{
-		if (Model.CustomRubric == false)
-		{
-					<div class="tab" onclick="openTab(event, 'bangdiem')" style="font-family: Poppins, sans-serif;font-weight: 600">Bảng điểm</div>
-		}
-		else
-		{
-					<div class="tab" onclick="openTab(event, 'bangdiemCustom')" style="font-family: Poppins, sans-serif;font-weight: 600">Bảng điểm</div>
-		}
-	}
-	<div class="tab" onclick="openTab(event, 'padlet')" style="font-family: Poppins, sans-serif;font-weight: 600">Padlet</div>
-	<div class="tab" onclick="openTab(event, 'letter')" style="font-family: Poppins, sans-serif;font-weight: 600">Đơn từ</div>
-	@{
-		if (Model.isOwner)
-		{
-			<div class="tab" onclick="openTab(event, 'setting')" style="font-family: Poppins, sans-serif;font-weight: 600">Settings</div>
-		}
-	}
-	<div class="tab" onclick="openTab(event, 'mainload')" style="font-family: Poppins, sans-serif;font-weight: 600" hidden>MainLoad</div>
-</div>
-<div id="teacher" class="tabcontent">
-	<div class="teacher-info" style="background-color: #fdffe0">
-		<h2 style="font-family: Poppins, sans-serif;">Thông tin giáo viên</h2>
-		<div class="teacher-details">			
-			<img src="/Imgs_avtUser/@Model.Owner.UrlAvt" alt="Teacher image" class="teacher-image" />
-			<div class="teacher-text">
-				<p style="font-family: Poppins, sans-serif;"><strong>Mã giảng viên:</strong> @Model.Owner.Mssv</p>
-				<p style="font-family: Poppins, sans-serif;"><strong>Tên giảng viên:</strong> @Model.Owner.Name</p>
-				<p style="font-family: Poppins, sans-serif;"><strong>Email:</strong> @Model.Owner.Email</p>
-			</div>
-		</div>
-	</div>
-</div>
-<div id="posts" class="tabcontent">
-	@{
-		if (Model.isOwner)
-		{
-					<div>
-						<button id="browseBaiGiang" class="button_btnBaiGiang">
-							<svg xmlns="http://www.w3.org/2000/svg">
-								<rect class="border_btnBaiGiang" pathLength="100"></rect>
-								<rect class="loading_btnBaiGiang" id="progressBar_btnBaiGiang" pathLength="100"></rect>
-
-								<svg class="done-svg_btnBaiGiang"
-										xmlns="http://www.w3.org/2000/svg"
-										viewBox="0 0 24 24">
-									<path class="done_btnBaiGiang done-cloud_btnBaiGiang"
-											pathLength="100"
-											d="M 6.5,20 Q 4.22,20 2.61,18.43 1,16.85 1,14.58 1,12.63 2.17,11.1 3.35,9.57 5.25,9.15 5.88,6.85 7.75,5.43 9.63,4 12,4 14.93,4 16.96,6.04 19,8.07 19,11 q 1.73,0.2 2.86,1.5 1.14,1.28 1.14,3 0,1.88 -1.31,3.19 Q 20.38,20 18.5,20 Z"></path>
-									<path class="done_btnBaiGiang done-check_btnBaiGiang"
-											pathLength="100"
-											d="M 7.515,12.74 10.34143,15.563569 15.275,10.625"></path>
-								</svg>
-							</svg>
-							<div class="txt-upload_btnBaiGiang">Upload</div>
-						</button>
-					</div>
-		}
-	}
-	<div class="posts" id="lectureContainer">
-		<partial name="_lecturePartial" model="Model.Unit" />
-	</div>
-
-</div>
-<div id="assignments" class="tabcontent">
-	@{
-		if (Model.isOwner)
-		{
-					<button id="uploadButton" onclick="Showtaobaitap()"
-							style="
-									background-color: #3498db;
-									font-family: Poppins, sans-serif;
-									color: #ffffff;
-									padding: 10px 20px;
-									border: none;
-									border-radius: 5px;
-									cursor: pointer;
-									transition: background-color 0.3s;
-									font-size: 15px;
-									font-weight: bold;">
-						Tạo bài tập mới
-					</button>
-					<form id="uploadbaitap" action="/ClassRooms/CreateBaitap" method="POST" style="display: none;">
-						<div class="form-section">
-							<label for="titleInput">Tiêu đề bài tập:</label>
-							<input type="text" name="Title" id="titleInput" class="form-control" placeholder="Nhập tiêu đề">
-							<label for="descriptionInput">Mô tả bài tập:</label>
-							<textarea name="Content" id="descriptionInput" class="form-control" placeholder="Nhập mô tả"></textarea>
-							<label for="deadlineInput">Hạn nộp:</label>
-							<input type="datetime-local" name="Deadline" id="deadlineInput" class="form-control">
-							<label for="fileFormatSelect">Chọn định dạng file cần nộp:</label>
-							<select name="FileFormat" id="fileFormatSelect">
-								<option value="pdf">pdf</option>
-								<option value="docx">docx</option>
-								<option value="xlsx">xls</option>
-								<option value="allfile">all file</option>
-							</select>
-							<div></div>
-							<label for="maxSize">Dung lượng tối đa:</label>
-							<input type="number" name="MaxSize" id="maxSize" class="form-control" placeholder="Dung lượng tối đa cho phép nộp (MB)" />
-						</div>
-						<input type="hidden" name="ClassId" id="classIdInput" value="@Model.ClassRoom.Id">
-						<label for="fileInput">Hướng dẫn (Nếu có): </label>
-						<input type="hidden" name="AttactURL" id="attactURL">
-						<label for="fileInput" class="custom-file-upload">
-							Upload file HD
-						</label>
-						<input type="file" name="FileUpLoad" id="fileInput" onchange="uploadFile()" />
-
-						<div class="modal" id="uploadModal" style="background-color: transparent;">
-						<div class="modal-content">
-							<div class="modal-header">
-								<h5 class="modal-title">Uploading File...</h5>
-							</div>
-							<div class="modal-body text-center">
-								<div class="loader" id="loader" style="display: block;"></div>
-								<progress id="progressBar" value="0" max="100" style="display: none;"></progress>
-								<div id="progressText" style="display: block;" class="mt-3">0%</div>
-								<div id="successText" class="mt-3" style="display: none;">Upload thành công</div>
-							</div>
-						</div>
-						</div>
-
-						<div class="modal-backdrop" id="modalBackdrop"></div>
-						<div id="TenFile" style="display: inline;"></div>
-						<div></div>
-						<input type="submit" value="Giao bài" class="btn btn-primary"></input> <!-- Nút giao bài -->
-					</form>
-		}
-	}
-	<div class="assignments">
-		<h2 style="font-family: Poppins, sans-serif;">Danh sách bài tập</h2>
-		@foreach (var assignment in Model.Homework.ToList())
-		{
-			<div class="assignment" style="height: 35vh;">
-				<div class="assignment-content" style="border-right: 1px solid black; height: 100%; width: 100%; margin: 50px; ">
-					@{
-						if (Model.isOwner)
-						{
-									<a class="btn btn-info" style="float: left; max-width: 50px; padding: 5px;" asp-action="DeleteBT" asp-controller="ClassRooms" asp-route-id="@assignment.Id" asp-route-classId="@assignment.ClassRoomId" onclick="return confirm('Bạn có chắc muốn xoá không ?')">Xóa</a>
-						}
-					}
-					<h3 class="text-center">@assignment.Title</h3>
-					<p class="assignment-description">@assignment.Content</p>
-					@{
-						if (assignment.Deadline.HasValue)
-						{
-									<p class="assignment-description">Hạn nộp: @assignment.Deadline</p>
-						}
-						else
-						{
-									<p class="assignment-description">Hạn nộp: Vô thời hạn</p>
-						}
-					}
-
-					<p class="assignment-file-format">Yêu cầu nộp file: @assignment.FileFormat</p>
-					<p class ="assignment-description">Dung lượng file tối đa: @assignment.MaxSize MB</p>
-					@if (!string.IsNullOrEmpty(assignment.attractUrl))
-					{
-						<a href="/Uploads/BAITAP/@assignment.attractUrl" target="_blank" style="text-decoration:none; color: deepskyblue!important;">@assignment.attractUrl</a>
-					}
-				</div>
-				@{
-					// L?y userId
-					string userId = user != null ? user.Id : null;
-
-					// L?y baiTapId t? assignment ho?c t? noi khác
-					string baiTapId = assignment != null ? assignment.Id : null;
-
-					// Ki?m tra xem user dã n?p bài t?p hay chua
-					bool hasSubmitted = userId != null && baiTapId != null ? CheckNop.HasUserSubmittedBaiTap(userId, baiTapId) : false;
+			@{
+				if (Model.CustomRubric == false)
+				{
+						<div class="tab" onclick="openTab(event, 'bangdiem')" style="font-family: Poppins, sans-serif;font-weight: 600">Bảng điểm</div>
 				}
+				else
+				{
+						<div class="tab" onclick="openTab(event, 'bangdiemCustom')" style="font-family: Poppins, sans-serif;font-weight: 600">Bảng điểm</div>
+				}
+			}
+			@* <div class="tab" onclick="openTab(event, 'padlet')" style="font-family: Poppins, sans-serif;font-weight: 600">Padlet</div> *@
+			<div class="tab" onclick="openTab(event, 'letter')" style="font-family: Poppins, sans-serif;font-weight: 600">Đơn từ</div>
+			@{
+				if (Model.isOwner)
+				{
+						<div class="tab" onclick="openTab(event, 'setting')" style="font-family: Poppins, sans-serif;font-weight: 600">Settings</div>
+				}
+			}
+			<div class="tab" onclick="openTab(event, 'mainload')" style="font-family: Poppins, sans-serif;font-weight: 600" hidden>MainLoad</div>
+		</div>
+		<div id="teacher" class="tabcontent">
+			<div class="teacher-info" style="background-color: #fdffe0">
+				<h2 style="font-family: Poppins, sans-serif;">Thông tin giáo viên</h2>
+				<div class="teacher-details">
+					<img src="/Imgs_avtUser/@Model.Owner.UrlAvt" alt="Teacher image" class="teacher-image" />
+					<div class="teacher-text">
+						<p style="font-family: Poppins, sans-serif;"><strong>Mã giảng viên:</strong> @Model.Owner.Mssv</p>
+						<p style="font-family: Poppins, sans-serif;"><strong>Tên giảng viên:</strong> @Model.Owner.Name</p>
+						<p style="font-family: Poppins, sans-serif;"><strong>Email:</strong> @Model.Owner.Email</p>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div id="posts" class="tabcontent">
+			@{
+				if (Model.isOwner)
+				{
+						<div>
+							<button id="browseBaiGiang" class="button_btnBaiGiang">
+								<svg xmlns="http://www.w3.org/2000/svg">
+									<rect class="border_btnBaiGiang" pathLength="100"></rect>
+									<rect class="loading_btnBaiGiang" id="progressBar_btnBaiGiang" pathLength="100"></rect>
 
-				<form id="submitForm_@assignment.Id" action="/ClassRooms/Nopbai" method="post" enctype="multipart/form-data" class="assignment-form" onsubmit="return validateAndSubmit('@assignment.FileFormat', '@assignment.Id', event)">
+									<svg class="done-svg_btnBaiGiang"
+									 	xmlns="http://www.w3.org/2000/svg"
+									 	viewBox="0 0 24 24">
+										<path class="done_btnBaiGiang done-cloud_btnBaiGiang"
+										  	pathLength="100"
+										  	d="M 6.5,20 Q 4.22,20 2.61,18.43 1,16.85 1,14.58 1,12.63 2.17,11.1 3.35,9.57 5.25,9.15 5.88,6.85 7.75,5.43 9.63,4 12,4 14.93,4 16.96,6.04 19,8.07 19,11 q 1.73,0.2 2.86,1.5 1.14,1.28 1.14,3 0,1.88 -1.31,3.19 Q 20.38,20 18.5,20 Z"></path>
+										<path class="done_btnBaiGiang done-check_btnBaiGiang"
+										  	pathLength="100"
+										  	d="M 7.515,12.74 10.34143,15.563569 15.275,10.625"></path>
+									</svg>
+								</svg>
+								<div class="txt-upload_btnBaiGiang">Upload</div>
+							</button>
+						</div>
+				}
+			}
+			<div class="posts" id="lectureContainer">
+				<partial name="_lecturePartial" model="Model.Unit" />
+			</div>
 
-					<div class="upload-form " style="margin-right: 30px;">
-						@{
-							if (!Model.isOwner)
+		</div>
+		<div id="assignments" class="tabcontent">
+			@{
+				if (Model.isOwner)
+				{
+						<button id="uploadButton" onclick="Showtaobaitap()"
+								style="
+											background-color: #3498db;
+											font-family: Poppins, sans-serif;
+											color: #ffffff;
+											padding: 10px 20px;
+											border: none;
+											border-radius: 5px;
+											cursor: pointer;
+											transition: background-color 0.3s;
+											font-size: 15px;
+											font-weight: bold;">
+							Tạo bài tập mới
+						</button>
+						<form id="uploadbaitap" action="/ClassRooms/CreateBaitap" method="POST" style="display: none;">
+							<div class="form-section">
+								<label for="titleInput">Tiêu đề bài tập:</label>
+								<input type="text" name="Title" id="titleInput" class="form-control" placeholder="Nhập tiêu đề">
+								<label for="descriptionInput">Mô tả bài tập:</label>
+								<textarea name="Content" id="descriptionInput" class="form-control" placeholder="Nhập mô tả"></textarea>
+								<label for="deadlineInput">Hạn nộp:</label>
+								<input type="datetime-local" name="Deadline" id="deadlineInput" class="form-control">
+								<label for="fileFormatSelect">Chọn định dạng file cần nộp:</label>
+								<select name="FileFormat" id="fileFormatSelect">
+									<option value="pdf">pdf</option>
+									<option value="docx">docx</option>
+									<option value="xlsx">xls</option>
+									<option value="allfile">all file</option>
+								</select>
+								<div></div>
+								<label for="maxSize">Dung lượng tối đa:</label>
+								<input type="number" name="MaxSize" id="maxSize" class="form-control" placeholder="Dung lượng tối đa cho phép nộp (MB)" />
+							</div>
+							<input type="hidden" name="ClassId" id="classIdInput" value="@Model.ClassRoom.Id">
+							<label for="fileInput">Hướng dẫn (Nếu có): </label>
+							<input type="hidden" name="AttactURL" id="attactURL">
+							<label for="fileInput" class="custom-file-upload">
+								Upload file HD
+							</label>
+							<input type="file" name="FileUpLoad" id="fileInput" onchange="uploadFile()" />
+
+							<div class="modal" id="uploadModal" style="background-color: transparent;">
+								<div class="modal-content">
+									<div class="modal-header">
+										<h5 class="modal-title">Uploading File...</h5>
+									</div>
+									<div class="modal-body text-center">
+										<div class="loader" id="loader" style="display: block;"></div>
+										<progress id="progressBar" value="0" max="100" style="display: none;"></progress>
+										<div id="progressText" style="display: block;" class="mt-3">0%</div>
+										<div id="successText" class="mt-3" style="display: none;">Upload thành công</div>
+									</div>
+								</div>
+							</div>
+
+							<div class="modal-backdrop" id="modalBackdrop"></div>
+							<div id="TenFile" style="display: inline;"></div>
+							<div></div>
+							<input type="submit" value="Giao bài" class="btn btn-primary"></input> <!-- Nút giao bài -->
+						</form>
+				}
+			}
+			<div class="assignments">
+				<h2 style="font-family: Poppins, sans-serif;">Danh sách bài tập</h2>
+				@foreach (var assignment in Model.Homework.ToList())
+				{
+					<div class="assignment" style="height: 35vh;">
+						<div class="assignment-content" style="border-right: 1px solid black; height: 100%; width: 100%; margin: 50px; ">
+							@{
+								if (Model.isOwner)
+								{
+										<a class="btn btn-info" style="float: left; max-width: 50px; padding: 5px;" asp-action="DeleteBT" asp-controller="ClassRooms" asp-route-id="@assignment.Id" asp-route-classId="@assignment.ClassRoomId" onclick="return confirm('Bạn có chắc muốn xoá không ?')">Xóa</a>
+								}
+							}
+							<h3 class="text-center">@assignment.Title</h3>
+							<p class="assignment-description">@assignment.Content</p>
+							@{
+								if (assignment.Deadline.HasValue)
+								{
+										<p class="assignment-description">Hạn nộp: @assignment.Deadline</p>
+								}
+								else
+								{
+										<p class="assignment-description">Hạn nộp: Vô thời hạn</p>
+								}
+							}
+
+							<p class="assignment-file-format">Yêu cầu nộp file: @assignment.FileFormat</p>
+							<p class="assignment-description">Dung lượng file tối đa: @assignment.MaxSize MB</p>
+							@if (!string.IsNullOrEmpty(assignment.attractUrl))
 							{
-										<label for="file-upload" class="file-label1" style="white-space: nowrap;">Bài tập của bạn</label>
-										<div class="file-input-wrapper">
-										@{
-									if (hasSubmitted)
+								<a href="/Uploads/BAITAP/@assignment.attractUrl" target="_blank" style="text-decoration:none; color: deepskyblue!important;">@assignment.attractUrl</a>
+							}
+						</div>
+						@{
+							// L?y userId
+							string userId = user != null ? user.Id : null;
+
+							// L?y baiTapId t? assignment ho?c t? noi khác
+							string baiTapId = assignment != null ? assignment.Id : null;
+
+							// Ki?m tra xem user dã n?p bài t?p hay chua
+							bool hasSubmitted = userId != null && baiTapId != null ? CheckNop.HasUserSubmittedBaiTap(userId, baiTapId) : false;
+						}
+
+						<form id="submitForm_@assignment.Id" action="/ClassRooms/Nopbai" method="post" enctype="multipart/form-data" class="assignment-form" onsubmit="return validateAndSubmit('@assignment.FileFormat', '@assignment.Id', event)">
+
+							<div class="upload-form " style="margin-right: 30px;">
+								@{
+									if (!Model.isOwner)
 									{
-														<p style="text-align: center; margin-left: 15px;">Đã nộp bài</p>
+											<label for="file-upload" class="file-label1" style="white-space: nowrap;">Bài tập của bạn</label>
+											<div class="file-input-wrapper">
+												@{
+												if (hasSubmitted)
+												{
+															<p style="text-align: center; margin-left: 15px;">Đã nộp bài</p>
+												}
+												else
+												{
+													// Ki?m tra deadline
+													if (assignment != null && assignment.Deadline.HasValue)
+													{
+														// L?y ngày deadline
+														DateTime deadline = assignment.Deadline.Value;
+
+														// Ki?m tra xem deadline dã qua hay chua
+														if (DateTime.Now > deadline)
+														{
+															// X? lý khi deadline dã qua
+															// Ví d?: hi?n th? thông báo cho ngu?i dùng
+																	<p>Deadline dã qua. Không thể nộp bài tập nữa.</p>
+														}
+														else
+														{
+															// X? lý khi deadline chua qua
+															// Ví d?: cho phép ngu?i dùng n?p bài t?p
+																	<p>Thiếu</p>
+																	<input id="FileInput_@assignment.Id" type="file" name="FileNopbai" accept="@(assignment.FileFormat == "allfile" ? "*/*" : assignment.FileFormat)" onchange="checkFileSize(this, @assignment.MaxSize)">
+
+																	<input type="hidden" name="ClassId" id="classIdInput" value="@Model.ClassRoom.Id">
+																	<input type="hidden" name="BaitapId" id="baitapinput" value="@assignment.Id">
+																	<input type="hidden" id="uploadedFilePath" name="UploadedFilePath">
+																	<p id="uploadStatus_@assignment.Id"></p>
+																	<button type="submit" id="uploadButton_@assignment.Id">Nộp bài</button>
+																	<button type="button" onclick="previewFile('@assignment.Id')">Xem trước</button>
+														}
+													}
+													else
+													{
+														// X? lý khi không có deadline du?c d?t
+																<p>Thiếu</p>
+																<input id="FileInput_@assignment.Id" type="file" name="FileNopbai" accept="@(assignment.FileFormat == "allfile" ? "*/*" : assignment.FileFormat)" onchange="checkFileSize(this, @assignment.MaxSize)">
+
+																<input type="hidden" name="ClassId" id="classIdInput" value="@Model.ClassRoom.Id">
+																<input type="hidden" name="BaitapId" id="baitapinput" value="@assignment.Id">
+																<input type="hidden" id="uploadedFilePath" name="UploadedFilePath">
+																<p id="uploadStatus_@assignment.Id"></p>
+																<button type="submit" id="uploadButton_@assignment.Id">Nộp bài</button>
+																<button type="button" onclick="previewFile('@assignment.Id')">Xem trước</button>
+													}
+												}
+												}
+											</div>
+											<div id="previewContainer_@assignment.Id"></div>
 									}
 									else
 									{
-										// Ki?m tra deadline
-										if (assignment != null && assignment.Deadline.HasValue)
-										{
-											// L?y ngày deadline
-											DateTime deadline = assignment.Deadline.Value;
+											<a asp-action="GetAllBTStu" asp-controller="ClassRooms" asp-route-classid="@Model.ClassRoom.Id" asp-route-baitapID="@assignment.Id" class="btn btn-info ">Xem bài tập đã nộp</a>
+									}
+								}
+							</div>
+						</form>
+					</div>
+				}
+			</div>
+		</div>
+		<div id="discussion" class="tabcontent">
+			<div class="discussion">
+				<div class="discussion-container">
+					<!-- Khung bên trái nhỏ hơn -->
+					<div class="left-panel">
+						<div class="search-box_discuss" style="margin-bottom: 20px;">
+							<!-- Biểu tượng tìm kiếm -->
+							<span class="search-icon_discuss">🔍</span>
+							<!-- Thanh tìm kiếm -->
+							<input type="search"
+								   class="search-input_discuss"
+								   placeholder="Tìm kiếm trên Messenger"
+								   aria-label="Tìm kiếm trên Messenger"
+								   dir="ltr"
+								   autocomplete="off"
+								   spellcheck="false">
+						</div>
+						<div class="account-info-container_discuss">
+							<div class="popup" id="popup" style="display: none;">
+								<div class="popup-content">
+									<div class="popup-image">
+										<img id="student-image" src="" alt="Student Avatar" style="width: 100%; height: 100%; object-fit:cover" />
+									</div>
+									<div class="popup-details">
+										<h3 style="margin-top:-5px; font-weight:600;">Thông tin sinh viên</h3>
+										<p id="student-mssv"></p>
+										<p id="student-name"></p>
+										<p id="student-email"></p>
+									</div>
+									<span class="popup-close" onclick="closePopup()">×</span>
+								</div>
+							</div>
+							<div id="listsv2"></div>
+							<div class="circle-text-container_discuss" id="student-template" style="display: none;">
+								<div class="circle_discuss ">
+									<img src="" alt="No Image" class="student-avatar" />
+								</div>
+								<h3 style="font-size: 18px; margin: 0; font-weight: 600;" class="student-info"></h3>
+								<span class="three-dots-icon_discuss">
+									<svg xmlns="http:www.w3.org/2000/svg" width="30" height="30" fill="currentColor" class="bi bi-three-dots-vertical" viewBox="0 0 16 16">
+										<path d="M9.5 13a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0m0-5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0m0-5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0" />
+									</svg>
+								</span>
+								<span class="star-icon_discuss">
+									<button type="button" class="send-notify-btn">★</button>
+								</span>
+							</div>
 
-											// Ki?m tra xem deadline dã qua hay chua
-											if (DateTime.Now > deadline)
+						</div>
+					</div>
+					<div class="right-panel">
+						<div id="messagesList" class="message-list">
+							<partial name="_MessagePartial" model="Model.Message" />
+						</div>
+						<form id="uploadForm" enctype="multipart/form-data" class="message-form">
+							<div class="input-hidden">
+								<input type="text" id="userInput" class="form-control" />
+								<input type="text" id="classId" class="form-control" value="@Model.ClassRoom.Id" />
+							</div>
+							<div class="message-input-group">
+								<button type="button" onclick="startSpeechRecognition()" id="recordButton" class="record" title="Bắt đầu ghi âm">
+									<svg class="microphone-icon" height="25px" viewBox="0 0 24 24" width="25px">
+										<title>Nhấn để ghi âm</title>
+										<path d="M5 4a4 4 0 018 0v5.5a4 4 0 01-8 0V4z" fill="#ff397f"></path>
+										<path d="M3.5 20.5a1 1 0 011-1h2.75a.5.5 0 00.5-.5v-.66a.52.52 0 00-.43-.5A8.5 8.5 0 01.5 9.5V9a1 1 0 011-1H2a1 1 0 011 1v.5a6 6 0 0012 0V9a1 1 0 011-1h.5a1 1 0 011 1v.5a8.5 8.5 0 01-6.82 8.33.52.52 0 00-.43.51V19c0 .28.22.5.5.5h2.75a1 1 0 011 1v.5a1 1 0 01-1 1h-9a1 1 0 01-1-1v-.5z" fill="#ff397f"></path>
+									</svg>
+								</button>
+								<label class="file-label" for="FileInput" title="Chọn tệp">
+									<span class="image-icon_discuss">
+										<svg xmlns="http://www.w3.org/2000/svg" width="25px" height="25px" fill="#ff397f" class="bi bi-paperclip" viewBox="0 0 16 16">
+											<path d="M4.5 3a2.5 2.5 0 0 1 5 0v9a1.5 1.5 0 0 1-3 0V5a.5.5 0 0 1 1 0v7a.5.5 0 0 0 1 0V3a1.5 1.5 0 1 0-3 0v9a2.5 2.5 0 0 0 5 0V5a.5.5 0 0 1 1 0v7a3.5 3.5 0 1 1-7 0z" />
+										</svg>
+									</span>
+								</label>
+								<input type="file" id="FileInput" style="display: none;">
+								@*<span id="fileName" class="file-name">Không có tệp nào được chọn</span> *@
+								<input type="text" class="form-control" id="messageInput" placeholder="Nhập tin nhắn" />
+								<button type="button" id="sendButton" class="send-button_discuss" aria-label="Nhấn Enter để gửi">
+									<svg class="send-icon_discuss" height="25px" viewBox="0 0 24 24" width="25px">
+										<title>Nhấn Enter để gửi</title>
+										<path d="M16.6915026,12.4744748 L3.50612381,13.2599618 C3.19218622,13.2599618 3.03521743,13.4170592 3.03521743,13.5741566 L1.15159189,20.0151496 C0.8376543,20.8006365 0.99,21.89 1.77946707,22.52 C2.41,22.99 3.50612381,23.1 4.13399899,22.8429026 L21.714504,14.0454487 C22.6563168,13.5741566 23.1272231,12.6315722 22.9702544,11.6889879 C22.8132856,11.0605983 22.3423792,10.4322088 21.714504,10.118014 L4.13399899,1.16346272 C3.34915502,0.9 2.40734225,1.00636533 1.77946707,1.4776575 C0.994623095,2.10604706 0.8376543,3.0486314 1.15159189,3.99121575 L3.03521743,10.4322088 C3.03521743,10.5893061 3.34915502,10.7464035 3.50612381,10.7464035 L16.6915026,11.5318905 C16.6915026,11.5318905 17.1624089,11.5318905 17.1624089,12.0031827 C17.1624089,12.4744748 16.6915026,12.4744748 16.6915026,12.4744748 Z" fill="var(--chat-composer-button-color)"></path>
+									</svg>
+								</button>
+							</div>
+						</form>
+					</div>
+				</div>
+			</div>
+
+
+		</div>
+		<div id="listsv" class="tabcontent">
+			@{
+				if (Model.isOwner)
+				{
+						<div style="margin-bottom: -35px;">
+							<form asp-controller="ClassRooms" asp-action="ExportDSSV" asp-route-classID="@Model.ClassRoom.Id" method="post">
+								<button type="submit" class="btn btn-info">Xuất danh sách sinh viên</button>
+							</form>
+						</div>
+				}
+			}
+			<div id="listsv1">
+			</div>
+		</div>
+		<!-- Div bao quanh bảng điểm -->
+		@{
+			if (Model.isOwner)
+			{
+
+				if (Model.CustomRubric == false)
+				{
+						<div id="bangdiem" class="tabcontent">
+							@{
+							List<BaiTap> bt = ViewBag.ListBT as List<BaiTap>;
+							List<DiemViewModel> diems = ViewBag.ListDiem as List<DiemViewModel>;
+							}
+							<div class="container-bangdiem">
+								<table id="user">
+									<thead>
+										<tr class="first-column">
+											<th style="text-align: center;" rowspan="2">Họ và tên</th>
+											<th style="text-align: center;" rowspan="2">MSSV</th>
+											<th style="text-align: center;" colspan="@bt.Count">Bài Tập</th>
+											<th style="text-align: center;" rowspan="2">ÐTB</th>
+										</tr>
+										<tr>
+											@foreach (var item in bt)
+										{
+												<th style="text-align: center;">@item.Title</th>
+										}
+										</tr>
+									</thead>
+									<tbody>
+										@foreach (var item in diems)
+									{
+											<tr>
+												<td>@item.HoVaTen</td>
+												<td>@item.MSSV</td>
+
+												@if (bt.Count <= 0)
 											{
-												// X? lý khi deadline dã qua
-												// Ví d?: hi?n th? thông báo cho ngu?i dùng
-																<p>Deadline dã qua. Không thể nộp bài tập nữa.</p>
+													<td> </td>
 											}
 											else
 											{
-												// X? lý khi deadline chua qua
-												// Ví d?: cho phép ngu?i dùng n?p bài t?p
-														<p>Thiếu</p>
-														<input id="FileInput_@assignment.Id" type="file" name="FileNopbai" accept="@(assignment.FileFormat == "allfile" ? "*/*" : assignment.FileFormat)" onchange="checkFileSize(this, @assignment.MaxSize)">
-
-														<input type="hidden" name="ClassId" id="classIdInput" value="@Model.ClassRoom.Id">
-														<input type="hidden" name="BaitapId" id="baitapinput" value="@assignment.Id">
-														<input type="hidden" id="uploadedFilePath" name="UploadedFilePath">
-														<p id="uploadStatus_@assignment.Id"></p>
-														<button type="submit" id="uploadButton_@assignment.Id">Nộp bài</button>
-														<button type="button" onclick="previewFile('@assignment.Id')">Xem trước</button>
+													@foreach (var d in @item.listDiemBT)
+												{
+														<td style="text-align: center;">@d</td>
+												}
 											}
-										}
-										else
-										{
-											// X? lý khi không có deadline du?c d?t
-													<p>Thiếu</p>
-													<input id="FileInput_@assignment.Id" type="file" name="FileNopbai" accept="@(assignment.FileFormat == "allfile" ? "*/*" : assignment.FileFormat)" onchange="checkFileSize(this, @assignment.MaxSize)">
-
-													<input type="hidden" name="ClassId" id="classIdInput" value="@Model.ClassRoom.Id">
-													<input type="hidden" name="BaitapId" id="baitapinput" value="@assignment.Id">
-													<input type="hidden" id="uploadedFilePath" name="UploadedFilePath">
-													<p id="uploadStatus_@assignment.Id"></p>
-													<button type="submit" id="uploadButton_@assignment.Id">Nộp bài</button>
-													<button type="button" onclick="previewFile('@assignment.Id')">Xem trước</button>
-										}
+												<td>@item.DTB</td>
+											</tr>
 									}
-										}
-									</div>
-									<div id="previewContainer_@assignment.Id"></div>
-							}
-							else
-							{
-										<a asp-action="GetAllBTStu" asp-controller="ClassRooms" asp-route-classid="@Model.ClassRoom.Id" asp-route-baitapID="@assignment.Id" class="btn btn-info ">Xem bài tập đã nộp</a>
-							}
-						}
-					</div>
-				</form>
-			</div>
-		}
-	</div>
-</div>
-<div id="discussion" class="tabcontent">
-	<div class="discussion">
-		<div class="discussion-container">
-			<!-- Khung bên trái nhỏ hơn -->
-			<div class="left-panel">
-				<div class="search-box_discuss" style="margin-bottom: 20px;">
-					<!-- Biểu tượng tìm kiếm -->
-					<span class="search-icon_discuss">🔍</span>
-					<!-- Thanh tìm kiếm -->
-					<input type="search"
-						   class="search-input_discuss"
-						   placeholder="Tìm kiếm trên Messenger"
-						   aria-label="Tìm kiếm trên Messenger"
-						   dir="ltr"
-						   autocomplete="off"
-						   spellcheck="false">
-				</div>
-				<div class="account-info-container_discuss">
-					<div class="popup" id="popup" style="display: none;">
-						<div class="popup-content">					
-							<div class="popup-image">
-								<img id="student-image" src="" alt="Student Avatar" style="width: 100%; height: 100%; object-fit:cover" />
+									</tbody>
+								</table>
 							</div>
-							<div class="popup-details">
-								<h3 style="margin-top:-5px; font-weight:600;">Thông tin sinh viên</h3>
-								<p id="student-mssv"></p>
-								<p id="student-name"></p>
-								<p id="student-email"></p>
-							</div>	
-							<span class="popup-close" onclick="closePopup()">×</span>
 						</div>
-					</div>
-					<div id="listsv2"></div>
-					<div class="circle-text-container_discuss" id="student-template" style="display: none;">
-						<div class="circle_discuss ">
-							<img src="" alt="No Image" class="student-avatar" />
-						</div>
-						<h3 style="font-size: 18px; margin: 0; font-weight: 600;" class="student-info"></h3>
-						<span class="three-dots-icon_discuss">
-							<svg xmlns="http:www.w3.org/2000/svg" width="30" height="30" fill="currentColor" class="bi bi-three-dots-vertical" viewBox="0 0 16 16">
-								<path d="M9.5 13a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0m0-5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0m0-5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0" />
-							</svg>
-						</span>
-						<span class="star-icon_discuss">
-							<button type="button" class="send-notify-btn">★</button>
-						</span>
-					</div>
-							
-				</div>
-			</div>
-			<div class="right-panel">
-				<div id="messagesList" class="message-list">
-					<partial name="_MessagePartial" model="Model.Message" />
-				</div>
-				<form id="uploadForm" enctype="multipart/form-data" class="message-form">
-					<div class="input-hidden">
-						<input type="text" id="userInput" class="form-control"  />
-						<input type="text" id="classId" class="form-control" value="@Model.ClassRoom.Id" />
-					</div>
-					<div class="message-input-group">
-						<button type="button" onclick="startSpeechRecognition()" id="recordButton" class="record" title="Bắt đầu ghi âm">
-							<svg class="microphone-icon" height="25px" viewBox="0 0 24 24" width="25px">
-								<title>Nhấn để ghi âm</title>
-								<path d="M5 4a4 4 0 018 0v5.5a4 4 0 01-8 0V4z" fill="#ff397f"></path>
-								<path d="M3.5 20.5a1 1 0 011-1h2.75a.5.5 0 00.5-.5v-.66a.52.52 0 00-.43-.5A8.5 8.5 0 01.5 9.5V9a1 1 0 011-1H2a1 1 0 011 1v.5a6 6 0 0012 0V9a1 1 0 011-1h.5a1 1 0 011 1v.5a8.5 8.5 0 01-6.82 8.33.52.52 0 00-.43.51V19c0 .28.22.5.5.5h2.75a1 1 0 011 1v.5a1 1 0 01-1 1h-9a1 1 0 01-1-1v-.5z" fill="#ff397f"></path>
-							</svg>
-						</button>
-						<label class="file-label" for="FileInput" title="Chọn tệp">
-							<span class="image-icon_discuss">
-								<svg xmlns="http://www.w3.org/2000/svg" width="25px" height="25px" fill="#ff397f" class="bi bi-paperclip" viewBox="0 0 16 16">
-									<path d="M4.5 3a2.5 2.5 0 0 1 5 0v9a1.5 1.5 0 0 1-3 0V5a.5.5 0 0 1 1 0v7a.5.5 0 0 0 1 0V3a1.5 1.5 0 1 0-3 0v9a2.5 2.5 0 0 0 5 0V5a.5.5 0 0 1 1 0v7a3.5 3.5 0 1 1-7 0z" />
-								</svg>
-							</span>
-						</label>
-						<input type="file" id="FileInput" style="display: none;">
-						@*<span id="fileName" class="file-name">Không có tệp nào được chọn</span> *@
-						<input type="text" class="form-control" id="messageInput" placeholder="Nhập tin nhắn" />
-						<button type="button" id="sendButton" class="send-button_discuss" aria-label="Nhấn Enter để gửi">
-							<svg class="send-icon_discuss" height="25px" viewBox="0 0 24 24" width="25px">
-								<title>Nhấn Enter để gửi</title>
-								<path d="M16.6915026,12.4744748 L3.50612381,13.2599618 C3.19218622,13.2599618 3.03521743,13.4170592 3.03521743,13.5741566 L1.15159189,20.0151496 C0.8376543,20.8006365 0.99,21.89 1.77946707,22.52 C2.41,22.99 3.50612381,23.1 4.13399899,22.8429026 L21.714504,14.0454487 C22.6563168,13.5741566 23.1272231,12.6315722 22.9702544,11.6889879 C22.8132856,11.0605983 22.3423792,10.4322088 21.714504,10.118014 L4.13399899,1.16346272 C3.34915502,0.9 2.40734225,1.00636533 1.77946707,1.4776575 C0.994623095,2.10604706 0.8376543,3.0486314 1.15159189,3.99121575 L3.03521743,10.4322088 C3.03521743,10.5893061 3.34915502,10.7464035 3.50612381,10.7464035 L16.6915026,11.5318905 C16.6915026,11.5318905 17.1624089,11.5318905 17.1624089,12.0031827 C17.1624089,12.4744748 16.6915026,12.4744748 16.6915026,12.4744748 Z" fill="var(--chat-composer-button-color)"></path>
-							</svg>
-						</button>
-					</div>
-				</form>
-			</div>
-		</div>
-	</div>
-	
-	
-</div>
-<div id="listsv" class="tabcontent">
-	@{
-		if (Model.isOwner)
-		{
-					<div style="margin-bottom: -35px;">
-						<form asp-controller="ClassRooms" asp-action="ExportDSSV" asp-route-classID="@Model.ClassRoom.Id" method="post">
-							<button type="submit" class="btn btn-info">Xuất danh sách sinh viên</button>
-						</form>
-					</div>
-		}
-	}
-	<div id="listsv1">
-	</div>
-</div>
-<!-- Div bao quanh bảng điểm -->
-@{
-	if (Model.isOwner)
-	{
-		
-		if (Model.CustomRubric == false)
-		{
-			<div id="bangdiem" class="tabcontent">
-				@{
-					List<BaiTap> bt = ViewBag.ListBT as List<BaiTap>;
-					List<DiemViewModel> diems = ViewBag.ListDiem as List<DiemViewModel>;
 				}
-				<div class="container-bangdiem">
-					<table id="user">
-						<thead>
-							<tr class="first-column">
-								<th style="text-align: center;" rowspan="2">Họ và tên</th>
-								<th style="text-align: center;" rowspan="2">MSSV</th>
-								<th style="text-align: center;" colspan="@bt.Count">Bài Tập</th>
-								<th style="text-align: center;" rowspan="2">ÐTB</th>
-							</tr>
-							<tr>
-								@foreach (var item in bt)
-						{
-									<th style="text-align: center;">@item.Title</th>
-						}
-							</tr>
-						</thead>
-						<tbody>
-							@foreach (var item in diems)
-					{
-								<tr>
-									<td>@item.HoVaTen</td>
-									<td>@item.MSSV</td>
-
-									@if (bt.Count <= 0)
-							{
-										<td> </td>
-							}
-							else
-							{
-										@foreach (var d in @item.listDiemBT)
-								{
-											<td style="text-align: center;">@d</td>
-								}
-							}
-									<td>@item.DTB</td>
-								</tr>
-					}
-						</tbody>
-					</table>
-				</div>
-			</div>
-		}
-		else
-		{
-			<div id="bangdiemCustom" class="tabcontent">
-				<iframe style="border: none;" src="@Url.Action("Details", "Rubrics", new { id = Model.Rubric.Id, classRoomId = Model.ClassRoom.Id, isowner = Model.isOwner})" width="100%" height="600px"></iframe>
-			</div>
-		}
-	} else
-	{
-		if (Model.ClassRoom.ShowRubric == 1){
-		
-			if (Model.CustomRubric == false)
-			{
-				<div id="bangdiem" class="tabcontent">
-					@{
-						List<BaiTap> bt = ViewBag.ListBT as List<BaiTap>;
-						List<DiemViewModel> diems = ViewBag.ListDiem as List<DiemViewModel>;
-					}
-					<div class="container-bangdiem">
-						<table id="user">
-							<thead>
-								<tr class="first-column">
-									<th style="text-align: center;" rowspan="2">Họ và tên</th>
-									<th style="text-align: center;" rowspan="2">MSSV</th>
-									<th style="text-align: center;" colspan="@bt.Count">Bài Tập</th>
-									<th style="text-align: center;" rowspan="2">ÐTB</th>
-								</tr>
-								<tr>
-									@foreach (var item in bt)
-									{
-										<th style="text-align: center;">@item.Title</th>
-									}
-								</tr>
-							</thead>
-							<tbody>
-								@foreach (var item in diems)
-								{
-									<tr>
-										<td>@item.HoVaTen</td>
-										<td>@item.MSSV</td>
-
-										@if (bt.Count <= 0)
-										{
-											<td> </td>
-										}
-										else
-										{
-											@foreach (var d in @item.listDiemBT)
-											{
-												<td style="text-align: center;">@d</td>
-											}
-										}
-										<td>@item.DTB</td>
-									</tr>
-								}
-							</tbody>
-						</table>
-					</div>
-				</div>
+				else
+				{
+						<div id="bangdiemCustom" class="tabcontent">
+							<iframe style="border: none;" src="@Url.Action("Details", "Rubrics", new { id = Model.Rubric.Id, classRoomId = Model.ClassRoom.Id, isowner = Model.isOwner})" width="100%" height="600px"></iframe>
+						</div>
+				}
 			}
 			else
 			{
-				<div id="bangdiemCustom" class="tabcontent">
-					<iframe style="border: none;" src="@Url.Action("Details", "Rubrics", new { id = Model.Rubric.Id, classRoomId = Model.ClassRoom.Id, isowner = Model.isOwner})" width="100%" height="600px"></iframe>
-				</div>
-			}
-		} else
-		{
-			<div class="text-center" style="margin-top: 150px"><p class="text-center">Bạn không có quyền xem bảng điểm !!!</p></div>
-		}
-	}
-}
+				if (Model.ClassRoom.ShowRubric == 1)
+				{
 
-<div id="padlet" class="tabcontent">
-	<div class="padlet-embed" style="border:1px solid rgba(0,0,0,0.1);border-radius:2px;box-sizing:border-box;overflow:hidden;position:relative;width:100%;background:#F4F4F4"><p style="padding:0;margin:0"><iframe src="https://padlet.com/embed/lup9um2r33899yju" frameborder="0" allow="camera;microphone;geolocation" style="width:100%;height:608px;display:block;padding:0;margin:0"></iframe></p><div style="display:flex;align-items:center;justify-content:end;margin:0;height:28px"><a href="https://padlet.com?ref=embed" style="display:block;flex-grow:0;margin:0;border:none;padding:0;text-decoration:none" target="_blank"><div style="display:flex;align-items:center;"><img src="https://padlet.net/embeds/made_with_padlet_2022.png" width="114" height="28" style="padding:0;margin:0;background:0 0;border:none;box-shadow:none" alt="Made with Padlet"></div></a></div></div>
-</div>
-<div id="letter" class="tabcontent">
-	<button type="button" class="btn btn-primary" onclick="toggleLeaveRequestForm()">Tạo đơn xin nghỉ phép</button>
-	<div id="leaveRequestFormContainer" style="display:none; margin-top: 20px;">
-		<form id="leaveRequestForm">
-			<input type="hidden" name="Id" value="0" />
+					if (Model.CustomRubric == false)
+					{
+							<div id="bangdiem" class="tabcontent">
+								@{
+								List<BaiTap> bt = ViewBag.ListBT as List<BaiTap>;
+								List<DiemViewModel> diems = ViewBag.ListDiem as List<DiemViewModel>;
+								}
+								<div class="container-bangdiem">
+									<table id="user">
+										<thead>
+											<tr class="first-column">
+												<th style="text-align: center;" rowspan="2">Họ và tên</th>
+												<th style="text-align: center;" rowspan="2">MSSV</th>
+												<th style="text-align: center;" colspan="@bt.Count">Bài Tập</th>
+												<th style="text-align: center;" rowspan="2">ÐTB</th>
+											</tr>
+											<tr>
+												@foreach (var item in bt)
+											{
+													<th style="text-align: center;">@item.Title</th>
+											}
+											</tr>
+										</thead>
+										<tbody>
+											@foreach (var item in diems)
+										{
+												<tr>
+													<td>@item.HoVaTen</td>
+													<td>@item.MSSV</td>
 
-			<div class="form-group" hidden>
-				<label for="ClassId">Class ID:</label>
-				<input type="text" class="form-control" id="ClassId" name="ClassId" value="@Model.ClassRoom.Id" readonly hidden/>
-			</div>
-
-			<div class="form-group">
-				<label for="StudenName">Họ và tên:</label>
-				<input type="text" class="form-control" id="StudenName" name="Name" value="@user.Name" readonly/>
-				<input type="hidden" class="form-control" id="UserID" name="UserID" value="@user.Id" hidden/>
-			</div>
-
-			<div class="form-group">
-				<label for="StartDate">Ngày bắt đầu:</label>
-				<input type="date" class="form-control" id="StartDate" name="StartDate" />
-			</div>
-
-			<div class="form-group">
-				<label for="EndDate">Ngày kết thúc:</label>
-				<input type="date" class="form-control" id="EndDate" name="EndDate" />
-			</div>
-
-			<div class="form-group">
-				<label for="Reason">Lý do:</label>
-				<textarea class="form-control" id="Reason" name="Reason" rows="4"></textarea>
-			</div>
-
-			<button type="submit" class="btn btn-primary" onclick="submitLeaveRequest(event)">Gửi yêu cầu</button>
-		</form>
-	</div>
-
-	<div class="container ctnleaveForm">
-		<div id="leaveRequestsList" class="row">
-			<!-- Cards will be dynamically added here -->
-		</div>
-	</div>
-
-</div>
-<div id="setting" class="tabcontent">
-	<form asp-action="Edit" asp-controller="ClassRooms" method="post" id="editClassRoomForm">
-		<input type="hidden" asp-for="@Model.ClassRoom.Id" name="Id"/>
-
-		<div class="form-group">
-			<label asp-for="@Model.ClassRoom.Name">Tên lớp học</label>
-			<input class="form-control" asp-for="@Model.ClassRoom.Name" name="Name" />
-			<span asp-validation-for="@Model.ClassRoom.Name" class="text-danger"></span>
-		</div>
-
-		<div class="form-group">
-			<label asp-for="@Model.ClassRoom.Description">Mô tả</label>
-			<textarea class="form-control" asp-for="@Model.ClassRoom.Description" name="Description"></textarea>
-			<span asp-validation-for="@Model.ClassRoom.Description" class="text-danger"></span>
-		</div>
-
-		<div class="form-group">
-			<label asp-for="@Model.ClassRoom.StartDate">Ngày bắt đầu khoá học</label>
-			<input class="form-control" asp-for="@Model.ClassRoom.StartDate" name="StartDate" type="date" />
-			<span asp-validation-for="@Model.ClassRoom.StartDate" class="text-danger"></span>
-		</div>
-
-		<div class="form-group">
-			<label asp-for="@Model.ClassRoom.EndDate">Ngày kết thúc khoá học</label>
-			<input class="form-control" asp-for="@Model.ClassRoom.EndDate" name="EndDate" type="date" />
-			<span asp-validation-for="@Model.ClassRoom.EndDate" class="text-danger"></span>
-		</div>
-
-		<div class="form-group">
-			<label>Ngày học</label><br />
-			@foreach (var day in Enum.GetValues(typeof(DayOfWeek)).Cast<DayOfWeek>())
-			{
-				<div class="form-check form-check-inline">
-					<input class="form-check-input" type="checkbox"
-						   name="DaysOfWeek"
-						   value="@day"
-					@(Model.ClassRoom.DaysOfWeek.Contains(day.ToString()) ? "checked" : "") />
-					<label class="form-check-label">@day</label>
-				</div>
-			}
-			<span asp-validation-for="@Model.ClassRoom.DaysOfWeek" class="text-danger"></span>
-		</div>
-
-		<div class="form-group">
-			<label asp-for="@Model.ClassRoom.StartTime">Giờ bắt đầu</label>
-			<input class="form-control" asp-for="@Model.ClassRoom.StartTime" name="StartTime" type="time" />
-			<span asp-validation-for="@Model.ClassRoom.StartTime"  class="text-danger"></span>
-		</div>
-
-		<div class="form-group">
-			<label asp-for="@Model.ClassRoom.EndTime">Giờ kết thúc</label>
-			<input class="form-control" asp-for="@Model.ClassRoom.EndTime" name="EndTime" type="time" />
-			<span asp-validation-for="@Model.ClassRoom.EndTime" class="text-danger"></span>
-		</div>
-		<div class="form-group">
-			<label for="publicRubric">Chế độ hiển thị bảng điểm</label><br />
-
-			<input type="radio" id="showPublic" name="ShowRubric" value="0"
-			@if (Model.ClassRoom.ShowRubric == 0)
-			{
-				<text>checked</text>
-			} />
-			<label for="showPublic">Riêng tư</label><br />
-
-			<input type="radio" id="showPrivate" name="ShowRubric" value="1"
-			@if (Model.ClassRoom.ShowRubric == 1)
-			{
-				<text>checked</text>
-			} />
-			<label for="showPrivate">Công khai</label><br />
-		</div>
-
-		<button type="submit" class="btn btn-primary" id="saveButton_setting">Save</button>
-	</form>
-</div>
-<div id="mainload" class="tabcontent">
-	<div class="text-center">
-		<h1 class="display-4" style="font-family: 'Poppins', sans-serif">Let's Study With Us</h1>
-		<p id="currentDateTime" style="font-family: 'Poppins', sans-serif"></p>
-	</div>
-	@{
-	    if (Model.isOwner)
-	    {
-					<div class="create-content"
-					 	style="border: 1px solid rgb(145, 137, 137);
-						border-radius: 8px;
-						padding: 10px;
-						height: 100%;
-						margin: 20px;
-						display: flex;
-						align-items: center;">
-
-						<!-- Icon hình tròn với SVG bên trong -->
-						<div class="circle-icon" style="background-color: rgb(66, 133, 244); border-radius: 50%; width: 40px; height: 40px; display: flex; align-items: center; justify-content: center; margin-right: 10px; margin-left: 20px;">
-							<svg focusable="false" width="24" height="24" viewBox="0 0 24 24" class="NMm5M hhikbc" style="fill: white;">
-								<path d="M7 15h7v2H7zm0-4h10v2H7zm0-4h10v2H7z"></path>
-								<path d="M19 3h-4.18C14.4 1.84 13.3 1 12 1c-1.3 0-2.4.84-2.82 2H5c-.14 0-.27.01-.4.04a2.008 2.008 0 0 0-1.44 1.19c-.1.23-.16.49-.16.77v14c0 .27.06.54.16.78s.25.45.43.64c.27.27.62.47 1.01.55.13.02.26.03.4.03h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-7-.25c.41 0 .75.34.75.75s-.34.75-.75.75-.75-.34-.75-.75.34-.75.75-.75zM19 19H5V5h14v14z"></path>
-							</svg>
-						</div>
-
-						<!-- Văn bản thông báo với sự kiện onclick -->
-						<h3 class="notify-text" style="cursor: pointer; margin-left: 20px;" onclick="expandContent()">Thông báo nội dung nào đó cho lớp học của bạn</h3>
-
-						<!-- Phần form ẩn -->
-						<form id="uploadpost" action="/ClassRooms/CreatePost" method="POST" style="width: 100%; display: none;">
-							<div id="expandable-form" style="display: none; width: 100%;">
-								<input type="text" name="Title" id="titleInput" class="form-control" placeholder="Nhập tiêu đề" style="margin-bottom: 10px; width: 100%; border-radius: 5px; padding: 10px;" />
-								<textarea name="Content" id="inputText" rows="4" class="input-textarea" oninput="checkInput()" style="width: 100%; border-radius: 5px; margin-top: 10px; padding: 10px;" placeholder="Nhập nội dung..."></textarea>
-								<div style="display: flex; justify-content: flex-end; margin-top: 10px;">
-									<button type="button" onclick="cancelInput()" style="margin-right: 10px; padding: 5px 10px;">Hủy</button>
-									<button id="submitButton" class="disabled-button" onclick="submitInput()" style="padding: 5px 10px;" disabled>Đăng</button>
+													@if (bt.Count <= 0)
+												{
+														<td> </td>
+												}
+												else
+												{
+														@foreach (var d in @item.listDiemBT)
+													{
+															<td style="text-align: center;">@d</td>
+													}
+												}
+													<td>@item.DTB</td>
+												</tr>
+										}
+										</tbody>
+									</table>
 								</div>
 							</div>
-							<input type="hidden" name="ClassId" id="classIdInput" value="@Model.ClassRoom.Id" />
-							<input type="hidden" name="UserId" id="UserIdInput" value="@Model.ClassRoom.UserId" />
-						</form>
-						@{
-					if (Model.isOwner)
+					}
+					else
 					{
+							<div id="bangdiemCustom" class="tabcontent">
+								<iframe style="border: none;" src="@Url.Action("Details", "Rubrics", new { id = Model.Rubric.Id, classRoomId = Model.ClassRoom.Id, isowner = Model.isOwner})" width="100%" height="600px"></iframe>
+							</div>
+					}
+				}
+				else
+				{
+					
+					if (Model.CustomRubric == false)
+					{
+							<div id="bangdiem" class="tabcontent">
+								<div class="text-center" style="margin-top: 150px"><p class="text-center">Bạn không có quyền xem bảng điểm !!!</p></div>
+							</div>
+					}
+					else
+					{
+							<div id="bangdiemCustom" class="tabcontent">
+								<div class="text-center" style="margin-top: 150px"><p class="text-center">Bạn không có quyền xem bảng điểm !!!</p></div>
+							</div>
+					}
+				
+				}
+			}
+		}
+
+		@*<div id="padlet" class="tabcontent">
+			<div class="padlet-embed" style="border:1px solid rgba(0,0,0,0.1);border-radius:2px;box-sizing:border-box;overflow:hidden;position:relative;width:100%;background:#F4F4F4"><p style="padding:0;margin:0"><iframe src="https://padlet.com/embed/lup9um2r33899yju" frameborder="0" allow="camera;microphone;geolocation" style="width:100%;height:608px;display:block;padding:0;margin:0"></iframe></p><div style="display:flex;align-items:center;justify-content:end;margin:0;height:28px"><a href="https://padlet.com?ref=embed" style="display:block;flex-grow:0;margin:0;border:none;padding:0;text-decoration:none" target="_blank"><div style="display:flex;align-items:center;"><img src="https://padlet.net/embeds/made_with_padlet_2022.png" width="114" height="28" style="padding:0;margin:0;background:0 0;border:none;box-shadow:none" alt="Made with Padlet"></div></a></div></div>
+		</div>*@
+
+		<div id="letter" class="tabcontent">
+			<button type="button" class="btn btn-primary" onclick="toggleLeaveRequestForm()">Tạo đơn xin nghỉ phép</button>
+			<div id="leaveRequestFormContainer" style="display:none; margin-top: 20px;">
+				<form id="leaveRequestForm">
+					<input type="hidden" name="Id" value="0" />
+
+					<div class="form-group" hidden>
+						<label for="ClassId">Class ID:</label>
+						<input type="text" class="form-control" id="ClassId" name="ClassId" value="@Model.ClassRoom.Id" readonly hidden />
+					</div>
+
+					<div class="form-group">
+						<label for="StudenName">Họ và tên:</label>
+						<input type="text" class="form-control" id="StudenName" name="Name" value="@user.Name" readonly />
+						<input type="hidden" class="form-control" id="UserID" name="UserID" value="@user.Id" hidden />
+					</div>
+
+					<div class="form-group">
+						<label for="StartDate">Ngày bắt đầu:</label>
+						<input type="date" class="form-control" id="StartDate" name="StartDate" />
+					</div>
+
+					<div class="form-group">
+						<label for="EndDate">Ngày kết thúc:</label>
+						<input type="date" class="form-control" id="EndDate" name="EndDate" />
+					</div>
+
+					<div class="form-group">
+						<label for="Reason">Lý do:</label>
+						<textarea class="form-control" id="Reason" name="Reason" rows="4"></textarea>
+					</div>
+
+					<button type="submit" class="btn btn-primary" onclick="submitLeaveRequest(event)">Gửi yêu cầu</button>
+				</form>
+			</div>
+
+			<div class="ctnleaveForm">
+				<div id="leaveRequestsList" class="row">
+					<!-- Cards will be dynamically added here -->
+				</div>
+			</div>
+
+		</div>
+		<div id="setting" class="tabcontent">
+			<form asp-action="Edit" asp-controller="ClassRooms" method="post" id="editClassRoomForm">
+				<input type="hidden" asp-for="@Model.ClassRoom.Id" name="Id" />
+
+				<div class="form-group">
+					<label asp-for="@Model.ClassRoom.Name">Tên lớp học</label>
+					<input class="form-control" asp-for="@Model.ClassRoom.Name" name="Name" />
+					<span asp-validation-for="@Model.ClassRoom.Name" class="text-danger"></span>
+				</div>
+
+				<div class="form-group">
+					<label asp-for="@Model.ClassRoom.Description">Mô tả</label>
+					<textarea class="form-control" asp-for="@Model.ClassRoom.Description" name="Description"></textarea>
+					<span asp-validation-for="@Model.ClassRoom.Description" class="text-danger"></span>
+				</div>
+
+				<div class="form-group">
+					<label asp-for="@Model.ClassRoom.StartDate">Ngày bắt đầu khoá học</label>
+					<input class="form-control" asp-for="@Model.ClassRoom.StartDate" name="StartDate" type="date" />
+					<span asp-validation-for="@Model.ClassRoom.StartDate" class="text-danger"></span>
+				</div>
+
+				<div class="form-group">
+					<label asp-for="@Model.ClassRoom.EndDate">Ngày kết thúc khoá học</label>
+					<input class="form-control" asp-for="@Model.ClassRoom.EndDate" name="EndDate" type="date" />
+					<span asp-validation-for="@Model.ClassRoom.EndDate" class="text-danger"></span>
+				</div>
+
+				<div class="form-group">
+					<label>Ngày học</label><br />
+					@foreach (var day in Enum.GetValues(typeof(DayOfWeek)).Cast<DayOfWeek>())
+					{
+						<div class="form-check form-check-inline">
+							<input class="form-check-input" type="checkbox"
+								   name="DaysOfWeek"
+								   value="@day"
+							@(Model.ClassRoom.DaysOfWeek.Contains(day.ToString()) ? "checked" : "") />
+							<label class="form-check-label">@day</label>
+						</div>
+					}
+					<span asp-validation-for="@Model.ClassRoom.DaysOfWeek" class="text-danger"></span>
+				</div>
+
+				<div class="form-group">
+					<label asp-for="@Model.ClassRoom.StartTime">Giờ bắt đầu</label>
+					<input class="form-control" asp-for="@Model.ClassRoom.StartTime" name="StartTime" type="time" />
+					<span asp-validation-for="@Model.ClassRoom.StartTime" class="text-danger"></span>
+				</div>
+
+				<div class="form-group">
+					<label asp-for="@Model.ClassRoom.EndTime">Giờ kết thúc</label>
+					<input class="form-control" asp-for="@Model.ClassRoom.EndTime" name="EndTime" type="time" />
+					<span asp-validation-for="@Model.ClassRoom.EndTime" class="text-danger"></span>
+				</div>
+				<div class="form-group">
+					<label for="publicRubric">Chế độ hiển thị bảng điểm</label><br />
+
+					<input type="radio" id="showPublic" name="ShowRubric" value="0"
+					@if (Model.ClassRoom.ShowRubric == 0)
+					{
+						<text>checked</text>
+					} />
+					<label for="showPublic">Riêng tư</label><br />
+
+					<input type="radio" id="showPrivate" name="ShowRubric" value="1"
+					@if (Model.ClassRoom.ShowRubric == 1)
+					{
+						<text>checked</text>
+					} />
+					<label for="showPrivate">Công khai</label><br />
+				</div>
+
+				<button type="submit" class="btn btn-primary" id="saveButton_setting">Save</button>
+			</form>
+		</div>
+		<div id="mainload" class="tabcontent">
+			<div class="text-center">
+				<h1 class="display-4" style="font-family: 'Poppins', sans-serif">Let's Study With Us</h1>
+				<p id="currentDateTime" style="font-family: 'Poppins', sans-serif"></p>
+			</div>
+			@{
+				if (Model.isOwner)
+				{
+						<div class="create-content"
+						 	style="border: 1px solid rgb(145, 137, 137);
+								border-radius: 8px;
+								padding: 10px;
+								height: 100%;
+								margin: 20px;
+								display: flex;
+								align-items: center;">
+
+							<!-- Icon hình tròn với SVG bên trong -->
+							<div class="circle-icon" style="background-color: rgb(66, 133, 244); border-radius: 50%; width: 40px; height: 40px; display: flex; align-items: center; justify-content: center; margin-right: 10px; margin-left: 20px;">
+								<svg focusable="false" width="24" height="24" viewBox="0 0 24 24" class="NMm5M hhikbc" style="fill: white;">
+									<path d="M7 15h7v2H7zm0-4h10v2H7zm0-4h10v2H7z"></path>
+									<path d="M19 3h-4.18C14.4 1.84 13.3 1 12 1c-1.3 0-2.4.84-2.82 2H5c-.14 0-.27.01-.4.04a2.008 2.008 0 0 0-1.44 1.19c-.1.23-.16.49-.16.77v14c0 .27.06.54.16.78s.25.45.43.64c.27.27.62.47 1.01.55.13.02.26.03.4.03h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-7-.25c.41 0 .75.34.75.75s-.34.75-.75.75-.75-.34-.75-.75.34-.75.75-.75zM19 19H5V5h14v14z"></path>
+								</svg>
+							</div>
+
+							<!-- Văn bản thông báo với sự kiện onclick -->
+							<h3 class="notify-text" style="cursor: pointer; margin-left: 20px;" onclick="expandContent()">Thông báo nội dung nào đó cho lớp học của bạn</h3>
+							@{
+							if (Model.isOwner)
+							{
 										<div style="background-color: none; color: white; border-radius: 50%; width: 40px; height: 40px; display: flex; align-items: center; justify-content: center; margin-left: auto;">
 											<button onclick="toggleClassSelection()" class="icon">
 												<svg focusable="false" width="24" height="24" viewBox="0 0 24 24" class=" NMm5M">
@@ -1800,76 +1823,88 @@
 												</svg>
 											</button>
 										</div>
-
-					}
-						}
-					</div>
-					<div id="postContainer" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0, 0, 0, 0.7); z-index: 1000;">
-						<div style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); background-color: #fff; color: black; border-radius: 8px; padding: 20px; width: 500px; height: 300px; overflow: auto;">
-							<button onclick="closePostContainer()" style="float: right;margin_bottom:10%;margin-left:20px ;background-color: red; color: white; border: none; cursor: pointer; border-radius: 4px;">
-								<i class="fas fa-times" style="font-size: 20px;"></i> <!-- Biểu tượng dấu X -->
-							</button>
-							<div class="mainList" style="margin-top:40px;">
-								@foreach (var post in ViewBag.UserPosts)
-						{
-									<div style="margin-bottom: 10px; display: flex; justify-content: space-between; align-items: center;">
-										<span style="text-align: left;">@post.Title</span>
-										<button type="button" style="color: black;" onclick="showPostContent('@post.Id')">Sử dụng lại</button>
+							}
+							}
+							<!-- Phần form ẩn -->
+							<form id="uploadpost" action="/ClassRooms/CreatePost" method="POST" style="width: 100%; display: none;">
+								<div id="expandable-form" style="display: none; width: 100%;">
+									<input type="text" name="Title" id="titleInput" class="form-control" placeholder="Nhập tiêu đề" style="margin-bottom: 10px; width: 100%; border-radius: 5px; padding: 10px;" />
+									<textarea name="Content" id="inputText" rows="4" class="input-textarea" oninput="checkInput()" style="width: 100%; border-radius: 5px; margin-top: 10px; padding: 10px;" placeholder="Nhập nội dung..."></textarea>
+									<div style="display: flex; justify-content: flex-end; margin-top: 10px;">
+										<button type="button" onclick="cancelInput()" style="margin-right: 10px; padding: 5px 10px;">Hủy</button>
+										<button id="submitButton" class="disabled-button" onclick="submitInput()" style="padding: 5px 10px;" disabled>Đăng</button>
 									</div>
-						}
-							</div>
-
-							@foreach (var post in ViewBag.UserPosts)
-					{
-								<div id="postList-@post.Id" class="postList" style="display: none; margin-top: 40px;">
-									<form method="post" asp-action="ReusePost" asp-controller="ClassRooms" style="display: inline;">
-										<input type="hidden" name="postId" value="@post.Id" />
-										<input type="hidden" name="ClassId" id="classIdInput" value="@Model.ClassRoom.Id" />
-										<input type="hidden" name="UserId" id="UserIdInput" value="@Model.ClassRoom.UserId" />
-										<!-- Cho phép chỉnh sửa tiêu đề và nội dung -->
-										<input type="text" name="Title" class="form-control" value="@post.Title" />
-										<textarea name="Content" class="input-textarea" style="width: 100%; border-radius: 5px; margin-top: 10px; padding: 10px;">@post.Content</textarea>
-										<button type="submit" style="color: black;">Đăng</button>
-										<button type="button" onclick="cancelReuse('@post.Id')" style="color: black; margin-left: 10px;">Hủy</button>
-									</form>
 								</div>
-					}
+								<input type="hidden" name="ClassId" id="classIdInput" value="@Model.ClassRoom.Id" />
+								<input type="hidden" name="UserId" id="UserIdInput" value="@Model.ClassRoom.UserId" />
+							</form>
 						</div>
-					</div>				
-		}
-	}	
-	
-	@{
-		// Tạo một danh sách kết hợp các đối tượng vô danh
-		var combinedList = Model.Post.Select(p => new
-		{
-			Type = "Post",
-			Id = p.Id,
-			Title = p.Title,
-			Content = p.Content,
-			CreatedAt = p.CreateTime,
-			OwnerName = Model.Owner.Name,
-			ClassRoomId = p.ClassRoomId
-		})
-		.Union(Model.Homework.Select(h => new
-		{
-			Type = "Homework",
-			Id = h.Id,
-			Title = h.Title,
-			Content = (string)null, // Bài tập có thể không có nội dung
-			CreatedAt = h.CreatedAt,
-			OwnerName = Model.Owner.Name,
-			ClassRoomId = h.ClassRoomId
-		}))
-		.OrderByDescending(item => item.CreatedAt) // Sắp xếp theo thời gian tạo
-		.ToList();
-	}
+						<div id="postContainer" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0, 0, 0, 0.7); z-index: 1000;">
+							<div style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); background-color: #fff; color: black; border-radius: 8px; padding: 20px; width: 500px; height: 300px; overflow: auto;">
+								<button onclick="closePostContainer()" style="float: right;margin_bottom:10%;margin-left:20px ;background-color: red; color: white; border: none; cursor: pointer; border-radius: 4px;">
+									<i class="fas fa-times" style="font-size: 20px;"></i> <!-- Biểu tượng dấu X -->
+								</button>
+								<div class="mainList" style="margin-top:40px;">
+									@foreach (var post in ViewBag.UserPosts)
+								{
+										<div style="margin-bottom: 10px; display: flex; justify-content: space-between; align-items: center;">
+											<span style="text-align: left;">@post.Title</span>
+											<button type="button" style="color: black;" onclick="showPostContent('@post.Id')">Sử dụng lại</button>
+										</div>
+								}
+								</div>
+
+								@foreach (var post in ViewBag.UserPosts)
+							{
+									<div id="postList-@post.Id" class="postList" style="display: none; margin-top: 40px;">
+										<form method="post" asp-action="ReusePost" asp-controller="ClassRooms" style="display: inline;">
+											<input type="hidden" name="postId" value="@post.Id" />
+											<input type="hidden" name="ClassId" id="classIdInput" value="@Model.ClassRoom.Id" />
+											<input type="hidden" name="UserId" id="UserIdInput" value="@Model.ClassRoom.UserId" />
+											<!-- Cho phép chỉnh sửa tiêu đề và nội dung -->
+											<input type="text" name="Title" class="form-control" value="@post.Title" />
+											<textarea name="Content" class="input-textarea" style="width: 100%; border-radius: 5px; margin-top: 10px; padding: 10px;">@post.Content</textarea>
+											<button type="submit" style="color: black;">Đăng</button>
+											<button type="button" onclick="cancelReuse('@post.Id')" style="color: black; margin-left: 10px;">Hủy</button>
+										</form>
+									</div>
+							}
+							</div>
+						</div>
+				}
+			}
+
+			@{
+				// Tạo một danh sách kết hợp các đối tượng vô danh
+				var combinedList = Model.Post.Select(p => new
+				{
+					Type = "Post",
+					Id = p.Id,
+					Title = p.Title,
+					Content = p.Content,
+					CreatedAt = p.CreateTime,
+					OwnerName = Model.Owner.Name,
+					ClassRoomId = p.ClassRoomId
+				})
+				.Union(Model.Homework.Select(h => new
+				{
+					Type = "Homework",
+					Id = h.Id,
+					Title = h.Title,
+					Content = (string)null, // Bài tập có thể không có nội dung
+					CreatedAt = h.CreatedAt,
+					OwnerName = Model.Owner.Name,
+					ClassRoomId = h.ClassRoomId
+				}))
+				.OrderByDescending(item => item.CreatedAt) // Sắp xếp theo thời gian tạo
+				.ToList();
+			}
 
 
-	@foreach (var item in combinedList)
-	{
-		<div class="create-content"
-			 style="border: 1px solid rgb(145, 137, 137);
+			@foreach (var item in combinedList)
+			{
+				<div class="create-content"
+					 style="border: 1px solid rgb(145, 137, 137);
 				border-radius: 8px;
 				padding: 10px;
 				height: 100%;
@@ -1878,85 +1913,83 @@
 				align-items: center;
 				position: relative;">
 
-			<div id="circle-icon-@item.Id" style="background-color: rgb(66, 133, 244); border-radius: 50%; width: 40px; height: 40px; display: flex; align-items: center; justify-content: center; margin-right: 10px; margin-left: 20px;">
-				<svg focusable="false" width="24" height="24" viewBox="0 0 24 24" class="NMm5M hhikbc" style="fill: white;">
-					<path d="M7 15h7v2H7zm0-4h10v2H7zm0-4h10v2H7z"></path>
-					<path d="M19 3h-4.18C14.4 1.84 13.3 1 12 1c-1.3 0-2.4.84-2.82 2H5c-.14 0-.27.01-.4.04a2.008 2.008 0 0 0-1.44 1.19c-.1.23-.16.49-.16.77v14c0 .27.06.54.16.78s.25.45.43.64c.27.27.62.47 1.01.55.13.02.26.03.4.03h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-7-.25c.41 0 .75.34.75.75s-.34.75-.75.75-.75-.34-.75-.75.34-.75.75-.75zM19 19H5V5h14v14z"></path>
-				</svg>
-			</div>
+					<div id="circle-icon-@item.Id" style="background-color: rgb(66, 133, 244); border-radius: 50%; width: 40px; height: 40px; display: flex; align-items: center; justify-content: center; margin-right: 10px; margin-left: 20px;">
+						<svg focusable="false" width="24" height="24" viewBox="0 0 24 24" class="NMm5M hhikbc" style="fill: white;">
+							<path d="M7 15h7v2H7zm0-4h10v2H7zm0-4h10v2H7z"></path>
+							<path d="M19 3h-4.18C14.4 1.84 13.3 1 12 1c-1.3 0-2.4.84-2.82 2H5c-.14 0-.27.01-.4.04a2.008 2.008 0 0 0-1.44 1.19c-.1.23-.16.49-.16.77v14c0 .27.06.54.16.78s.25.45.43.64c.27.27.62.47 1.01.55.13.02.26.03.4.03h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-7-.25c.41 0 .75.34.75.75s-.34.75-.75.75-.75-.34-.75-.75.34-.75.75-.75zM19 19H5V5h14v14z"></path>
+						</svg>
+					</div>
 
-			<div id="post-info-@item.Id" style="display: flex; flex-direction: column; margin-left: 10px; margin-top: -3.5px;">
+					<div id="post-info-@item.Id" style="display: flex; flex-direction: column; margin-left: 10px; margin-top: -3.5px;">
 
-				@if (item.Type == "Post")
-				{
-					<h3 style="font-size: 16px; margin-bottom: 0px;">đã đăng một thông báo mới: @item.Title</h3>
-				}
-				else
-				{
-					<h3 style="font-size: 16px; margin-bottom: 0px;">@item.OwnerName đã đăng một bài tập mới: @item.Title</h3>
-				}
-
-				@if (item.Type == "Post")
-				{
-					string content = item.Content;
-					string pattern = @"(https?://[a-zA-Z0-9.-]+(?:/[^\s]*)?)"; // Regex nhận diện URL đầy đủ với đường dẫn
-					var parts = System.Text.RegularExpressions.Regex.Split(content, pattern); // Tách nội dung
-					<p style="font-size: 16px; margin-bottom: 0px;">
-						@foreach (var part in parts)
+						@if (item.Type == "Post")
 						{
-							if (System.Text.RegularExpressions.Regex.IsMatch(part, pattern)) // Nếu là link hợp lệ
-							{
-								<a href="@part" target="_blank" style="color: #007bff; text-decoration: none;">@part</a>
-							}
-							else // Nếu không phải là link
-							{
-								@part
-							}
+							<h3 style="font-size: 16px; margin-bottom: 0px;">đã đăng một thông báo mới: @item.Title</h3>
 						}
-					</p>
-				}
-				<p class="post-created-at" style="font-size: 14px; color: gray; margin-top: 0px;">@item.CreatedAt.ToString("dd/MM/yyyy - HH:mm:ss")</p>
-			</div>
+						else
+						{
+							<h3 style="font-size: 16px; margin-bottom: 0px;">@item.OwnerName đã đăng một bài tập mới: @item.Title</h3>
+						}
 
-			@{
-				if (Model.isOwner && item.Type == "Post")
-				{
-							<div id="post-options-@item.Id" style="margin-left: auto; cursor: pointer; display: flex; align-items: center; height: 100%;">
-								<button id="post-options-@item.Id" class="icon">
-									<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-										<circle cx="12" cy="5" r="2" fill="gray"></circle>
-										<circle cx="12" cy="12" r="2" fill="gray"></circle>
-										<circle cx="12" cy="19" r="2" fill="gray"></circle>
-									</svg>
-								</button>
-								<div class="options-menu" style="display: none;padding:10px; top: 85px; right:40px; position: absolute; background-color: white; border: 1px solid gray; border-radius: 5px; z-index: 10;">
-									<a class="btn" href="javascript:void(0);" onclick="showEditForm('@item.Id')">Sửa</a>
-									<a class="btn" asp-action="Delete" asp-controller="Posts" asp-route-id="@item.Id" asp-route-classId="@item.ClassRoomId" onclick="return confirm('Bạn có chắc muốn xóa không ?')">Xóa</a>
-								</div>
-							</div>
-							<!-- Form ẩn để chỉnh sửa bài viết -->
-							<div id="editForm-@item.Id" style="display: none; margin-top: 10px; width: 100%;">
-								<form action="/Posts/Editpost" method="POST">
-									<input type="hidden" name="Id" value="@item.Id" />
-									<input type="text" name="Title" value="@item.Title" class="form-control" placeholder="Nhập tiêu đề" style="margin-bottom: 10px;" />
-									<textarea name="Content" rows="4" class="input-textarea" style="width: 100%; border-radius: 5px; margin-top: 10px; padding: 10px;" placeholder="Nhập nội dung">@item.Content</textarea>
-									<div style="display: flex; justify-content: flex-end; margin-top: 10px;">
-										<button type="button" onclick="hideEditForm('@item.Id')" style="margin-right: 10px;">Hủy</button>
-										<button type="submit" class="btn btn-success">Lưu</button>
+						@if (item.Type == "Post")
+						{
+							string content = item.Content;
+							string pattern = @"(https?://[a-zA-Z0-9.-]+(?:/[^\s]*)?)"; // Regex nhận diện URL đầy đủ với đường dẫn
+							var parts = System.Text.RegularExpressions.Regex.Split(content, pattern); // Tách nội dung
+							<p style="font-size: 16px; margin-bottom: 0px;">
+								@foreach (var part in parts)
+								{
+									if (System.Text.RegularExpressions.Regex.IsMatch(part, pattern)) // Nếu là link hợp lệ
+									{
+										<a href="@part" target="_blank" style="color: #007bff; text-decoration: none;">@part</a>
+									}
+									else // Nếu không phải là link
+									{
+										@part
+									}
+								}
+							</p>
+						}
+						<p class="post-created-at" style="font-size: 14px; color: gray; margin-top: 0px;">@item.CreatedAt.ToString("dd/MM/yyyy - HH:mm:ss")</p>
+					</div>
+
+					@{
+						if (Model.isOwner && item.Type == "Post")
+						{
+								<div id="post-options-@item.Id" style="margin-left: auto; cursor: pointer; display: flex; align-items: center; height: 100%;">
+									<button id="post-options-@item.Id" class="icon">
+										<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+											<circle cx="12" cy="5" r="2" fill="gray"></circle>
+											<circle cx="12" cy="12" r="2" fill="gray"></circle>
+											<circle cx="12" cy="19" r="2" fill="gray"></circle>
+										</svg>
+									</button>
+									<div class="options-menu" style="display: none;padding:10px; top: 85px; right:40px; position: absolute; background-color: white; border: 1px solid gray; border-radius: 5px; z-index: 10;">
+										<a class="btn" href="javascript:void(0);" onclick="showEditForm('@item.Id')">Sửa</a>
+										<a class="btn" asp-action="Delete" asp-controller="Posts" asp-route-id="@item.Id" asp-route-classId="@item.ClassRoomId" onclick="return confirm('Bạn có chắc muốn xóa không ?')">Xóa</a>
 									</div>
-									<input type="hidden" name="ClassId" id="classIdInput" value="@Model.ClassRoom.Id" />
-									<input type="hidden" name="UserId" id="UserIdInput" value="@Model.ClassRoom.UserId" />
-								</form>
-							</div>
-				}
+								</div>
+								<!-- Form ẩn để chỉnh sửa bài viết -->
+								<div id="editForm-@item.Id" style="display: none; margin-top: 10px; width: 100%;">
+									<form action="/Posts/Editpost" method="POST">
+										<input type="hidden" name="Id" value="@item.Id" />
+										<input type="text" name="Title" value="@item.Title" class="form-control" placeholder="Nhập tiêu đề" style="margin-bottom: 10px;" />
+										<textarea name="Content" rows="4" class="input-textarea" style="width: 100%; border-radius: 5px; margin-top: 10px; padding: 10px;" placeholder="Nhập nội dung">@item.Content</textarea>
+										<div style="display: flex; justify-content: flex-end; margin-top: 10px;">
+											<button type="button" onclick="hideEditForm('@item.Id')" style="margin-right: 10px;">Hủy</button>
+											<button type="submit" class="btn btn-success">Lưu</button>
+										</div>
+										<input type="hidden" name="ClassId" id="classIdInput" value="@Model.ClassRoom.Id" />
+										<input type="hidden" name="UserId" id="UserIdInput" value="@Model.ClassRoom.UserId" />
+									</form>
+								</div>
+						}
+					}
+				</div>
 			}
 		</div>
-	}
-	
+	</div>
 </div>
-
-
-
 @* ==================================SCRIPT======================================================*@
 <script>
 	function showPostContent(postId) {
@@ -2512,24 +2545,11 @@
 
 		var userInput = document.getElementById("userInput").value;
 		if (encodedUser === userInput) {
-			// Nếu người gửi là người hiện tại, hiển thị bên trái (current-user)
-			messageBox.classList.add("current-user");
+			li.classList.add("current-user");
 		} else {
-			messageBox.classList.add("other-user");
-
-			// Add the avatar element for other users
-			// var avatarDiv = document.createElement("div");
-			// avatarDiv.classList.add("avatar");
-			// avatarDiv.style.cssText = "width: 75px; height: 75px; background-color: #ddd; border-radius: 50%; text-align: center; line-height: 40px; font-size: 18px; font-weight: bold; color: #555; margin-right: 10px;";  Adjusted margin to position it on the left
-
-			// You can replace the URL here with a dynamic one if needed
-			// var img = document.createElement("img");
-			// img.src = `/Imgs_avtUser/${encodedUser}`;  Assuming `user` is the user ID or URL for the avatar
-			// img.alt = "Avatar";
-			// img.style.cssText = "width: 100%; height: 100%; object-fit: cover; border-radius: 50%";
-			// avatarDiv.appendChild(img);
-
-			// li.appendChild(avatarDiv);
+			li.classList.add("other-user");
+			li.appendChild(avatarBox);
+			
 		}
 		li.appendChild(messageBox);
 		const messagesList = document.querySelector(".message-list");
@@ -2815,6 +2835,7 @@
 	// G?i hàm updateDateTime l?n d?u tiên d? hi?n th? th?i gian ngay t? khi trang du?c t?i
 	updateDateTime();
 </script> @* T?o d?ng h? *@
+
 <script>
 	const btnCopy = document.getElementById("btnCopy");
 	const input = document.getElementById("contentcopy");
@@ -2827,7 +2848,7 @@
 
 		try {
 			await navigator.clipboard.writeText(input.value);
-			console.log('Text copied to clipboard');
+			toastr.info('Copied', '', { timeOut: 3000 });
 			icon.textContent = 'check_circle';  // Change icon to check mark
 			setTimeout(() => {
 				icon.textContent = 'content_copy';  // Revert back to copy icon after 2 seconds
@@ -3064,7 +3085,7 @@ function submitLeaveRequest(event) {
     })
     .then(function (response) {
         if (response.data.success) {
-            alert(response.data.message);
+			toastr.success('Gửi đơn thành công. Vui lòng đợi đơn được phê duyệt !', 'Thành công', { timeOut: 3000 })
 			$('#leaveRequestForm')[0].reset();
 			toggleLeaveRequestForm(); // Hide the form on success
 			getAllLeaveRequests();
@@ -3206,10 +3227,10 @@ function submitLeaveRequest(event) {
 		axios.put('/LeaveRequests/UpdateStatus', { leaveRequestId: requestId, status: status })
 			.then(response => {
 				if (response.data.success) {
-					console.log('Cập nhật trạng thái thành công!');
-					// Cập nhật lại danh sách yêu cầu nghỉ phép nếu cần
+					toastr.success('Cập nhật trạng thái thành công!', 'Thành công', { timeOut: 3000 });
 					getAllLeaveRequests();
 				} else {
+					toastr.error('Cập nhật trạng thái thất bại.', 'Gặp lỗi!')
 					console.error('Có lỗi xảy ra:', response.data.errors);
 				}
 			})
@@ -3234,6 +3255,7 @@ function submitLeaveRequest(event) {
 			axios.delete(`/LeaveRequests/Delete/${id}`)
 				.then(function (response) {
 					// Refresh the leave requests list
+					toastr.success('Xoá đơn thành công !', 'Thành công', { timeOut: 3000 });
 					getAllLeaveRequests();
 				})
 				.catch(function (error) {
@@ -3291,28 +3313,24 @@ function submitLeaveRequest(event) {
 </script> @* Nộp bt theo dung lượng*@
 <script>
 	// Gửi form chỉnh sửa qua AJAX
-	$("#setting").on("click", "#saveButton_setting", function () {
+	$("#setting").on("click", "#saveButton_setting", function (e) {
 		var form = $("#editClassRoomForm");
-		$.ajax({
-			url: "/ClassRooms/Edit",  // Chỉnh sửa URL nếu cần
-			type: "POST",
-			data: form.serialize(),  // Gửi dữ liệu form
-			success: function (response) {
-				if (response.success) {
-					alert(response.message); // Hiển thị thông báo thành công
-					// Có thể thêm mã để cập nhật giao diện sau khi lưu thành công
-					// Ví dụ: $("#setting").html(""); hoặc cập nhật lại bảng lớp học
-					window.location.reload();
+		e.preventDefault();
+		// Gửi yêu cầu POST với dữ liệu form
+		axios.post('/ClassRooms/Edit', new URLSearchParams(new FormData(form[0])).toString())
+			.then(function (response) {
+				// Kiểm tra kết quả trả về
+				if (response.data.success) {
+					toastr.success('Lưu thành công', 'Thành công', { timeOut: 3000 });
 				} else {
-					alert(response.message); // Hiển thị thông báo lỗi
+					toastr.error('Lỗi trong quá trình lưu dữ liệu', 'Thất bại', { timeOut: 3000 });
 				}
-			},
-			error: function () {
-				alert("Đã xảy ra lỗi khi gửi yêu cầu.");
-			}
-		});
+			})
+			.catch(function (error) {
+				// Xử lý lỗi nếu có
+				toastr.error('Đã xảy ra lỗi khi gửi yêu cầu.', 'Thất bại', { timeOut: 3000 });
+				console.error(error); // In chi tiết lỗi ra console để debug
+			});
 	});
+
 </script>
-<script>
-	
-</script> @* Lưu trạng thái hiển thị của rubric vào localstorage *@
