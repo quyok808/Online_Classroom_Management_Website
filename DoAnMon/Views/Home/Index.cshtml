@@ -2,138 +2,188 @@
     ViewData["Title"] = "Trang chủ";
 }
 <style>
-    #loading {
-        font-size: 20px;
-        color: #000;
+    .container {
+        display: flex;
+        margin-top:100px;
+        width: 100%;
+        overflow-y: auto;
+        height: 900px;
+    }
+
+    .slider-container {
+        display: flex;
+        flex-direction: column;
+        align-items: center; 
+        width: 400px;
+    }
+
+        .slider {
+            position: relative;
+            width: 100%;
+            height: 630px;
+            overflow: hidden;
+            border-radius: 10px;
+        }
+
+        .slider img {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transform: translateY(100%);
+            animation: slideUp 24s infinite ease-in-out;
+        }
+
+        .slider img:nth-child(2) {
+            animation-delay: 8s;
+        }
+
+        .slider img:nth-child(3) {
+            animation-delay: 16s;
+        }
+
+        @@keyframes slideUp {
+            0% {
+                transform: translateY(100%);
+                opacity: 0;
+            }
+            20% {
+                transform: translateY(0);
+                opacity: 1;
+            }
+            40% {
+                transform: translateY(0);
+                opacity: 1;
+            }
+            60% {
+                transform: translateY(-100%);
+                opacity: 0;
+            }
+            100% {
+                transform: translateY(-100%);
+                opacity: 0;
+            }
+        }
+
+        .post-container{
+            border-top-left-radius:10px;
+            border-top-right-radius:10px;
+            border-bottom:0;
+            flex-grow: 1;
+            height:100%;
+            display:flex;
+            margin-left: 20px;
+        }
+
+    .below-slider {
+        width: 100%;
+        height: 250px;
+        padding: 5px;
         text-align: center;
-        padding: 20px;
+        border: 3px solid blue;       
+        border-radius: 10px;
+        padding-left:10px;
+        margin-bottom:20px;
     }
 
-    .sidebar-right {
-        position: relative;
-    }
-
-    #loading {
-        position: absolute;
-        top: 50%;
-        left: 50%;
-        transform: translate(-50%, -50%);
-    }
-
-    .typing-indicator {
-        width: 60px;
-        height: 30px;
-        position: relative;
-        z-index: 4;
-    }
-
-    .typing-circle {
-        width: 8px;
-        height: 8px;
-        position: absolute;
-        border-radius: 50%;
-        background-color: #000;
-        left: 15%;
-        transform-origin: 50%;
-        animation: typing-circle7124 0.5s alternate infinite ease;
-    }
-
-    @@keyframes typing-circle7124 {
-        0% {
-            top: 20px;
-            height: 5px;
-            border-radius: 50px 50px 25px 25px;
-            transform: scaleX(1.7);
+        .below-slider p a {
+            color: black !important; /* Đảm bảo màu đen luôn được ưu tiên */
+            text-decoration: none; /* Loại bỏ gạch chân (nếu có) */
         }
 
-        40% {
-            height: 8px;
-            border-radius: 50%;
-            transform: scaleX(1);
+            .below-slider p a:hover {
+                color: black; /* Đảm bảo khi hover vẫn giữ màu đen */
+                text-decoration: underline; /* Tuỳ chọn, thêm hiệu ứng khi hover */
+            }
+
+    .main-content {
+        width:800px; 
+        margin-right: 10px;
+        height:100%;
+        overflow-y:auto;
+    }
+
+        .main-content .post-content {
+            text-overflow: inherit;
+            display: block;
+            -webkit-line-clamp: initial;
+            -webkit-box-orient: initial;
         }
 
-        100% {
-            top: 0%;
-        }
-    }
-
-    .typing-circle:nth-child(2) {
-        left: 45%;
-        animation-delay: 0.2s;
-    }
-
-    .typing-circle:nth-child(3) {
-        left: auto;
-        right: 15%;
-        animation-delay: 0.3s;
-    }
-
-    .typing-shadow {
-        width: 5px;
-        height: 4px;
-        border-radius: 50%;
-        background-color: rgba(0, 0, 0, 0.2);
-        position: absolute;
-        top: 30px;
-        transform-origin: 50%;
-        z-index: 3;
-        left: 15%;
-        filter: blur(1px);
-        animation: typing-shadow046 0.5s alternate infinite ease;
-    }
-
-    @@keyframes typing-shadow046 {
-        0% {
-            transform: scaleX(1.5);
+        .main-content img {
+            max-height: 300px;
+            max-width: 500px;
         }
 
-        40% {
-            transform: scaleX(1);
-            opacity: 0.7;
+        .main-content h3 {
+            font-size: 45px;
+            font-weight: bold;
         }
 
-        100% {
-            transform: scaleX(0.2);
-            opacity: 0.4;
-        }
+    .post-listcontent {
+        flex-grow: 1;
+        margin-left: 20px;
+        height:fit-content;
+        width:350px;
+    } 
+    .new{
+        height:580px;
+        width: 100%;
+        overflow-y: auto;
     }
-
-    .typing-shadow:nth-child(4) {
-        left: 45%;
-        animation-delay: 0.2s;
-    }
-
-    .typing-shadow:nth-child(5) {
-        left: auto;
-        right: 15%;
-        animation-delay: 0.3s;
-    }
+    
 </style>
 <div class="container">
-    <div id="myCarousel" class="carousel slide" data-ride="carousel">
-        <!-- Indicators -->
-        <ol class="carousel-indicators">
-            <li data-target="#myCarousel" data-slide-to="0" class="active"></li>
-            <li data-target="#myCarousel" data-slide-to="1"></li>
-            <li data-target="#myCarousel" data-slide-to="2"></li>
-        </ol>
-
-        <!-- Wrapper for slides -->
-        <div class="carousel-inner">
-            <div class="item active">
-                <img src="https://file1.hutech.edu.vn/file/slider/f4bc1b922ec864d0cfe84cf9382fa359.jpg" alt="Slide 1" style="width: 1100px; height: 300px;">
-            </div>
-            <div class="item">
-                <img src="https://file1.hutech.edu.vn/file/slider/38ce9cac8573fd8219ae19a0a0565176.png" alt="Slide 2" style="width: 1100px; height: 300px;">
-            </div>
-            <div class="item">
-                <img src="https://file1.hutech.edu.vn/file/slider/b8c36131bc826fd5776e1c3ea07a0128.jpg" alt="Slide 3" style="width: 1100px; height: 300px;">
+    <div class="slider-container">
+        <div class="below-slider">
+            <p style="text-align:center; font-size:16px; font-weight:bold">TRUY CẬP NHANH </p>
+            <p style="text-align:left; font-size:14px;"><a href="https://sinhvien.hutech.edu.vn/#/sinhvien/login/login">Sinh viên Hutech</a></p>
+            <p style="text-align:left; font-size:14px; "><a href="https://daotao.hutech.edu.vn/>">Cổng Thông Tin Đào Tạo</a></p>
+            <p style="text-align:left; font-size:14px;"><a href="https://e-graduate.hutech.edu.vn/">E-Learning Hutech</a></p>
+            <p style="text-align:left; font-size:14px;"><a href="https://itcoder.hutech.edu.vn/?fbclid=IwZXh0bgNhZW0CMTEAAR1_dTRkcC1NyWZiEPGYpgKG0pDmztI0nCR3DEPiZIeGGeTmTEydrsVUe0o_aem_e7PLpYTeUkRbYjIX8doOIw">ITCoder HUTECH</a></p>
+            <p style="text-align:left; font-size:14px;"><a href="https://chatgpt.com/">Chat GPT</a></p>
+            <p style="text-align:left; font-size:14px;"><a href="https://fontawesome.com/">Fontawesome</a></p>
+        </div>
+        <div class="slider">
+            <img src="https://i.pinimg.com/736x/43/8d/e3/438de398950b3f2554749ca67507fa33.jpg" alt="Image 1">
+            <img src="https://i.pinimg.com/736x/be/aa/9f/beaa9f9366d683630bff7fbe27f862a6.jpg" alt="Image 2">
+            <img src="https://i.pinimg.com/736x/12/ab/59/12ab59146d603a8dd7fc9c5b263879bc.jpg" alt="Image 3">
+        </div>
+        
+    </div>
+    <div style="width: 1px; height: 900px; background-color: gainsboro; margin-left:20px;"></div>
+    
+    <div class="post-container">
+        <div class="main-content"></div>
+        <div class="post-listcontent">
+            <video width="100%" height="100%" controls>
+                <source src="/images/1052842079-preview.mp4" type="video/mp4">
+            </video>
+            <p style="font-weight:bold;font-size:16px;text-align:center;">
+                ⏰ HỌC MỌI LÚC 🌍 MỌI NƠI VỚI NỀN TẢNG HỌC TRỰC TUYẾN CỦA CHÚNG TÔI 💻 ONLY A
+            </p>
+            <hr />
+            <div class="new">
+                <h1 style="text-align:center; font-size:18px; font-weight:bold;">TẠI SAO HỌC ONLINE LÀ XU HƯỚNG TRONG THỜI ĐẠI SỐ?🔥🔥🔥</h1>
+                <p>Trong thời đại mà công nghệ len lỏi vào từng góc của cuộc sống, học online không còn là lựa chọn xa lạ mà đã trở thành một xu hướng tất yếu. Từ việc tiếp cận kiến thức nhanh chóng đến khả năng học tập linh hoạt, học online đang mở ra cơ hội cho hàng triệu người trên toàn thế giới.</p>
+                <p style="font-weight:bold;">1. Học bất cứ lúc nào, bất cứ nơi đâu</p>
+                <p>Chỉ với một thiết bị có kết nối Internet, bạn có thể học mọi lúc, mọi nơi. Điều này đặc biệt hữu ích với những người bận rộn hoặc sống ở những nơi xa trung tâm học tập.</p>
+                <img src="https://oes.vn/wp-content/uploads/2023/07/loi-ich-va-bat-loi-cua-hoc-online-4.png" alt="Image 4" width="100%" height="200px">
+                <p style="font-weight:bold;">2. Lộ trình học tập cá nhân hóa</p>
+                <p>Học online cho phép bạn học theo tốc độ riêng của mình. Bạn có thể tua lại bài giảng, ôn tập nội dung hoặc học nhanh hơn mà không bị ràng buộc bởi thời gian cố định.</p>
+                <p style="font-weight:bold;">3. Tiết kiệm chi phí</p>
+                <p>So với việc tham gia các khóa học truyền thống, học online giúp bạn tiết kiệm đáng kể chi phí đi lại, tài liệu học tập, và đôi khi cả học phí.</p>
+                <p style="font-weight:bold;">4. Khóa học đa dạng và phong phú</p>
+                <p>Bạn có thể tìm thấy mọi khóa học từ các lĩnh vực như công nghệ, kinh doanh, thiết kế, đến ngoại ngữ hay kỹ năng mềm, đáp ứng mọi nhu cầu học tập của mình.</p>
+                <p style="font-weight:bold;">5. Cơ hội kết nối toàn cầu</p>
+                <p>Học online không chỉ giúp bạn tiếp thu kiến thức mà còn mở rộng mối quan hệ với những người có cùng đam mê ở khắp nơi trên thế giới.</p>
             </div>
         </div>
+
     </div>
 </div>
-<div class="container">
-    <div class="sidebar">
+@* <div class="container">
+   <div class="sidebar">
         <h2>Chủ đề</h2>
         <!-- Nội dung của cột chủ đề -->
         <ul>
@@ -163,33 +213,18 @@
             </div>
         </div>
 
-    </div>
-</div>
-<script>
-    document.addEventListener("DOMContentLoaded", function () {
-        // Lấy địa chỉ URL hiện tại
-        var url = window.location.href;
-
-        // Lấy tất cả các mục trong thanh menu
-        var menuItems = document.querySelectorAll('nav ul li a');
-
-        // Lặp qua từng mục trong thanh menu
-        menuItems.forEach(function (item) {
-            // Kiểm tra nếu địa chỉ URL chứa đường dẫn của mục đó
-            if (url.indexOf(item.getAttribute('href')) > -1) {
-                // Thêm lớp 'selected' cho mục đó
-                item.classList.add('selected');
-            }
-        });
-    });
+    </div> 
+</div>*@
+ <script>
+    
     /*bài post*/
     $(document).ready(function () {
-        const postsContainer = $('#posts_container');
-        const mainContent = $('.main-content');
-        let currentIndex = -1;
+        const mainContent = $('.main-content'); // Lấy khung hiển thị chính
+        let currentIndex = -1; // Chỉ số bài đăng hiện tại
 
+        // Hàm lấy bài đăng từ API
         async function fetchPosts() {
-            $('#loading').show();
+            $('#loading').show(); // Hiển thị loading
             try {
                 const response = await fetch("https://script.google.com/macros/s/AKfycbyf_E0bAmFqn9i1m_efPwvYXPfUYMBJc9KQ_J1jKOwlBwFBFIGxLQ7kpEuK3lQJml7r/exec");
                 if (!response.ok) {
@@ -197,59 +232,56 @@
                 }
                 const data = await response.json();
                 if (data && data.length > 0) {
-                    displayPosts(data);
-                    startAutoRotation();
+                    displayPosts(data); // Hiển thị bài đăng
+                    startAutoRotation(); // Bắt đầu xoay tự động
                 } else {
-                    postsContainer.html('<p>No posts available at the moment.</p>');
+                    mainContent.html('<p>No posts available at the moment.</p>');
                 }
             } catch (error) {
                 console.error('Error fetching posts:', error);
-                postsContainer.html('<p>Failed to load posts. Please try again later.</p>');
+                mainContent.html('<p>Failed to load posts. Please try again later.</p>');
             } finally {
-                $('#loading').hide();
+                $('#loading').hide(); // Ẩn loading
             }
         }
 
+        // Hàm hiển thị danh sách bài đăng
         function displayPosts(posts) {
-            postsContainer.empty(); // Clear existing posts
-            posts.forEach(post => {
-                const postElement = $(`
-                            <div class="post">
-                                <center><h3 style="margin-top: 10px; font-size: 20px">${post.title}</h3></center>
-                                   ${post.image ? `<img src="${post.image}" alt="Hình ảnh bài viết">` : ''}
-                                <div class="post-content">
-                                    ${post.contents_}
-                                </div>
-                            </div>
-                        `);
-                postsContainer.append(postElement);
-            });
+            if (posts.length === 0) {
+                mainContent.html('<p>No posts available at the moment.</p>');
+                return;
+            }
+
+            // Lưu danh sách bài đăng vào bộ nhớ
+            mainContent.data('posts', posts);
+            currentIndex = 0; // Hiển thị bài đầu tiên
+            updateMainContent(posts[currentIndex]); // Hiển thị nội dung bài đăng đầu tiên
         }
 
+        // Hàm cập nhật nội dung bài đăng vào `main-content`
+        function updateMainContent(post) {
+            const postHtml = `
+                <div class="post">
+                    <center><h3 style="margin-top: 10px; font-size: 20px">${post.title}</h3></center>
+                    ${post.image ? `<img src="${post.image}" alt="Hình ảnh bài viết">` : ''}
+                    <div class="post-content">${post.contents_}</div>
+                </div>
+            `;
+            mainContent.html(postHtml); // Cập nhật nội dung vào khung chính
+        }
+
+        // Hàm xoay tự động
         function startAutoRotation() {
-            const posts = $(".sidebar-right .post");
+            const posts = mainContent.data('posts'); // Lấy danh sách bài đăng
             setInterval(function () {
-                rotatePosts(posts);
-            }, 3000); // 3 seconds
+                currentIndex = (currentIndex + 1) % posts.length; // Tăng chỉ số bài đăng
+                updateMainContent(posts[currentIndex]); // Cập nhật bài đăng tiếp theo
+            }, 10000); // 10 giây mỗi lần
         }
 
-        function rotatePosts(posts) {
-            const nextIndex = (currentIndex + 1) % posts.length;
-            const nextPost = $(posts[nextIndex]);
-
-            $(".sidebar-right").prepend(nextPost);
-
-            currentIndex = nextIndex;
-
-            const clonedContent = nextPost.clone();
-            clonedContent.removeClass('post');
-            clonedContent.css({ 'border': 'none', 'height': 'auto' });
-            mainContent.html(clonedContent);
-        }
-
-        fetchPosts();
+        fetchPosts(); // Gọi hàm lấy dữ liệu bài đăng
     });
-</script>
+</script> 
 <script>
     document.addEventListener('DOMContentLoaded', (event) => {
         const dropbtn = document.querySelector('.btnchude');

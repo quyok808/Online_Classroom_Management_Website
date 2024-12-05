@@ -29,6 +29,9 @@ using Microsoft.IdentityModel.Tokens;
 using DoAnMon.Migrations;
 using DoAnMon.SendMail;
 using System.Security.Claims;
+using Microsoft.EntityFrameworkCore.Metadata;
+using DoAnMon.SignalR;
+using System.Text.RegularExpressions;
 using DoAnMon.ViewModels;
 namespace DoAnMon.Controllers
 {
@@ -42,7 +45,7 @@ namespace DoAnMon.Controllers
 		private static readonly SemaphoreSlim _semaphore = new SemaphoreSlim(1, 1);
 		private readonly ILogger<HomeController> _logger;
 
-        public ClassRoomsController(ApplicationDbContext context, UserManager<CustomUser> userManager, IWebHostEnvironment environment, IStudent studentRepo, ILogger<HomeController> logger)
+		public ClassRoomsController(ApplicationDbContext context, UserManager<CustomUser> userManager, IWebHostEnvironment environment, IStudent studentRepo, ILogger<HomeController> logger)
 		{
 			_context = context;
 			_userManager = userManager;
@@ -50,7 +53,7 @@ namespace DoAnMon.Controllers
 			_studentRepo = studentRepo;
 			_logger = logger;
 
-        }
+		}
         public static List<ClassRoom>? userClasses;
 		// GET: ClassRooms
 		public async Task<IActionResult> Index()
@@ -233,6 +236,7 @@ namespace DoAnMon.Controllers
 				.Select(g => g.First())
 				.ToListAsync();
 			ViewBag.UserPosts = userposts;
+			ViewBag.UserId = userId;
 
 			//var listpost = await _context.posts.Where(p => p.ClassRoomId == id).ToListAsync();
 			var listBT = await _context.baiTaps.Where(p => p.ClassRoomId == id).ToListAsync();
@@ -391,7 +395,7 @@ namespace DoAnMon.Controllers
 					classRoom.Id = GenerateUniqueRandomString(6);
 					classRoom.UserId = currentUser.Id;
 					classRoom.RoomOnline = "https://meeting-room-onlya1.glitch.me?room=" + linkRoom;
-					classRoom.backgroundUrl = "anhclass.png";
+					classRoom.backgroundUrl = "classImage_Default.gif";
 					classRoom.STT = 0;
                     if (haveRubric)
 					{
@@ -485,11 +489,15 @@ namespace DoAnMon.Controllers
 
         [HttpGet]
 		public PartialViewResult GetMessages()
-		{
+		{			
 			List<Message> messages = _context.Messages.ToList();
-
 			return PartialView("_MessagePartial", messages);
 		}
+
+		
+
+
+
 		[HttpPost]
 		public async Task<IActionResult> JoinClassV1(ClassroomDetail classroom)
 		{
@@ -1657,6 +1665,6 @@ namespace DoAnMon.Controllers
 
 			return dates;
 		}
-
-    }
+		
+	}
 }

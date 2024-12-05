@@ -1,23 +1,71 @@
 ﻿@using DoAnMon.IdentityCudtomUser
 @using Microsoft.AspNetCore.Identity
+@using static DoAnMon.Models.ClassroomViewModel
 @inject UserManager<CustomUser> _userManager
 @model IEnumerable<DoAnMon.Models.Message>
+<style>
+      li {
+        display: flex;
+        margin: 15px 0;
+    }
 
+    .message-box {
+         display: inline-block;
+         max-width: 763px;
+         border-radius: 10px;
+         padding: 10px;
+         background-color: #FBEAF0;
+         margin-left: 15px
+     }
 
+     .current-user {
+         justify-content: flex-end; 
+         align-items: flex-end;
+         margin-left: auto; 
+     }
 
+     .other-user {
+         justify-content: flex-start;
+         align-items: flex-start;
+        
+     }
+
+    
+</style>
 @{
     List<Message>? listmsg = Model.ToList();
-    for (int i = listmsg.Count() - 1; i >= 0; i--)
-    {
-        var chat = listmsg[i];
-        CustomUser chattinguser = _userManager.FindByIdAsync(chat.UserId).Result;
-        <li style="font-size: 17px;"><strong>@chattinguser.Mssv _ @chattinguser.Name (@chat.Time):</strong> @chat.Noidung
-            @if (!string.IsNullOrEmpty(chat.FilePath))
-            {
-                <a href="@Url.Content(chat.FilePath)" target="_blank">[Download File]</a>
-            }
-
-        </li>
-	}
+    var currentUserId = _userManager.GetUserId(User);
 }
+
+@for (int i = 0; i < listmsg.Count; i++)
+{
+    var chat = listmsg[i];
+    var chattinguser = _userManager.FindByIdAsync(chat.UserId).Result;
+
+    if (chattinguser != null) // Kiểm tra nếu tìm thấy người dùng
+    {
+        var alignmentClass = chat.UserId == currentUserId ? "current-user" : "other-user";
+
+        <li class="@alignmentClass" style="font-family: 'JetBrains Mono', serif; ">
+            @if (alignmentClass == "other-user")
+            {
+                <div class="avatar" style="width: 75px; height: 75px; background-color: #ddd; border-radius: 50%; text-align: center; line-height: 40px; margin-left: 10px; font-size: 18px; font-weight: bold; color: #555;">
+                    <img src="/Imgs_avtUser/@chattinguser.UrlAvt"
+                         alt="Avatar"
+                         style="width: 100%; height: 100%; object-fit: cover;border-radius: 50%">
+                </div>
+            }
+            <div class="message-box">
+                <h3 style="font-size: 18px;font-weight:600;margin:0;">@chattinguser.Mssv - @chattinguser.Name</h3>
+                <p style="font-size: 17px;margin:0;">@chat.Noidung</p>
+                <p style="font-size: 13px; margin-top: 5px;margin:0;">(@chat.Time)</p>
+                @if (!string.IsNullOrEmpty(chat.FilePath))
+                {
+                    <a href="@Url.Content(chat.FilePath)" target="_blank">[Download File]</a>
+                }
+            </div>                  
+        </li>
+    }
+}
+
 

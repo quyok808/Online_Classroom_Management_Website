@@ -4,6 +4,7 @@ using DoAnMon.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DoAnMon.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20241121183944_nhom2")]
+    partial class nhom2
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -185,9 +188,6 @@ namespace DoAnMon.Migrations
                     b.Property<bool>("HasSubmittedFile")
                         .HasColumnType("bit");
 
-                    b.Property<int?>("MaxSize")
-                        .HasColumnType("int");
-
                     b.Property<string>("Title")
                         .HasColumnType("nvarchar(max)");
 
@@ -260,9 +260,6 @@ namespace DoAnMon.Migrations
                     b.Property<string>("RoomOnline")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int?>("RubricId")
-                        .HasColumnType("int");
-
                     b.Property<int>("STT")
                         .HasColumnType("int");
 
@@ -315,31 +312,6 @@ namespace DoAnMon.Migrations
                     b.ToTable("classroomDetail");
                 });
 
-            modelBuilder.Entity("DoAnMon.Models.Criterion", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<int?>("RubricId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("Title")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<float>("Weight")
-                        .HasColumnType("real");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("RubricId");
-
-                    b.ToTable("Criteria");
-                });
-
             modelBuilder.Entity("DoAnMon.Models.DiemDanh", b =>
                 {
                     b.Property<int>("Id")
@@ -370,32 +342,6 @@ namespace DoAnMon.Migrations
                     b.ToTable("diemDanh");
                 });
 
-            modelBuilder.Entity("DoAnMon.Models.Evaluation", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<int>("CriterionId")
-                        .HasColumnType("int");
-
-                    b.Property<float>("Score")
-                        .HasColumnType("real");
-
-                    b.Property<int>("StudentId")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("CriterionId");
-
-                    b.HasIndex("StudentId");
-
-                    b.ToTable("Evaluations");
-                });
-
             modelBuilder.Entity("DoAnMon.Models.LeaveRequest", b =>
                 {
                     b.Property<int>("Id")
@@ -419,9 +365,6 @@ namespace DoAnMon.Migrations
 
                     b.Property<int>("Status")
                         .HasColumnType("int");
-
-                    b.Property<DateTime>("ThoiGianYeuCau")
-                        .HasColumnType("datetime2");
 
                     b.Property<string>("UserID")
                         .IsRequired()
@@ -472,35 +415,6 @@ namespace DoAnMon.Migrations
                     b.ToTable("Messages");
                 });
 
-            modelBuilder.Entity("DoAnMon.Models.Notify", b =>
-                {
-                    b.Property<string>("Id")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<string>("ClassID")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Content")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("ReceiverId")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("SenderId")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime>("SentTime")
-                        .HasColumnType("datetime2");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("notify");
-                });
-
             modelBuilder.Entity("DoAnMon.Models.Post", b =>
                 {
                     b.Property<string>("Id")
@@ -524,56 +438,6 @@ namespace DoAnMon.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("posts");
-                });
-
-            modelBuilder.Entity("DoAnMon.Models.Rubric", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<string>("ClassRoomId")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("ClassRoomId")
-                        .IsUnique()
-                        .HasFilter("[ClassRoomId] IS NOT NULL");
-
-                    b.ToTable("Rubric");
-                });
-
-            modelBuilder.Entity("DoAnMon.Models.Student", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<string>("FullName")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("MSSV")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int?>("RubricId")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("RubricId");
-
-                    b.ToTable("Students");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
@@ -794,16 +658,6 @@ namespace DoAnMon.Migrations
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("DoAnMon.Models.Criterion", b =>
-                {
-                    b.HasOne("DoAnMon.Models.Rubric", "Rubric")
-                        .WithMany("Criteria")
-                        .HasForeignKey("RubricId")
-                        .OnDelete(DeleteBehavior.Restrict);
-
-                    b.Navigation("Rubric");
-                });
-
             modelBuilder.Entity("DoAnMon.Models.DiemDanh", b =>
                 {
                     b.HasOne("DoAnMon.Models.ClassRoom", "ClassRoom")
@@ -817,25 +671,6 @@ namespace DoAnMon.Migrations
                     b.Navigation("ClassRoom");
 
                     b.Navigation("User");
-                });
-
-            modelBuilder.Entity("DoAnMon.Models.Evaluation", b =>
-                {
-                    b.HasOne("DoAnMon.Models.Criterion", "Criterion")
-                        .WithMany("Evaluations")
-                        .HasForeignKey("CriterionId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("DoAnMon.Models.Student", "Student")
-                        .WithMany("Evaluations")
-                        .HasForeignKey("StudentId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Criterion");
-
-                    b.Navigation("Student");
                 });
 
             modelBuilder.Entity("DoAnMon.Models.LeaveRequest", b =>
@@ -874,25 +709,6 @@ namespace DoAnMon.Migrations
                     b.Navigation("ClassRoom");
 
                     b.Navigation("User");
-                });
-
-            modelBuilder.Entity("DoAnMon.Models.Rubric", b =>
-                {
-                    b.HasOne("DoAnMon.Models.ClassRoom", "ClassRoom")
-                        .WithOne("Rubric")
-                        .HasForeignKey("DoAnMon.Models.Rubric", "ClassRoomId");
-
-                    b.Navigation("ClassRoom");
-                });
-
-            modelBuilder.Entity("DoAnMon.Models.Student", b =>
-                {
-                    b.HasOne("DoAnMon.Models.Rubric", "Rubric")
-                        .WithMany("Student")
-                        .HasForeignKey("RubricId")
-                        .OnDelete(DeleteBehavior.Restrict);
-
-                    b.Navigation("Rubric");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -969,31 +785,12 @@ namespace DoAnMon.Migrations
 
                     b.Navigation("ClassroomDetails");
 
-                    b.Navigation("Rubric");
-
                     b.Navigation("leaveRequests");
-                });
-
-            modelBuilder.Entity("DoAnMon.Models.Criterion", b =>
-                {
-                    b.Navigation("Evaluations");
                 });
 
             modelBuilder.Entity("DoAnMon.Models.Post", b =>
                 {
                     b.Navigation("ClassRooms");
-                });
-
-            modelBuilder.Entity("DoAnMon.Models.Rubric", b =>
-                {
-                    b.Navigation("Criteria");
-
-                    b.Navigation("Student");
-                });
-
-            modelBuilder.Entity("DoAnMon.Models.Student", b =>
-                {
-                    b.Navigation("Evaluations");
                 });
 #pragma warning restore 612, 618
         }
