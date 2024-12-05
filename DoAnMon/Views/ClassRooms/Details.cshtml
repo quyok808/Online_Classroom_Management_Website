@@ -1163,7 +1163,12 @@
 	}
 	<div class="tab" onclick="openTab(event, 'padlet')" style="font-family: Poppins, sans-serif;font-weight: 600">Padlet</div>
 	<div class="tab" onclick="openTab(event, 'letter')" style="font-family: Poppins, sans-serif;font-weight: 600">Đơn từ</div>
-	<div class="tab" onclick="openTab(event, 'setting')" style="font-family: Poppins, sans-serif;font-weight: 600">Settings</div>
+	@{
+		if (Model.isOwner)
+		{
+			<div class="tab" onclick="openTab(event, 'setting')" style="font-family: Poppins, sans-serif;font-weight: 600">Settings</div>
+		}
+	}
 	<div class="tab" onclick="openTab(event, 'mainload')" style="font-family: Poppins, sans-serif;font-weight: 600" hidden>MainLoad</div>
 	<div class="tab" onclick="openNotification()" style="font-family: Poppins, sans-serif;font-weight: 600">Thông báo</div>
 </div>
@@ -1497,13 +1502,76 @@
 	<div id="listsv1">
 	</div>
 </div>
+<!-- Div bao quanh bảng điểm -->
 @{
-	if (Model.CustomRubric == false)
+	if (Model.isOwner)
 	{
+		
+		if (Model.CustomRubric == false)
+		{
+			<div id="bangdiem" class="tabcontent">
+				@{
+					List<BaiTap> bt = ViewBag.ListBT as List<BaiTap>;
+					List<DiemViewModel> diems = ViewBag.ListDiem as List<DiemViewModel>;
+				}
+				<div class="container-bangdiem">
+					<table id="user">
+						<thead>
+							<tr class="first-column">
+								<th style="text-align: center;" rowspan="2">Họ và tên</th>
+								<th style="text-align: center;" rowspan="2">MSSV</th>
+								<th style="text-align: center;" colspan="@bt.Count">Bài Tập</th>
+								<th style="text-align: center;" rowspan="2">ÐTB</th>
+							</tr>
+							<tr>
+								@foreach (var item in bt)
+						{
+									<th style="text-align: center;">@item.Title</th>
+						}
+							</tr>
+						</thead>
+						<tbody>
+							@foreach (var item in diems)
+					{
+								<tr>
+									<td>@item.HoVaTen</td>
+									<td>@item.MSSV</td>
+
+									@if (bt.Count <= 0)
+							{
+										<td> </td>
+							}
+							else
+							{
+										@foreach (var d in @item.listDiemBT)
+								{
+											<td style="text-align: center;">@d</td>
+								}
+							}
+									<td>@item.DTB</td>
+								</tr>
+					}
+						</tbody>
+					</table>
+				</div>
+			</div>
+		}
+		else
+		{
+			<div id="bangdiemCustom" class="tabcontent">
+				<iframe style="border: none;" src="@Url.Action("Details", "Rubrics", new { id = Model.Rubric.Id, classRoomId = Model.ClassRoom.Id, isowner = Model.isOwner})" width="100%" height="600px"></iframe>
+			</div>
+		}
+	} else
+	{
+		if (Model.ClassRoom.ShowRubric == 1){
+		
+			if (Model.CustomRubric == false)
+			{
 				<div id="bangdiem" class="tabcontent">
 					@{
-				List<BaiTap> bt = ViewBag.ListBT as List<BaiTap>;
-				List<DiemViewModel> diems = ViewBag.ListDiem as List<DiemViewModel>;
+						List<BaiTap> bt = ViewBag.ListBT as List<BaiTap>;
+						List<DiemViewModel> diems = ViewBag.ListDiem as List<DiemViewModel>;
 					}
 					<div class="container-bangdiem">
 						<table id="user">
@@ -1516,44 +1584,50 @@
 								</tr>
 								<tr>
 									@foreach (var item in bt)
-							{
+									{
 										<th style="text-align: center;">@item.Title</th>
-							}
+									}
 								</tr>
 							</thead>
 							<tbody>
 								@foreach (var item in diems)
-						{
+								{
 									<tr>
 										<td>@item.HoVaTen</td>
 										<td>@item.MSSV</td>
 
 										@if (bt.Count <= 0)
-								{
+										{
 											<td> </td>
-								}
-								else
-								{
+										}
+										else
+										{
 											@foreach (var d in @item.listDiemBT)
-									{
+											{
 												<td style="text-align: center;">@d</td>
-									}
-								}
+											}
+										}
 										<td>@item.DTB</td>
 									</tr>
-						}
+								}
 							</tbody>
 						</table>
 					</div>
 				</div>
-	}
-	else
-	{
+			}
+			else
+			{
 				<div id="bangdiemCustom" class="tabcontent">
 					<iframe style="border: none;" src="@Url.Action("Details", "Rubrics", new { id = Model.Rubric.Id, classRoomId = Model.ClassRoom.Id, isowner = Model.isOwner})" width="100%" height="600px"></iframe>
 				</div>
+			}
+		} else
+		{
+			<div class="text-center" style="margin-top: 150px"><p class="text-center">Bạn không có quyền xem bảng điểm !!!</p></div>
+		}
 	}
 }
+
 <div id="padlet" class="tabcontent">
 	<div class="padlet-embed" style="border:1px solid rgba(0,0,0,0.1);border-radius:2px;box-sizing:border-box;overflow:hidden;position:relative;width:100%;background:#F4F4F4"><p style="padding:0;margin:0"><iframe src="https://padlet.com/embed/lup9um2r33899yju" frameborder="0" allow="camera;microphone;geolocation" style="width:100%;height:608px;display:block;padding:0;margin:0"></iframe></p><div style="display:flex;align-items:center;justify-content:end;margin:0;height:28px"><a href="https://padlet.com?ref=embed" style="display:block;flex-grow:0;margin:0;border:none;padding:0;text-decoration:none" target="_blank"><div style="display:flex;align-items:center;"><img src="https://padlet.net/embeds/made_with_padlet_2022.png" width="114" height="28" style="padding:0;margin:0;background:0 0;border:none;box-shadow:none" alt="Made with Padlet"></div></a></div></div>
 </div>
@@ -1601,7 +1675,79 @@
 
 </div>
 <div id="setting" class="tabcontent">
-	<h1>This is setting class</h1>
+	<form asp-action="Edit" asp-controller="ClassRooms" method="post" id="editClassRoomForm">
+		<input type="hidden" asp-for="@Model.ClassRoom.Id" name="Id"/>
+
+		<div class="form-group">
+			<label asp-for="@Model.ClassRoom.Name">Tên lớp học</label>
+			<input class="form-control" asp-for="@Model.ClassRoom.Name" name="Name" />
+			<span asp-validation-for="@Model.ClassRoom.Name" class="text-danger"></span>
+		</div>
+
+		<div class="form-group">
+			<label asp-for="@Model.ClassRoom.Description">Mô tả</label>
+			<textarea class="form-control" asp-for="@Model.ClassRoom.Description" name="Description"></textarea>
+			<span asp-validation-for="@Model.ClassRoom.Description" class="text-danger"></span>
+		</div>
+
+		<div class="form-group">
+			<label asp-for="@Model.ClassRoom.StartDate">Ngày bắt đầu khoá học</label>
+			<input class="form-control" asp-for="@Model.ClassRoom.StartDate" name="StartDate" type="date" />
+			<span asp-validation-for="@Model.ClassRoom.StartDate" class="text-danger"></span>
+		</div>
+
+		<div class="form-group">
+			<label asp-for="@Model.ClassRoom.EndDate">Ngày kết thúc khoá học</label>
+			<input class="form-control" asp-for="@Model.ClassRoom.EndDate" name="EndDate" type="date" />
+			<span asp-validation-for="@Model.ClassRoom.EndDate" class="text-danger"></span>
+		</div>
+
+		<div class="form-group">
+			<label>Ngày học</label><br />
+			@foreach (var day in Enum.GetValues(typeof(DayOfWeek)).Cast<DayOfWeek>())
+			{
+				<div class="form-check form-check-inline">
+					<input class="form-check-input" type="checkbox"
+						   name="DaysOfWeek"
+						   value="@day"
+					@(Model.ClassRoom.DaysOfWeek.Contains(day.ToString()) ? "checked" : "") />
+					<label class="form-check-label">@day</label>
+				</div>
+			}
+			<span asp-validation-for="@Model.ClassRoom.DaysOfWeek" class="text-danger"></span>
+		</div>
+
+		<div class="form-group">
+			<label asp-for="@Model.ClassRoom.StartTime">Giờ bắt đầu</label>
+			<input class="form-control" asp-for="@Model.ClassRoom.StartTime" name="StartTime" type="time" />
+			<span asp-validation-for="@Model.ClassRoom.StartTime"  class="text-danger"></span>
+		</div>
+
+		<div class="form-group">
+			<label asp-for="@Model.ClassRoom.EndTime">Giờ kết thúc</label>
+			<input class="form-control" asp-for="@Model.ClassRoom.EndTime" name="EndTime" type="time" />
+			<span asp-validation-for="@Model.ClassRoom.EndTime" class="text-danger"></span>
+		</div>
+		<div class="form-group">
+			<label for="publicRubric">Chế độ hiển thị bảng điểm</label><br />
+
+			<input type="radio" id="showPublic" name="ShowRubric" value="0"
+			@if (Model.ClassRoom.ShowRubric == 0)
+			{
+				<text>checked</text>
+			} />
+			<label for="showPublic">Riêng tư</label><br />
+
+			<input type="radio" id="showPrivate" name="ShowRubric" value="1"
+			@if (Model.ClassRoom.ShowRubric == 1)
+			{
+				<text>checked</text>
+			} />
+			<label for="showPrivate">Công khai</label><br />
+		</div>
+
+		<button type="submit" class="btn btn-primary" id="saveButton_setting">Save</button>
+	</form>
 </div>
 <div id="mainload" class="tabcontent">
 	<div class="text-center">
@@ -2008,7 +2154,6 @@
 		document.getElementById('uploadpost').submit();
 	}
 </script>@*post*@
-
 <script>
 	function openTab(evt, tabName) {
 		var i, tabcontent, tablinks;
@@ -3158,6 +3303,31 @@ function submitLeaveRequest(event) {
 			}
 		}
 	}
+</script> @* Nộp bt theo dung lượng*@
+<script>
+	// Gửi form chỉnh sửa qua AJAX
+	$("#setting").on("click", "#saveButton_setting", function () {
+		var form = $("#editClassRoomForm");
+		$.ajax({
+			url: "/ClassRooms/Edit",  // Chỉnh sửa URL nếu cần
+			type: "POST",
+			data: form.serialize(),  // Gửi dữ liệu form
+			success: function (response) {
+				if (response.success) {
+					alert(response.message); // Hiển thị thông báo thành công
+					// Có thể thêm mã để cập nhật giao diện sau khi lưu thành công
+					// Ví dụ: $("#setting").html(""); hoặc cập nhật lại bảng lớp học
+					window.location.reload();
+				} else {
+					alert(response.message); // Hiển thị thông báo lỗi
+				}
+			},
+			error: function () {
+				alert("Đã xảy ra lỗi khi gửi yêu cầu.");
+			}
+		});
+	});
 </script>
-
-
+<script>
+	
+</script> @* Lưu trạng thái hiển thị của rubric vào localstorage *@
