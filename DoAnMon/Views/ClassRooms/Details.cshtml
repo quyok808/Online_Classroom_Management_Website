@@ -1170,7 +1170,6 @@
 		}
 	}
 	<div class="tab" onclick="openTab(event, 'mainload')" style="font-family: Poppins, sans-serif;font-weight: 600" hidden>MainLoad</div>
-	<div class="tab" onclick="openNotification()" style="font-family: Poppins, sans-serif;font-weight: 600">Thông báo</div>
 </div>
 <div id="teacher" class="tabcontent">
 	<div class="teacher-info" style="background-color: #fdffe0">
@@ -1959,20 +1958,6 @@
 
 
 @* ==================================SCRIPT======================================================*@
-<script>
-    // Hàm hiển thị thông báo
-    function openNotification() {
-        // Lấy phần tử thông báo
-		var notificationBox = document.getElementById("notificationBox");
-        
-        // Kiểm tra xem khung thông báo đã hiển thị hay chưa
-		if (notificationBox.style.display === "none" || notificationBox.style.display === "") {
-			notificationBox.style.display = "block";  // Hiển thị thông báo
-        } else {
-			notificationBox.style.display = "none";  // Ẩn thông báo
-        }
-    }
-</script>
 <script>
 	function showPostContent(postId) {
 		// Hide all post lists
