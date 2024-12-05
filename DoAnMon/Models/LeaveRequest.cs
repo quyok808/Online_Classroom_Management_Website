@@ -11,6 +11,7 @@ namespace DoAnMon.Models
         public DateTime StartDate {  get; set; }
         public DateTime EndDate { get; set; }
         public string? Reasion {  get; set; }
+        public DateTime ThoiGianYeuCau {  get; set; }
         public int Status { get; set; }
 
         [ValidateNever]

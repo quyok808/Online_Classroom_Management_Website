@@ -74,15 +74,27 @@ public class EmailSchedulerService : IHostedService, IDisposable
             .ToListAsync();
     }
 
+    //private async Task<List<ClassRoom>> GetClassesWithUpcomingSessionsAsync(ApplicationDbContext context)
+    //{
+    //    var now = DateTime.Now;
+    //    return await context.classRooms
+    //        .Include(c => c.User) // Nạp thêm User vào ClassRoom
+    //        .Where(c =>
+    //            c.StartDate.Date == now.Date &&
+    //            c.StartTime > now.TimeOfDay &&
+    //            c.StartTime <= now.TimeOfDay.Add(TimeSpan.FromMinutes(30)))
+    //        .ToListAsync();
+    //}
+
     private async Task<List<ClassRoom>> GetClassesWithUpcomingSessionsAsync(ApplicationDbContext context)
     {
         var now = DateTime.Now;
-
-        // Tính giá trị endTime nhưng giới hạn tối đa là 23:59:59.9999999
         var endTime = now.TimeOfDay.Add(TimeSpan.FromMinutes(30));
-        if (endTime > TimeSpan.FromHours(24))
+
+        // Nếu endTime vượt quá 24 giờ, đặt giới hạn là 23:59:59
+        if (endTime > new TimeSpan(23, 59, 59))
         {
-            endTime = TimeSpan.FromHours(24) - TimeSpan.FromMilliseconds(1);
+            endTime = new TimeSpan(23, 59, 59);
         }
 
         return await context.classRooms
@@ -93,7 +105,6 @@ public class EmailSchedulerService : IHostedService, IDisposable
                 c.StartTime <= endTime)
             .ToListAsync();
     }
-
 
 
     public Task StopAsync(CancellationToken cancellationToken)

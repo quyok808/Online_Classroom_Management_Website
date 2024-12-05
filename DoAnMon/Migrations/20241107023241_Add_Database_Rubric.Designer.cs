@@ -4,6 +4,7 @@ using DoAnMon.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DoAnMon.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20241107023241_Add_Database_Rubric")]
+    partial class Add_Database_Rubric
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -185,9 +188,6 @@ namespace DoAnMon.Migrations
                     b.Property<bool>("HasSubmittedFile")
                         .HasColumnType("bit");
 
-                    b.Property<int?>("MaxSize")
-                        .HasColumnType("int");
-
                     b.Property<string>("Title")
                         .HasColumnType("nvarchar(max)");
 
@@ -300,9 +300,6 @@ namespace DoAnMon.Migrations
                     b.Property<string>("UserId")
                         .HasColumnType("nvarchar(450)")
                         .HasColumnOrder(0);
-
-                    b.Property<string>("GroupId")
-                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("RoleId")
                         .IsRequired()
@@ -420,9 +417,6 @@ namespace DoAnMon.Migrations
                     b.Property<int>("Status")
                         .HasColumnType("int");
 
-                    b.Property<DateTime>("ThoiGianYeuCau")
-                        .HasColumnType("datetime2");
-
                     b.Property<string>("UserID")
                         .IsRequired()
                         .HasColumnType("nvarchar(450)");
@@ -470,35 +464,6 @@ namespace DoAnMon.Migrations
                     b.HasIndex("UserId");
 
                     b.ToTable("Messages");
-                });
-
-            modelBuilder.Entity("DoAnMon.Models.Notify", b =>
-                {
-                    b.Property<string>("Id")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<string>("ClassID")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Content")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("ReceiverId")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("SenderId")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime>("SentTime")
-                        .HasColumnType("datetime2");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("notify");
                 });
 
             modelBuilder.Entity("DoAnMon.Models.Post", b =>
@@ -566,7 +531,7 @@ namespace DoAnMon.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int?>("RubricId")
+                    b.Property<int>("RubricId")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
@@ -890,7 +855,8 @@ namespace DoAnMon.Migrations
                     b.HasOne("DoAnMon.Models.Rubric", "Rubric")
                         .WithMany("Student")
                         .HasForeignKey("RubricId")
-                        .OnDelete(DeleteBehavior.Restrict);
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
 
                     b.Navigation("Rubric");
                 });

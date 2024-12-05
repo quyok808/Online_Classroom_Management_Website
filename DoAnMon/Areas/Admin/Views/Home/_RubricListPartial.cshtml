@@ -1,0 +1,46 @@
+﻿@using DoAnMon.Models
+@model List<Rubric>
+
+@if (Model != null && Model.Count > 0)
+{
+    foreach (var item in Model)
+    {
+        <a href="/Rubrics/Details/@item.Id?classRoomId=@item.ClassRoomId&isowner=false" style="color: #000000; text-decoration: none">
+            <div class="Rubric-info_admin">
+                <div class="Rubric-info-head_admin">
+                    <h6 class="Rubric-info-head-title_admin">@item.Name</h6>
+                </div>
+                <div class="Rubric-info-body_admin">
+                    <div class="info-container_admin">
+                        <div>
+                            <p class="Rubric-info-body-infomation_admin">
+                                Lớp: @item.ClassRoom.Name - @item.ClassRoomId
+                            </p>
+                        </div>
+                        <div><a style="float: right;" href="@Url.Action("Edit","Rubrics",new {id = item.Id})"><i class="fa-regular fa-pen-to-square" style="color: #000000;"></i></a></div>
+                    </div>
+                    <hr />
+                    @if (item?.Id != null && item.ClassRoomId != null)
+                    {
+                        <iframe width="100%"
+                                height="auto"
+                                src="@Url.Action("Details", "Rubrics", new { id = item.Id, classRoomId = item.ClassRoomId, isowner = false })"
+                                frameborder="0"
+                                class="iframe-custom_admin myIframe"></iframe>
+                    }
+                    else
+                    {
+                        <img src="https://halfbaked.education/wp-content/uploads/2020/11/Rubric-960x832.jpg"
+                             alt="Rubric Placeholder"
+                             style="width: 300px; height: 151px;">
+                    }
+
+                </div>
+            </div>
+        </a>
+    }
+}
+else
+{
+    <p>Không tìm thấy Rubric nào.</p>
+}
