@@ -164,6 +164,11 @@
         vertical-align: middle; /* Canh giữa văn bản nếu cần */
     }
 
+    .null_Classroom{
+        display: grid;
+        place-items: center;
+    }
+
 
     @@media (max-width: 768px) {
         .classrooms-content {
@@ -267,8 +272,8 @@
         </div>
     </div>
     <div class="main-content" style="flex: 1;">
-     @* <!-- Nội dung main content -->
-         <button class="plus-button" title="Tạo hoặc tham gia lớp học" onclick="toggleOptions()">
+      <!-- Nội dung main content -->
+        @* <button class="plus-button" title="Tạo hoặc tham gia lớp học" onclick="toggleOptions()">
             <svg xmlns="http://www.w3.org/2000/svg" width="35" height="35" viewBox="0 0 24 24">
                 <path d="M20 13h-7v7h-2v-7H4v-2h7V4h2v7h7v2z" />
             </svg>
@@ -327,39 +332,51 @@
             </div>
         </div>
         *@
-        <div id="classroomList" class="classrooms-content">
-            @{
-                if (Model != null)
+        
+        @{
+            if (Model != null)
+            {
+                if (Model.Count > 0)
                 {
-                    @foreach (var viewModel in Model)
-                    {
-                        //  <a href="@viewModel.ClassRoom.RoomOnline&User=@user.Id&class=@viewModel.ClassRoom.Id" id="diemDanhBtn" data-class-id="@viewModel.ClassRoom.Id" class="btn btn-primary btn-info btn-custom" target="_blank" style="font-family: Poppins, sans-serif; font-size: 14px;font-weight: 600;">Giảng đường</a>
+                    <div id="classroomList" class="classrooms-content">
+                        @foreach (var viewModel in Model)
+                        {
+                            //  <a href="@viewModel.ClassRoom.RoomOnline&User=@user.Id&class=@viewModel.ClassRoom.Id" id="diemDanhBtn" data-class-id="@viewModel.ClassRoom.Id" class="btn btn-primary btn-info btn-custom" target="_blank" style="font-family: Poppins, sans-serif; font-size: 14px;font-weight: 600;">Giảng đường</a>
 
-                        //Card hiển thị lớp
-                        <div class="card-item" data-id="@viewModel.ClassRoom.Id">
-                            <div class="card-inner">
-                                <div class="card-front">
-                                    <img src="~/images/@viewModel.ClassRoom.backgroundUrl" class="card-img" alt="Front Image">
-                                </div>
-                                <div class="card-back">
-                                    <div class="card">
-                                        <div class="card-header">
-                                            <strong>GV giảng dạy: </strong>@viewModel.Owner.Name
-                                        </div>
-                                        <hr style="border-top: 2px solid #ddd; margin: 0" />
-                                        <div class="card-body">
-                                            <h5 class="card-title">@viewModel.ClassRoom.Name</h5>
-                                            <p class="card-text">@viewModel.ClassRoom.Description</p>
-                                            <a asp-action="Details" asp-route-id="@viewModel.ClassRoom.Id" class="btn btn-primary" style="float: right;">Vào lớp</a>
+                            //Card hiển thị lớp
+                            <div class="card-item" data-id="@viewModel.ClassRoom.Id">
+                                <div class="card-inner">
+                                    <div class="card-front">
+                                        <img src="~/images/@viewModel.ClassRoom.backgroundUrl" class="card-img" alt="Front Image">
+                                    </div>
+                                    <div class="card-back">
+                                        <div class="card">
+                                            <div class="card-header">
+                                                <strong>GV giảng dạy: </strong>@viewModel.Owner.Name
+                                            </div>
+                                            <hr style="border-top: 2px solid #ddd; margin: 0" />
+                                            <div class="card-body">
+                                                <h5 class="card-title">@viewModel.ClassRoom.Name</h5>
+                                                <p class="card-text">@viewModel.ClassRoom.Description</p>
+                                                <a asp-action="Details" asp-route-id="@viewModel.ClassRoom.Id" class="btn btn-primary" style="float: right;">Vào lớp</a>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
                             </div>
-                        </div>
-                    }
+                        }
+                    </div>
                 }
-            }
-        </div> 
+                else
+                {
+                    <div class="null_Classroom">
+                        <img src="~/images/null_Classroom_Index.gif" width="600px" height="400px" alt=" Null Classroom" />
+                        <h3 style="font-family: 'Itim', serif; font-size: 25px; margin-top: -50px;">Hiện tại bạn đang không tham gia lớp học nào !!!</h3>
+                    </div>
+                }
+            } 
+        }
+        
     </div>
 </div>
 
