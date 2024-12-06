@@ -872,6 +872,80 @@
 }
 </style>
 <style>
+	.container_listsv {
+		width: 100%;
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		padding: 0;
+	}
+
+	.row_listsv {
+		width: 100%;
+		display: flex;
+		justify-content: center;
+		flex-wrap: wrap;
+		gap: 20px;
+		margin-bottom: 20px;
+	}
+
+	.card_listsv {
+		width: 18%; /* Adjusted for 5 cards per row */
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		padding: 20px;
+		border: 1px solid #ddd;
+		border-radius: 8px;
+		box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+		background-color: #fff;
+	}
+
+	.img_listsv {
+		width: 80px;
+		height: 80px;
+		border-radius: 50%;
+		margin-bottom: 15px;
+		box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+		object-fit: cover;
+	}
+
+	.p_listsv {
+		margin: 5px 0;
+		font-size: 16px;
+		font-weight: bold;
+		color: #333;
+		text-align: center;
+	}
+
+	.hr_listsv {
+		width: 100%;
+		border: 0;
+		border-top: 1px solid orange;
+	}
+
+	.header_listsv {
+		font-weight: bold;
+		font-size: 18px;
+		margin-left: auto;
+	}
+
+	.invite_button {
+		margin-top: 10px;
+		padding: 10px 15px;
+		background-color: orange;
+		color: white;
+		border: none;
+		border-radius: 5px;
+		cursor: pointer;
+		font-size: 14px;
+	}
+
+	.invite_button:hover {
+		background-color: darkorange;
+	}
+</style>
+<style>
 	.button_btnBaiGiang {
   position: relative;
   width: 10rem;
@@ -1186,7 +1260,7 @@
 			@{
 				if (Model.isOwner)
 				{
-						<div class="tab" onclick="openTab(event, 'setting')" style="font-family: Poppins, sans-serif;font-weight: 600">Settings</div>
+						<div class="tab" onclick="openTab(event, 'setting')" style="font-family: Poppins, sans-serif;font-weight: 600">Tuỳ chỉnh</div>
 				}
 			}
 			<div class="tab" onclick="openTab(event, 'mainload')" style="font-family: Poppins, sans-serif;font-weight: 600" hidden>MainLoad</div>
@@ -1420,14 +1494,14 @@
 			<div class="discussion">
 				<div class="discussion-container">
 					<!-- Khung bên trái nhỏ hơn -->
-					<div class="left-panel">
+					@*<div class="left-panel">
 						<div class="search-box_discuss" style="margin-bottom: 20px;">
 							<!-- Biểu tượng tìm kiếm -->
 							<span class="search-icon_discuss">🔍</span>
 							<!-- Thanh tìm kiếm -->
 							<input type="search"
 								   class="search-input_discuss"
-								   placeholder="Tìm kiếm trên Messenger"
+								   placeholder="Tìm kiếm sinh vien "
 								   aria-label="Tìm kiếm trên Messenger"
 								   dir="ltr"
 								   autocomplete="off"
@@ -1465,7 +1539,7 @@
 							</div>
 
 						</div>
-					</div>
+					</div> *@
 					<div class="right-panel">
 						<div id="messagesList" class="message-list">
 							<partial name="_MessagePartial" model="Model.Message" />
@@ -1518,7 +1592,21 @@
 						</div>
 				}
 			}
+			
 			<div id="listsv1">
+				<div class="container_listsv">
+					<p class="header_listsv">Sĩ số: 0 sinh viên</p>
+					<hr class="hr_listsv">
+
+					<div class="row_listsv">
+						<div class="card_listsv">
+							<img class="img_listsv" src="/Imgs_avtUser/sample.jpg" alt="No Image">
+							<p class="p_listsv">MSSV</p>
+							<p class="p_listsv">Name</p>
+							<button class="invite_button" onclick="sendInvite('sample_id')">Gửi lời mời tạo nhóm</button>
+						</div>
+					</div>
+				</div>
 			</div>
 		</div>
 		<!-- Div bao quanh bảng điểm -->
@@ -1722,7 +1810,7 @@
 
 				<div class="form-group">
 					<label asp-for="@Model.ClassRoom.Description">Mô tả</label>
-					<textarea class="form-control" asp-for="@Model.ClassRoom.Description" name="Description"></textarea>
+					<textarea style="resize: none;" class="form-control" asp-for="@Model.ClassRoom.Description" name="Description"></textarea>
 					<span asp-validation-for="@Model.ClassRoom.Description" class="text-danger"></span>
 				</div>
 
@@ -1782,7 +1870,7 @@
 					<label for="showPrivate">Công khai</label><br />
 				</div>
 
-				<button type="submit" class="btn btn-primary" id="saveButton_setting">Save</button>
+				<button type="submit" class="btn btn-primary" id="saveButton_setting">Lưu thông tin</button>
 			</form>
 		</div>
 		<div id="mainload" class="tabcontent">
@@ -2459,9 +2547,9 @@
 <script src="https://cdn.jsdelivr.net/npm/he@1.2.0/he.min.js"></script>
 <script>
 	document.addEventListener("DOMContentLoaded", async function () {
-		console.log(document.getElementById('FileInput'));  
+		console.log(document.getElementById('FileInput'));
 		const connection = new signalR.HubConnectionBuilder()
-			.withUrl("/chathub") 
+			.withUrl("/chathub")
 			.build();
 
 		connection.onclose(function () {
@@ -2490,7 +2578,7 @@
 	connection.on("ReceiveMessage", function (user, message, fileUrl, urlavt) {
 		var li = document.createElement("li");
 		var classId = document.getElementById("classId").value;
-		
+
 		const currentTime = new Date();
 		const year = currentTime.getFullYear();
 		const month = currentTime.getMonth() + 1;
@@ -2539,17 +2627,18 @@
 		messageBox.appendChild(messageElement);
 		messageBox.appendChild(timeElement);
 
-		
+
 		li.style.cssText = "font-family: 'JetBrains Mono', serif; ";
-		
+
 
 		var userInput = document.getElementById("userInput").value;
 		if (encodedUser === userInput) {
+			// Nếu người gửi là người hiện tại, hiển thị bên trái (current-user)
 			li.classList.add("current-user");
+
 		} else {
 			li.classList.add("other-user");
 			li.appendChild(avatarBox);
-			
 		}
 		li.appendChild(messageBox);
 		const messagesList = document.querySelector(".message-list");
@@ -2575,12 +2664,12 @@
 	function getClassId() {
 		return document.getElementById("classId").value;
 	}
-	
+
 	async function sendMessage() {
 		var user = document.getElementById("userInput").value;
 		var message = document.getElementById("messageInput").value;
 		var classId = document.getElementById("classId").value;
-		var formatTime = getCurrentTime(); 
+		var formatTime = getCurrentTime();
 		var FileInput = document.getElementById("FileInput");
 		var fileUrl = null;
 		var Urlavt = "@((await _userManager.GetUserAsync(User))?.UrlAvt)";
@@ -2588,7 +2677,7 @@
 			var file = FileInput.files[0];
 
 			var formData = new FormData();
-			formData.append("file", file); 
+			formData.append("file", file);
 
 			try {
 				console.log("Đang gửi file tới API...");
@@ -2598,14 +2687,14 @@
 				});
 
 				if (response.ok) {
-					fileUrl = await response.text(); 
+					fileUrl = await response.text();
 				} else {
 					console.error('Lỗi khi upload file.');
-					return;  
+					return;
 				}
 			} catch (err) {
 				console.error('Lỗi khi gửi file: ' + err.toString());
-				return; 
+				return;
 			}
 		}
 		if (message.trim() !== "" || fileUrl) {
@@ -2628,9 +2717,9 @@
 		var fileNameSpan = document.getElementById('messageInput');
 
 		if (fileInput.files.length > 0) {
-        const fileName = fileInput.files[0].name; // Lấy tên file
+			const fileName = fileInput.files[0].name; // Lấy tên file
 
-        // Hiển thị tên file trong khung nhập tin nhắn
+			// Hiển thị tên file trong khung nhập tin nhắn
 			if (messageInput.value.trim() === '') {
 				messageInput.value = fileName; // Nếu khung trống, hiển thị tên file
 			} else {
@@ -2643,7 +2732,7 @@
 
 
 	document.getElementById("sendButton").addEventListener("click", async function (event) {
-		await sendMessage();  
+		await sendMessage();
 	});
 
 	document.getElementById("messageInput").addEventListener("keydown", async function (event) {
@@ -2651,7 +2740,7 @@
 			event.preventDefault();
 			await sendMessage();
 		}
-	});	
+	});
 
 	window.onload = function () {
 		const messagesList = document.querySelector(".message-list");
@@ -2770,32 +2859,30 @@
 	}
 
 	function displayStudents(students) {
-		var listHtml = '<ul style="width: 100%; display: flex; flex-direction: column; align-items: center; padding: 0;">';
+		var listHtml = '<div class="container_listsv">';
 		var tongslsv = students.length;
-		listHtml += '<p style = "margin-left: auto; font-weight: bold;">Sĩ số : ' + tongslsv + ' sinh viên</p>';
-		listHtml += '<hr style = "width: 100%; border: 1px solid orange; margin-top: 0;">'
+		listHtml += '<p class="header_listsv">Sĩ số : ' + tongslsv + ' sinh viên</p>';
+		listHtml += '<hr class="hr_listsv">';
 
-		listHtml += '<li style="width: 100%; display: flex; justify-content: space-between; align-items: center; padding: 0;">';
-		listHtml += '<div style="width: 50%;">' + '</div>';
-		listHtml += '<ul style="width: 50%; padding: 0;">';
-		students.forEach(function (student, index) {
-			listHtml += '<li style="display: flex; align-items: center; margin-bottom: 20px; padding: 0;">';
-			listHtml += '<img src="/Imgs_avtUser/' + student.urlAvt + '" alt="No Image" style="width: 50px; height: 50px; border-radius: 50%; margin-right: 20px; box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); object-fit: cover;"/>';
-			listHtml += '<div style="flex: 1;">' + '<p style="margin: 0; min-width: 0;">' + student.mssv + '_' + student.name + '</p>' + '</div>';
-			listHtml += '</li>';
-
-			// Ki?m tra n?u không ph?i là th? li cu?i cùng
-			if (index !== students.length - 1) {
-				listHtml += '<hr style="width: 80%; border: 0; border-top: 1px solid grey; margin-top: 0; margin-left: -45px;">';
-			}
+		listHtml += '<div class="row_listsv">';
+		students.forEach(function (student) {
+			listHtml += '<div class="card_listsv">';
+			listHtml += '<img class="img_listsv" src="/Imgs_avtUser/' + student.urlAvt + '" alt="No Image">';
+			listHtml += '<p class = "p_listsv">' + student.mssv + '</p>';
+			listHtml += '<p class = "p_listsv">' + student.name + '</p>';
+			listHtml += '<button class="invite_button" onclick="sendInvite(\'' + student.mssv + '\')">Gửi lời mời tạo nhóm</button>';
+			listHtml += '</div>';
 		});
-		listHtml += '</ul>';
-		listHtml += '<div style="width: 25%;">' + '</div>';
-		listHtml += '</li>';
-		listHtml += '</ul>';
-		$('#listsv1').html(listHtml);
+		listHtml += '</div>';
+
+		listHtml += '</div>';
+		$('#listsv1').html(listHtml);;
 	}
 
+	function sendInvite(mssv) {
+		alert('Lời mời tạo nhóm đã được gửi đến sinh viên MSSV: ' + mssv);
+		// Add logic for real-time notification here (e.g., using WebSocket or SignalR)
+	}
 
 	$(document).ready(function () {
 		getListStudents();
