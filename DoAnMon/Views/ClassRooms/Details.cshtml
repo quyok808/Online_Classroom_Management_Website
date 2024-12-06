@@ -207,7 +207,7 @@
 		}
 
 	/* BÀI T?P */
-	.assignment {
+	@* .assignment {
 		background-color: #f9f9f9;
 		padding: 20px;
 		border-radius: 5px;
@@ -231,7 +231,7 @@
 	.assignment-description {
 		margin-bottom: 20px;
 	}
-
+	*@
 	.file-input-wrapper {
 		margin-right: 20px;
 	}
@@ -259,7 +259,7 @@
 
 	.btn:hover {
 		background-color: #0056b3;
-	}
+	} 
 
 	/* UPLOAD BAITAP */
 	.upload-form {
@@ -895,17 +895,128 @@
 	margin-top: 0;
 	font-weight:bold;
 }
+.btn-taobaitap{
+	background-color: rgb(74, 113, 255);
+	font-family: 'Itim', serif;
+	color: white; 
+	padding: 12px 24px;
+	border: none; 
+	border-radius: 50px; 
+	cursor: pointer;
+	transition: all 0.3s ease; 
+	font-size: 16px; 
+	font-weight: bold; 
+}
+
+		.btn-taobaitap:hover {
+			background-color: rgb(23 0 255);
+			transform: translateY(-3px); 
+		}
+
+	.khungtaobaitap {
+		position: fixed;
+		transform: translate(-50%, -50%);
+		top: 50%;
+		left: 50%;
+		font-family: 'Itim', serif;
+		background-color: #dce2fd;
+		padding: 20px;
+		border-radius: 8px;
+		box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+		width: 800px;
+		text-align: left;
+		font-size:16px;
+	}
+
+	.close-btn {
+		background-color: #ff4d4d;
+		color: #fff;
+		border: none;
+		border-radius: 4px;
+		padding: 7px 15px;
+		cursor: pointer;
+		font-size: 16px;
+		margin-top:20px;
+		float:right;
+	}
+
+		.close-btn:hover {
+			background-color: #ff1a1a;
+		}
+
+	.giaobai-btn {
+		background-color: rgb(74, 113, 255);
+		color: #fff;
+		border: none;
+		border-radius: 4px;
+		padding: 7px 15px;
+		cursor: pointer;
+		font-size: 16px;
+		margin-top: 20px;
+		background-color: rgb(74, 113, 255);
+	}
+
+		.giaobai-btn:hover {
+			background-color: rgb(23 0 255);
+		}
+	/*Bài tập*/
+	.danhsach_assignment {
+		display: flex; 
+		margin-top:20px;
+		font-family: 'Itim', serif;
+		border-radius: 8px;
+		width:100%;
+		border: 1px solid black;
+	}
+
+	.assignment-left-box {
+		padding: 20px;
+		width: 50%;
+		font-size:16px;
+	}
+	.assignment-middle-box {
+		padding: 20px;
+		width: 25%;
+		font-size:16px;
+	}
+
+	.assignment-right-box {
+		padding: 20px;
+		width: 25%;
+		font-size:16px;
+	}
+	.divider {
+		width: 1px;
+		background-color: #ccc; /* Màu gạch dọc */
+	}
+	.btn-nopbai {
+		background-color: rgb(74, 113, 255); 
+		color: white; 
+		border: none;
+		border-radius: 5px;
+		padding: 5px;
+		font-size: 16px;
+	}
+	.btn-xemtruoc {
+		background-color: rgb(74, 113, 255); 
+		color: white;
+		border: none;
+		border-radius: 5px;
+		padding: 5px;
+		font-size: 16px;
+		float:right;
+	}
 
 </style>
 
 <style>
 	.button_btnBaiGiang {
-  position: relative;
-  width: 10rem;
-  height: 3rem;
-  cursor: pointer;
-  border: none;
-  background: none;
+	  position: relative;
+	  width: 10rem;
+	  height: 3rem;
+	  cursor: pointer;
+	  border: none;
+	  background: none;
 }
 
 .button_btnBaiGiang svg {
@@ -1058,17 +1169,17 @@
 <style>
 	.custom-file-upload {
 		display: inline-block;
-		padding: 10px 20px;
+		padding: 5px;
 		cursor: pointer;
-		background-color: #007bff;
+		background-color: rgb(74, 113, 255);
 		color: white;
-		border: none;
 		border-radius: 5px;
 		font-size: 14px;
+		margin-top:10px;
 	}
 
 		.custom-file-upload:hover {
-			background-color: #0056b3;
+			background-color: rgb(23 0 255);
 		}
 
 	#fileInput {
@@ -1094,7 +1205,7 @@
 							<i class="fa-solid fa-camera"></i>
 							Thay đổi ảnh bìa
 						</label>
-						<input id="file-upload" type="file" name="image" accept="image/*" required
+						<input id="file-upload" type="file" name="image" accept="image" required
 							onchange="document.getElementById('changeBG').submit();" style="display:none;" />
 					</form>
 		}
@@ -1232,184 +1343,281 @@
 	</div>
 
 </div>
-<div id="assignments" class="tabcontent">
+<div id="assignments" class="tabcontent" style="width:100%">
 	@{
 		if (Model.isOwner)
 		{
-					<button id="uploadButton" onclick="Showtaobaitap()"
-							style="
-									background-color: #3498db;
-									font-family: Poppins, sans-serif;
-									color: #ffffff;
-									padding: 10px 20px;
-									border: none;
-									border-radius: 5px;
-									cursor: pointer;
-									transition: background-color 0.3s;
-									font-size: 15px;
-									font-weight: bold;">
-						Tạo bài tập mới
-					</button>
-					<form id="uploadbaitap" action="/ClassRooms/CreateBaitap" method="POST" style="display: none;">
-						<div class="form-section">
-							<label for="titleInput">Tiêu đề bài tập:</label>
-							<input type="text" name="Title" id="titleInput" class="form-control" placeholder="Nhập tiêu đề">
-							<label for="descriptionInput">Mô tả bài tập:</label>
-							<textarea name="Content" id="descriptionInput" class="form-control" placeholder="Nhập mô tả"></textarea>
-							<label for="deadlineInput">Hạn nộp:</label>
-							<input type="datetime-local" name="Deadline" id="deadlineInput" class="form-control">
-							<label for="fileFormatSelect">Chọn định dạng file cần nộp:</label>
-							<select name="FileFormat" id="fileFormatSelect">
-								<option value="pdf">pdf</option>
-								<option value="docx">docx</option>
-								<option value="xlsx">xls</option>
-								<option value="allfile">all file</option>
-							</select>
-							<div></div>
-							<label for="maxSize">Dung lượng tối đa:</label>
-							<input type="number" name="MaxSize" id="maxSize" class="form-control" placeholder="Dung lượng tối đa cho phép nộp (MB)" />
-						</div>
-						<input type="hidden" name="ClassId" id="classIdInput" value="@Model.ClassRoom.Id">
-						<label for="fileInput">Hướng dẫn (Nếu có): </label>
-						<input type="hidden" name="AttactURL" id="attactURL">
-						<label for="fileInput" class="custom-file-upload">
-							Upload file HD
-						</label>
-						<input type="file" name="FileUpLoad" id="fileInput" onchange="uploadFile()" />
+			<button id="uploadButton" onclick="Showtaobaitap()" class="btn-taobaitap">Tạo bài tập mới</button>
+			<form class="khungtaobaitap" id="uploadbaitap" action="/ClassRooms/CreateBaitap" method="POST" style="display: none;">
+				<div class="form-section" >
+					<label for="titleInput">Tiêu đề bài tập:</label>
+					<input type="text" name="Title" id="titleInput" class="form-control" placeholder="Nhập tiêu đề">
+					<label for="descriptionInput">Mô tả bài tập:</label>
+					<textarea name="Content" id="descriptionInput" class="form-control" placeholder="Nhập mô tả"></textarea>
+					<label for="deadlineInput">Hạn nộp:</label>
+					<input type="datetime-local" name="Deadline" id="deadlineInput" class="form-control">
+					<label for="fileFormatSelect">Chọn định dạng file cần nộp:</label>
+					<select name="FileFormat" id="fileFormatSelect">
+						<option value="pdf">pdf</option>
+						<option value="docx">docx</option>
+						<option value="xlsx">xls</option>
+						<option value="allfile">all file</option>
+					</select>
+					<div></div>
+					<label for="maxSize">Dung lượng tối đa:</label>
+					<input type="number" name="MaxSize" id="maxSize" class="form-control" placeholder="Dung lượng tối đa cho phép nộp (MB)" />
+				</div>
+				<input type="hidden" name="ClassId" id="classIdInput" value="@Model.ClassRoom.Id">
+				<label for="fileInput">Hướng dẫn (Nếu có): </label>
+				<input type="hidden" name="AttactURL" id="attactURL">
+				<label for="fileInput" class="custom-file-upload">
+					Upload file HD
+				</label>
+				<input type="file" name="FileUpLoad" id="fileInput" onchange="uploadFile()" />
 
-						<div class="modal" id="uploadModal" style="background-color: transparent;">
-						<div class="modal-content">
-							<div class="modal-header">
-								<h5 class="modal-title">Uploading File...</h5>
-							</div>
-							<div class="modal-body text-center">
-								<div class="loader" id="loader" style="display: block;"></div>
-								<progress id="progressBar" value="0" max="100" style="display: none;"></progress>
-								<div id="progressText" style="display: block;" class="mt-3">0%</div>
-								<div id="successText" class="mt-3" style="display: none;">Upload thành công</div>
-							</div>
+				<div class="modal" id="uploadModal" style="background-color: transparent;">
+					<div class="modal-content">
+						<div class="modal-header">
+							<h5 class="modal-title">Uploading File...</h5>
 						</div>
+						<div class="modal-body text-center">
+							<div class="loader" id="loader" style="display: block;"></div>
+							<progress id="progressBar" value="0" max="100" style="display: none;"></progress>
+							<div id="progressText" style="display: block;" class="mt-3">0%</div>
+							<div id="successText" class="mt-3" style="display: none;">Upload thành công</div>
 						</div>
+					</div>
+				</div>
 
-						<div class="modal-backdrop" id="modalBackdrop"></div>
-						<div id="TenFile" style="display: inline;"></div>
-						<div></div>
-						<input type="submit" value="Giao bài" class="btn btn-primary"></input> <!-- Nút giao bài -->
-					</form>
+				<div class="modal-backdrop" id="modalBackdrop"></div>
+				<div id="TenFile" style="display: inline;"></div>
+				<div></div>
+				<input type="submit" value="Giao bài" class="giaobai-btn"></input> 
+				<button class="close-btn">Đóng</button>
+			</form>
 		}
 	}
-	<div class="assignments">
-		<h2 style="font-family: Poppins, sans-serif;">Danh sách bài tập</h2>
+	
 		@foreach (var assignment in Model.Homework.ToList())
-		{
-			<div class="assignment" style="height: 35vh;">
-				<div class="assignment-content" style="border-right: 1px solid black; height: 100%; width: 100%; margin: 50px; ">
-					@{
-						if (Model.isOwner)
-						{
-									<a class="btn btn-info" style="float: left; max-width: 50px; padding: 5px;" asp-action="DeleteBT" asp-controller="ClassRooms" asp-route-id="@assignment.Id" asp-route-classId="@assignment.ClassRoomId" onclick="return confirm('Bạn có chắc muốn xoá không ?')">Xóa</a>
-						}
-					}
-					<h3 class="text-center">@assignment.Title</h3>
-					<p class="assignment-description">@assignment.Content</p>
-					@{
-						if (assignment.Deadline.HasValue)
-						{
-									<p class="assignment-description">Hạn nộp: @assignment.Deadline</p>
-						}
-						else
-						{
-									<p class="assignment-description">Hạn nộp: Vô thời hạn</p>
-						}
-					}
+		{		
+			<div class="danhsach_assignment">
+				<div class="assignment-left-box">
+					<h3 style="margin-top:0;">@assignment.Title</h3>
+					<p >@assignment.CreatedAt</p>
+					<p style="margin:0;">@assignment.Content</p>
 
-					<p class="assignment-file-format">Yêu cầu nộp file: @assignment.FileFormat</p>
-					<p class ="assignment-description">Dung lượng file tối đa: @assignment.MaxSize MB</p>
 					@if (!string.IsNullOrEmpty(assignment.attractUrl))
 					{
 						<a href="/Uploads/BAITAP/@assignment.attractUrl" target="_blank" style="text-decoration:none; color: deepskyblue!important;">@assignment.attractUrl</a>
 					}
 				</div>
+				<div class="divider"></div>
+				<div class="assignment-middle-box">
 				@{
-					// L?y userId
-					string userId = user != null ? user.Id : null;
+						if (assignment.Deadline.HasValue)
+						{
+							<p >Hạn đến @assignment.Deadline</p>
+						}
+						else
+						{
+							<p>Vô thời hạn</p>
+						}
+					}
+					<p class="assignment-file-format">Yêu cầu nộp file: @assignment.FileFormat</p>
+					<p class ="assignment-description">Dung lượng file tối đa: @assignment.MaxSize MB</p>
+				</div>
+				<div class="divider"></div>
+				<div class="assignment-right-box">
+					@{
+						// L?y userId
+						string userId = user != null ? user.Id : null;
 
-					// L?y baiTapId t? assignment ho?c t? noi khác
-					string baiTapId = assignment != null ? assignment.Id : null;
+						// L?y baiTapId t? assignment ho?c t? noi khác
+						string baiTapId = assignment != null ? assignment.Id : null;
 
-					// Ki?m tra xem user dã n?p bài t?p hay chua
-					bool hasSubmitted = userId != null && baiTapId != null ? CheckNop.HasUserSubmittedBaiTap(userId, baiTapId) : false;
-				}
+						// Ki?m tra xem user dã n?p bài t?p hay chua
+						bool hasSubmitted = userId != null && baiTapId != null ? CheckNop.HasUserSubmittedBaiTap(userId, baiTapId) : false;
+					}
 
-				<form id="submitForm_@assignment.Id" action="/ClassRooms/Nopbai" method="post" enctype="multipart/form-data" class="assignment-form" onsubmit="return validateAndSubmit('@assignment.FileFormat', '@assignment.Id', event)">
+					<form id="submitForm_@assignment.Id" action="/ClassRooms/Nopbai" method="post" enctype="multipart/form-data" class="assignment-form" onsubmit="return validateAndSubmit('@assignment.FileFormat', '@assignment.Id', event)">
 
-					<div class="upload-form " style="margin-right: 30px;">
-						@{
-							if (!Model.isOwner)
-							{
-										<label for="file-upload" class="file-label1" style="white-space: nowrap;">Bài tập của bạn</label>
-										<div class="file-input-wrapper">
-										@{
-									if (hasSubmitted)
-									{
-														<p style="text-align: center; margin-left: 15px;">Đã nộp bài</p>
-									}
-									else
-									{
-										// Ki?m tra deadline
-										if (assignment != null && assignment.Deadline.HasValue)
+						<div class="upload-form " style="margin-right: 30px;font-size:16px;">
+							@{
+								if (!Model.isOwner)
+								{
+									<label for="file-upload" class="file-label1" style="white-space: nowrap;">Bài tập của bạn</label>
+									<div class="file-input-wrapper">
+									@{
+										if (hasSubmitted)
 										{
-											// L?y ngày deadline
-											DateTime deadline = assignment.Deadline.Value;
-
-											// Ki?m tra xem deadline dã qua hay chua
-											if (DateTime.Now > deadline)
-											{
-												// X? lý khi deadline dã qua
-												// Ví d?: hi?n th? thông báo cho ngu?i dùng
-																<p>Deadline dã qua. Không thể nộp bài tập nữa.</p>
-											}
-											else
-											{
-												// X? lý khi deadline chua qua
-												// Ví d?: cho phép ngu?i dùng n?p bài t?p
-														<p>Thiếu</p>
-														<input id="FileInput_@assignment.Id" type="file" name="FileNopbai" accept="@(assignment.FileFormat == "allfile" ? "*/*" : assignment.FileFormat)" onchange="checkFileSize(this, @assignment.MaxSize)">
-
-														<input type="hidden" name="ClassId" id="classIdInput" value="@Model.ClassRoom.Id">
-														<input type="hidden" name="BaitapId" id="baitapinput" value="@assignment.Id">
-														<input type="hidden" id="uploadedFilePath" name="UploadedFilePath">
-														<p id="uploadStatus_@assignment.Id"></p>
-														<button type="submit" id="uploadButton_@assignment.Id">Nộp bài</button>
-														<button type="button" onclick="previewFile('@assignment.Id')">Xem trước</button>
-											}
+											<p style="text-align: center; margin-left: 15px; font-weight:bold;">Đã nộp bài</p>
 										}
 										else
 										{
-											// X? lý khi không có deadline du?c d?t
-													<p>Thiếu</p>
-													<input id="FileInput_@assignment.Id" type="file" name="FileNopbai" accept="@(assignment.FileFormat == "allfile" ? "*/*" : assignment.FileFormat)" onchange="checkFileSize(this, @assignment.MaxSize)">
+											// Ki?m tra deadline
+											if (assignment != null && assignment.Deadline.HasValue)
+											{
+												// L?y ngày deadline
+												DateTime deadline = assignment.Deadline.Value;
+
+												// Ki?m tra xem deadline dã qua hay chua
+												if (DateTime.Now > deadline)
+												{
+													// X? lý khi deadline dã qua
+													// Ví d?: hi?n th? thông báo cho ngu?i dùng
+													<p style="text-align:center;">Deadline dã qua. Không thể nộp bài tập nữa.</p>
+												}
+												else
+												{
+													// X? lý khi deadline chua qua
+													// Ví d?: cho phép ngu?i dùng n?p bài t?p
+													<p style="font-weight:bold;">Thiếu</p>
+													<input id="FileInput_@assignment.Id" type="file" name="FileNopbai" accept="@(assignment.FileFormat == "allfile" ? "*" : assignment.FileFormat)" onchange="checkFileSize(this, @assignment.MaxSize)">
 
 													<input type="hidden" name="ClassId" id="classIdInput" value="@Model.ClassRoom.Id">
 													<input type="hidden" name="BaitapId" id="baitapinput" value="@assignment.Id">
 													<input type="hidden" id="uploadedFilePath" name="UploadedFilePath">
 													<p id="uploadStatus_@assignment.Id"></p>
-													<button type="submit" id="uploadButton_@assignment.Id">Nộp bài</button>
-													<button type="button" onclick="previewFile('@assignment.Id')">Xem trước</button>
+													<button type="submit" id="uploadButton_@assignment.Id" class="btn-nopbai">Nộp bài</button>
+													<button type="button" onclick="previewFile('@assignment.Id')" class="btn-xemtruoc">Xem trước</button>
+												}
+											}
+											else
+											{
+												// X? lý khi không có deadline du?c d?t
+												<p style="font-weight:bold;">Thiếu</p>
+												<input id="FileInput_@assignment.Id" type="file" name="FileNopbai" accept="@(assignment.FileFormat == "allfile" ? "*/*" : assignment.FileFormat)" onchange="checkFileSize(this, @assignment.MaxSize)">
+												<input type="hidden" name="ClassId" id="classIdInput" value="@Model.ClassRoom.Id">
+												<input type="hidden" name="BaitapId" id="baitapinput" value="@assignment.Id">
+												<input type="hidden" id="uploadedFilePath" name="UploadedFilePath">
+												<p id="uploadStatus_@assignment.Id"></p>
+												<button type="submit" id="uploadButton_@assignment.Id" class="btn-nopbai">Nộp bài</button>
+												<button type="button" onclick="previewFile('@assignment.Id')" class="btn-xemtruoc">Xem trước</button>
+											}
 										}
 									}
-										}
 									</div>
 									<div id="previewContainer_@assignment.Id"></div>
+								}
+								else
+								{
+									<a asp-action="GetAllBTStu" asp-controller="ClassRooms" asp-route-classid="@Model.ClassRoom.Id" asp-route-baitapID="@assignment.Id" class="btn btn-info ">Xem bài tập đã nộp</a>
+								}
 							}
-							else
-							{
-										<a asp-action="GetAllBTStu" asp-controller="ClassRooms" asp-route-classid="@Model.ClassRoom.Id" asp-route-baitapID="@assignment.Id" class="btn btn-info ">Xem bài tập đã nộp</a>
-							}
-						}
-					</div>
-				</form>
+						</div>
+					</form>
+				</div>
 			</div>
+			
+
+			// <div class="assignment" style="height: 35vh;">
+			// 	<div class="assignment-content" style="border-right: 1px solid black; height: 100%; width: 100%; margin: 50px; ">
+			// 		@{
+			// 			if (Model.isOwner)
+			// 			{
+			// 						<a class="btn btn-info" style="float: left; max-width: 50px; padding: 5px;" asp-action="DeleteBT" asp-controller="ClassRooms" asp-route-id="@assignment.Id" asp-route-classId="@assignment.ClassRoomId" onclick="return confirm('Bạn có chắc muốn xoá không ?')">Xóa</a>
+			// 			}
+			// 		}
+			// 		<h3 class="text-center">@assignment.Title</h3>
+			// 		<p class="assignment-description">@assignment.Content</p>
+			// 		@{
+			// 			if (assignment.Deadline.HasValue)
+			// 			{
+			// 						<p class="assignment-description">Hạn nộp: @assignment.Deadline</p>
+			// 			}
+			// 			else
+			// 			{
+			// 						<p class="assignment-description">Hạn nộp: Vô thời hạn</p>
+			// 			}
+			// 		}
+
+			// 		<p class="assignment-file-format">Yêu cầu nộp file: @assignment.FileFormat</p>
+			// 		<p class ="assignment-description">Dung lượng file tối đa: @assignment.MaxSize MB</p>
+			// 		@if (!string.IsNullOrEmpty(assignment.attractUrl))
+			// 		{
+			// 			<a href="/Uploads/BAITAP/@assignment.attractUrl" target="_blank" style="text-decoration:none; color: deepskyblue!important;">@assignment.attractUrl</a>
+			// 		}
+			// 	</div>
+			// 	@{
+			// 		// L?y userId
+			// 		string userId = user != null ? user.Id : null;
+
+			// 		// L?y baiTapId t? assignment ho?c t? noi khác
+			// 		string baiTapId = assignment != null ? assignment.Id : null;
+
+			// 		// Ki?m tra xem user dã n?p bài t?p hay chua
+			// 		bool hasSubmitted = userId != null && baiTapId != null ? CheckNop.HasUserSubmittedBaiTap(userId, baiTapId) : false;
+			// 	}
+
+			// 	<form id="submitForm_@assignment.Id" action="/ClassRooms/Nopbai" method="post" enctype="multipart/form-data" class="assignment-form" onsubmit="return validateAndSubmit('@assignment.FileFormat', '@assignment.Id', event)">
+
+			// 		<div class="upload-form " style="margin-right: 30px;">
+			// 			@{
+			// 				if (!Model.isOwner)
+			// 				{
+			// 							<label for="file-upload" class="file-label1" style="white-space: nowrap;">Bài tập của bạn</label>
+			// 							<div class="file-input-wrapper">
+			// 							@{
+			// 						if (hasSubmitted)
+			// 						{
+			// 											<p style="text-align: center; margin-left: 15px;">Đã nộp bài</p>
+			// 						}
+			// 						else
+			// 						{
+			// 							// Ki?m tra deadline
+			// 							if (assignment != null && assignment.Deadline.HasValue)
+			// 							{
+			// 								// L?y ngày deadline
+			// 								DateTime deadline = assignment.Deadline.Value;
+
+			// 								// Ki?m tra xem deadline dã qua hay chua
+			// 								if (DateTime.Now > deadline)
+			// 								{
+			// 									// X? lý khi deadline dã qua
+			// 									// Ví d?: hi?n th? thông báo cho ngu?i dùng
+			// 													<p>Deadline dã qua. Không thể nộp bài tập nữa.</p>
+			// 								}
+			// 								else
+			// 								{
+			// 									// X? lý khi deadline chua qua
+			// 									// Ví d?: cho phép ngu?i dùng n?p bài t?p
+			// 											<p>Thiếu</p>
+			// 											<input id="FileInput_@assignment.Id" type="file" name="FileNopbai" accept="@(assignment.FileFormat == "allfile" ? "*" : assignment.FileFormat)" onchange="checkFileSize(this, @assignment.MaxSize)">
+
+			// 											<input type="hidden" name="ClassId" id="classIdInput" value="@Model.ClassRoom.Id">
+			// 											<input type="hidden" name="BaitapId" id="baitapinput" value="@assignment.Id">
+			// 											<input type="hidden" id="uploadedFilePath" name="UploadedFilePath">
+			// 											<p id="uploadStatus_@assignment.Id"></p>
+			// 											<button type="submit" id="uploadButton_@assignment.Id">Nộp bài</button>
+			// 											<button type="button" onclick="previewFile('@assignment.Id')">Xem trước</button>
+			// 								}
+			// 							}
+			// 							else
+			// 							{
+			// 								// X? lý khi không có deadline du?c d?t
+			// 										<p>Thiếu</p>
+			// 										<input id="FileInput_@assignment.Id" type="file" name="FileNopbai" accept="@(assignment.FileFormat == "allfile" ? "*/*" : assignment.FileFormat)" onchange="checkFileSize(this, @assignment.MaxSize)">
+
+			// 										<input type="hidden" name="ClassId" id="classIdInput" value="@Model.ClassRoom.Id">
+			// 										<input type="hidden" name="BaitapId" id="baitapinput" value="@assignment.Id">
+			// 										<input type="hidden" id="uploadedFilePath" name="UploadedFilePath">
+			// 										<p id="uploadStatus_@assignment.Id"></p>
+			// 										<button type="submit" id="uploadButton_@assignment.Id">Nộp bài</button>
+			// 										<button type="button" onclick="previewFile('@assignment.Id')">Xem trước</button>
+			// 							}
+			// 						}
+			// 							}
+			// 						</div>
+			// 						<div id="previewContainer_@assignment.Id"></div>
+			// 				}
+			// 				else
+			// 				{
+			// 							<a asp-action="GetAllBTStu" asp-controller="ClassRooms" asp-route-classid="@Model.ClassRoom.Id" asp-route-baitapID="@assignment.Id" class="btn btn-info ">Xem bài tập đã nộp</a>
+			// 				}
+			// 			}
+			// 		</div>
+			// 	</form>
+			// </div>
 		}
 	</div>
 </div>
@@ -2129,6 +2337,7 @@
 
 		var uploadForm = document.getElementById("uploadbaitap");
 		uploadForm.style.display = "block"; // Hi?n th? form khi nút du?c nh?n
+		document.querySelector('.overlay').style.display = 'block';
 
 		// Hi?n th? ph?n nh?p tiêu d?
 		var titleInput = document.getElementById("titleInput");
@@ -2141,6 +2350,10 @@
 		var attachmentForm = document.getElementById("attachmentForm");
 		attachmentForm.style.display = "block"; // Hi?n th? form dính kèm
 	}
+	document.querySelector('.close-btn').addEventListener('click', () => {		
+		document.getElementById("uploadbaitap").style.display = "none"; 
+		document.getElementById("uploadButton").style.display = "block";
+	});
 
 </script> @* T?o bài t?p m?i *@
 <script>
