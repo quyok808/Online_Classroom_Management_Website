@@ -21,6 +21,7 @@ namespace DoAnMon.Models
 		public TimeSpan StartTime { get; set; }
 		public TimeSpan EndTime { get; set; }
 
+        public int? ShowRubric { get; set; } = 0;
         public Rubric? Rubric { get; set; }
 		[ValidateNever]
         public ICollection<ClassroomDetail> ClassroomDetails { get; set; }
