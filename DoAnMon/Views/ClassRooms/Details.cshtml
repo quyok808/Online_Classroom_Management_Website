@@ -436,40 +436,19 @@
 		gap: 10px;
 	}
 
-	.card {
-		border: 1px solid #ccc;
-		padding: 15px;
-		border-radius: 10px;
-		margin-bottom: 15px;
-		box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-		position: relative;
-		min-width: 215px;
-		margin-top: 15px;
-		margin-right: 15pc;
-	}
-
-	.card-title {
-		font-size: 1.25rem;
-		font-weight: bold;
-	}
-
-	.card-text {
-		font-size: 1rem;
-	}
-
 	.delete-btn {
-		position: absolute; /* Position it absolutely within the card */
-		top: 10px; /* Adjust as needed */
-		right: 5px; /* Adjust as needed */
-		border: none; /* Remove border */
-		background: transparent; /* Make background transparent */
-		font-size: 18px; /* Adjust size */
-		color: #fff; /* Change color to white */
-		cursor: pointer; /* Change cursor to pointer */
+		position: absolute; 
+		top: 10px;
+		right: 10px;
+		border: none; 
+		background: transparent; 
+		font-size: 30px; 
+		color: black ;
+		cursor: pointer; 
 	}
 
 		.delete-btn:hover {
-			color: #ff0000; /* Change color on hover */
+			color: #ff0000; 
 		}
 
 	.ctnleaveForm{
@@ -849,27 +828,68 @@
 		font-weight: 600;
 	}
 
-
-	.notification-box {
-		display: none; /* Ẩn thông báo mặc định */
-		position: fixed; /* Đặt vị trí cố định trên màn hình */
-		top: 50%; /* Căn giữa theo trục dọc */
-		left: 50%; /* Căn giữa theo trục ngang */
-		transform: translate(-50%, -50%); /* Dịch chuyển để khung nằm chính giữa */
-		padding: 20px;
-		margin: 0; /* Xóa margin để không ảnh hưởng đến vị trí */
-		border: 1px solid #ccc;
-		background-color: #e0f7fa;
-		border-radius: 5px;
-		width: 50%; /* Độ rộng bằng 50% màn hình, có thể tùy chỉnh */
-		max-width: 400px; /* Giới hạn độ rộng tối đa */
-		box-sizing: border-box;
-		box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Tạo hiệu ứng đổ bóng */
-		z-index: 1000; /* Đảm bảo khung nằm trên các thành phần khác */
-        }
 .btn:hover{
 			background-color: lightgray;
 }
+.btn-nghiphep{
+	background-color: rgb(74, 113, 255); 
+    color: white;             
+    border: none;           
+    border-radius: 8px;      
+    padding: 5px;     
+    font-size: 16px; 
+	font-weight:bold;
+    cursor: pointer; 
+	font-family: 'Itim', serif;
+}
+	.btn-nghiphep:hover {
+		background-color: #2000ff; 
+		color:white;
+	}
+.card-letter {
+	margin-top:20px;
+	border-radius: 20px;
+	padding: 20px;
+	box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+	transition: all 0.3s ease;
+	position: relative;
+}
+
+	.card-letter:hover {
+		transform: translateY(-5px);
+	}
+.btn-duyet {
+    background-color: #28a745; 
+    color: white;            
+    border: none;            
+    border-radius: 5px;       
+    padding: 4px 8px;       
+    margin-right: 10px;        
+    font-size: 16px;   
+	font-family: 'Itim', serif;
+}
+.btn-tu-choi {
+    background-color: #dc3545; 
+    color: white;             
+    border: none;             
+    border-radius: 5px;      
+    padding: 4px 8px;        
+    font-size: 16px;          
+	font-family: 'Itim', serif;
+}
+
+.card-text{
+	font-size:16px;
+	font-family: 'Itim', serif;		
+}
+
+.card-title{
+	font-size:16px;
+	font-family: 'Itim', serif;
+	margin-top: 0;
+	font-weight:bold;
+}
+
 </style>
 <style>
 	.container_listsv {
@@ -1092,6 +1112,7 @@
 .button_btnBaiGiang.focus .loading_btnBaiGiang {
 	stroke-dasharray: 100 0; /* Hiển thị thanh tiến trình */
 }
+
 </style>
 <style>
 	.material-symbols-outlined {
@@ -1756,7 +1777,7 @@
 		</div>*@
 
 		<div id="letter" class="tabcontent">
-			<button type="button" class="btn btn-primary" onclick="toggleLeaveRequestForm()">Tạo đơn xin nghỉ phép</button>
+			<button type="button" class="btn btn-nghiphep" onclick="toggleLeaveRequestForm()">Tạo đơn xin nghỉ phép</button>
 			<div id="leaveRequestFormContainer" style="display:none; margin-top: 20px;">
 				<form id="leaveRequestForm">
 					<input type="hidden" name="Id" value="0" />
@@ -3218,15 +3239,15 @@ function submitLeaveRequest(event) {
 
 	function createLeaveRequestCard(request) {
 		const card = document.createElement('div');
-		card.classList.add('card', 'h-100', 'position-relative'); // Ensure cards are equal height
+		card.classList.add('card-letter', ); // Ensure cards are equal height
 
 		// Set the background color based on status
 		if (request.status === 0) {
-			card.style.backgroundColor = 'yellow'; // Background color for status 0
+			card.style.backgroundColor = '#fff26a'; // Background color for status 0
 		} else if (request.status === 1) {
-			card.style.backgroundColor = 'lightgreen'; // Background color for status 1
+			card.style.backgroundColor = '#76ff93'; // Background color for status 1
 		} else if (request.status === -1) {
-			card.style.backgroundColor = 'lightcoral'; // Background color for status -1
+				card.style.backgroundColor = '#ff8c8c'; // Background color for status -1
 		}
 
 		const cardBody = document.createElement('div');
@@ -3265,7 +3286,7 @@ function submitLeaveRequest(event) {
 				// Tạo button Duyệt
 				const approveButton = document.createElement('button');
 				approveButton.textContent = 'Duyệt';
-				approveButton.classList.add('btn', 'btn-success', 'mr-2');
+				approveButton.classList.add('btn-duyet');
 				approveButton.onclick = function () {
 					updateLeaveRequestStatus(request.id, 1); // 1 cho "Đã duyệt"
 				};
@@ -3273,7 +3294,7 @@ function submitLeaveRequest(event) {
 				// Tạo button Từ chối
 				const rejectButton = document.createElement('button');
 				rejectButton.textContent = 'Từ chối';
-				rejectButton.classList.add('btn', 'btn-danger');
+				rejectButton.classList.add('btn-tu-choi');
 				rejectButton.onclick = function () {
 					updateLeaveRequestStatus(request.id, -1); // -1 cho "Đã từ chối"
 				};
