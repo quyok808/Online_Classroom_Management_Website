@@ -31,6 +31,7 @@ namespace DoAnMon.ViewModels
         [Display(Name = "Giờ kết thúc")]
         [DataType(DataType.Time)]
         public TimeSpan EndTime { get; set; }
-    }
+		public int? ShowRubric { get; set; }
+	}
 
 }

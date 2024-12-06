@@ -44,6 +44,18 @@ namespace DoAnMon.SignalR
 
 			_context.Messages.Add(newMessage);
 			await _context.SaveChangesAsync();
-		}	
+		}
+
+		public async Task NotifyUser(string receiverUserId, string senderUserId, string message)
+		{
+			// Gửi thông báo tới user B
+			await Clients.User(receiverUserId).SendAsync("ReceiveNotification", senderUserId, message);
+		}
+
+		public async Task UpdateButtonState(string senderUserId, string receiverUserId, string state)
+		{
+			// Cập nhật trạng thái button (state: accepted/rejected)
+			await Clients.Users(senderUserId, receiverUserId).SendAsync("ChangeButtonState", state);
+		}
 	}
 }
