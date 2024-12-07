@@ -1,0 +1,239 @@
+﻿@using DoAnMon.IdentityCudtomUser
+@using Microsoft.AspNetCore.Identity
+
+@inject UserManager<CustomUser> _userManager
+@inject IUserStore<CustomUser> _userStore
+
+@model IEnumerable<DoAnMon.Models.FriendRequest>
+@{
+    ViewData["Title"] = "Notifications";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    
+}
+
+<style>
+    
+    .card_noti {
+        width: 250px;
+        height: 200px;
+        border-radius: 15px;
+        background: rgba(203, 157, 240, 0.7);
+        display: flex;
+        flex-direction: column;
+        position: relative;
+        overflow: hidden;
+        box-shadow: 5px 5px 5px #B4B4B8;
+    }
+
+    .card_noti::before {
+        content: "";
+        height: 100px;
+        width: 100px;
+        position: absolute;
+        top: -40%;
+        left: -20%;
+        border-radius: 50%;
+        border: 35px solid rgba(250, 247, 240, 0.3);
+        transition: all .8s ease;
+        filter: blur(.5rem);
+    }
+
+    .text_noti {
+        flex-grow: 1;
+        padding: 15px;
+        display: flex;
+        flex-direction: column;
+        color: aliceblue;
+        font-weight: 900;
+        font-size: 18px;
+        font-family: "Literata", sans-serif;
+    }
+
+    .subtitle_noti {
+        font-size: 11px;
+        font-weight: 300;
+        color: rgba(240, 248, 255, 0.691);
+    }
+
+    .icons_noti {
+        display: flex;
+        justify-items: center;
+        align-items: center;
+        width: 250px;
+        border-radius: 0px 0px 15px 15px;
+        overflow: hidden;
+    }
+
+    .btn_noti {
+        border: none;
+        width: 84px;
+        height: 35px;
+        background-color: rgba(247, 234, 234, 0.589);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+    }
+
+    .btn_noti:hover {
+        background-color: #F5F5F7;
+        text-decoration: none;
+    }
+
+    .card_noti:hover::before {
+        width: 200px;
+        height: 200px;
+        top: -30%;
+        left: 50%;
+        filter: blur(0rem);
+    }
+
+    .container_noti{
+        margin-top: 80px;
+        display: grid;
+        grid-template-columns: repeat(5, 1fr);
+        gap: 20px;
+        padding: 25px;
+        margin-left: 1%;
+    }
+</style>
+<div class="container_noti" id="con_noti">
+    @foreach (var item in Model)
+    {
+        var currentUser = await _userManager.FindByIdAsync(item.RequesterId);
+
+        if (currentUser != null)
+        {
+            if (item.IsAccepted != true)
+            {
+                <div class="card_noti">
+                    <div class="text_noti">
+                        <span style="color: #000"><span>@currentUser.Name</span> đã mời bạn vào nhóm !!!</span>
+                        <p class="subtitle_noti" style="color: #000; margin: 0;">Mã lớp: @item.ClassID</p>
+                        <input type="text" id="timecreate_@item.Id" value="@(item.createAt.HasValue ? item.createAt.Value.ToString("dd/MM/yyyy HH:mm:ss") : "N/A")" hidden />
+                        <p class="subtitle_noti" id="time_@item.Id" style="color: #000"></p>
+                    </div>
+                    <div class="icons_noti" id="noti_@item.Id">
+                        <a class="btn_noti" onclick="UpdateStatusNoti(@item.Id, 1, '@item.ClassID' )">
+                            <i class="fa-solid fa-check"></i>
+                        </a>
+                        <a class="btn_noti" onclick="UpdateStatusNoti(@item.Id, 0,' @item.ClassID')">
+                            <i class="fa-solid fa-ban"></i>
+                        </a>
+                        <a class="btn_noti" onclick="UpdateStatusNoti(@item.Id, -1, '@item.ClassID')">
+                            <i class="fa-solid fa-trash"></i>
+                        </a>
+                    </div>
+                </div>
+            }
+            else
+            {
+                <div class="card_noti">
+                    <div class="text_noti">
+                        <span style="color: #000">Bạn đã chấp nhận lời mời vào nhóm của <span>@currentUser.Name</span>!!!</span>
+                        <p class="subtitle_noti" style="color: #000">Mã lớp: @item.ClassID</p>
+                    </div>
+                    <div class="icons_noti" id="noti_@item.Id">
+                        <a class="btn_noti" style="width: 100%; cursor:default;">
+                            <i class="fa-solid fa-check"></i>
+                        </a>
+                    </div>
+                </div>
+            }
+        }
+    }
+
+</div>
+<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+<script>
+    function UpdateStatusNoti(requestId, status, classid) {
+
+        const data = {
+            requestId: requestId,
+            status: status,
+            classId: classid
+        };
+        // Gọi API với axios
+        axios.post('/Notifications/AcceptRequest', data, {
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        })
+        .then(response => {
+                if (response.data.success) {
+                toastr.success('Cập nhật trạng thái thành công!', 'Thành công', { timeOut: 3000 });
+                setTimeout(() => {
+                    window.location.reload();
+                }, 3000);
+            } else {
+                toastr.error('Cập nhật trạng thái thất bại.', 'Gặp lỗi!');
+            }
+        })
+        .catch(error => {
+            if (error.response) {
+                console.error('Có lỗi xảy ra khi gọi API:', error.response.data);
+            } else {
+                console.error('Có lỗi xảy ra:', error);
+            }
+        });
+    }
+
+    document.addEventListener("DOMContentLoaded", function () {
+        // Lấy tất cả các input timecreate
+        const timeCreateInputs = document.querySelectorAll("input[id^='timecreate_']");
+        timeCreateInputs.forEach(input => {
+            updateTimeDisplay(input);
+        });
+        // Cập nhật thời gian mỗi giây
+        setInterval(() => {
+            timeCreateInputs.forEach(input => {
+                updateTimeDisplay(input);
+            });
+        }, 5000); // Cập nhật mỗi 1000ms (1 giây)
+    });
+
+    function updateTimeDisplay(input) {
+        const pastDate = input.value; // Lấy giá trị thời gian từ input
+        const timeDisplay = document.getElementById(`time_${input.id.split('_')[1]}`); // Tìm phần tử hiển thị thời gian tương ứng
+
+        // Đảm bảo đúng định dạng ngày tháng (chuyển từ DD/MM/YYYY HH:MM:SS sang YYYY-MM-DDTHH:MM:SS)
+        let [dateOnly, timePart] = pastDate.split(' '); // Tách ngày và giờ
+        let [day, month, year] = dateOnly.split('/'); // Giả định định dạng DD/MM/YYYY
+        if (!timePart) timePart = "00:00:00"; // Giờ mặc định nếu không có
+
+        let formattedDate = `${year}-${month}-${day}T${timePart}`; // Định dạng ISO: YYYY-MM-DDTHH:MM:SS
+
+        // Chuyển đổi thành đối tượng Date
+        let pastDateObject = new Date(formattedDate);
+
+        // Kiểm tra nếu đối tượng Date không hợp lệ
+        if (isNaN(pastDateObject)) {
+            console.error('Ngày không hợp lệ:', formattedDate);
+            timeDisplay.innerText = "Thời gian không hợp lệ";
+            return; // Dừng lại nếu ngày không hợp lệ
+        }
+
+        // Tính toán chênh lệch thời gian
+        let currentDate = new Date();
+        let timeDifference = currentDate - pastDateObject; // Tính chênh lệch millisecond
+
+        // Chuyển đổi thành ngày, giờ, phút, giây
+        let seconds = Math.floor((timeDifference / 1000) % 60);
+        let minutes = Math.floor((timeDifference / (1000 * 60)) % 60);
+        let hours = Math.floor((timeDifference / (1000 * 60 * 60)) % 24);
+        let days = Math.floor(timeDifference / (1000 * 60 * 60 * 24));
+
+        // Hiển thị thời gian chênh lệch
+        if (days >= 1) {
+            timeDisplay.innerText = `Đã yêu cầu từ ${days} ngày, ${hours} giờ, ${minutes} phút và ${seconds} giây trước`;
+        } else if (hours >= 1) {
+            timeDisplay.innerText = `Đã yêu cầu từ ${hours} giờ, ${minutes} phút và ${seconds} giây trước`;
+        } else if (minutes >= 1) {
+            timeDisplay.innerText = `Đã yêu cầu từ ${minutes} phút và ${seconds} giây trước`;
+        } else {
+            timeDisplay.innerText = `Đã yêu cầu từ ${seconds} giây trước`;
+        }
+    }
+
+</script>
+

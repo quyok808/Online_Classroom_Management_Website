@@ -63,9 +63,17 @@
         padding-top: 0;
     }
 
-        .dropdown-menu .dropdown-item a:hover {
-            color: #333;
-        }
+    .dropdown-menu .dropdown-item a:hover {
+        color: #333;
+    }
+
+    .custom-avt{
+        border-radius: 50%;
+    }
+
+    .custom-avt:hover{
+        box-shadow: 0 0 3px 5px #DDDDDD;
+    }
 
 </style>
 
@@ -78,7 +86,7 @@
     {
         <li class="nav-item dropdown">
             <a class="nav-link dropdown-toggle text-dark" id="userDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                <i class="fas fa-user"></i>
+                <img class="custom-avt" src="~/Imgs_avtUser/@user.UrlAvt" alt="@user.Name" width="46px" height="46px" />
             </a>
             <div class="dropdown-menu" aria-labelledby="userDropdown">
                 <div class="dropdown-item">

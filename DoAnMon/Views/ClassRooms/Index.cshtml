@@ -169,6 +169,19 @@
         place-items: center;
     }
 
+    .notification-count {
+        position: absolute;
+        top: -19px; /* Điều chỉnh vị trí của số lượng */
+        right: -8px; /* Điều chỉnh vị trí của số lượng */
+        background-color: red;
+        color: white;
+        font-size: 12px;
+        width: 18px;
+        height: 18px;
+        border-radius: 50%;
+        text-align: center;
+        line-height: 18px;
+    }
 
     @@media (max-width: 768px) {
         .classrooms-content {
@@ -193,7 +206,17 @@
             <li><a href="/Identity/Account/Manage/Index">Thông tin cá nhân</a></li>
         </ul> *@
         <button type="button" class="btn btn-light btn-custom-indexControl" onclick="location.href='/ClassRooms'"><i class="fa-solid fa-house-chimney fa-xl" style="color: #000; margin-right: 30px;"></i> Màn hình chính</button>
-        <button type="button" class="btn btn-light btn-custom-indexControl" onclick="location.href='/Notifications'"><i class="fa-solid fa-bell fa-xl" style="color: #000; margin-right: 35px;"></i> Thông báo mới</button>
+        <button type="button" class="btn btn-light btn-custom-indexControl" onclick="location.href='/Notifications'">
+            <i class="fa-solid fa-bell fa-xl" style="color: #000; margin-right: 35px; position: relative;">
+                @{
+                    if (ViewBag.listNotiNew > 0)
+                    {
+                        <span class="notification-count">@ViewBag.listNotiNew</span>
+                    }
+                }
+            </i>
+            Thông báo mới 
+        </button>
         @if (User.IsInRole("Teacher") || User.IsInRole("Admin"))
          {
             <button type="button" class="btn btn-light btn-custom-indexControl" onclick="location.href='/ClassRooms/Create'"><i class="fa-solid fa-plus fa-xl" style="color: #000; margin-right: 35px;"></i> Tạo lớp mới</button>

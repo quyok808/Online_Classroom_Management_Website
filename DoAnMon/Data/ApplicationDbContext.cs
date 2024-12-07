@@ -31,6 +31,7 @@ namespace DoAnMon.Data
         public DbSet<Criterion> Criteria { get; set; }
         public DbSet<Evaluation> Evaluations { get; set; }
         public DbSet<Rubric> Rubric { get; set; }
+        public DbSet<FriendRequest> FriendRequests { get; set; }
         protected override void OnModelCreating(ModelBuilder modelBuilder) 
         { 
 

@@ -175,7 +175,7 @@
     <script src="https://cdn.jsdelivr.net/npm/jsqr/dist/jsQR.js"></script>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/microsoft-signalr/3.1.18/signalr.min.js"></script>
 </head>
 <body>
     <div class="wrapper">
@@ -230,6 +230,18 @@
 
         @await RenderSectionAsync("Scripts", required: false)
     </div>
-
+    <script>
+        const connections = new signalR.HubConnectionBuilder().withUrl("/chatHub").build();
+        connections.on("ReceiveFriendRequestNotification", (requesterName) => {
+            toastr.info(`Bạn có lời mời vào nhóm từ ${requesterName}`, 'Thông báo', {
+                timeOut: 3000, 
+                onclick: function () {
+                    // Khi người dùng click vào thông báo, chuyển hướng
+                    window.location.href = '/Notifications';
+                }
+            })
+        });
+        connections.start().catch(err => console.error(err.toString()));
+    </script>
 </body>
 </html>

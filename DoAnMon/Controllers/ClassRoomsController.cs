@@ -33,6 +33,7 @@ using Microsoft.EntityFrameworkCore.Metadata;
 using DoAnMon.SignalR;
 using System.Text.RegularExpressions;
 using DoAnMon.ViewModels;
+using Humanizer;
 namespace DoAnMon.Controllers
 {
 	[Authorize(Roles ="Admin, Teacher, Student")]
@@ -116,8 +117,8 @@ namespace DoAnMon.Controllers
 				}
 			}
 			ViewBag.ListRoom = userClasses;
-			// Truyền danh sách lớp học của người dùng vào View
-			return View(classRoomViewModels);
+            ViewBag.listNotiNew = await _context.FriendRequests.Where(user => user.TargetId.Equals(currentUser.Id) && user.IsAccepted == false).OrderByDescending(p => p.createAt).CountAsync();
+            return View(classRoomViewModels);
 		}
 
         public void DeleteClassrooms(string id)
@@ -238,8 +239,9 @@ namespace DoAnMon.Controllers
 			ViewBag.UserPosts = userposts;
 			ViewBag.UserId = userId;
 
-			//var listpost = await _context.posts.Where(p => p.ClassRoomId == id).ToListAsync();
+			
 			var listBT = await _context.baiTaps.Where(p => p.ClassRoomId == id).ToListAsync();
+
 
 			var Diem = new List<DiemViewModel>();
 
@@ -308,7 +310,15 @@ namespace DoAnMon.Controllers
 				viewModel.CustomRubric = true;
 				viewModel.Rubric = await _context.Rubric.FirstOrDefaultAsync(p => p.ClassRoomId.Equals(id));
 			}
-			return View(viewModel);
+
+			var userClassDetails = _context.classroomDetail.FirstOrDefault(p => p.ClassRoomId.Equals(id) && p.UserId.Equals(currentUser.Id));
+            if (userClassDetails != null)
+			{
+                List<ClassroomDetail> listUserGroup = await _context.classroomDetail.Where(p => p.GroupId.Equals(userClassDetails.GroupId)).ToListAsync();
+                ViewBag.ListUserGroup = listUserGroup;
+            }
+            
+            return View(viewModel);
 		}
 
 		// GET: ClassRooms/Create
@@ -395,7 +405,7 @@ namespace DoAnMon.Controllers
 					classRoom.Id = GenerateUniqueRandomString(6);
 					classRoom.UserId = currentUser.Id;
 					classRoom.RoomOnline = "https://meeting-room-onlya1.glitch.me?room=" + linkRoom;
-					classRoom.backgroundUrl = "classImage_Default.gif";
+					classRoom.backgroundUrl = GetBackgroundFile();
 					classRoom.STT = 0;
                     if (haveRubric)
 					{
@@ -422,6 +432,25 @@ namespace DoAnMon.Controllers
 			return View(classRoom);
 		}
 		static string linkRoom;
+
+		public string GetBackgroundFile()
+		{
+            var path = Path.Combine(_environment.WebRootPath, "images");
+            string[] files = Directory.GetFiles(path);
+
+            var fileNames = files.Select(file => Path.GetFileName(file)).ToList();
+			foreach(var filename in fileNames)
+			{
+				if (!filename.Contains("classImage_Default"))
+				{
+					fileNames.Remove(filename);
+				}
+			}
+
+            Random rand = new Random();
+            int number = rand.Next(0, 10); // Số ngẫu nhiên trong khoảng từ min đến max
+            return fileNames[number];
+		}
 
         [HttpPost]
         public ActionResult ReceiveRoomUrl(string roomUrl1)
@@ -799,7 +828,7 @@ namespace DoAnMon.Controllers
 			}
 			_context.classRooms.Remove(classRoom);
 			await _context.SaveChangesAsync();
-			return RedirectToAction(nameof(Create));
+			return RedirectToAction(nameof(Index));
 		}
 
 		//DELETE FILE
@@ -964,7 +993,6 @@ namespace DoAnMon.Controllers
 				await _context.SaveChangesAsync();
 
 				return Json(new { success = true, message = "Lớp học đã được cập nhật thành công." });
-				//return RedirectToAction("Details", "ClassRooms", new { id = id });
 			}
 			catch (Exception ex)
 			{
@@ -1259,6 +1287,7 @@ namespace DoAnMon.Controllers
 					newsv.Mssv = sv.Mssv;
 					newsv.Name = sv.Name;
 					newsv.Email = sv.Email;
+					newsv.Userid = sv.Id;
 					_studentRepo.AddSV(newsv);
 				}
 				List<SV> newSVs = _studentRepo.getListSV();
