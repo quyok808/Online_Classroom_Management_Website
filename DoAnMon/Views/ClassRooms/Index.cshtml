@@ -196,15 +196,6 @@
 </style>
 <div class="container-classrooms-trangchinh" style="margin-top: 80px;display: flex;min-height: 500px;">
    <div class="left-column_indexClassroom">
-        @* <div class="image-frame">
-            <img src="~/Imgs_avtUser/@user.UrlAvt" alt="Hình ảnh">
-        </div>
-        <center>
-            <p style="font-weight: bold; font-size: 20px;">@user.Name</p>
-        </center>
-        <ul class="vertical-menu1">
-            <li><a href="/Identity/Account/Manage/Index">Thông tin cá nhân</a></li>
-        </ul> *@
         <button type="button" class="btn btn-light btn-custom-indexControl" onclick="location.href='/ClassRooms'"><i class="fa-solid fa-house-chimney fa-xl" style="color: #000; margin-right: 30px;"></i> Màn hình chính</button>
         <button type="button" class="btn btn-light btn-custom-indexControl" onclick="location.href='/Notifications'">
             <i class="fa-solid fa-bell fa-xl" style="color: #000; margin-right: 35px; position: relative;">
@@ -295,67 +286,6 @@
         </div>
     </div>
     <div class="main-content" style="flex: 1;">
-      <!-- Nội dung main content -->
-        @* <button class="plus-button" title="Tạo hoặc tham gia lớp học" onclick="toggleOptions()">
-            <svg xmlns="http://www.w3.org/2000/svg" width="35" height="35" viewBox="0 0 24 24">
-                <path d="M20 13h-7v7h-2v-7H4v-2h7V4h2v7h7v2z" />
-            </svg>
-        </button>
-        <div id="class-options-container" class="hidden">
-            <div class="options-frame">
-                @if (User.IsInRole("Teacher") || User.IsInRole("Admin"))
-                {
-
-                <div class="option">
-                    <a href="/ClassRooms/Create" title="Create Classroom" style="text-decoration:none;">
-                        <p style="font-size: 16px; padding-left: 5px; color: black; margin: 0;">Lớp học</p>
-                    </a>
-                </div>
-                }
-                <div class="option">
-                    <button id="btnAddRoom" data-toggle="modal" data-target="#joinRoomModal" style="font-size: 16px;background-color: transparent; color:black; border-color:transparent;">Tham gia</button>
-                </div>
-                <div class="option">
-                    <button id="scanButton" style="font-size: 16px; border-color:transparent;background-color: transparent">Quét Mã QR</button>
-                </div>
-            </div>
-        </div>
-        <div id="joinRoomModal" class="modal" tabindex="-1">
-            <div class="modal-dialog">
-                <div class="modal-content">
-                    <div class="modal-header" style="margin-bottom: 10px; border-bottom: none">
-                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                            <span aria-hidden="true">&times;</span>
-                        </button>
-                        <h5 class="modal-title" style="font-size:30px;font-weight:bold; color: #FA7070">THAM GIA PHÒNG HỌC</h5>
-                    </div>
-
-
-                    <form id="joinRoomForm" action="/ClassRooms/JoinClassV1" method="post">
-                        <div class="col-md-12" style="width: 100%">
-                            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-                            <div class="form-group">
-                                <label for="ClassRoomId" class="control-label" style="color: black; text-align: left; display: block; margin:10px 0">Mã phòng học:</label>
-                                <input name="ClassRoomId" id="ClassRoomId" class="form-control custom-input-width" required />
-                                <span id="ClassRoomIdError" class="text-danger"></span>
-                            </div>
-                        </div>
-                        <div class="modal-footer" style="border-top: 1px solid #e5e5e5; padding-top: 10px">
-                            <button type="button" class="btn btn-secondary" data-dismiss="modal" style="font-weight:bold; background-color: grey; font-size: 16px">Đóng</button>
-                            <input style="font-size: 16px; font-weight:bold" type="submit" value="Tham gia" class="btn btn-primary" />
-                        </div>
-                    </form>
-                </div>
-            </div>
-        </div>
-        <div id="cameraModal" class="modal">
-            <div class="modal-content" style="align-items: center;justify-content: center;">
-                <span class="close">&times;</span>
-                <video id="qrScanner" width="400" height="400" autoplay style="align-items: center;justify-content: center;"></video>
-            </div>
-        </div>
-        *@
-        
         @{
             if (Model != null)
             {

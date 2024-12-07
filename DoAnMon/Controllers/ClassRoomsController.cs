@@ -435,24 +435,25 @@ namespace DoAnMon.Controllers
 
 		public string GetBackgroundFile()
 		{
-            var path = Path.Combine(_environment.WebRootPath, "images");
-            string[] files = Directory.GetFiles(path);
+			var path = Path.Combine(_environment.WebRootPath, "images");
+			string[] files = Directory.GetFiles(path);
 
-            var fileNames = files.Select(file => Path.GetFileName(file)).ToList();
-			foreach(var filename in fileNames)
+			var fileNames = files.Select(file => Path.GetFileName(file))
+								 .Where(filename => filename.Contains("classImage_Default"))
+								 .ToList();
+
+			if (fileNames.Count == 0)
 			{
-				if (!filename.Contains("classImage_Default"))
-				{
-					fileNames.Remove(filename);
-				}
+				return null; // Or some default value if no valid files are found
 			}
 
-            Random rand = new Random();
-            int number = rand.Next(0, 10); // Số ngẫu nhiên trong khoảng từ min đến max
-            return fileNames[number];
+			Random rand = new Random();
+			int number = rand.Next(0, fileNames.Count); // Random number within the valid range
+			return fileNames[number];
 		}
 
-        [HttpPost]
+
+		[HttpPost]
         public ActionResult ReceiveRoomUrl(string roomUrl1)
         {
 			linkRoom = roomUrl1;

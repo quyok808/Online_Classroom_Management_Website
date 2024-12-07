@@ -182,10 +182,27 @@
         <header>
             <div class="menu-container">
                 <ul class="menu">
-                    <li><a href="/Home/Index" class="@(ViewContext.RouteData.Values["action"].ToString() == "Index" && ViewContext.RouteData.Values["controller"].ToString() == "Home" ? "active" : "")"><i class="fas fa-home"></i></a></li> <!-- Trang chủ -->
-                    <li><a href="/ClassRooms" class="@(ViewContext.RouteData.Values["controller"].ToString() == "ClassRooms" ? "active" : "")"><i class="fas fa-chalkboard"></i></a></li> <!-- Lớp học -->
-                    <li><a href="/BaiTaps" class="@(ViewContext.RouteData.Values["controller"].ToString() == "BaiTaps" ? "active" : "")"><i class="fas fa-book"></i></a></li> <!-- Bài tập -->
-                    <li><a href="/Schedule" class="@(ViewContext.RouteData.Values["controller"].ToString() == "Schedule" ? "active" : "")"><i class="fas fa-calendar-alt"></i></a></li> <!-- Thời khoá biểu -->
+                    <li>
+                        <a href="/Home/Index" class="@(ViewContext.RouteData.Values["action"]?.ToString() == "Index" && ViewContext.RouteData.Values["controller"]?.ToString() == "Home" ? "active" : "")">
+                            <i class="fas fa-home"></i>
+                        </a>
+                    </li> <!-- Trang chủ -->
+                    <li>
+                        <a href="/ClassRooms" class="@(ViewContext.RouteData.Values["controller"]?.ToString() == "ClassRooms" ? "active" : "")">
+                            <i class="fas fa-chalkboard"></i>
+                        </a>
+                    </li> <!-- Lớp học -->
+                    <li>
+                        <a href="/BaiTaps" class="@(ViewContext.RouteData.Values["controller"]?.ToString() == "BaiTaps" ? "active" : "")">
+                            <i class="fas fa-book"></i>
+                        </a>
+                    </li> <!-- Bài tập -->
+                    <li>
+                        <a href="/Schedule" class="@(ViewContext.RouteData.Values["controller"]?.ToString() == "Schedule" ? "active" : "")">
+                            <i class="fas fa-calendar-alt"></i>
+                        </a>
+                    </li> <!-- Thời khoá biểu -->
+
                 </ul>
                 <ul class="login-item">
                     <partial name="_LoginPartial" />

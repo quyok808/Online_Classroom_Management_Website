@@ -93,7 +93,8 @@
                     <p><i class="fas fa-user"></i> @user.Name</p>
                     <p >MSSV: @user.Mssv</p>
                     <p style="white-space: nowrap;"><i class="fa-solid fa-envelope"></i> @user.Email</p>
-                    <a asp-area="Identity" asp-page="/Account/Manage/ChangePassword" title="Manage"><i class="fa-solid fa-key"></i> Đổi mật khẩu</a>
+                    <a href="/Identity/Account/Manage/Index"><i class="fa-solid fa-id-card"></i> Cập nhật thông tin cá nhân</a>
+                    <a asp-area="Identity" asp-page="/Account/Manage/ChangePassword"><i class="fa-solid fa-key"></i> Đổi mật khẩu</a>
                 </div>
                 <form class="form-inline dropdown-item" asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Action("Index", "Home", new { area = "" })">
                     <button>
