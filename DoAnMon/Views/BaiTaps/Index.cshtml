@@ -6,106 +6,186 @@
 	Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<form id="Search-form" method="get" style="margin-top: 10px;">
-	<input type="text" id="query" name="query" placeholder="Nhập tên bài tập hoặc mã lớp" class="search-input" value="@Model.CurrentQuery" style="width: 70%;" />
-	<input id="searchButton" type="submit" value="Search" />
-</form>
-<div style="margin: 10px auto;">
-	<hr style="border: 1px solid black;" />
+
+<style>
+    #Search-form {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: 10px; 
+        
+    }
+
+    .search-input {
+        width: 600px;
+        padding: 10px;
+        font-size: 16px;
+        border: 1px solid #ccc;
+        border-radius: 30px;
+        transition: border-color 0.3s ease, box-shadow 0.3s ease;
+    }
+
+        .search-input:focus {
+            border-color: #007bff;
+            box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
+            outline: none;
+        }
+
+    #searchButton {
+        padding: 10px 20px;
+        font-size: 16px;
+        background-color: #4a71ff;
+        color: #fff;
+        border-radius: 30px;
+        border:none;
+        cursor: pointer;
+        transition: background-color 0.3s ease, transform 0.2s ease;
+    }
+
+        #searchButton:hover {
+            background-color: #3300ff;
+            transform: scale(1.05);
+        }
+
+    .assignments-panel {
+        width:100%;
+        margin-top:100px;
+        font-family: 'Itim',serif;
+    }
+
+    #assignmentContainer {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 20px; 
+        justify-content: flex-start; 
+        margin-top:30px;
+        margin-left:20px;
+    }
+
+    .item {
+        flex: 1 1 calc(25% - 20px); 
+        background: #dcdcff;
+        border-radius: 10px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        overflow: hidden;
+        transition: transform 0.2s ease, box-shadow 0.2s ease;
+        max-width: calc(25% - 20px); 
+    }
+
+        .item:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+        }
+
+    .assignment {
+        padding: 20px;
+        text-align: center;
+    }
+
+        .assignment h3 {
+            font-size: 18px;
+            color: #333;
+            font-weight: bold;
+            margin-top: 0;
+        }
+
+        .assignment p {
+            font-size: 14px;
+            color: #333;
+            margin: 0 0 10px;
+            text-align: justify;
+        }
+
+        .assignment .button {
+            display: inline-block;
+            padding: 5px 12px;
+            font-size: 14px;
+            margin: 10px;
+            font-weight: bold;
+            text-transform: uppercase;
+            color: #fff;
+            background: #4a71ff;
+            border-radius: 20px;
+            text-decoration: none;
+            transition: background-color 0.3s ease, transform 0.2s ease;
+        }
+
+            .assignment .button:hover {
+                background-color: #3300ff;
+                transform: scale(1.05);
+            }
+
+    .pagination {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin: 20px auto;
+        max-width: 600px;
+    }
+
+        .pagination a {
+            display: inline-block;
+            padding: 10px 20px;
+            font-size: 14px;
+            font-weight: bold;
+            color: #fff;
+            background: #007bff;
+            border-radius: 4px;
+            text-decoration: none;
+            transition: background-color 0.3s ease;
+        }
+
+            .pagination a:hover {
+                background-color: #0056b3;
+            }
+
+            .pagination a.hidden {
+                visibility: hidden;
+            }
+</style>
+<div class="assignments-panel">
+    <form id="Search-form" method="get">
+        <input type="text" id="query" name="query" placeholder="Nhập tên bài tập hoặc mã lớp" class="search-input" value="@Model.CurrentQuery" />
+        <input id="searchButton" type="submit" value="Tìm kiếm" />
+    </form>
+
+    <div id="assignmentContainer">
+        @foreach (var item in Model)
+        {
+            <div class="item">
+                <div class="assignment">
+                    <div class="assignment-content">
+                        <h3>@item.Title</h3>
+                        <p>@item.Content</p>
+                    </div>
+                    @if (User.IsInRole("Teacher"))
+                    {
+                        <a asp-action="GetAllBTStu" asp-controller="ClassRooms" asp-route-classid="@item.ClassRoomId" asp-route-baitapID="@item.Id" class="button">Xem Bài tập</a>
+                    }
+                    else
+                    {
+                        <a asp-action="GetOwnBT" asp-controller="ClassRooms" asp-route-classid="@item.ClassRoomId" asp-route-baitapID="@item.Id" class="button">Xem Bài tập</a>
+                    }
+                </div>
+            </div>
+        }
+    </div>
+
+    @{
+        var prevDisabled = !Model.HasPreviousPage ? "hidden" : "";
+        var nextDisabled = !Model.HasNextPage ? "hidden" : "";
+    }
+
+    <div class="pagination">
+        <a asp-action="Index" asp-controller="BaiTaps" asp-route-pageNumber="@(Model.PageIndex - 1)" asp-route-query="@Model.CurrentQuery" class="@prevDisabled">
+            Previous
+        </a>
+        <a asp-action="Index" asp-controller="BaiTaps" asp-route-pageNumber="@(Model.PageIndex + 1)" asp-route-query="@Model.CurrentQuery" class="@nextDisabled">
+            Next
+        </a>
+    </div>
 </div>
-<div id="assignmentContainer">
-	<style>
-		.button {
-			display: inline-block;
-			padding: 10px 20px;
-			background-color: #007bff;
-			color: #fff;
-			text-decoration: none;
-			border-radius: 5px;
-			font-size: 16px;
-			border: none;
-			cursor: pointer;
-			text-align: center;
-		}
 
-			.button:hover {
-				background-color: #0056b3;
-				color: white;
-			}
-
-		.assignment {
-			background-color: #f9f9f9;
-			padding: 20px;
-			border-radius: 5px;
-			margin-bottom: 20px;
-			display: flex;
-			justify-content: space-between;
-			align-items: center;
-			border: 1px solid #ccc;
-			/* Thêm viền */
-		}
-
-		.assignment-content {
-			flex-grow: 1;
-			margin-right: 20px;
-		}
-
-		.assignment h3 {
-			margin-top: 0;
-			margin-bottom: 10px;
-		}
-
-		.assignment-description {
-			margin-bottom: 20px;
-		}
-
-		.active-menu {
-			background-color: black !important;
-			color: white !important;
-		}
-
-		.getallhw {
-			background-color: #00CA79 !important;
-			color: white !important;
-		}
-	</style>
-
-	@foreach (var item in Model)
-	{
-		<div class="item">
-			<div class="assignment" style="height: 30vh;">
-				<div class="assignment-content"
-					 style="border-right: 1px solid black; height: 100%; width: 100%; margin: 50px;">
-					
-					<h3 class="text-center">@item.Title</h3>
-					<p class="assignment-description">
-						@item.Content
-					</p>
-				</div>
-				@if (User.IsInRole("Teacher"))
-				{
-					<a asp-action="GetAllBTStu" asp-controller="ClassRooms" asp-route-classid="@item.ClassRoomId" asp-route-baitapID="@item.Id" class="button">Xem Bài tập</a>
-				}
-				else
-				{
-					<a asp-action="GetOwnBT" asp-controller="ClassRooms" asp-route-classid="@item.ClassRoomId" asp-route-baitapID="@item.Id" class="button">Xem Bài tập</a>
-				}
-			</div>
-		</div>
-	}
-</div>
-@{
-	var prevDisabled = !Model.HasPreviousPage ? "hidden" : "";
-	var nextDisabled = !Model.HasNextPage ? "hidden" : "";
-}
-<div style="display:flex; justify-content: space-between;">
-	<a asp-action="Index" asp-controller="BaiTaps" asp-route-pageNumber="@(Model.PageIndex- 1)" asp-route-query="@Model.CurrentQuery" class="btn btn-default @prevDisabled">
-		Previous
-	</a>
-	<a asp-action="Index" asp-controller="BaiTaps" asp-route-pageNumber="@(Model.PageIndex + 1)" asp-route-query="@Model.CurrentQuery" class="btn btn-default @nextDisabled">
-		Next
-	</a>
-</div>
 @section Scripts {
 	<script>
 		$(document).ready(function () {
