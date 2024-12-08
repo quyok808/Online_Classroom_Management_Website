@@ -6,6 +6,10 @@
 @model List<ClassRoomViewModel>
 
 <head>
+	<meta charset="utf-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+	<title>Quản lý lớp học - Only A</title>
+	<link rel="icon" type="image/x-icon" href="/images/Logo_Web.png" />
 	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
 	<!--Color-->
 	<!-- Font -->
@@ -15,6 +19,7 @@
 	<link href="https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300..800;1,300..800&family=Roboto+Slab:wght@100..900&display=swap" rel="stylesheet">
 	<link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&family=Open+Sans:ital,wght@0,300..800;1,300..800&family=Roboto+Slab:wght@100..900&family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap" rel="stylesheet">
 	<link href="/assets/css/color.css" rel="stylesheet" />
+	<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.1/css/fontawesome.min.css" rel="stylesheet">
 	<style>
 		#ClassPeriodContainer {
 			display: flex;
@@ -31,7 +36,7 @@
 </head>
 <body>
 	<!-- Navbar -->
-	<nav class="navbar navbar-expand-lg navbar-dark " style="background-color: #00CA79;padding: 0 5;">
+	<nav class="navbar navbar-expand-lg navbar-dark " style="background-color: #7BD3EA;padding: 0 5;">
 		<a asp-controller="ClassRooms" asp-action="Index" class="navbar-brand" style="font-family: 'Roboto Slab', sans-serif; padding: 0;">
 			<img style="padding: 0;" src="~/images/xanh.png" alt="Logo" width="70" height="auto" />
 		</a>
@@ -45,7 +50,7 @@
 	</nav>
 	<div class="container-fluid mt-5" style="font-family: 'Montserrat', sans-serif">
 		<h2 class="page-title" style="font-family: 'Roboto Slab', sans-serif;">Quản lý phòng học</h2>
-		<div class="card">
+		<div class="card" style="background-color: #F6F7C4;">
 			<div class="card-body">
 				<div class="row mt-4">
 					<div class="col-12" style="text-align: center;">
@@ -86,18 +91,6 @@
 											<label for="EndDate" class="control-label">Ngày kết thúc:</label>
 											<input type="date" name="EndDate" id="EndDate" class="form-control" required />
 										</div>
-										@* <div class="form-group">
-											<label for="DaysOfWeek" class="control-label">Chọn ngày học:</label>
-											<select name="DaysOfWeek" id="DaysOfWeek" multiple class="form-control" required>
-												<option value="Monday">Thứ 2</option>
-												<option value="Tuesday">Thứ 3</option>
-												<option value="Wednesday">Thứ 4</option>
-												<option value="Thursday">Thứ 5</option>
-												<option value="Friday">Thứ 6</option>
-												<option value="Saturday">Thứ 7</option>
-												<option value="Sunday">Chủ nhật</option>
-											</select>
-										</div> *@
 										<div class="form-group">
 											<label for="DaysOfWeek" class="control-label">Chọn ngày học:</label>
 											<div id="DaysOfWeek" class="checkbox-group" style="display: flex; justify-content: space-between;">
@@ -136,64 +129,67 @@
 											<label class="control-label">Ca học:</label>
 											<div id="ClassPeriodContainer" style="overflow-y: auto;">
 												<div class="form-check">
-													<input type="checkbox" class="form-check-input" id="Period1" value="1" onchange="setClassTimes()">
-													<label class="form-check-label" for="Period1">Ca 1 - Tiết 2, 3: 07:30 đến 09:00</label>
+													<input type="checkbox" class="form-check-input" id="Period19" value="19" onchange="setClassTimes()">
+													<label class="form-check-label" for="Period19">Ca sáng: 07:30 đến 11:35</label>
 												</div>
+												
 												<div class="form-check">
 													<input type="checkbox" class="form-check-input" id="Period7" value="7" onchange="setClassTimes()">
 													<label class="form-check-label" for="Period7">Tiết 1: 06:45 đến 07:30</label>
 												</div>
 												<div class="form-check">
-													<input type="checkbox" class="form-check-input" id="Period2" value="2" onchange="setClassTimes()">
-													<label class="form-check-label" for="Period2">Ca 2 - Tiết 4, 5, 6: 09:20 đến 11:35</label>
+													<input type="checkbox" class="form-check-input" id="Period20" value="20" onchange="setClassTimes()">
+													<label class="form-check-label" for="Period20">Ca chiều: 12:30 đến 16:35</label>
 												</div>
+												
 												<div class="form-check">
 													<input type="checkbox" class="form-check-input" id="Period8" value="8" onchange="setClassTimes()">
 													<label class="form-check-label" for="Period8">Tiết 2: 07:30 đến 08:15</label>
 												</div>
 												<div class="form-check">
-													<input type="checkbox" class="form-check-input" id="Period3" value="3" onchange="setClassTimes()">
-													<label class="form-check-label" for="Period3">Ca 3 - Tiết 7, 8, 9: 12:30 đến 14:45</label>
+													<input type="checkbox" class="form-check-input" id="Period21" value="21" onchange="setClassTimes()">
+													<label class="form-check-label" for="Period21">Ca tối: 18:00 đến 20:15</label>
 												</div>
+												
 												<div class="form-check">
 													<input type="checkbox" class="form-check-input" id="Period9" value="9" onchange="setClassTimes()">
 													<label class="form-check-label" for="Period9">Tiết 3: 08:15 đến 09:00</label>
 												</div>
 												<div class="form-check">
-													<input type="checkbox" class="form-check-input" id="Period4" value="4" onchange="setClassTimes()">
-													<label class="form-check-label" for="Period4">Ca 4 - Tiết 10, 11: 15:05 đến 16:20</label>
+													<input type="checkbox" class="form-check-input" id="Period1" value="1" onchange="setClassTimes()">
+													<label class="form-check-label" for="Period1">Ca 1 - Tiết 2, 3: 07:30 đến 09:00</label>
 												</div>
 												<div class="form-check">
 													<input type="checkbox" class="form-check-input" id="Period10" value="10" onchange="setClassTimes()">
 													<label class="form-check-label" for="Period10">Tiết 4: 09:20 đến 10:05</label>
 												</div>
 												<div class="form-check">
-													<input type="checkbox" class="form-check-input" id="Period5" value="5" onchange="setClassTimes()">
-													<label class="form-check-label" for="Period5">Ca 5 - Tiết 13, 14, 15: 18:00 đến 20:15</label>
+													<input type="checkbox" class="form-check-input" id="Period2" value="2" onchange="setClassTimes()">
+													<label class="form-check-label" for="Period2">Ca 2 - Tiết 4, 5, 6: 09:20 đến 11:35</label>
 												</div>
 												<div class="form-check">
 													<input type="checkbox" class="form-check-input" id="Period11" value="11" onchange="setClassTimes()">
 													<label class="form-check-label" for="Period11">Tiết 5: 10:05 đến 10:50</label>
 												</div>
 												<div class="form-check">
-													<input type="checkbox" class="form-check-input" id="Period19" value="19" onchange="setClassTimes()">
-													<label class="form-check-label" for="Period19">Ca sáng: 07:30 đến 11:35</label>
+													<input type="checkbox" class="form-check-input" id="Period3" value="3" onchange="setClassTimes()">
+													<label class="form-check-label" for="Period3">Ca 3 - Tiết 7, 8, 9: 12:30 đến 14:45</label>
 												</div>
 												<div class="form-check">
 													<input type="checkbox" class="form-check-input" id="Period12" value="12" onchange="setClassTimes()">
 													<label class="form-check-label" for="Period12">Tiết 6: 10:50 đến 11:35</label>
 												</div>
 												<div class="form-check">
-													<input type="checkbox" class="form-check-input" id="Period20" value="20" onchange="setClassTimes()">
-													<label class="form-check-label" for="Period20">Ca chiều: 12:30 đến 16:35</label>
+													<input type="checkbox" class="form-check-input" id="Period4" value="4" onchange="setClassTimes()">
+													<label class="form-check-label" for="Period4">Ca 4 - Tiết 10, 11: 15:05 đến 16:20</label>
 												</div>
 												<div class="form-check">
 													<input type="checkbox" class="form-check-input" id="Period13" value="13" onchange="setClassTimes()">
 													<label class="form-check-label" for="Period13">Tiết 7: 12:30 đến 13:10</label>
 												</div>
 												<div class="form-check">
-													<input type="checkbox" class="form-check-input" id="Period21" value="21" onchange="setClassTimes()">
-													<label class="form-check-label" for="Period21">Ca tối: 18:00 đến 20:15</label>
+													<input type="checkbox" class="form-check-input" id="Period5" value="5" onchange="setClassTimes()">
+													<label class="form-check-label" for="Period5">Ca 5 - Tiết 13, 14, 15: 18:00 đến 20:15</label>
 												</div>
 												<div class="form-check">
 													<input type="checkbox" class="form-check-input" id="Period14" value="14" onchange="setClassTimes()">
@@ -262,7 +258,13 @@
 										<td class="teacher-name">@item.ClassRoom.User.Name</td>
 										<td>@item.ClassRoom.RoomOnline</td>
 										<td style=" display: flex;justify-content: space-evenly;">
-											<a asp-action="Edit" asp-route-id="@item.ClassRoom.Id" class="btn btn-sm btn-info btn-action" style="height: 30.6px;">Edit</a>
+											<a asp-action="Details" asp-route-id="@item.ClassRoom.Id" class="btn btn-sm btn-info btn-action" style="height: 30.6px;">
+												<lord-icon src="https://cdn.lordicon.com/hmqxevgf.json"
+														   trigger="hover"
+														   colors="primary:#121331,secondary:#000000"
+														   style="width:25px;height:25px">
+												</lord-icon>
+											</a>
 											<form asp-action="Delete" method="post">
 												<input type="hidden" name="Id" value="@item.ClassRoom.Id" />
 												<button type="submit" class="btn btn-sm btn-danger btn-action">Xóa</button>
@@ -285,6 +287,7 @@
 
 	<script src="https://cdn.jsdelivr.net/npm/vue@2.6.12/dist/vue.min.js"></script>
 	<script src="https://cdn.jsdelivr.net/npm/axios@0.20.0/dist/axios.min.js"></script>
+	<script src="https://cdn.lordicon.com/lordicon.js"></script>
 	<script src="https://cdn.stringee.com/sdk/web/2.2.1/stringee-web-sdk.min.js"></script>
 
 	

@@ -175,17 +175,34 @@
     <script src="https://cdn.jsdelivr.net/npm/jsqr/dist/jsQR.js"></script>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/microsoft-signalr/3.1.18/signalr.min.js"></script>
 </head>
 <body>
     <div class="wrapper">
         <header>
             <div class="menu-container">
                 <ul class="menu">
-                    <li><a href="/Home/Index" class="@(ViewContext.RouteData.Values["action"].ToString() == "Index" && ViewContext.RouteData.Values["controller"].ToString() == "Home" ? "active" : "")"><i class="fas fa-home"></i></a></li> <!-- Trang chủ -->
-                    <li><a href="/ClassRooms" class="@(ViewContext.RouteData.Values["controller"].ToString() == "ClassRooms" ? "active" : "")"><i class="fas fa-chalkboard"></i></a></li> <!-- Lớp học -->
-                    <li><a href="/BaiTaps" class="@(ViewContext.RouteData.Values["controller"].ToString() == "BaiTaps" ? "active" : "")"><i class="fas fa-book"></i></a></li> <!-- Bài tập -->
-                    <li><a href="/Schedule" class="@(ViewContext.RouteData.Values["controller"].ToString() == "Schedule" ? "active" : "")"><i class="fas fa-calendar-alt"></i></a></li> <!-- Thời khoá biểu -->
+                    <li>
+                        <a href="/Home/Index" class="@(ViewContext.RouteData.Values["action"]?.ToString() == "Index" && ViewContext.RouteData.Values["controller"]?.ToString() == "Home" ? "active" : "")">
+                            <i class="fas fa-home"></i>
+                        </a>
+                    </li> <!-- Trang chủ -->
+                    <li>
+                        <a href="/ClassRooms" class="@(ViewContext.RouteData.Values["controller"]?.ToString() == "ClassRooms" ? "active" : "")">
+                            <i class="fas fa-chalkboard"></i>
+                        </a>
+                    </li> <!-- Lớp học -->
+                    <li>
+                        <a href="/BaiTaps" class="@(ViewContext.RouteData.Values["controller"]?.ToString() == "BaiTaps" ? "active" : "")">
+                            <i class="fas fa-book"></i>
+                        </a>
+                    </li> <!-- Bài tập -->
+                    <li>
+                        <a href="/Schedule" class="@(ViewContext.RouteData.Values["controller"]?.ToString() == "Schedule" ? "active" : "")">
+                            <i class="fas fa-calendar-alt"></i>
+                        </a>
+                    </li> <!-- Thời khoá biểu -->
+
                 </ul>
                 <ul class="login-item">
                     <partial name="_LoginPartial" />
@@ -230,6 +247,26 @@
 
         @await RenderSectionAsync("Scripts", required: false)
     </div>
+    <script>
+        const connections = new signalR.HubConnectionBuilder().withUrl("/chatHub").build();
+        connections.on("ReceiveFriendRequestNotification", (requesterName) => {
+            toastr.info(`Bạn có lời mời vào nhóm từ ${requesterName}`, 'Thông báo', {
+                timeOut: 3000, 
+                onclick: function () {
+                    // Khi người dùng click vào thông báo, chuyển hướng
+                    window.location.href = '/Notifications';
+                }
+            })
 
+            const noti_count = document.getElementById("noti_count");
+            if (noti_count) {
+                let count = parseInt(noti_count.innerText, 10) || 0;
+                count += 1;
+                noti_count.innerText = count;
+                noti_count.style.display = "inline"; // Hiển thị lại nếu đang bị ẩn
+            }
+        });
+        connections.start().catch(err => console.error(err.toString()));
+    </script>
 </body>
 </html>
