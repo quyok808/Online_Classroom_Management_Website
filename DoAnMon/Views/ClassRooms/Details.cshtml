@@ -893,6 +893,7 @@
 		flex-direction: column;
 		align-items: center;
 		padding: 0;
+		margin-top:-60px;
 	}
 
 	.row_listsv {
@@ -1205,9 +1206,30 @@
 		font-family: "JetBrains Mono", serif;
 	}
 
-	.color-custom{
-		color: #295F98;
+	.searchsv-container {
+		width: 100%;
+		display: flex;
+		justify-content: center;
+		margin-bottom: 20px;
 	}
+
+	#searchsvInput {
+		width: 80%;
+		max-width: 600px;
+		padding: 12px 20px;
+		font-size: 16px;
+		border: 1px solid #ccc;
+		border-radius: 25px;
+		box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+		outline: none;
+		transition: all 0.3s ease;
+	}
+
+		#searchsvInput:focus {
+			border-color: #4CAF50;
+			box-shadow: 0 6px 8px rgba(0, 0, 0, 0.2);
+		}
+
 </style>
 <div style="position: relative; width: 100%;">
 	<img class="img-fluid" src="/images/@Model.ClassRoom.backgroundUrl" alt="No Images" style="width: 100%; height: 400px;" />
@@ -1614,9 +1636,12 @@
 					</div>
 				}
 			}
-			
-			<div id="listsv1">
+			<div class="searchsv-container">
+				<input type="text" id="searchsvInput" placeholder="🔍 Tìm kiếm sinh viên..." onkeyup="filterStudents()">
+			</div>
+			<div id="listsv1">				
 				<div class="container_listsv">
+					
 					<p class="header_listsv">Sĩ số: 0 sinh viên</p>
 					<hr class="hr_listsv">
 
@@ -2951,6 +2976,23 @@
 
 		listHtml += '</div>';
 		$('#listsv1').html(listHtml);;
+	}
+	function filterStudents() {
+		var input = document.getElementById('searchsvInput');
+		var filter = input.value.toLowerCase(); // Chuyển về chữ thường để so sánh
+		var container = document.querySelector('.row_listsv');
+		var cards = container.getElementsByClassName('card_listsv'); // Lấy tất cả các card sinh viên
+
+		for (var i = 0; i < cards.length; i++) {
+			var name = cards[i].querySelector('.p_listsv:nth-child(3)').textContent.toLowerCase(); // Lấy tên sinh viên
+			var mssv = cards[i].querySelector('.p_listsv:nth-child(2)').textContent.toLowerCase(); // Lấy MSSV
+			// Hiển thị hoặc ẩn dựa trên kết quả tìm kiếm
+			if (name.includes(filter) || mssv.includes(filter)) {
+				cards[i].style.display = ''; // Hiển thị
+			} else {
+				cards[i].style.display = 'none'; // Ẩn
+			}
+		}
 	}
 
 	async function sendInvite(targetUserId) {
