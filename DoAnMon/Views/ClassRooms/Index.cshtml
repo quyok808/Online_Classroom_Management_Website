@@ -164,6 +164,24 @@
         vertical-align: middle; /* Canh giữa văn bản nếu cần */
     }
 
+    .null_Classroom{
+        display: grid;
+        place-items: center;
+    }
+
+    .notification-count {
+        position: absolute;
+        top: -19px; /* Điều chỉnh vị trí của số lượng */
+        right: -8px; /* Điều chỉnh vị trí của số lượng */
+        background-color: red;
+        color: white;
+        font-size: 12px;
+        width: 18px;
+        height: 18px;
+        border-radius: 50%;
+        text-align: center;
+        line-height: 18px;
+    }
 
     @@media (max-width: 768px) {
         .classrooms-content {
@@ -178,22 +196,26 @@
 </style>
 <div class="container-classrooms-trangchinh" style="margin-top: 80px;display: flex;min-height: 500px;">
    <div class="left-column_indexClassroom">
-        @* <div class="image-frame">
-            <img src="~/Imgs_avtUser/@user.UrlAvt" alt="Hình ảnh">
-        </div>
-        <center>
-            <p style="font-weight: bold; font-size: 20px;">@user.Name</p>
-        </center>
-        <ul class="vertical-menu1">
-            <li><a href="/Identity/Account/Manage/Index">Thông tin cá nhân</a></li>
-        </ul> *@
         <button type="button" class="btn btn-light btn-custom-indexControl" onclick="location.href='/ClassRooms'"><i class="fa-solid fa-house-chimney fa-xl" style="color: #000; margin-right: 30px;"></i> Màn hình chính</button>
-        <button type="button" class="btn btn-light btn-custom-indexControl" onclick="location.href='/Notifications'"><i class="fa-solid fa-bell fa-xl" style="color: #000; margin-right: 35px;"></i> Thông báo mới</button>
+        <button type="button" class="btn btn-light btn-custom-indexControl" onclick="location.href='/Notifications'">
+            <i class="fa-solid fa-bell fa-xl" style="color: #000; margin-right: 35px; position: relative;">
+                @{
+                    if (ViewBag.listNotiNew > 0)
+                    {
+                        <span class="notification-count" id="noti_count">@ViewBag.listNotiNew</span>
+                    } else
+                    {
+                        <span class="notification-count" id="noti_count" style="display: none;"></span>
+                    }
+                }
+            </i>
+            Thông báo mới 
+        </button>
         @if (User.IsInRole("Teacher") || User.IsInRole("Admin"))
          {
             <button type="button" class="btn btn-light btn-custom-indexControl" onclick="location.href='/ClassRooms/Create'"><i class="fa-solid fa-plus fa-xl" style="color: #000; margin-right: 35px;"></i> Tạo lớp mới</button>
          }
-        <button data-toggle="modal" data-target="#JoinModal" type="button" class="btn btn-light btn-custom-indexControl"><img src="https://cdn-icons-png.flaticon.com/512/12366/12366453.png" alt="Alternate Text" width="26.25px" height="30.4" style="margin-right:35px; " /> Tham gia lớp học</button>
+        <button data-toggle="modal" data-target="#JoinModal" type="button" class="btn btn-light btn-custom-indexControl"><img src="https://cdn-icons-png.flaticon.com/512/12366/12366453.png" alt="Alternate Text" width="33.75px" height="35px" style="margin-right:26px; " /> Tham gia lớp học</button>
         <hr style="border-top: 2px solid #ddd; margin: 10px 0 auto;" />
         <div class="btn btn-light btn-custom-indexControl">
             <img src="~/images/group.gif" alt="Alternate Text" width="40px" height="40px">
@@ -267,99 +289,50 @@
         </div>
     </div>
     <div class="main-content" style="flex: 1;">
-     @* <!-- Nội dung main content -->
-         <button class="plus-button" title="Tạo hoặc tham gia lớp học" onclick="toggleOptions()">
-            <svg xmlns="http://www.w3.org/2000/svg" width="35" height="35" viewBox="0 0 24 24">
-                <path d="M20 13h-7v7h-2v-7H4v-2h7V4h2v7h7v2z" />
-            </svg>
-        </button>
-        <div id="class-options-container" class="hidden">
-            <div class="options-frame">
-                @if (User.IsInRole("Teacher") || User.IsInRole("Admin"))
+        @{
+            if (Model != null)
+            {
+                if (Model.Count > 0)
                 {
+                    <div id="classroomList" class="classrooms-content">
+                        @foreach (var viewModel in Model)
+                        {
+                            //  <a href="@viewModel.ClassRoom.RoomOnline&User=@user.Id&class=@viewModel.ClassRoom.Id" id="diemDanhBtn" data-class-id="@viewModel.ClassRoom.Id" class="btn btn-primary btn-info btn-custom" target="_blank" style="font-family: Poppins, sans-serif; font-size: 14px;font-weight: 600;">Giảng đường</a>
 
-                <div class="option">
-                    <a href="/ClassRooms/Create" title="Create Classroom" style="text-decoration:none;">
-                        <p style="font-size: 16px; padding-left: 5px; color: black; margin: 0;">Lớp học</p>
-                    </a>
-                </div>
-                }
-                <div class="option">
-                    <button id="btnAddRoom" data-toggle="modal" data-target="#joinRoomModal" style="font-size: 16px;background-color: transparent; color:black; border-color:transparent;">Tham gia</button>
-                </div>
-                <div class="option">
-                    <button id="scanButton" style="font-size: 16px; border-color:transparent;background-color: transparent">Quét Mã QR</button>
-                </div>
-            </div>
-        </div>
-        <div id="joinRoomModal" class="modal" tabindex="-1">
-            <div class="modal-dialog">
-                <div class="modal-content">
-                    <div class="modal-header" style="margin-bottom: 10px; border-bottom: none">
-                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                            <span aria-hidden="true">&times;</span>
-                        </button>
-                        <h5 class="modal-title" style="font-size:30px;font-weight:bold; color: #FA7070">THAM GIA PHÒNG HỌC</h5>
-                    </div>
-
-
-                    <form id="joinRoomForm" action="/ClassRooms/JoinClassV1" method="post">
-                        <div class="col-md-12" style="width: 100%">
-                            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-                            <div class="form-group">
-                                <label for="ClassRoomId" class="control-label" style="color: black; text-align: left; display: block; margin:10px 0">Mã phòng học:</label>
-                                <input name="ClassRoomId" id="ClassRoomId" class="form-control custom-input-width" required />
-                                <span id="ClassRoomIdError" class="text-danger"></span>
-                            </div>
-                        </div>
-                        <div class="modal-footer" style="border-top: 1px solid #e5e5e5; padding-top: 10px">
-                            <button type="button" class="btn btn-secondary" data-dismiss="modal" style="font-weight:bold; background-color: grey; font-size: 16px">Đóng</button>
-                            <input style="font-size: 16px; font-weight:bold" type="submit" value="Tham gia" class="btn btn-primary" />
-                        </div>
-                    </form>
-                </div>
-            </div>
-        </div>
-        <div id="cameraModal" class="modal">
-            <div class="modal-content" style="align-items: center;justify-content: center;">
-                <span class="close">&times;</span>
-                <video id="qrScanner" width="400" height="400" autoplay style="align-items: center;justify-content: center;"></video>
-            </div>
-        </div>
-        *@
-        <div id="classroomList" class="classrooms-content">
-            @{
-                if (Model != null)
-                {
-                    @foreach (var viewModel in Model)
-                    {
-                        //  <a href="@viewModel.ClassRoom.RoomOnline&User=@user.Id&class=@viewModel.ClassRoom.Id" id="diemDanhBtn" data-class-id="@viewModel.ClassRoom.Id" class="btn btn-primary btn-info btn-custom" target="_blank" style="font-family: Poppins, sans-serif; font-size: 14px;font-weight: 600;">Giảng đường</a>
-
-                        //Card hiển thị lớp
-                        <div class="card-item" data-id="@viewModel.ClassRoom.Id">
-                            <div class="card-inner">
-                                <div class="card-front">
-                                    <img src="~/images/@viewModel.ClassRoom.backgroundUrl" class="card-img" alt="Front Image">
-                                </div>
-                                <div class="card-back">
-                                    <div class="card">
-                                        <div class="card-header">
-                                            <strong>GV giảng dạy: </strong>@viewModel.Owner.Name
-                                        </div>
-                                        <hr style="border-top: 2px solid #ddd; margin: 0" />
-                                        <div class="card-body">
-                                            <h5 class="card-title">@viewModel.ClassRoom.Name</h5>
-                                            <p class="card-text">@viewModel.ClassRoom.Description</p>
-                                            <a asp-action="Details" asp-route-id="@viewModel.ClassRoom.Id" class="btn btn-primary" style="float: right;">Vào lớp</a>
+                            //Card hiển thị lớp
+                            <div class="card-item" data-id="@viewModel.ClassRoom.Id">
+                                <div class="card-inner">
+                                    <div class="card-front">
+                                        <img src="~/images/@viewModel.ClassRoom.backgroundUrl" class="card-img" alt="Front Image">
+                                    </div>
+                                    <div class="card-back">
+                                        <div class="card">
+                                            <div class="card-header">
+                                                <strong>GV giảng dạy: </strong>@viewModel.Owner.Name
+                                            </div>
+                                            <hr style="border-top: 2px solid #ddd; margin: 0" />
+                                            <div class="card-body">
+                                                <h5 class="card-title">@viewModel.ClassRoom.Name</h5>
+                                                <p class="card-text">@viewModel.ClassRoom.Description</p>
+                                                <a asp-action="Details" asp-route-id="@viewModel.ClassRoom.Id" class="btn btn-primary" style="float: right;">Vào lớp</a>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
                             </div>
-                        </div>
-                    }
+                        }
+                    </div>
                 }
-            }
-        </div> 
+                else
+                {
+                    <div class="null_Classroom">
+                        <img src="~/images/null_Classroom_Index.gif" width="600px" height="400px" alt=" Null Classroom" />
+                        <h3 style="font-family: 'Itim', serif; font-size: 25px; margin-top: -50px;">Hiện tại bạn đang không tham gia lớp học nào !!!</h3>
+                    </div>
+                }
+            } 
+        }
+        
     </div>
 </div>
 
