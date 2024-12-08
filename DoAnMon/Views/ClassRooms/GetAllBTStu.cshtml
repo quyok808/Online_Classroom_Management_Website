@@ -8,80 +8,151 @@
 	ViewData["Title"] = "GetAllStu";
 	Layout = "~/Views/Shared/_Layout.cshtml";
 }
+<style>
+	.list-container{
+		margin-top: 100px;
+		width: 100%;
+		height: 100%;
+		font-family: 'Itim', serif;
+	}
 
-<h2>Danh sách bài tập đã nộp</h2>
+	.btn-download{
+		background-color: white; /* Màu nền */
+		color: rgb(74, 113, 255); /* Màu chữ */
+		border-radius: 50%; /* Biến nút thành hình tròn */
+		width: 50px; /* Chiều rộng */
+		height: 50px; /* Chiều cao */
+		display: flex; /* Để căn giữa icon */
+		align-items: center; /* Căn giữa icon theo chiều dọc */
+		justify-content: center; /* Căn giữa icon theo chiều ngang */
+		float: right; /* Đẩy nút sang bên phải */
+		transition: background-color 0.3s ease; /* Hiệu ứng hover */
+		margin-right:20px;
+		margin-top:10px;
+		margin-bottom:20px;
+	}
+
+		.btn-download:hover {
+			background-color: #eee; 
+			color: rgb(23 0 255);
+		}
+
+	.btn-download .icon{
+		font-size: 30px;  
+	}
+
+	.table {
+		border: 1px solid #ddd;
+		border-radius: 10px;
+		overflow: hidden;
+	}
+
+		.table th {
+			text-transform: uppercase;
+			letter-spacing: 0.05em;
+		}
+
+		.table td, .table th {
+			vertical-align: middle;
+		}
+
+		.table a {
+			text-decoration: none;
+			font-weight: bold;
+		}
+
+			.table a:hover {
+				color: #007bff;
+				text-decoration: underline;
+			}
+
+	.badge {
+		font-size: 0.9em;
+		padding: 5px 10px;
+		border-radius: 5px;
+	}
+
+	.shadow-sm {
+		box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+	}
+
+	.form-control-sm {
+		font-size: 0.8em;
+		height: auto;
+		padding: 5px;
+	}
+
+	.btn-sm {
+		font-size: 0.85em;
+		padding: 5px 10px;
+		
+	}
+
+	.thead-dark th{
+		background-color: rgb(74, 113, 255);
+		color: white;
+		text-align: center;
+	}
+
+</style>
+<div class="list-container">
 @{
 	// Chuyển danh sách List<BaiNop> sang chuỗi JSON và mã hóa nó
 	string baiNopJson = Newtonsoft.Json.JsonConvert.SerializeObject(Model);
 	string baiNopBase64 = Convert.ToBase64String(Encoding.UTF8.GetBytes(baiNopJson));
 }
-@{
-	if (User.IsInRole("Teacher") || User.IsInRole("Admin"))
-	{
-		<a class="btn btn-info" style="margin: 10px 0;" asp-controller="ClassRooms" asp-action="DownloadFiles" asp-route-baiNop="@baiNopBase64">Download Files</a>
-	}
-}
-
-<table class="table table-hover table-bordered">
-	<thead class="thead-dark" style="background-color: #41444B;color: white;">
-		<tr>
-			<th>
-				Mã lớp
-			</th>
-			<th>
-				Thời gian nộp
-			</th>
-			<th>
-				Tên người nộp
-			</th>
-			<th>
-				File nộp
-			</th>
-			<th>
-				Điểm
-			</th>
-			<th>
-				 Thao tác
-			</th>
-		</tr>
-	</thead>
-	<tbody>
-		@foreach (var item in Model)
+	@{
+		if (User.IsInRole("Teacher") || User.IsInRole("Admin"))
 		{
-			<tr>
-				<td>
-					@Html.DisplayFor(modelItem => item.ClassId)
-				</td>
-				<td>
-					@Html.DisplayFor(modelItem => item.SubmittedAt)
-				</td>
-				<td>
-					@{
-						var user = await _userManager.FindByIdAsync(@item.UserId);
-					}
-					@Html.DisplayFor(modelItem => user.Name)
-
-				</td>
-				<td>
-					<a href="/BAINOP/@item.Urlbainop" download>@item.Urlbainop</a>
-				</td>
-				<td>
-					<span id="displayLabel">@item.Diem</span>
-				</td>
-				<td>
-					@if (User.IsInRole("Teacher") || User.IsInRole("Admin"))
-					{
-						<input type="number" id="editInput" style="display:none;" value="@item.Diem" />
-						<button class="btn btn-warning btn-sm" onclick="toggleEdit()" id="editButton">Chấm điểm</button>
-						<button class="btn btn-success btn-sm d-none" onclick="saveGrade('@item.IdBaiNop')" id="saveButton" style="display:none;">Lưu</button>
-					}
-
-				</td>
-
-			</tr>
+			<a class="btn btn-download" asp-controller="ClassRooms" asp-action="DownloadFiles" asp-route-baiNop="@baiNopBase64"><i class="fa fa-download icon"></i></a>
+			
 		}
-	</tbody>
-</table>
+	}
+	<table class="table table-hover table-bordered shadow-sm">
+		<thead class="thead-dark">
+			<tr>
+				<th>Mã lớp</th>
+				<th>Thời gian nộp</th>
+				<th>Tên người nộp</th>
+				<th>File nộp</th>
+				<th>Điểm</th>
+				<th>Thao tác</th>
+			</tr>
+		</thead>
+		<tbody>
+			@foreach (var item in Model)
+			{
+				<tr style="text-align: justify; vertical-align: middle;">
+					<td>@Html.DisplayFor(modelItem => item.ClassId)</td>
+					<td>@Html.DisplayFor(modelItem => item.SubmittedAt)</td>
+					<td>
+						@{
+							var user = await _userManager.FindByIdAsync(@item.UserId);
+						}
+						@user.Name
+					</td>
+					<td>
+						<a href="/BAINOP/@item.Urlbainop" class="text-primary" download>@item.Urlbainop</a>
+					</td>
+					<td>
+						<span id="displayLabel" class="badge bg-primary">@item.Diem</span>
+					</td>
+					<td>
+						@if (User.IsInRole("Teacher") || User.IsInRole("Admin"))
+						{
+							<div class="d-flex justify-content-center align-items-center">
+								<input type="number" id="editInput" class="form-control form-control-sm w-50 d-none" value="@item.Diem" />
+								<button style="margin-top:10px;" class="btn btn-warning btn-sm mx-1" onclick="toggleEdit()" id="editButton">Chấm điểm</button>
+								<button style="margin-top:10px;" class="btn btn-success btn-sm d-none mx-1" onclick="saveGrade('@item.IdBaiNop')" id="saveButton">Lưu</button>
+							</div>
+						}
+					</td>
+				</tr>
+			}
+		</tbody>
+	</table>
+	
+</div>
 
 <script>
 	function toggleEdit() {
