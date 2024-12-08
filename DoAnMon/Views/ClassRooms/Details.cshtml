@@ -1134,8 +1134,6 @@
 		display: none; /* Ẩn thẻ input gốc */
 	}
 </style>
-
-
 <style>
 	.ClassroomDetail-container{
 		display: flex;
@@ -1197,10 +1195,18 @@
 		text-decoration: none;
 	}
 
+	.custom-VaoPhong:active, .custom-VaoPhong:visited, .custom-VaoPhong:focus{
+			color: #295F98;
+	}
+
 	.ClassroomDetail-right-container {
 		width: 80%;
 		margin-left: 20px;
 		font-family: "JetBrains Mono", serif;
+	}
+
+	.color-custom{
+		color: #295F98;
 	}
 </style>
 <div style="position: relative; width: 100%;">
@@ -1246,8 +1252,8 @@
 				</li>
 				<li class="list-group-item padding-custom" style="font-weight: bold;">@Model.ClassRoom.Name</li>
 				<li class="list-group-item padding-custom">@Model.ClassRoom.Description</li>
-				<li class="list-group-item padding-custom">
-					<a href="@Model.ClassRoom.RoomOnline&User=@user.Id&class=@Model.ClassRoom.Id" id="diemDanhBtn" class="custom-VaoPhong" id="join-btn"><span>Tham gia phòng học</span></a>
+				<li class="list-group-item padding-custom color-custom">
+					<a href="@Model.ClassRoom.RoomOnline&User=@user.Id&class=@Model.ClassRoom.Id" id="diemDanhBtn" class="custom-VaoPhong" id="join-btn">Tham gia phòng học</a>
 				</li>
 			</ul>
 		</div>

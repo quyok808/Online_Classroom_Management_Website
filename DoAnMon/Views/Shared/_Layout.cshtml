@@ -257,6 +257,14 @@
                     window.location.href = '/Notifications';
                 }
             })
+
+            const noti_count = document.getElementById("noti_count");
+            if (noti_count) {
+                let count = parseInt(noti_count.innerText, 10) || 0;
+                count += 1;
+                noti_count.innerText = count;
+                noti_count.style.display = "inline"; // Hiển thị lại nếu đang bị ẩn
+            }
         });
         connections.start().catch(err => console.error(err.toString()));
     </script>

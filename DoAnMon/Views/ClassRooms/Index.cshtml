@@ -202,7 +202,10 @@
                 @{
                     if (ViewBag.listNotiNew > 0)
                     {
-                        <span class="notification-count">@ViewBag.listNotiNew</span>
+                        <span class="notification-count" id="noti_count">@ViewBag.listNotiNew</span>
+                    } else
+                    {
+                        <span class="notification-count" id="noti_count" style="display: none;"></span>
                     }
                 }
             </i>
@@ -212,7 +215,7 @@
          {
             <button type="button" class="btn btn-light btn-custom-indexControl" onclick="location.href='/ClassRooms/Create'"><i class="fa-solid fa-plus fa-xl" style="color: #000; margin-right: 35px;"></i> Tạo lớp mới</button>
          }
-        <button data-toggle="modal" data-target="#JoinModal" type="button" class="btn btn-light btn-custom-indexControl"><img src="https://cdn-icons-png.flaticon.com/512/12366/12366453.png" alt="Alternate Text" width="26.25px" height="30.4" style="margin-right:35px; " /> Tham gia lớp học</button>
+        <button data-toggle="modal" data-target="#JoinModal" type="button" class="btn btn-light btn-custom-indexControl"><img src="https://cdn-icons-png.flaticon.com/512/12366/12366453.png" alt="Alternate Text" width="33.75px" height="35px" style="margin-right:26px; " /> Tham gia lớp học</button>
         <hr style="border-top: 2px solid #ddd; margin: 10px 0 auto;" />
         <div class="btn btn-light btn-custom-indexControl">
             <img src="~/images/group.gif" alt="Alternate Text" width="40px" height="40px">
