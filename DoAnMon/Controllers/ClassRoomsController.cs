@@ -312,9 +312,9 @@ namespace DoAnMon.Controllers
 			}
 
 			var userClassDetails = _context.classroomDetail.FirstOrDefault(p => p.ClassRoomId.Equals(id) && p.UserId.Equals(currentUser.Id));
-            if (userClassDetails != null)
+            if (userClassDetails != null && userClassDetails.GroupId != null)
 			{
-                List<ClassroomDetail> listUserGroup = await _context.classroomDetail.Where(p => p.GroupId.Equals(userClassDetails.GroupId)).ToListAsync();
+                List<ClassroomDetail> listUserGroup = await _context.classroomDetail.Where(p => p.GroupId.Equals(userClassDetails.GroupId) && p.ClassRoomId.Equals(id)).ToListAsync();
                 ViewBag.ListUserGroup = listUserGroup;
             }
             
