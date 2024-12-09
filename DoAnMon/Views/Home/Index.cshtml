@@ -2,12 +2,16 @@
     ViewData["Title"] = "Trang chủ";
 }
 <style>
-    .container {
+    .container1 {
         display: flex;
         margin-top:100px;
         width: 100%;
         overflow-y: auto;
         height: 900px;
+    }
+
+    .container1::-webkit-scrollbar{
+        display: none;
     }
 
     .slider-container {
@@ -120,6 +124,10 @@
             font-weight: bold;
         }
 
+        .main-content::-webkit-scrollbar{
+            display: none;
+        }
+
     .post-listcontent {
         flex-grow: 1;
         margin-left: 20px;
@@ -131,14 +139,18 @@
         width: 100%;
         overflow-y: auto;
     }
+
+    .new::-webkit-scrollbar{
+        display: none;
+    }
     
 </style>
-<div class="container">
+<div class="container1">
     <div class="slider-container">
         <div class="below-slider">
             <p style="text-align:center; font-size:16px; font-weight:bold">TRUY CẬP NHANH </p>
             <p style="text-align:left; font-size:14px;"><a href="https://sinhvien.hutech.edu.vn/#/sinhvien/login/login">Sinh viên Hutech</a></p>
-            <p style="text-align:left; font-size:14px; "><a href="https://daotao.hutech.edu.vn/>">Cổng Thông Tin Đào Tạo</a></p>
+            <p style="text-align:left; font-size:14px; "><a href="https://daotao.hutech.edu.vn/">Cổng Thông Tin Đào Tạo</a></p>
             <p style="text-align:left; font-size:14px;"><a href="https://e-graduate.hutech.edu.vn/">E-Learning Hutech</a></p>
             <p style="text-align:left; font-size:14px;"><a href="https://itcoder.hutech.edu.vn/?fbclid=IwZXh0bgNhZW0CMTEAAR1_dTRkcC1NyWZiEPGYpgKG0pDmztI0nCR3DEPiZIeGGeTmTEydrsVUe0o_aem_e7PLpYTeUkRbYjIX8doOIw">ITCoder HUTECH</a></p>
             <p style="text-align:left; font-size:14px;"><a href="https://chatgpt.com/">Chat GPT</a></p>
@@ -156,8 +168,8 @@
     <div class="post-container">
         <div class="main-content"></div>
         <div class="post-listcontent">
-            <video width="100%" height="100%" controls>
-                <source src="/images/1052842079-preview.mp4" type="video/mp4">
+            <video width="100%" height="100%" controls autoplay>
+                <source src="https://www.shutterstock.com/shutterstock/videos/1052842079/preview/stock-footage-learning-home-boy-studying-in-online-schools-watching-a-video-broadcast-of-a-lesson-on-a-computer.webm" type="video/mp4">
             </video>
             <p style="font-weight:bold;font-size:16px;text-align:center;">
                 ⏰ HỌC MỌI LÚC 🌍 MỌI NƠI VỚI NỀN TẢNG HỌC TRỰC TUYẾN CỦA CHÚNG TÔI 💻 ONLY A
@@ -282,7 +294,7 @@
         fetchPosts(); // Gọi hàm lấy dữ liệu bài đăng
     });
 </script> 
-<script>
+@* <script>
     document.addEventListener('DOMContentLoaded', (event) => {
         const dropbtn = document.querySelector('.btnchude');
         const dropdownContent = document.querySelector('.chude-content');
@@ -298,4 +310,4 @@
         });
     });
 
-</script>
+</script> *@

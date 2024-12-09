@@ -6,7 +6,6 @@
 	Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-
 <style>
     #Search-form {
         display: flex;
@@ -185,6 +184,7 @@
             Next
         </a>
     </div>
+
 </div>
 
 @section Scripts {
@@ -204,6 +204,7 @@
 				data: { query: query },
 				success: function (data) {
 					$("#assignmentContainer").html(data);
+					$("#query").val("");
 				},
 				error: function (xhr, status, error) {
 					console.error("Error:", error);
