@@ -1,0 +1,59 @@
+﻿@using DoAnMon.ViewModels
+@model EditClassRoomViewModel
+
+<form id="editClassRoomForm">
+    <input type="hidden" asp-for="Id" />
+
+    <div class="form-group">
+        <label asp-for="Name"></label>
+        <input class="form-control" asp-for="Name" />
+        <span asp-validation-for="Name" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="Description"></label>
+        <textarea class="form-control" asp-for="Description"></textarea>
+        <span asp-validation-for="Description" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="StartDate"></label>
+        <input class="form-control" asp-for="StartDate" type="date" />
+        <span asp-validation-for="StartDate" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="EndDate"></label>
+        <input class="form-control" asp-for="EndDate" type="date" />
+        <span asp-validation-for="EndDate" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label>Ngày học</label><br />
+        @foreach (var day in Enum.GetValues(typeof(DayOfWeek)).Cast<DayOfWeek>())
+        {
+            <div class="form-check form-check-inline">
+                <input class="form-check-input" type="checkbox"
+                       name="DaysOfWeek"
+                       value="@day"
+                @(Model.DaysOfWeek.Contains(day.ToString()) ? "checked" : "") />
+                <label class="form-check-label">@day</label>
+            </div>
+        }
+    </div>
+
+    <div class="form-group">
+        <label asp-for="StartTime"></label>
+        <input class="form-control" asp-for="StartTime" type="time" />
+        <span asp-validation-for="StartTime" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="EndTime"></label>
+        <input class="form-control" asp-for="EndTime" type="time" />
+        <span asp-validation-for="EndTime" class="text-danger"></span>
+    </div>
+
+    <button type="button" class="btn btn-primary" id="saveButton">Save</button>
+</form>
+

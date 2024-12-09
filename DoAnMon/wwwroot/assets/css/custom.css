@@ -253,12 +253,6 @@ CUSTOM PICTURE HEADER
 /* ========================================
 CUSTOM CLASSROOM CARD
 =========================================*/
-.content{
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: space-between;
-  justify-content: flex-start;
-}
 
 .classroom {
   background-color: #fff;
@@ -315,18 +309,18 @@ CUSTOM CLASSROOM CARD
 }
 
 /* IMG CARD */
-.card-bottom .PNzAWd{
+/*.card-bottom .PNzAWd{
   border-radius: 50%;
   float: right;
   position: relative;
   margin-top: -4.5rem;
   overflow: clip;
 
-  height: 6rem; /* hoặc bất kỳ giá trị % nào phù hợp */
-  width: 6rem; /* hoặc bất kỳ giá trị % nào phù hợp */
-  max-height: 6rem; /* giới hạn kích thước tối đa */
-  max-width: 6rem; /* giới hạn kích thước tối đa */
-}
+  height: 6rem;*/ /* hoặc bất kỳ giá trị % nào phù hợp */
+  /*width: 6rem;*/ /* hoặc bất kỳ giá trị % nào phù hợp */
+  /*max-height: 6rem;*/ /* giới hạn kích thước tối đa */
+  /*max-width: 6rem;*/ /* giới hạn kích thước tối đa */
+/*}
 
 .card-bottom{
   position: relative;
@@ -345,7 +339,7 @@ CUSTOM CLASSROOM CARD
   height: 100px;
   border-radius: 5px 5px 0 0;
   border-color: #fff;
-}
+}*/
 /* ===================================================
 CUSTOM BTN VÀO PHÒNG
 ======================================================*/

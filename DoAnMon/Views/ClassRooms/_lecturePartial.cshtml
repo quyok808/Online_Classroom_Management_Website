@@ -1,7 +1,7 @@
 ﻿@model IEnumerable<DoAnMon.Models.BaiGiang>
 
 @{
-    var lectures = Model != null ? Model.ToList() : new List<BaiGiang>();
+    var lectures = Model != null ? Model.OrderBy(p => p.Id).ToList() : new List<BaiGiang>();
     var totalCount = lectures.Count;
     bool isOwner = ViewBag.Isowner;
 }
@@ -35,7 +35,8 @@
 }
 else
 {
-	<h2 style="font-family: Poppins, sans-serif;">Chưa có bài nào được đăng lên</h2>
+    <img src="~/images/emptyData.gif" style="width: 200px; height: auto; display: flex; justify-self: center;" />
+    <h3 style="font-family: 'JetBrains Mono',serif; text-align: center;">Chưa có bài giảng được đăng lên</h3>
 }
 
 

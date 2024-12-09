@@ -18,13 +18,13 @@ namespace DoAnMon.SignalR
 			_context = context;
 		}
 
-		public async Task SendMessage(string user, string message, string time, string classID, string? fileUrl = null)
+		public async Task SendMessage(string user, string message, string time, string classID, string Urlavt, string? fileUrl = null)
 		{
 			if (!string.IsNullOrEmpty(message) || !string.IsNullOrEmpty(fileUrl))
 			{
 				var content = string.IsNullOrEmpty(message) ? "Đã gửi một file." : message;
 				await SaveMessageToDatabase(classID, content, time, fileUrl);
-				await Clients.All.SendAsync("ReceiveMessage", user, content, fileUrl);
+				await Clients.All.SendAsync("ReceiveMessage", user, content, fileUrl, Urlavt);
 			}
 		}
 
@@ -44,6 +44,17 @@ namespace DoAnMon.SignalR
 
 			_context.Messages.Add(newMessage);
 			await _context.SaveChangesAsync();
+		}
+
+        public async Task SendFriendRequestNotification(string targetUserId, string requesterName)
+        {
+            await Clients.Client(targetUserId).SendAsync("ReceiveFriendRequestNotification", requesterName);
+        }
+
+        public async Task UpdateButtonState(string senderUserId, string receiverUserId, string state)
+		{
+			// Cập nhật trạng thái button (state: accepted/rejected)
+			await Clients.Users(senderUserId, receiverUserId).SendAsync("ChangeButtonState", state);
 		}
 	}
 }

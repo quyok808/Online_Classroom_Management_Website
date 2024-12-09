@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Primitives;
+using Newtonsoft.Json;
 
 namespace DoAnMon.Controllers
 {
@@ -20,7 +21,7 @@ namespace DoAnMon.Controllers
 			_context = context;
 		}
 
-		[HttpPost]
+		[HttpPost("UploadChunk")]
 		public async Task<IActionResult> UploadChunk()
 		{
 			var folderType = Request.Form["folderType"]; // Lấy loại thư mục từ yêu cầu
@@ -116,7 +117,7 @@ namespace DoAnMon.Controllers
 
 
         // Kiểm tra chunk đã tồn tại chưa
-        [HttpGet]
+        [HttpGet("DoesChunkExist")]
 		public IActionResult DoesChunkExist()
 		{
 			var resumableChunkNumber = Request.Query["resumableChunkNumber"];
@@ -133,6 +134,47 @@ namespace DoAnMon.Controllers
 				return StatusCode(204); // Chunk chưa tồn tại
 			}
 		}
+
+		[HttpPost("UploadFileResumable")]
+		public IActionResult UploadFileResumable()
+		{
+			var resumableIdentifier = Request.Form["resumableIdentifier"];
+			var resumableFilename = Request.Form["resumableFilename"];
+			var resumableChunkNumber = int.Parse(Request.Form["resumableChunkNumber"]);
+
+			var uploadPath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/Uploads/BAINOP/temp", resumableIdentifier);
+			Directory.CreateDirectory(uploadPath);
+
+			var chunkFilePath = Path.Combine(uploadPath, $"{resumableChunkNumber}");
+			using (var fileStream = new FileStream(chunkFilePath, FileMode.Create))
+			{
+				Request.Body.CopyTo(fileStream);
+			}
+
+			var totalChunks = int.Parse(Request.Form["resumableTotalChunks"]);
+			if (Directory.GetFiles(uploadPath).Length == totalChunks)
+			{
+				var finalPath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/Uploads/BAINOP", resumableFilename);
+
+				using (var finalFile = new FileStream(finalPath, FileMode.Create))
+				{
+					for (var i = 1; i <= totalChunks; i++)
+					{
+						var chunkPath = Path.Combine(uploadPath, $"{i}");
+						var chunkData = System.IO.File.ReadAllBytes(chunkPath);
+						finalFile.Write(chunkData, 0, chunkData.Length);
+						System.IO.File.Delete(chunkPath);
+					}
+				}
+
+				Directory.Delete(uploadPath);
+
+				return new JsonResult(new { success = true, filePath = $"/Uploads/BAINOP/{resumableFilename}" });
+			}
+
+			return Ok();
+		}
+
 	}
 
 }

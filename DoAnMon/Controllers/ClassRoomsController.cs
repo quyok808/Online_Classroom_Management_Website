@@ -1,4 +1,4 @@
-﻿  using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -29,6 +29,11 @@ using Microsoft.IdentityModel.Tokens;
 using DoAnMon.Migrations;
 using DoAnMon.SendMail;
 using System.Security.Claims;
+using Microsoft.EntityFrameworkCore.Metadata;
+using DoAnMon.SignalR;
+using System.Text.RegularExpressions;
+using DoAnMon.ViewModels;
+using Humanizer;
 namespace DoAnMon.Controllers
 {
 	[Authorize(Roles ="Admin, Teacher, Student")]
@@ -41,7 +46,7 @@ namespace DoAnMon.Controllers
 		private static readonly SemaphoreSlim _semaphore = new SemaphoreSlim(1, 1);
 		private readonly ILogger<HomeController> _logger;
 
-        public ClassRoomsController(ApplicationDbContext context, UserManager<CustomUser> userManager, IWebHostEnvironment environment, IStudent studentRepo, ILogger<HomeController> logger)
+		public ClassRoomsController(ApplicationDbContext context, UserManager<CustomUser> userManager, IWebHostEnvironment environment, IStudent studentRepo, ILogger<HomeController> logger)
 		{
 			_context = context;
 			_userManager = userManager;
@@ -49,7 +54,7 @@ namespace DoAnMon.Controllers
 			_studentRepo = studentRepo;
 			_logger = logger;
 
-        }
+		}
         public static List<ClassRoom>? userClasses;
 		// GET: ClassRooms
 		public async Task<IActionResult> Index()
@@ -112,8 +117,8 @@ namespace DoAnMon.Controllers
 				}
 			}
 			ViewBag.ListRoom = userClasses;
-			// Truyền danh sách lớp học của người dùng vào View
-			return View(classRoomViewModels);
+            ViewBag.listNotiNew = await _context.FriendRequests.Where(user => user.TargetId.Equals(currentUser.Id) && user.IsAccepted == false).OrderByDescending(p => p.createAt).CountAsync();
+            return View(classRoomViewModels);
 		}
 
         public void DeleteClassrooms(string id)
@@ -153,7 +158,16 @@ namespace DoAnMon.Controllers
             {
                 _context.classroomDetail.Remove(item);
             }
-            _context.classRooms.Remove(classRoom);
+			var rubric = _context.Rubric.FirstOrDefault(p => p.ClassRoomId.Equals(id));
+			if (rubric != null)
+			{
+				var Criteria = _context.Criteria.Where(p => p.RubricId == rubric.Id);
+				Criteria.ForEachAsync(p => _context.Criteria.Remove(p));
+				var StudentsList = _context.Students.Where(p => p.RubricId == rubric.Id);
+				StudentsList.ForEachAsync(p => _context.Students.Remove(p));
+				_context.Rubric.Remove(rubric);
+			}
+			_context.classRooms.Remove(classRoom);
             _context.SaveChanges();
         }
 
@@ -178,7 +192,7 @@ namespace DoAnMon.Controllers
 			var owner = await _context.Users.FirstOrDefaultAsync(u => u.Id == classRoom.UserId);
 			var Lecture = await _context.BaiGiang.Where(p => p.ClassId == classRoom.Id).ToListAsync();
 			var chatHistory = await _context.Messages.Where(p => p.ClassRoomId == classRoom.Id).ToListAsync();
-			var homework = await _context.baiTaps.Where(p => p.ClassRoomId == classRoom.Id).ToListAsync();
+			var homework = await _context.baiTaps.Where(p => p.ClassRoomId == classRoom.Id).OrderByDescending(p => p.CreatedAt).ToListAsync();
 			var post = await _context.posts.Where(p => p.ClassRoomId == classRoom.Id).ToListAsync();
 			if (owner == null)
 			{
@@ -223,9 +237,11 @@ namespace DoAnMon.Controllers
 				.Select(g => g.First())
 				.ToListAsync();
 			ViewBag.UserPosts = userposts;
+			ViewBag.UserId = userId;
 
-			//var listpost = await _context.posts.Where(p => p.ClassRoomId == id).ToListAsync();
+			
 			var listBT = await _context.baiTaps.Where(p => p.ClassRoomId == id).ToListAsync();
+
 
 			var Diem = new List<DiemViewModel>();
 
@@ -283,7 +299,26 @@ namespace DoAnMon.Controllers
 										new TimeSpan(classRoom.StartTime.Hours, classRoom.StartTime.Minutes, 0),
 										new TimeSpan(classRoom.EndTime.Hours, classRoom.EndTime.Minutes,0)
 										);
-			return View(viewModel);
+
+			
+			if (classRoom.RubricId == -1)
+			{
+				viewModel.CustomRubric = false;
+			}
+			else
+			{
+				viewModel.CustomRubric = true;
+				viewModel.Rubric = await _context.Rubric.FirstOrDefaultAsync(p => p.ClassRoomId.Equals(id));
+			}
+
+			var userClassDetails = _context.classroomDetail.FirstOrDefault(p => p.ClassRoomId.Equals(id) && p.UserId.Equals(currentUser.Id));
+            if (userClassDetails != null && userClassDetails.GroupId != null)
+			{
+                List<ClassroomDetail> listUserGroup = await _context.classroomDetail.Where(p => p.GroupId.Equals(userClassDetails.GroupId) && p.ClassRoomId.Equals(id)).ToListAsync();
+                ViewBag.ListUserGroup = listUserGroup;
+            }
+            
+            return View(viewModel);
 		}
 
 		// GET: ClassRooms/Create
@@ -359,7 +394,7 @@ namespace DoAnMon.Controllers
 		// For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
 		[HttpPost]
 		[ValidateAntiForgeryToken]
-		public async Task<IActionResult> Create(ClassRoom classRoom, string[] DaysOfWeek)
+		public async Task<IActionResult> Create(ClassRoom classRoom, string[] DaysOfWeek, bool haveRubric)
 		{
 			ModelState.Remove("Id");
 			if (ModelState.IsValid)
@@ -370,11 +405,15 @@ namespace DoAnMon.Controllers
 					classRoom.Id = GenerateUniqueRandomString(6);
 					classRoom.UserId = currentUser.Id;
 					classRoom.RoomOnline = "https://meeting-room-onlya1.glitch.me?room=" + linkRoom;
-					classRoom.backgroundUrl = "anhclass.png";
+					classRoom.backgroundUrl = GetBackgroundFile();
 					classRoom.STT = 0;
+                    if (haveRubric)
+					{
+						classRoom.RubricId = -1;
+					}
 
-					// Ghép các ngày học lại thành chuỗi
-					classRoom.DaysOfWeek = string.Join(",", DaysOfWeek);
+                    // Ghép các ngày học lại thành chuỗi
+                    classRoom.DaysOfWeek = string.Join(",", DaysOfWeek);
 
 					_context.Add(classRoom);
 					await _context.SaveChangesAsync();
@@ -385,14 +424,36 @@ namespace DoAnMon.Controllers
 						clr.STT++;
 					}
 					await _context.SaveChangesAsync();
-					return RedirectToAction(nameof(Index));
+					if (haveRubric)
+						return RedirectToAction(nameof(Index));
+					return RedirectToAction("Create", "Rubrics", new { classroomId = classRoom.Id });
 				}
 			}
 			return View(classRoom);
 		}
 		static string linkRoom;
 
-        [HttpPost]
+		public string GetBackgroundFile()
+		{
+			var path = Path.Combine(_environment.WebRootPath, "images");
+			string[] files = Directory.GetFiles(path);
+
+			var fileNames = files.Select(file => Path.GetFileName(file))
+								 .Where(filename => filename.Contains("classImage_Default"))
+								 .ToList();
+
+			if (fileNames.Count == 0)
+			{
+				return null; // Or some default value if no valid files are found
+			}
+
+			Random rand = new Random();
+			int number = rand.Next(0, fileNames.Count); // Random number within the valid range
+			return fileNames[number];
+		}
+
+
+		[HttpPost]
         public ActionResult ReceiveRoomUrl(string roomUrl1)
         {
 			linkRoom = roomUrl1;
@@ -458,11 +519,15 @@ namespace DoAnMon.Controllers
 
         [HttpGet]
 		public PartialViewResult GetMessages()
-		{
+		{			
 			List<Message> messages = _context.Messages.ToList();
-
 			return PartialView("_MessagePartial", messages);
 		}
+
+		
+
+
+
 		[HttpPost]
 		public async Task<IActionResult> JoinClassV1(ClassroomDetail classroom)
 		{
@@ -533,7 +598,7 @@ namespace DoAnMon.Controllers
 		}
 
 		[HttpPost]
-		public async Task<IActionResult> CreateBaitap(string AttactURL, string Content, string Title, string ClassId, string FileFormat, DateTime Deadline, DateTime CreateAt)
+		public async Task<IActionResult> CreateBaitap(string AttactURL, string Content, string Title, string ClassId, string FileFormat, DateTime Deadline, DateTime CreateAt, int MaxSize)
 		{
 
 			BaiTap baitap = new BaiTap();
@@ -544,6 +609,7 @@ namespace DoAnMon.Controllers
 			baitap.ClassRoomId = ClassId;
 			baitap.CreatedAt = DateTime.Now;
 			baitap.FileFormat = FileFormat;
+			baitap.MaxSize = MaxSize != 0 ? MaxSize : 10;
 			if (Deadline.ToString() != "01/01/0001 12:00:00 AM")
 			{
 				baitap.Deadline = Deadline;
@@ -752,9 +818,17 @@ namespace DoAnMon.Controllers
 			{
 				_context.classroomDetail.Remove(item);
 			}
+			var rubric = _context.Rubric.FirstOrDefault(p => p.ClassRoomId.Equals(id));
+			if (rubric != null)
+			{
+				var Criteria = _context.Criteria.Where(p => p.RubricId == rubric.Id);
+				await Criteria.ForEachAsync(p => _context.Criteria.Remove(p));
+				var StudentsList = _context.Students.Where(p => p.RubricId == rubric.Id);
+				await StudentsList.ForEachAsync(p => _context.Students.Remove(p));
+				_context.Rubric.Remove(rubric);
+			}
 			_context.classRooms.Remove(classRoom);
 			await _context.SaveChangesAsync();
-
 			return RedirectToAction(nameof(Index));
 		}
 
@@ -777,27 +851,40 @@ namespace DoAnMon.Controllers
 		// GET: ClassRooms/Edit/5
 		public async Task<IActionResult> Edit(string id)
 		{
-			ViewBag.ListRoom = userClasses;
 			if (id == null)
 			{
 				return NotFound();
 			}
 
+			// Lấy thông tin lớp học dựa trên Id
 			var classRoom = await _context.classRooms.FindAsync(id);
 			if (classRoom == null)
 			{
 				return NotFound();
 			}
 
-			return View(classRoom);
+			// Truyền dữ liệu ra ViewModel
+			var viewModel = new EditClassRoomViewModel
+			{
+				Id = classRoom.Id,
+				Name = classRoom.Name,
+				Description = classRoom.Description,
+				StartDate = classRoom.StartDate,
+				EndDate = classRoom.EndDate,
+				DaysOfWeek = classRoom.DaysOfWeek?.Split(',') ?? Array.Empty<string>(),
+				StartTime = classRoom.StartTime,
+				EndTime = classRoom.EndTime
+			};
+
+			return View(viewModel);
 		}
 
+		// POST: ClassRooms/Edit/5
 		[HttpPost]
 		[ValidateAntiForgeryToken]
-		public async Task<IActionResult> Edit(string id, ClassRoom classRoom)
+		public async Task<IActionResult> Edit1(string id, EditClassRoomViewModel viewModel)
 		{
-
-			if (id == null || classRoom == null || classRoom.Id != id)
+			if (id != viewModel.Id)
 			{
 				return NotFound();
 			}
@@ -806,31 +893,31 @@ namespace DoAnMon.Controllers
 			{
 				try
 				{
-					// Lấy thông tin classRoom hiện tại từ cơ sở dữ liệu
-					var existingClassRoom = await _context.classRooms.FindAsync(id);
-
-					if (existingClassRoom == null)
+					// Lấy thông tin lớp học từ database
+					var classRoom = await _context.classRooms.FindAsync(id);
+					if (classRoom == null)
 					{
 						return NotFound();
 					}
 
-					// Lấy thông tin chủ sở hữu (owner) của classRoom hiện tại
-					var owner = await _context.Users.FirstOrDefaultAsync(u => u.Id == existingClassRoom.UserId);
+					// Cập nhật các trường được chỉnh sửa
+					classRoom.Name = viewModel.Name;
+					classRoom.Description = viewModel.Description;
+					classRoom.StartDate = viewModel.StartDate;
+					classRoom.EndDate = viewModel.EndDate;
+					classRoom.DaysOfWeek = string.Join(",", viewModel.DaysOfWeek);
+					classRoom.StartTime = viewModel.StartTime;
+					classRoom.EndTime = viewModel.EndTime;
 
-					// Cập nhật thông tin từ classRoom được gửi từ view
-					existingClassRoom.Name = classRoom.Name;
-					existingClassRoom.Description = classRoom.Description;
-
-					// Gán lại giá trị UserId
-					existingClassRoom.UserId = existingClassRoom.UserId; // Giữ nguyên giá trị UserId
-
-					_context.Update(existingClassRoom);
+					// Lưu lại thay đổi
+					_context.Update(classRoom);
 					await _context.SaveChangesAsync();
-					return RedirectToAction(nameof(Index));
+
+					return RedirectToAction(nameof(Create));
 				}
 				catch (DbUpdateConcurrencyException)
 				{
-					if (!ClassRoomExists(classRoom.Id))
+					if (!ClassRoomExists(viewModel.Id))
 					{
 						return NotFound();
 					}
@@ -840,13 +927,87 @@ namespace DoAnMon.Controllers
 					}
 				}
 			}
-			return View(classRoom);
+			return View(viewModel);
 		}
 
-		private bool ClassRoomExists(string id)
+		// GET: ClassRooms/Edit/5
+		//public async Task<IActionResult> Edit(string id)
+		//{
+		//	if (string.IsNullOrEmpty(id))
+		//	{
+		//		return BadRequest();
+		//	}
+
+		//	var classRoom = await _context.classRooms.FindAsync(id);
+		//	if (classRoom == null)
+		//	{
+		//		return NotFound();
+		//	}
+
+		//	var viewModel = new EditClassRoomViewModel
+		//	{
+		//		Id = classRoom.Id,
+		//		Name = classRoom.Name,
+		//		Description = classRoom.Description,
+		//		StartDate = classRoom.StartDate,
+		//		EndDate = classRoom.EndDate,
+		//		DaysOfWeek = classRoom.DaysOfWeek?.Split(',') ?? Array.Empty<string>(),
+		//		StartTime = classRoom.StartTime,
+		//		EndTime = classRoom.EndTime
+		//	};
+
+		//	return PartialView("_EditClassRoom", viewModel);
+		//}
+
+		[HttpPost]
+		[ValidateAntiForgeryToken]
+		public async Task<IActionResult> Edit(string id, EditClassRoomViewModel viewModel)
 		{
-			return _context.classRooms.Any(e => e.Id == id);
+			if (id != viewModel.Id)
+			{
+				return Json(new { success = false, message = "ID không hợp lệ." });
+			}
+
+			if (!ModelState.IsValid)
+			{
+				return Json(new { success = false, message = "Dữ liệu không hợp lệ." });
+			}
+
+			try
+			{
+				var classRoom = await _context.classRooms.FindAsync(id);
+				if (classRoom == null)
+				{
+					return Json(new { success = false, message = "Không tìm thấy lớp học." });
+				}
+
+				classRoom.Name = viewModel.Name;
+				classRoom.Description = viewModel.Description;
+				classRoom.StartDate = viewModel.StartDate;
+				classRoom.EndDate = viewModel.EndDate;
+				classRoom.DaysOfWeek = string.Join(",", viewModel.DaysOfWeek);
+				classRoom.StartTime = viewModel.StartTime;
+				classRoom.EndTime = viewModel.EndTime;
+				classRoom.ShowRubric = viewModel.ShowRubric;
+
+				_context.Update(classRoom);
+				await _context.SaveChangesAsync();
+
+				return Json(new { success = true, message = "Lớp học đã được cập nhật thành công." });
+			}
+			catch (Exception ex)
+			{
+				_logger.LogError(ex, "Lỗi khi chỉnh sửa lớp học.");
+				return Json(new { success = false, message = "Đã xảy ra lỗi khi cập nhật lớp học." });
+			}
 		}
+
+
+		// Kiểm tra lớp học có tồn tại không
+		private bool ClassRoomExists(string id)
+        {
+            return _context.classRooms.Any(e => e.Id == id);
+        }
 
 		private static string classID;
 		public IActionResult AddListSV(string id)
@@ -1127,6 +1288,7 @@ namespace DoAnMon.Controllers
 					newsv.Mssv = sv.Mssv;
 					newsv.Name = sv.Name;
 					newsv.Email = sv.Email;
+					newsv.Userid = sv.Id;
 					_studentRepo.AddSV(newsv);
 				}
 				List<SV> newSVs = _studentRepo.getListSV();
@@ -1538,6 +1700,6 @@ namespace DoAnMon.Controllers
 
 			return dates;
 		}
-
-    }
+		
+	}
 }

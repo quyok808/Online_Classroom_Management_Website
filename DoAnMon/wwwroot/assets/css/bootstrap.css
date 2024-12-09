@@ -2810,9 +2810,9 @@ fieldset[disabled] .btn-default.active {
   background-color: #333;
 }
 .btn-primary {
-  color: #fff;
-  background-color: #428bca;
-  border-color: #357ebd;
+    color: #fff;
+    background-color: #BFECFF;
+    border-color: #357ebd;
 }
 .btn-primary:hover,
 .btn-primary:focus,
@@ -5439,16 +5439,30 @@ button.close {
   opacity: .5;
 }
 .modal-header {
-  min-height: 16.42857143px;
-  padding: 15px;
-  border-bottom: 1px solid #e5e5e5;
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-align: start;
+    -ms-flex-align: start;
+    align-items: flex-start;
+    -webkit-box-pack: justify;
+    -ms-flex-pack: justify;
+    justify-content: space-between;
+    padding: 1rem;
+    border-bottom: 1px solid #e9ecef;
+    border-top-left-radius: .3rem;
+    border-top-right-radius: .3rem;
 }
 .modal-header .close {
-  margin-top: -2px;
+    padding: 1rem;
+    margin: -1rem -1rem -1rem auto;
+    font-size: 24px;
 }
 .modal-title {
   margin: 0;
   line-height: 1.42857143;
+  font-size: 28px;
+  font-weight: bold;
 }
 .modal-body {
   position: relative;

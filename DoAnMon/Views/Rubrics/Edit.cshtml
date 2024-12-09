@@ -1,0 +1,104 @@
+﻿@using DoAnMon.ViewModels
+@model EditRubricViewModel
+
+@{
+    ViewData["Title"] = "Edit";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h1>Edit</h1>
+
+<h4>Rubric</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Edit">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" asp-for="@Model.Rubric.ClassRoomId" />
+            <input type="hidden" asp-for="@Model.Rubric.Id" />
+            <div class="form-group">
+                <label asp-for="@Model.Rubric.Name" class="control-label"></label>
+                <input asp-for="@Model.Rubric.Name" class="form-control" />
+                <span asp-validation-for="@Model.Rubric.Name" class="text-danger"></span>
+            </div>
+            <table class="table table-bordered">
+                <thead>
+                    <tr>
+                        <th style="width: 5%">#</th>
+                        <th style="width: 55%">Title</th>
+                        <th style="width: 20%">Weight</th>
+                        <th style="width: 20%">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @if (Model.Criterion != null)
+                    {
+                        for (int i = 0; i < Model.Criterion.Count; i++)
+                        {
+                            <tr>
+                                <td style="display: none">
+                                    <input type="hidden" asp-for="@Model.Criterion[i].Id" />
+                                    @Model.Criterion[i].Id
+                                </td>
+                                <td style="display: none">
+                                    <input type="hidden" asp-for="@Model.Criterion[i].RubricId" />
+                                    @Model.Criterion[i].RubricId
+                                </td>
+                                <td>
+                                    <p>@(i + 1)</p>
+                                </td>
+                                <td>
+                                    <input asp-for="@Model.Criterion[i].Title" class="form-control" />
+                                    <span asp-validation-for="@Model.Criterion[i].Title" class="text-danger"></span>
+                                </td>
+                                <td>
+                                    <input asp-for="@Model.Criterion[i].Weight" class="form-control" />
+                                    <span asp-validation-for="@Model.Criterion[i].Weight" class="text-danger"></span>
+                                </td>
+                                <td>
+                                    <button type="button" class="btn btn-danger btn-sm" onclick="deleteCriterion(@Model.Criterion[i].Id)">Xoá</button>
+                                </td>
+                            </tr>
+                        }
+                    }
+                    else
+                    {
+                        <tr>
+                            <td colspan="4" class="text-center">No data available</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+            <div class="form-group">
+                <input type="submit" value="Lưu" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a href="/Admin#Rubric">Quay lại</a>
+</div>
+<script>
+    function deleteCriterion(id) {
+        if (confirm("Bạn có chắc chắn muốn xóa?")) {
+            $.ajax({
+                url: `/Rubrics/Delete_Criteria/${id}`,
+                type: 'DELETE',
+                success: function () {
+                    alert("Xóa thành công!");
+                    location.reload(); // Reload lại trang
+                },
+                error: function () {
+                    alert("Xóa thất bại!")
+                }
+            });
+        }
+    }
+</script>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

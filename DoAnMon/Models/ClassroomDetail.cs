@@ -18,6 +18,7 @@ namespace DoAnMon.Models
 		public ClassRoom ClassRoom { get; set; }
 		[ValidateNever]
 		public CustomUser User { get; set; }
+		public string? GroupId { get; set; }
 
 	}
 }

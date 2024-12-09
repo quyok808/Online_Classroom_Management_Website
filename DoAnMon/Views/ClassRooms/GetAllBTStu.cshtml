@@ -9,79 +9,103 @@
 	Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h2>Danh sách bài tập đã nộp</h2>
-@{
-	// Chuyển danh sách List<BaiNop> sang chuỗi JSON và mã hóa nó
-	string baiNopJson = Newtonsoft.Json.JsonConvert.SerializeObject(Model);
-	string baiNopBase64 = Convert.ToBase64String(Encoding.UTF8.GetBytes(baiNopJson));
-}
-@{
-	if (User.IsInRole("Teacher") || User.IsInRole("Admin"))
-	{
-		<a class="btn btn-info" style="margin: 10px 0;" asp-controller="ClassRooms" asp-action="DownloadFiles" asp-route-baiNop="@baiNopBase64">Download Files</a>
+<style>
+	.khungbaitap {
+		width: 100%;
+		margin-top: 100px;
+		font-family: 'Itim',serif;
 	}
-}
 
-<table class="table table-hover table-bordered">
-	<thead class="thead-dark" style="background-color: #41444B;color: white;">
-		<tr>
-			<th>
-				Mã lớp
-			</th>
-			<th>
-				Thời gian nộp
-			</th>
-			<th>
-				Tên người nộp
-			</th>
-			<th>
-				File nộp
-			</th>
-			<th>
-				Điểm
-			</th>
-			<th>
-				 Thao tác
-			</th>
-		</tr>
-	</thead>
-	<tbody>
-		@foreach (var item in Model)
-		{
-			<tr>
-				<td>
-					@Html.DisplayFor(modelItem => item.ClassId)
-				</td>
-				<td>
-					@Html.DisplayFor(modelItem => item.SubmittedAt)
-				</td>
-				<td>
-					@{
-						var user = await _userManager.FindByIdAsync(@item.UserId);
-					}
-					@Html.DisplayFor(modelItem => user.Name)
+	.btn-download {
+		width: 50px;
+		height: 50px;
+		border-radius: 50px;
+		background: #4a71ff;
+		margin-bottom: 20px;
+		display: flex;
+		justify-content: center;
+		align-items: center;
+		float: right;
+		margin-right: 40px;
+	}
 
-				</td>
-				<td>
-					<a href="/BAINOP/@item.Urlbainop" download>@item.Urlbainop</a>
-				</td>
-				<td>
-					<span id="displayLabel">@item.Diem</span>
-				</td>
-				<td>
-					@if (User.IsInRole("Teacher") || User.IsInRole("Admin"))
-					{
-						<input type="number" id="editInput" style="display:none;" value="@item.Diem" />
-						<button class="btn btn-warning btn-sm" onclick="toggleEdit()" id="editButton">Chấm điểm</button>
-						<button class="btn btn-success btn-sm d-none" onclick="saveGrade('@item.IdBaiNop')" id="saveButton" style="display:none;">Lưu</button>
-					}
+	.icons-download {
+		font-size: 28px;
+		color: white;
+	}
 
-				</td>
+	.thead-dark {
+		background-color: #4a71ff;
+		color: white;
+	}
 
-			</tr>
+		.thead-dark th {
+			text-align: center;
+			font-size: 18px;
 		}
-	</tbody>
-</table>
+
+		.thead-dark td {
+			text-align: justify;
+		}
+</style>
+<div class="khungbaitap">
+	@{
+		string baiNopJson = Newtonsoft.Json.JsonConvert.SerializeObject(Model);
+		string baiNopBase64 = Convert.ToBase64String(Encoding.UTF8.GetBytes(baiNopJson));
+	}
+	@{
+		if (User.IsInRole("Teacher") || User.IsInRole("Admin"))
+		{
+			<a class="btn btn-download" asp-controller="ClassRooms" asp-action="DownloadFiles" asp-route-baiNop="@baiNopBase64"><i class="fas fa-download icons-download"></i></a>
+		}
+	}
+
+	<table class="table table-hover table-bordered">
+		<thead class="thead-dark">
+			<tr>
+				<th>Mã lớp</th>
+				<th>Thời gian nộp</th>
+				<th>Tên người nộp</th>
+				<th>File nộp</th>
+				<th>Điểm</th>
+				<th>Thao tác</th>
+			</tr>
+		</thead>
+		<tbody>
+			@foreach (var item in Model)
+			{
+				<tr>
+					<td>@Html.DisplayFor(modelItem => item.ClassId)</td>
+					<td>@Html.DisplayFor(modelItem => item.SubmittedAt)</td>
+					<td>
+						@{
+							var user = await _userManager.FindByIdAsync(@item.UserId);
+						}
+						@Html.DisplayFor(modelItem => user.Name)
+
+					</td>
+					<td>
+						<a href="/BAINOP/@item.Urlbainop" download>@item.Urlbainop</a>
+					</td>
+					<td>
+						<span id="displayLabel">@item.Diem</span>
+					</td>
+					<td>
+						@if (User.IsInRole("Teacher") || User.IsInRole("Admin"))
+						{
+							<input type="number" id="editInput" style="display:none;" value="@item.Diem" />
+							<button class="btn btn-warning btn-sm" onclick="toggleEdit()" id="editButton">Chấm điểm</button>
+							<button class="btn btn-success btn-sm d-none" onclick="saveGrade('@item.IdBaiNop')" id="saveButton" style="display:none;">Lưu</button>
+						}
+
+					</td>
+
+				</tr>
+			}
+		</tbody>
+	</table>
+</div>
+
 
 <script>
 	function toggleEdit() {
@@ -116,7 +140,7 @@
 		saveButton.style.display = 'none';
 		editButton.style.display = 'inline';
 
-		var diem = parseFloat(editInput.value); 
+		var diem = parseFloat(editInput.value);
 		if (diem < 0 || diem > 10 || isNaN(diem)) {
 			alert("Điểm phải nằm trong khoảng từ 0 đến 10");
 			return;
