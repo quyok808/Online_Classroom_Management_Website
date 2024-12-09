@@ -156,7 +156,8 @@
                 <div class="assignment">
                     <div class="assignment-content">
                         <h3>@item.Title</h3>
-                        <p>@item.Content</p>
+                        <p>Hạn nộp: @item.Deadline</p>
+                        <p>Hạn nộp: @item.CreatedAt</p>
                     </div>
                     @if (User.IsInRole("Teacher"))
                     {
