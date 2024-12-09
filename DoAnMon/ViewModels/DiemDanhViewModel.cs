@@ -6,5 +6,6 @@ namespace DoAnMon.ViewModels
     {
         public List<DiemDanh>? DiemDanhs { get; set; }
         public DateTime NgayDiemDanh { get; set; }
+        public string OwnerId;
     }
 }

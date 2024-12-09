@@ -1,9 +1,13 @@
-﻿@using DoAnMon.ViewModels
+﻿@using DoAnMon.IdentityCudtomUser
+@using DoAnMon.ViewModels
+@using Microsoft.AspNetCore.Identity
+@inject UserManager<CustomUser> _userManager
 @model DiemDanhViewModel
 
 @{
     ViewData["Title"] = "Index";
     Layout = "~/Views/Shared/_Layout.cshtml";
+    var user = await _userManager.GetUserAsync(User);
 }
 <style>
     .container-Diemdanh{
@@ -69,7 +73,7 @@
                             }
 
                             // If "OUT" is not found, display a button
-                            if (!outFound)
+                            if (!outFound && Model.OwnerId.Equals(user.Id))
                             {
                                 <td>
                                     <button class="btn btn-primary" onclick="markOut('@Model.DiemDanhs[i].UserId', '@Model.DiemDanhs[i].ClassRoomId', '@Model.DiemDanhs[i].time')">Mark OUT</button>

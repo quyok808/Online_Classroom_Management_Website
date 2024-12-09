@@ -28,6 +28,8 @@ namespace DoAnMon.Controllers
             model.DiemDanhs = await applicationDbContext.ToListAsync();
             model.NgayDiemDanh = date;
 
+            var ownerID = _context.classRooms.FirstOrDefault(p => p.Id.Equals(classroomId))?.UserId;
+            model.OwnerId = ownerID;
             return View(model);
         }
 
