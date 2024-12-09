@@ -598,7 +598,7 @@ namespace DoAnMon.Controllers
 		}
 
 		[HttpPost]
-		public async Task<IActionResult> CreateBaitap(string AttactURL, string Content, string Title, string ClassId, string FileFormat, DateTime Deadline, DateTime CreateAt, int MaxSize)
+		public async Task<IActionResult> CreateBaitap(string AttactURL, string Content, string Title, string ClassId, string FileFormat, DateTime Deadline, DateTime CreateAt, int MaxSize, string bt_category)
 		{
 
 			BaiTap baitap = new BaiTap();
@@ -618,7 +618,7 @@ namespace DoAnMon.Controllers
 			{
 				baitap.Deadline = null;
 			}
-
+			baitap.Loaibt = bt_category;
 			_context.Add(baitap);
 			await _context.SaveChangesAsync();
 
@@ -709,7 +709,27 @@ namespace DoAnMon.Controllers
 				var Name = currentuser.Name;
 				var homework = _context.baiTaps.FirstOrDefault(h => h.Id == BaitapId);
 				var Tenbai = homework.Title;
-				var filename = $"{MSSV}_{Name}_{Tenbai}{Path.GetExtension(FileNopbai.FileName)}";
+				string filename = "";
+				var usercurrent = _context.classroomDetail.FirstOrDefault(p => p.UserId.Equals(currentuser.Id) && p.ClassRoomId.Equals(ClassId));
+				List<ClassroomDetail>? listUser = new List<ClassroomDetail>();
+				if (usercurrent.GroupId != null)
+				{
+					listUser = _context.classroomDetail.Where(p => p.GroupId.Equals(usercurrent.GroupId)).Include(p => p.User).ToList();
+				}
+				if (homework.Loaibt.Equals("CaNhan"))
+				{
+					filename = $"{MSSV}_{Name}_{Tenbai}{Path.GetExtension(FileNopbai.FileName)}";
+				} else
+				{
+					string fileusername = "";
+
+					foreach (var item in listUser)
+					{
+						fileusername += item.User.Name + "_" + item.User.Mssv + "_";
+					}
+
+					filename = $"{fileusername}{Tenbai}{Path.GetExtension(FileNopbai.FileName)}";
+				}
 				var uploadsFolder = Path.Combine(_environment.WebRootPath,"Uploads", "BAINOP");
                 if (!Directory.Exists(uploadsFolder))
                 {
@@ -738,16 +758,31 @@ namespace DoAnMon.Controllers
 					_context.Update(homework);
 					await _context.SaveChangesAsync();
 				}
-				//var currentuser = await _userManager.GetUserAsync(User);
-				BaiNop baiNop = new BaiNop();
-				baiNop.ClassId = ClassId;
-				baiNop.BaiTapId = BaitapId;
-				baiNop.UserId = currentuser.Id;
-				baiNop.SubmittedAt = DateTime.Now;
-				baiNop.Urlbainop = filename;
-				baiNop.Diem = 0;
-
-				_context.Add(baiNop);
+				if (homework.Loaibt.Equals("CaNhan"))
+				{
+					BaiNop baiNop = new BaiNop();
+					baiNop.ClassId = ClassId;
+					baiNop.BaiTapId = BaitapId;
+					baiNop.UserId = currentuser.Id;
+					baiNop.SubmittedAt = DateTime.Now;
+					baiNop.Urlbainop = filename;
+					baiNop.Diem = 0;
+					_context.Add(baiNop);
+				}
+				else
+				{
+                    foreach (var item in listUser)
+                    {
+						BaiNop baiNop = new BaiNop();
+						baiNop.ClassId = ClassId;
+						baiNop.BaiTapId = BaitapId;
+						baiNop.UserId = item.User.Id;
+						baiNop.SubmittedAt = DateTime.Now;
+						baiNop.Urlbainop = filename;
+						baiNop.Diem = 0;
+						_context.Add(baiNop);
+					}
+                }
 				await _context.SaveChangesAsync();
 				return RedirectToAction("Details", "ClassRooms", new { id = ClassId });
 			}

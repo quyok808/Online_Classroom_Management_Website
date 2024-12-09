@@ -1503,7 +1503,7 @@
 							<label for="titleInput">Tiêu đề bài tập:</label>
 							<input type="text" name="Title" id="titleInput" class="form-control" placeholder="Nhập tiêu đề">
 							<label for="descriptionInput">Mô tả bài tập:</label>
-							<textarea name="Content" id="descriptionInput" class="form-control" placeholder="Nhập mô tả"></textarea>
+							<textarea name="Content" id="descriptionInput" class="form-control" placeholder="Nhập mô tả" style="display: block;width: 660px;height: 130px; resize: none;"></textarea>
 							<label for="deadlineInput">Hạn nộp:</label>
 							<input type="datetime-local" name="Deadline" id="deadlineInput" class="form-control">
 							<label for="fileFormatSelect">Chọn định dạng file cần nộp:</label>
@@ -1511,7 +1511,15 @@
 								<option value="pdf">pdf</option>
 								<option value="docx">docx</option>
 								<option value="xlsx">xls</option>
+								<option value="zip">zip</option>
+								<option value="rar">rar</option>
+								<option value="png">png</option>
+								<option value="mp4">mp4</option>
 								<option value="allfile">all file</option>
+							</select>
+							<select name="bt_category">
+								<option value="BTNhom">Bài tập nhóm</option>
+								<option value="CaNhan">Bài cá nhân</option>
 							</select>
 							<div></div>
 							<label for="maxSize">Dung lượng tối đa:</label>
@@ -1562,6 +1570,16 @@
 						<div class="assignment-left-box">
 							<h3>@assignment.Title</h3>
 							<p>@assignment.Content</p>
+							@{
+								if (assignment.Loaibt.Equals("CaNhan"))
+								{
+									<p><strong>Loại bài tập:</strong> Bài tập cá nhân</p>
+								}
+								else
+								{
+									<p><strong>Loại bài tập:</strong> Bài tập nhóm</p>
+								}
+							}
 						</div>
 						<div class="divider"></div>
 						<div class="assignment-middle-box">
@@ -2526,6 +2544,11 @@
 		attachmentForm.style.display = "block"; // Hi?n th? form dính kèm
 	}
 
+	document.querySelector('.close-btn').addEventListener('click', () => {
+		document.getElementById("uploadbaitap").style.display = "none"; 
+		document.getElementById("uploadButton").style.display = "block";
+	});
+
 </script> @* T?o bài t?p m?i *@
 <script>
 	async function calculateChunkHash(chunk) {
@@ -2926,45 +2949,6 @@
 			}
 		});
 	}
-	@*
-		document.querySelector(".search-input_discuss").addEventListener("input", function () {
-		const query = this.value.toLowerCase(); // Lấy từ khóa tìm kiếm và chuyển về chữ thường
-		const allStudents = document.querySelectorAll("#listsv2 .circle-text-container_discuss");
-		allStudents.forEach(studentCard => {
-		const studentInfo = studentCard.querySelector(".student-info").textContent.toLowerCase();
-		if (studentInfo.includes(query)) {
-		studentCard.style.display = "flex"; // Hiển thị nếu khớp
-		} else {
-		studentCard.style.display = "none"; // Ẩn nếu không khớp
-		}
-		});
-		});*@
-
-		function displaySV(students) {
-			const listContainer = document.getElementById("listsv2");
-			const template = document.getElementById("student-template")
-			// Duyệt qua danh sách sinh viên
-			students.forEach(function (student) {
-				// Clone template
-				const studentCard = template.cloneNode(true);
-				studentCard.style.display = "flex"; // Hiển thị
-				studentCard.id = ""; // Xóa ID để tránh trùng lặp
-
-				// Điền thông tin sinh viên
-				studentCard.querySelector(".student-avatar").src = `/Imgs_avtUser/${student.urlAvt}`;
-				studentCard.querySelector(".student-avatar").alt = `Avatar của ${student.name}`;
-				studentCard.querySelector(".student-info").textContent = `${student.name} - ${student.mssv}`;
-
-				// Gắn sự kiện cho biểu tượng ba chấm
-				studentCard.querySelector(".three-dots-icon_discuss").setAttribute(
-					"onclick",
-					`openPopup('${student.name}', '${student.mssv}', '${student.email}', '${student.urlAvt}')`
-				);
-
-				// Thêm sinh viên vào danh sách
-				listContainer.appendChild(studentCard);
-			});
-		}
 
 
 	$(document).ready(function () {
@@ -2986,9 +2970,6 @@
 	function closePopup() {
 		document.getElementById("popup").style.display = "none";
 	}
-
-
-
 
 </script>@*chọn nhóm*@
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
