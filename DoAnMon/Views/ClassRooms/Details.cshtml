@@ -1239,6 +1239,34 @@
 			box-shadow: 0 6px 8px rgba(0, 0, 0, 0.2);
 		}
 
+	.khungtaodontu {
+		font-family: 'Itim',serif;
+		transform: translate(-50%, -50%);
+		top: 50%;
+		left: 50%;
+		background-color: #dfe1fc;
+		padding: 20px;
+		border-radius: 8px;
+		box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+		width: 700px;
+		text-align: left;
+		position: fixed;
+		font-size: 16px;
+		z-index: 1000;
+	}
+
+	.btn-guiyeucau {
+		background-color: #007bff;
+		color: white;
+		font-size: 16px;
+		font-weight: bold;
+		padding: 7px 10px;
+		border: none;
+		border-radius: 8px;
+		cursor: pointer;
+		float: right;
+	}
+
 </style>
 <div style="position: relative; width: 100%;">
 	<img class="img-fluid" src="/images/@Model.ClassRoom.backgroundUrl" alt="No Images" style="width: 100%; height: 400px;" />
@@ -1792,7 +1820,7 @@
 		<div id="letter" class="tabcontent">
 			<button type="button" class="btn btn-nghiphep" onclick="toggleLeaveRequestForm()">Tạo đơn xin nghỉ phép</button>
 			<div id="leaveRequestFormContainer" style="display:none; margin-top: 20px;">
-				<form id="leaveRequestForm">
+				<form id="leaveRequestForm" class="khungtaodontu">
 					<input type="hidden" name="Id" value="0" />
 
 					<div class="form-group" hidden>
@@ -1818,10 +1846,10 @@
 
 					<div class="form-group">
 						<label for="Reason">Lý do:</label>
-						<textarea class="form-control" id="Reason" name="Reason" rows="4"></textarea>
+						<textarea class="form-control" id="Reason" name="Reason" rows="4" style="resize: none;"></textarea>
 					</div>
 
-					<button type="submit" class="btn btn-primary" onclick="submitLeaveRequest(event)">Gửi yêu cầu</button>
+					<button type="submit" class="btn-guiyeucau" onclick="submitLeaveRequest(event)">Gửi yêu cầu</button>
 				</form>
 			</div>
 
