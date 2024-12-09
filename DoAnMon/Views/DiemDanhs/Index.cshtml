@@ -1,0 +1,110 @@
+﻿@using DoAnMon.IdentityCudtomUser
+@using DoAnMon.ViewModels
+@using Microsoft.AspNetCore.Identity
+@inject UserManager<CustomUser> _userManager
+@model DiemDanhViewModel
+
+@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    var user = await _userManager.GetUserAsync(User);
+}
+<style>
+    .container-Diemdanh{
+        margin-top: 90px;
+    }
+
+    .text-Header_DiemDanh{
+        font-family: "JetBrains Mono", serif;
+        font-weight: bold;
+        text-align: center;
+    }
+
+    .table-custom-DiemDanh{
+        font-family: "JetBrains Mono", serif;
+    }
+</style>
+
+<div class="container-Diemdanh">
+    <h2 class="text-Header_DiemDanh">Danh sách điểm danh ngày @Model.NgayDiemDanh.ToString("dd/MM/yyyy")</h2>
+    <table class="table table-bordered table-custom-DiemDanh">
+        <thead style="background-color: #C7C8CC;">
+            <tr>
+                <th scope="col" class="text-center">#</th>
+                <th scope="col" class="text-center">Mã số sinh viên</th>
+                <th scope="col" class="text-center">Họ tên</th>
+                <th scope="col" class="text-center">IN</th>
+                <th scope="col" class="text-center">OUT</th>
+            </tr>
+        </thead>
+        <tbody class="text-center">
+            @{
+                for (int i = 0; i < (Model.DiemDanhs != null ? Model.DiemDanhs.Count() : 1); i += 2)
+                {
+                                <tr>
+                                    <th scope="row" class="text-center" style="vertical-align: middle;">@((i / 2) + 1)</th>
+                                    <td style="vertical-align: middle;">@Model.DiemDanhs[i].User?.Mssv</td>
+                                    <td style="vertical-align: middle;">@Model.DiemDanhs[i].User?.Name</td>
+                                    @if (Model.DiemDanhs[i].Check.Equals("IN"))
+                        {
+                                        <span style="display: none;">@Model.DiemDanhs[i].Id</span>
+                                        <td id="in_@Model.DiemDanhs[i].Id" style="vertical-align: middle;">@Model.DiemDanhs[i].time</td>
+                            bool outFound = false; // Variable to track if "OUT" is found
+                            for (int j = i + 1; j < (Model.DiemDanhs != null ? Model.DiemDanhs.Count() : 1); j++)
+                            {
+                                if (Model.DiemDanhs[j].UserId.Equals(Model.DiemDanhs[i].UserId) && Model.DiemDanhs[j].Check.Equals("OUT"))
+                                {
+                                            <span style="display: none;">@Model.DiemDanhs[j].Id</span>
+                                            @functions {
+                                        public string SafeSubstringBefore(string input, string separator)
+                                        {
+                                            if (string.IsNullOrEmpty(input) || !input.Contains(separator))
+                                                return input;
+                                            return input.Substring(0, input.IndexOf(separator));
+                                        }
+                                            }
+                                            <td id="out_@Model.DiemDanhs[j].Id" style="vertical-align: middle;">
+                                                @SafeSubstringBefore(Model.DiemDanhs[j].time, " ~")
+                                            </td>
+
+                                    outFound = true;
+                                    break; // Exit loop after finding "OUT"
+                                }
+                            }
+
+                            // If "OUT" is not found, display a button
+                            if (!outFound && Model.OwnerId.Equals(user.Id))
+                            {
+                                <td>
+                                    <button class="btn btn-primary" onclick="markOut('@Model.DiemDanhs[i].UserId', '@Model.DiemDanhs[i].ClassRoomId', '@Model.DiemDanhs[i].time')">Mark OUT</button>
+                                </td>
+                            }
+                        }
+                    </tr>
+                }
+            }
+        </tbody>
+    </table>
+</div>
+
+<script>
+    function markOut(userId, classId, date) {
+        // You can use AJAX or a form submission to send the data to the server
+        console.log("UserId:", userId, "ClassId:", classId, "Date: ", date);
+        $.ajax({
+            url: '/DiemDanhs/MarkOut',
+            method: 'POST',
+            data: { userId: userId, classId: classId, date: date },
+            success: function (response) {
+                toastr.success('Check out thành công !!!', 'Thông báo', { timeOut: 3000 });
+                setTimeout(() => {
+                    window.location.reload();
+                }, 3000);  
+            },
+            error: function (xhr, status, error) {
+                alert('An error occurred');
+            }
+        });
+    }
+
+</script>
