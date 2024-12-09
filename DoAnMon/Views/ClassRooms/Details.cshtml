@@ -206,14 +206,12 @@
 
 	/* BÀI T?P */
 	.assignment {
-		background-color: #f9f9f9;
+		background-color: white;
 		padding: 20px;
-		border-radius: 5px;
-		margin-bottom: 20px;
+		border-radius: 20px;
+		margin-top: 20px;
 		display: flex;
-		justify-content: space-between;
-		align-items: center;
-		border: 1px solid #ccc; /* Thêm vi?n */
+		border: 1px solid #333; /* Thêm vi?n */
 	}
 
 	.assignment-content {
@@ -1267,6 +1265,147 @@
 		float: right;
 	}
 
+	.btn-taobaitap {
+		background-color: #4a71ff;
+		font-family: 'Itim',serif;
+		color: #ffffff;
+		padding: 10px 20px;
+		border: none;
+		border-radius: 20px;
+		cursor: pointer;
+		transition: background-color 0.3s;
+		font-size: 18px;
+		font-weight: bold;
+	}
+
+	.khungtaobaitap {
+		font-family: 'Itim',serif;
+		transform: translate(-50%, -50%);
+		top: 50%;
+		left: 50%;
+		background-color: #dfe1fc;
+		padding: 20px;
+		border-radius: 8px;
+		box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+		width: 700px;
+		text-align: left;
+		position: fixed;
+		font-size: 16px;
+	}
+
+	.close-btn {
+		background-color: #ff4d4d;
+		color: #fff;
+		border: none;
+		padding: 7px 15px;
+		cursor: pointer;
+		font-size: 16px;
+		margin-top: 20px;
+		float: right;
+		border-radius: 20px;
+	}
+
+		.close-btn:hover {
+			background-color: #ff1a1a;
+		}
+
+	.giaobai-btn {
+		background-color: #4a71ff;
+		color: #fff;
+		border: none;
+		padding: 7px 15px;
+		cursor: pointer;
+		font-size: 16px;
+		margin-top: 20px;
+		border-radius: 20px;
+	}
+
+	.giaobai-btn:hover {
+		background-color: #0022ff;
+	}
+
+	.assignment-left-box {
+		width: 50%;
+	}
+
+	.assignment-middle-box {
+		width: 25%;
+		text-align: justify;
+		padding-left: 20px;
+		padding-right: 20px;
+	}
+
+	.assignment-right-box {
+		width: 50%;
+		align-items: center;
+		justify-content: center;
+		display: flex;
+	}
+
+	.divider {
+		width: 1px;
+		background-color: #333; /* Màu gạch dọc */
+	}
+
+	.btn-xoa {
+		background-color: #dc3545; /* Màu đỏ */
+		color: white;
+		border: none;
+		padding: 10px;
+		border-radius: 5px;
+		cursor: pointer;
+		transition: 0.3s;
+	}
+
+		.btn-xoa:hover {
+			color: white;
+			text-decoration: none;
+		}
+
+	.btn-xembaidanop {
+		background-color: #4a71ff;
+		color: white;
+		border: none;
+		padding: 10px;
+		border-radius: 5px;
+		cursor: pointer;
+		transition: 0.3s;
+		margin-right: 20px;
+	}
+
+		.btn-xembaidanop:hover {
+			color: white;
+			text-decoration: none;
+		}
+
+	.btn-nopbai {
+		background-color: #28a745;
+		color: white;
+		border: none;
+		padding: 10px 20px;
+		border-radius: 5px;
+		cursor: pointer;
+		transition: 0.3s;
+	}
+
+		.btn-nopbai:hover {
+			background-color: #218838;
+		}
+
+	.btn-xemtruoc {
+		background-color: #007bff;
+		color: white;
+		border: none;
+		padding: 10px 20px;
+		border-radius: 5px;
+		cursor: pointer;
+		transition: 0.3s;
+	}
+
+		.btn-xemtruoc:hover {
+			background-color: #0056b3;
+		}
+
 </style>
 <div style="position: relative; width: 100%;">
 	<img class="img-fluid" src="/images/@Model.ClassRoom.backgroundUrl" alt="No Images" style="width: 100%; height: 400px;" />
@@ -1409,25 +1548,12 @@
 			</div>
 
 		</div>
-		<div id="assignments" class="tabcontent">
+		<div id="assignments" class="tabcontent" style="width:100%">
 			@{
 				if (Model.isOwner)
 				{
-					<button id="uploadButton" onclick="Showtaobaitap()"
-							style="
-															background-color: #3498db;
-															font-family: Poppins, sans-serif;
-															color: #ffffff;
-															padding: 10px 20px;
-															border: none;
-															border-radius: 5px;
-															cursor: pointer;
-															transition: background-color 0.3s;
-															font-size: 15px;
-															font-weight: bold;">
-						Tạo bài tập mới
-					</button>
-					<form id="uploadbaitap" action="/ClassRooms/CreateBaitap" method="POST" style="display: none;">
+					<button id="uploadButton" onclick="Showtaobaitap()" class="btn-taobaitap">Tạo bài tập mới</button>
+					<form class="khungtaobaitap" id="uploadbaitap" action="/ClassRooms/CreateBaitap" method="POST" style="display: none;" enctype="multipart/form-data">
 						<div class="form-section">
 							<label for="titleInput">Tiêu đề bài tập:</label>
 							<input type="text" name="Title" id="titleInput" class="form-control" placeholder="Nhập tiêu đề">
@@ -1471,62 +1597,61 @@
 						<div class="modal-backdrop" id="modalBackdrop"></div>
 						<div id="TenFile" style="display: inline;"></div>
 						<div></div>
-						<input type="submit" value="Giao bài" class="btn btn-primary"></input> <!-- Nút giao bài -->
+						<input type="submit" value="Giao bài" class="giaobai-btn">
+						<button type="button" class="close-btn">Đóng</button>
 					</form>
 				}
 			}
 			<div class="assignments">
 				@{
-					if (Model.Homework.Count == 0)
+					if (Model.Homework?.Count == 0)
 					{
 						<img src="~/images/emptyData.gif" style="width: 200px; height: auto; display: flex; justify-self: center;" />
-						<h3 style="font-family: 'JetBrains Mono',serif; text-align: center;">Chưa có bài bật được đăng lên</h3>
+						<h3 style="font-family: 'JetBrains Mono',serif; text-align: center;">Chưa có bài tập được đăng lên</h3>
 					}
 				}
+
 				@foreach (var assignment in Model.Homework.ToList())
 				{
-						<div class="assignment" style="height: 35vh;">
-							<div class="assignment-content" style="border-right: 1px solid black; height: 100%; width: 100%; margin: 50px; ">
-							@{
-								if (Model.isOwner)
-								{
-									<a class="btn btn-info" style="float: left; max-width: 50px; padding: 5px;" asp-action="DeleteBT" asp-controller="ClassRooms" asp-route-id="@assignment.Id" asp-route-classId="@assignment.ClassRoomId" onclick="return confirm('Bạn có chắc muốn xoá không ?')">Xóa</a>
-								}
-							}
-								<h3 class="text-center">@assignment.Title</h3>
-								<p class="assignment-description">@assignment.Content</p>
+					<div class="assignment">
+						<div class="assignment-left-box">
+							<h3>@assignment.Title</h3>
+							<p>@assignment.Content</p>
+						</div>
+						<div class="divider"></div>
+						<div class="assignment-middle-box">
 							@{
 								if (assignment.Deadline.HasValue)
 								{
-									<p class="assignment-description">Hạn nộp: @assignment.Deadline</p>
+									<p>Hạn nộp: @assignment.Deadline</p>
 								}
 								else
 								{
-									<p class="assignment-description">Hạn nộp: Vô thời hạn</p>
+									<p>Hạn nộp: Vô thời hạn</p>
 								}
 							}
 
-								<p class="assignment-file-format">Yêu cầu nộp file: @assignment.FileFormat</p>
-								<p class="assignment-description">Dung lượng file tối đa: @assignment.MaxSize MB</p>
+							<p class="assignment-file-format">Yêu cầu nộp file: @assignment.FileFormat</p>
+							<p class="assignment-description">Dung lượng file tối đa: @assignment.MaxSize MB</p>
 							@if (!string.IsNullOrEmpty(assignment.attractUrl))
 							{
-										<a href="/Uploads/BAITAP/@assignment.attractUrl" target="_blank" style="text-decoration:none; color: deepskyblue!important;">@assignment.attractUrl</a>
+								<a href="/Uploads/BAITAP/@assignment.attractUrl" target="_blank" style="text-decoration:none; color: deepskyblue!important;">@assignment.attractUrl</a>
 							}
-							</div>
-						@{
-							// L?y userId
-							string userId = user != null ? user.Id : null;
+						</div>
+						<div class="divider"></div>
+						<div class="assignment-right-box">
+							@{
+								// L?y userId
+								string userId = user != null ? user.Id : null;
 
-							// L?y baiTapId t? assignment ho?c t? noi khác
-							string baiTapId = assignment != null ? assignment.Id : null;
+								// L?y baiTapId t? assignment ho?c t? noi khác
+								string baiTapId = assignment != null ? assignment.Id : null;
 
-							// Ki?m tra xem user dã n?p bài t?p hay chua
-							bool hasSubmitted = userId != null && baiTapId != null ? CheckNop.HasUserSubmittedBaiTap(userId, baiTapId) : false;
-						}
+								// Ki?m tra xem user dã n?p bài t?p hay chua
+								bool hasSubmitted = userId != null && baiTapId != null ? CheckNop.HasUserSubmittedBaiTap(userId, baiTapId) : false;
+							}
 
 							<form id="submitForm_@assignment.Id" action="/ClassRooms/Nopbai" method="post" enctype="multipart/form-data" class="assignment-form" onsubmit="return validateAndSubmit('@assignment.FileFormat', '@assignment.Id', event)">
-
-								<div class="upload-form " style="margin-right: 30px;">
 								@{
 									if (!Model.isOwner)
 									{
@@ -1548,37 +1673,36 @@
 														// Ki?m tra xem deadline dã qua hay chua
 														if (DateTime.Now > deadline)
 														{
-														// X? lý khi deadline dã qua
+															// X? lý khi deadline dã qua
 															// Ví d?: hi?n th? thông báo cho ngu?i dùng
-															<p>Deadline dã qua. Không thể nộp bài tập nữa.</p>
+															<p style="text-align: center;">Deadline dã qua. Không thể nộp bài tập nữa.</p>
 														}
 														else
 														{
 															// X? lý khi deadline chua qua
 															// Ví d?: cho phép ngu?i dùng n?p bài t?p
 															<p>Thiếu</p>
-															<input id="FileInput_@assignment.Id" type="file" name="FileNopbai" accept="@(assignment.FileFormat == "allfile" ? "*/*" : assignment.FileFormat)" onchange="checkFileSize(this, @assignment.MaxSize)">
+															<input id="FileInput_@assignment.Id" type="file" name="FileNopbai" accept="@(assignment.FileFormat == "allfile" ? "/" : assignment.FileFormat)" onchange="checkFileSize(this, @assignment.MaxSize)">
 
 															<input type="hidden" name="ClassId" id="classIdInput" value="@Model.ClassRoom.Id">
 															<input type="hidden" name="BaitapId" id="baitapinput" value="@assignment.Id">
 															<input type="hidden" id="uploadedFilePath" name="UploadedFilePath">
 															<p id="uploadStatus_@assignment.Id"></p>
-															<button type="submit" id="uploadButton_@assignment.Id">Nộp bài</button>
-															<button type="button" onclick="previewFile('@assignment.Id')">Xem trước</button>
+															<button type="submit" id="uploadButton_@assignment.Id" class="btn-nopbai">Nộp bài</button>
+															<button type="button" onclick="previewFile('@assignment.Id')" class="btn-xemtruoc">Xem trước</button>
 														}
 													}
 													else
 													{
-														// X? lý khi không có deadline du?c d?t
 														<p>Thiếu</p>
-														<input id="FileInput_@assignment.Id" type="file" name="FileNopbai" accept="@(assignment.FileFormat == "allfile" ? "*/*" : assignment.FileFormat)" onchange="checkFileSize(this, @assignment.MaxSize)">
+														<input id="FileInput_@assignment.Id" type="file" name="FileNopbai" accept="@(assignment.FileFormat == "allfile" ? "/" : assignment.FileFormat)" onchange="checkFileSize(this, @assignment.MaxSize)">
 
 														<input type="hidden" name="ClassId" id="classIdInput" value="@Model.ClassRoom.Id">
 														<input type="hidden" name="BaitapId" id="baitapinput" value="@assignment.Id">
 														<input type="hidden" id="uploadedFilePath" name="UploadedFilePath">
 														<p id="uploadStatus_@assignment.Id"></p>
-														<button type="submit" id="uploadButton_@assignment.Id">Nộp bài</button>
-														<button type="button" onclick="previewFile('@assignment.Id')">Xem trước</button>
+														<button type="submit" id="uploadButton_@assignment.Id" class="btn-nopbai">Nộp bài</button>
+														<button type="button" onclick="previewFile('@assignment.Id')" class="btn-xemtruoc">Xem trước</button>
 													}
 												}
 											}
@@ -1587,12 +1711,14 @@
 									}
 									else
 									{
-										<a asp-action="GetAllBTStu" asp-controller="ClassRooms" asp-route-classid="@Model.ClassRoom.Id" asp-route-baitapID="@assignment.Id" class="btn btn-info ">Xem bài tập đã nộp</a>
+										<a asp-action="GetAllBTStu" asp-controller="ClassRooms" asp-route-classid="@Model.ClassRoom.Id" asp-route-baitapID="@assignment.Id" class="btn-xembaidanop ">Xem bài tập đã nộp</a>
+										<a class="btn-xoa" asp-action="DeleteBT" asp-controller="ClassRooms" asp-route-id="@assignment.Id" asp-route-classId="@assignment.ClassRoomId" onclick="return confirm('Bạn có chắc muốn xoá không ?')">Xóa</a>
 									}
 								}
-								</div>
 							</form>
 						</div>
+
+					</div>
 				}
 			</div>
 		</div>
@@ -2703,7 +2829,7 @@
 
 		var avatarBox = document.createElement("div");
 		avatarBox.classList.add("avatar");
-		avatarBox.style.cssText = "width: 75px; height: 75px; background-color: #ddd; border-radius: 50%; text-align: center; line-height: 40px; margin-left: 10px; font-size: 18px; font-weight: bold; color: #555;";
+		avatarBox.style.cssText = "width: 50px; height: 50px; background-color: #ddd; border-radius: 50%; text-align: center; line-height: 40px; margin-left: 10px; font-size: 18px; font-weight: bold; color: #555;";
 		avatarBox.appendChild(avatarElement);
 
 		var messageBox = document.createElement("div");
