@@ -1,4 +1,4 @@
-﻿﻿@using DoAnMon.IdentityCudtomUser
+﻿﻿﻿﻿@using DoAnMon.IdentityCudtomUser
 @using Microsoft.AspNetCore.Identity
 @inject ICheckNop CheckNop
 
@@ -62,16 +62,16 @@
 		text-align: start;
 	}
 
-	.dropdown-content a, .dropdown-content p {
-		color: black;
-		padding: 12px 16px;
-		text-decoration: none;
-		display: block;
-	}
+		.dropdown-content a, .dropdown-content p {
+			color: black;
+			padding: 12px 16px;
+			text-decoration: none;
+			display: block;
+		}
 
-	.dropdown-content a:hover {
-		background-color: #f1f1f1;
-	}
+			.dropdown-content a:hover {
+				background-color: #f1f1f1;
+			}
 
 	.dropdown:hover .dropdown-content {
 		display: block;
@@ -91,13 +91,13 @@
 		transition: background-color 0.3s;
 	}
 
-	.tab:hover {
-		background-color: #ddd;
-	}
+		.tab:hover {
+			background-color: #ddd;
+		}
 
-	.tab.active {
-		background-color: #ccc;
-	}
+		.tab.active {
+			background-color: #ccc;
+		}
 
 	.tabcontent {
 		display: none;
@@ -115,26 +115,26 @@
 		margin-bottom: 20px;
 	}
 
-	.post img {
-		max-width: 100%;
-		height: auto;
-		margin-bottom: 10px;
-	}
+		.post img {
+			max-width: 100%;
+			height: auto;
+			margin-bottom: 10px;
+		}
 
-	.post h2 {
-		font-size: 20px;
-		margin-bottom: 10px;
-	}
+		.post h2 {
+			font-size: 20px;
+			margin-bottom: 10px;
+		}
 
-	.post p {
-		font-size: 16px;
-		margin-bottom: 10px;
-	}
+		.post p {
+			font-size: 16px;
+			margin-bottom: 10px;
+		}
 
-	.post .author {
-		font-style: italic;
-		color: #666;
-	}
+		.post .author {
+			font-style: italic;
+			color: #666;
+		}
 
 	/* THÔNG TIN GI?NG VIÊN */
 	.teacher-info {
@@ -164,14 +164,14 @@
 		flex: 1;
 	}
 
-	.teacher-text p {
-		margin-bottom: 10px;
-	}
+		.teacher-text p {
+			margin-bottom: 10px;
+		}
 
-	.teacher-text p strong {
-		font-weight: bold;
-		color: #e72323;
-	}
+			.teacher-text p strong {
+				font-weight: bold;
+				color: #e72323;
+			}
 
 	/* POST BÀI GI?NG */
 	.post {
@@ -182,11 +182,11 @@
 		box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
 	}
 
-	.post h2 {
-		font-size: 24px;
-		margin-bottom: 10px;
-		text-align: center;
-	}
+		.post h2 {
+			font-size: 24px;
+			margin-bottom: 10px;
+			text-align: center;
+		}
 
 	.pdf-container {
 		width: 100%;
@@ -194,24 +194,26 @@
 		overflow: auto;
 	}
 
-	.pdf-container object {
-		width: 100%;
-		height: 100%;
-	}
+		.pdf-container object {
+			width: 100%;
+			height: 100%;
+		}
 
-	.pdf-container embed {
-		width: 100%;
-		height: 100%;
-	}
+		.pdf-container embed {
+			width: 100%;
+			height: 100%;
+		}
 
 	/* BÀI T?P */
 	.assignment {
-		background-color: white;
+		background-color: #f9f9f9;
 		padding: 20px;
-		border-radius: 20px;
-		margin-top: 20px;
+		border-radius: 5px;
+		margin-bottom: 20px;
 		display: flex;
-		border: 1px solid #333; /* Thêm vi?n */
+		justify-content: space-between;
+		align-items: center;
+		border: 1px solid #ccc; /* Thêm vi?n */
 	}
 
 	.assignment-content {
@@ -249,13 +251,14 @@
 		transition: background-color 0.3s;
 	}
 
-	.btn:hover {
-		background-color: #0056b3;
-	}
+		.btn:hover {
+			background-color: #0056b3;
+		}
 
 	/* UPLOAD BAITAP */
 	.upload-form {
 		display: flex;
+		flex-direction: column;
 		align-items: center;
 		margin-bottom: 20px;
 	}
@@ -278,10 +281,10 @@
 		margin: 10px;
 	}
 
-	.file-input:focus {
-		border-color: #007bff;
-		outline: none;
-	}
+		.file-input:focus {
+			border-color: #007bff;
+			outline: none;
+		}
 
 	.btn {
 		width: 100%;
@@ -308,30 +311,49 @@
 		overflow-x: auto; /* Horizontal scroll for small screens */
 	}
 
-	#user td,
-	#user th {
-		border: 1px solid #ddd;
-		padding: 8px;
-	}
+		#user td,
+		#user th {
+			border: 1px solid #ddd;
+			padding: 8px;
+		}
 
-	#user tr:nth-child(even) {
-		background-color: #f2f2f2;
-	}
+		#user tr:nth-child(even) {
+			background-color: #f2f2f2;
+		}
 
-	#user tr:hover {
-		background-color: #ddd;
-	}
+		#user tr:hover {
+			background-color: #ddd;
+		}
 
-	#user th {
-		padding-top: 12px;
-		padding-bottom: 12px;
-		text-align: left;
-		background-color: #04AA6D;
-		color: white;
-	}
+		#user th {
+			padding-top: 12px;
+			padding-bottom: 12px;
+			text-align: left;
+			background-color: #04AA6D;
+			color: white;
+		}
 
-		/* T?o icon copy */
+	/* T?o icon copy */
 	/* T?o button change background */
+	.custom-file-upload {
+		display: inline-block;
+		padding: 10px 20px;
+		cursor: pointer;
+		background-color: #ffffff; /* Màu n?n */
+		color: black; /* Màu ch? */
+		border-radius: 5px; /* Bo tròn góc */
+		font-size: 16px;
+		font-weight: bold;
+		transition: background-color 0.3s ease; /* Hi?u ?ng chuy?n d?i màu */
+	}
+
+		.custom-file-upload:hover {
+			background-color: #E3E1D9; /* Màu n?n khi hover */
+		}
+
+		.custom-file-upload:active {
+			background-color: #B4B4B8; /* Màu n?n khi click */
+		}
 
 	/* Bright Modal */
 	.modal {
@@ -381,24 +403,24 @@
 		z-index: 999; /* Below the modal */
 	}
 
-	.modal.show, .modal-backdrop.show {
-		display: block;
-	}
+		.modal.show, .modal-backdrop.show {
+			display: block;
+		}
 
 	/*LOADER*/
 	.loader {
-	  width: 100%;
-	  height: 10px;
-	  background: repeating-linear-gradient(-45deg, #766DF4 0 20px,#0000 0 40px) left/200% 100%;
-	  animation: i3 2s infinite linear;
-	  border-radius: 10px;
-	  border: 1px solid #766DF4;
+		width: 100%;
+		height: 10px;
+		background: repeating-linear-gradient(-45deg, #766DF4 0 20px,#0000 0 40px) left/200% 100%;
+		animation: i3 2s infinite linear;
+		border-radius: 10px;
+		border: 1px solid #766DF4;
 	}
 
 	@@keyframes i3 {
-	  100% {
-		background-position: right
-	  }
+		100% {
+			background-position: right
+		}
 	}
 
 	.d-flex {
@@ -410,21 +432,21 @@
 	}
 
 	.delete-btn {
-		position: absolute; 
+		position: absolute;
 		top: 10px;
 		right: 10px;
-		border: none; 
-		background: transparent; 
-		font-size: 30px; 
-		color: black ;
-		cursor: pointer; 
+		border: none;
+		background: transparent;
+		font-size: 30px;
+		color: black;
+		cursor: pointer;
 	}
 
-	.delete-btn:hover {
-		color: #ff0000; 
-	}
+		.delete-btn:hover {
+			color: #ff0000;
+		}
 
-	.ctnleaveForm{
+	.ctnleaveForm {
 		justify-content: flex-start;
 		gap: 20px;
 	}
@@ -450,16 +472,16 @@
 		resize: none;
 	}
 
-	.input-textarea:hover {
-		background-color: rgb(141, 250, 250); /* Màu nền khi hover */
-	}
+		.input-textarea:hover {
+			background-color: rgb(141, 250, 250); /* Màu nền khi hover */
+		}
 
-	.input-textarea:focus {
-		outline: none; /* Bỏ viền mặc định khi focus */
-		border-bottom: 2px solid rgb(66, 133, 244); /* Đường viền dưới khi focus */
-	}
+		.input-textarea:focus {
+			outline: none; /* Bỏ viền mặc định khi focus */
+			border-bottom: 2px solid rgb(66, 133, 244); /* Đường viền dưới khi focus */
+		}
 
-	
+
 	/* Nút bị vô hiệu hóa (disabled) */
 	.disabled-button {
 		background-color: lightgray;
@@ -474,9 +496,9 @@
 		color: white;
 		opacity: 1;
 	}
-	
+
 	/*xóa & sửa*/
-	.icon{
+	.icon {
 		border: none;
 		background: none;
 		width: 40px;
@@ -487,14 +509,14 @@
 		justify-content: center; /* Màu nền khi hover */
 	}
 
-	.icon:hover{
-		background-color: rgba(145, 137, 137, 0.2);
-	}
+		.icon:hover {
+			background-color: rgba(145, 137, 137, 0.2);
+		}
 
 	.discussion-container {
 		display: flex;
 		width: 100%;
-		height:600px;
+		height: 600px;
 		font-family: 'JetBrains Mono', serif;
 	}
 
@@ -557,15 +579,15 @@
 
 
 	/* Khung tin nhắn */
-	.message-list {		
-		list-style-type: none; 
+	.message-list {
+		list-style-type: none;
 		margin: 0;
-		height: calc(100% - 70px); 
-		width: 100%; 
+		height: calc(100% - 70px);
+		width: 100%;
 		overflow-y: auto; /* Hiển thị thanh cuộn dọc nếu nội dung vượt quá chiều cao */
 		box-sizing: border-box; /* Đảm bảo padding không tăng kích thước phần tử */
 	}
-	
+
 	.message-form {
 		position: absolute;
 		bottom: 0;
@@ -599,7 +621,7 @@
 		/*cursor: pointer;  Thêm hiệu ứng con trỏ tay khi hover */
 		display: flex;
 		align-items: center;
-		margin:0;
+		margin: 0;
 	}
 
 	.file-name {
@@ -615,26 +637,25 @@
 		margin-top: 15px;
 	}
 
-	.message-box{
+	.message-box {
 		display: inline-block;
 		max-width: 763px;
 		border-radius: 10px;
 		padding: 10px;
 		background-color: #FBEAF0;
-		margin-left:15px
+		margin-left: 15px
 	}
 
 	.current-user {
 		justify-content: flex-end; /* Hiển thị bên phải cho người khác */
 		align-items: flex-end;
-		margin-left: auto;	
+		margin-left: auto;
 	}
 
 	/* Tin nhắn từ người khác */
-	.other-user{
+	.other-user {
 		justify-content: flex-start; /* Hiển thị bên trái cho người hiện tại */
 		align-items: flex-start;
-
 	}
 
 	.search-box_discuss {
@@ -659,9 +680,9 @@
 		margin-right: 20px;
 	}
 
-	.search-input_discuss:focus {
-		border-color: #0078ff;
-	}
+		.search-input_discuss:focus {
+			border-color: #0078ff;
+		}
 
 	/* Biểu tượng tìm kiếm */
 	.search-icon_discuss {
@@ -683,31 +704,31 @@
 	}
 
 	.circle-text-container_discuss {
-		display: flex; 
-		align-items: center; 
-		width:100%;
-		padding: 15px; 
-		border: none; 
+		display: flex;
+		align-items: center;
+		width: 100%;
+		padding: 15px;
+		border: none;
 		border-radius: 10px;
-		background-color: none; 
+		background-color: none;
 		position: relative;
 		transition: background-color 0.3s;
 	}
 
-	.circle-text-container_discuss:hover {
-		background-color: #E1E1E1;
-	}
+		.circle-text-container_discuss:hover {
+			background-color: #E1E1E1;
+		}
 
 	.circle_discuss {
 		margin-right: 10px; /* Khoảng cách giữa hình tròn và chữ */
 	}
 
-	.circle_discuss img {
-		width: 90px;
-		height: 90px;
-		object-fit: cover;
-		border-radius: 50%;
-	}
+		.circle_discuss img {
+			width: 90px;
+			height: 90px;
+			object-fit: cover;
+			border-radius: 50%;
+		}
 
 	#listsv2 {
 		display: flex;
@@ -760,8 +781,8 @@
 		padding: 20px;
 		border: 1px solid #888;
 		width: 600px;
-		border-radius:20px;
-		display:flex;
+		border-radius: 20px;
+		display: flex;
 	}
 
 	/* Nút đóng */
@@ -770,16 +791,16 @@
 		float: right;
 		font-size: 30px;
 		font-weight: bold;
-		margin-left:auto;
+		margin-left: auto;
 		margin-top: -10px;
 	}
 
-	.popup-close:hover,
-	.popup-close:focus {
-		color: red;
-		text-decoration: none;
-		cursor: pointer;
-	}
+		.popup-close:hover,
+		.popup-close:focus {
+			color: red;
+			text-decoration: none;
+			cursor: pointer;
+		}
 
 	.popup-image {
 		width: 150px;
@@ -796,31 +817,34 @@
 
 	.popup-details p {
 		margin: 5px 0;
-		line-height: 1.5; 
+		line-height: 1.5;
 		font-size: 18px;
 		font-weight: 600;
 	}
 
-	.btn:hover{
+	.btn:hover {
 		background-color: lightgray;
 	}
-	.btn-nghiphep{
-		background-color: rgb(74, 113, 255); 
-		color: white;             
-		border: none;           
-		border-radius: 8px;      
-		padding: 5px;     
-		font-size: 16px; 
-		font-weight:bold;
-		cursor: pointer; 
+
+	.btn-nghiphep {
+		background-color: rgb(74, 113, 255);
+		color: white;
+		border: none;
+		border-radius: 8px;
+		padding: 5px;
+		font-size: 16px;
+		font-weight: bold;
+		cursor: pointer;
 		font-family: 'Itim', serif;
 	}
-	.btn-nghiphep:hover {
-		background-color: #2000ff; 
-		color:white;
-	}
+
+		.btn-nghiphep:hover {
+			background-color: #2000ff;
+			color: white;
+		}
+
 	.card-letter {
-		margin-top:20px;
+		margin-top: 20px;
 		border-radius: 20px;
 		padding: 20px;
 		box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
@@ -828,39 +852,41 @@
 		position: relative;
 	}
 
-	.card-letter:hover {
-		transform: translateY(-5px);
-	}
+		.card-letter:hover {
+			transform: translateY(-5px);
+		}
+
 	.btn-duyet {
-		background-color: #28a745; 
-		color: white;            
-		border: none;            
-		border-radius: 5px;       
-		padding: 4px 8px;       
-		margin-right: 10px;        
-		font-size: 16px;   
+		background-color: #28a745;
+		color: white;
+		border: none;
+		border-radius: 5px;
+		padding: 4px 8px;
+		margin-right: 10px;
+		font-size: 16px;
 		font-family: 'Itim', serif;
 	}
+
 	.btn-tu-choi {
-		background-color: #dc3545; 
-		color: white;             
-		border: none;             
-		border-radius: 5px;      
-		padding: 4px 8px;        
-		font-size: 16px;          
+		background-color: #dc3545;
+		color: white;
+		border: none;
+		border-radius: 5px;
+		padding: 4px 8px;
+		font-size: 16px;
 		font-family: 'Itim', serif;
 	}
 
-	.card-text{
-		font-size:16px;
-		font-family: 'Itim', serif;		
+	.card-text {
+		font-size: 16px;
+		font-family: 'Itim', serif;
 	}
 
-	.card-title{
-		font-size:16px;
+	.card-title {
+		font-size: 16px;
 		font-family: 'Itim', serif;
 		margin-top: 0;
-		font-weight:bold;
+		font-weight: bold;
 	}
 
 </style>
@@ -871,7 +897,7 @@
 		flex-direction: column;
 		align-items: center;
 		padding: 0;
-		margin-top:-60px;
+		margin-top: -60px;
 	}
 
 	.row_listsv {
@@ -931,310 +957,166 @@
 		color: white;
 		border: none;
 		border-radius: 5px;
-		width: 50%; /* Độ rộng bằng 50% màn hình, có thể tùy chỉnh */
-		max-width: 400px; /* Giới hạn độ rộng tối đa */
-		box-sizing: border-box;
-		box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Tạo hiệu ứng đổ bóng */
-		z-index: 1000; /* Đảm bảo khung nằm trên các thành phần khác */
-        }
-	.btn:hover{
-		background-color: lightgray;
-	}
-
-	.btn-taobaitap {
-		background-color: #4a71ff;
-		font-family: 'Itim',serif;
-		color: #ffffff;
-		padding: 10px 20px;
-		border: none;
-		border-radius: 20px;
 		cursor: pointer;
-		transition: background-color 0.3s;
-		font-size: 18px;
-		font-weight: bold;
+		font-size: 14px;
 	}
 
-	.khungtaobaitap {
-		font-family: 'Itim',serif;
-		transform: translate(-50%, -50%);
-		top: 50%;
-		left: 50%;
-		background-color: #dfe1fc;
-		padding: 20px;
-		border-radius: 8px;
-		box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-		width: 700px;
-		text-align: left;
-		position: fixed;
-		font-size:16px;
-	}
-
-	.close-btn {
-		background-color: #ff4d4d;
-		color: #fff;
-		border: none;
-		padding: 7px 15px;
-		cursor: pointer;
-		font-size: 16px;
-		margin-top: 20px;
-		float:right;
-		border-radius:20px;
-	}
-
-		.close-btn:hover {
-			background-color: #ff1a1a;
+		.invite_button:hover {
+			background-color: darkorange;
 		}
-
-	.giaobai-btn{
-		background-color: #4a71ff;
-		color: #fff;
-		border: none;
-		padding: 7px 15px;
-		cursor: pointer;
-		font-size: 16px;
-		margin-top: 20px;
-		border-radius: 20px;
-	}
-
-		.giaobai-btn:hover {
-			background-color: #0022ff;
-		}
-
-	.assignment-left-box {
-		width:50%;
-	}
-
-	.assignment-middle-box {
-		width:25%;
-		text-align:justify;
-		padding-left:20px;
-		padding-right:20px;
-	}
-
-	.assignment-right-box {
-		width:25%;
-		align-items: center;
-		justify-content: center;
-		display:flex;
-	}
-
-	.divider {
-		width: 1px;
-		background-color: #333; /* Màu gạch dọc */
-	}
-
-	.btn-xoa {
-		background-color: #dc3545; /* Màu đỏ */
-		color: white;
-		border: none;
-		padding: 10px;
-		border-radius: 5px;
-		cursor: pointer;
-		transition: 0.3s;
-	}
-
-		.btn-xoa:hover{
-			color: white;
-			text-decoration:none;
-		}
-
-	.btn-xembaidanop{
-		background-color: #4a71ff; 
-		color: white;
-		border: none;
-		padding: 10px;
-		border-radius: 5px;
-		cursor: pointer;
-		transition: 0.3s;
-		margin-right:20px;
-	}
-
-		.btn-xembaidanop:hover {
-			color: white;
-			text-decoration: none;
-		}
-
-	.btn-nopbai {
-		background-color: #28a745;
-		color: white;
-		border: none;
-		padding: 10px 20px;
-		border-radius: 5px;
-		cursor: pointer;
-		transition: 0.3s;
-	}
-
-		.btn-nopbai:hover {
-			background-color: #218838;
-		}
-
-	.btn-xemtruoc {
-		background-color: #007bff;
-		color: white;
-		border: none;
-		padding: 10px 20px;
-		border-radius: 5px;
-		cursor: pointer;
-		transition: 0.3s;
-	}
-
-		.btn-xemtruoc:hover {
-			background-color: #0056b3;
-		}
-
-</style>
-
-	.invite_button:hover {
-		background-color: darkorange;
-	}
 </style>
 <style>
 	.button_btnBaiGiang {
-  position: relative;
-  width: 10rem;
-  height: 3rem;
-  cursor: pointer;
-  border: none;
-  background: none;
-}
+		position: relative;
+		width: 10rem;
+		height: 3rem;
+		cursor: pointer;
+		border: none;
+		background: none;
+	}
 
-.button_btnBaiGiang svg {
-  width: 100%;
-  height: 100%;
-  overflow: visible;
-}
+		.button_btnBaiGiang svg {
+			width: 100%;
+			height: 100%;
+			overflow: visible;
+		}
 
-.border_btnBaiGiang {
-  width: 100%;
-  height: 100%;
-  stroke: black;
-  stroke-width: 2px;
-  fill: #0000;
-  rx: 1em;
-  ry: 1em;
-  stroke-dasharray: 25;
-  transition: fill 0.25s;
-  animation: 4s linear infinite stroke-animation_btnBaiGiang;
-}
+	.border_btnBaiGiang {
+		width: 100%;
+		height: 100%;
+		stroke: black;
+		stroke-width: 2px;
+		fill: #0000;
+		rx: 1em;
+		ry: 1em;
+		stroke-dasharray: 25;
+		transition: fill 0.25s;
+		animation: 4s linear infinite stroke-animation_btnBaiGiang;
+	}
 
-.button_btnBaiGiang:hover .border_btnBaiGiang {
-  fill: #0001;
-}
+	.button_btnBaiGiang:hover .border_btnBaiGiang {
+		fill: #0001;
+	}
 
-.button_btnBaiGiang:focus .border_btnBaiGiang {
-  transition: fill 0.25s 7.75s;
-  fill: #0000;
-}
+	.button_btnBaiGiang:focus .border_btnBaiGiang {
+		transition: fill 0.25s 7.75s;
+		fill: #0000;
+	}
 
-@@keyframes stroke-animation_btnBaiGiang {
-  0% {
-    stroke-dashoffset: 100;
-  }
-  to {
-    stroke-dashoffset: 0;
-  }
-}
+	@@keyframes stroke-animation_btnBaiGiang {
+		0% {
+			stroke-dashoffset: 100;
+		}
 
-.txt-upload_btnBaiGiang {
-  position: absolute;
-  inset: 0;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
+		to {
+			stroke-dashoffset: 0;
+		}
+	}
 
-.txt-upload_btnBaiGiang::after {
-  content: "";
-}
+	.txt-upload_btnBaiGiang {
+		position: absolute;
+		inset: 0;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+	}
 
-.button_btnBaiGiang:focus .rect_btnBaiGiang {
-  stroke-dasharray: 50;
-}
+		.txt-upload_btnBaiGiang::after {
+			content: "";
+		}
 
-.button_btnBaiGiang:focus .border_btnBaiGiang {
-  stroke: #0000;
-}
+	.button_btnBaiGiang:focus .rect_btnBaiGiang {
+		stroke-dasharray: 50;
+	}
 
-.button_btnBaiGiang:focus .txt-upload_btnBaiGiang {
-  opacity: 0;
-  transition: opacity 0.25s 8s;
-}
+	.button_btnBaiGiang:focus .border_btnBaiGiang {
+		stroke: #0000;
+	}
 
-.button_btnBaiGiang:focus .txt-upload_btnBaiGiang::after {
-  animation: 0.66666s anim_btnBaiGiang step-end forwards,
-    1.33333s 0.6666s anim2_btnBaiGiang linear infinite alternate;
-}
+	.button_btnBaiGiang:focus .txt-upload_btnBaiGiang {
+		opacity: 0;
+		transition: opacity 0.25s 8s;
+	}
 
-@@keyframes anim_btnBaiGiang {
-  0% {
-    content: "i";
-  }
-  50% {
-    content: "in";
-  }
-  to {
-    content: "ing";
-  }
-}
+		.button_btnBaiGiang:focus .txt-upload_btnBaiGiang::after {
+			animation: 0.66666s anim_btnBaiGiang step-end forwards, 1.33333s 0.6666s anim2_btnBaiGiang linear infinite alternate;
+		}
 
-@@keyframes anim2_btnBaiGiang {
-  0% {
-    content: "ing";
-  }
-  33% {
-    content: "ing.";
-  }
-  66% {
-    content: "ing..";
-  }
-  to {
-    content: "ing...";
-  }
-}
+	@@keyframes anim_btnBaiGiang {
+		0% {
+			content: "i";
+		}
 
-.loading_btnBaiGiang {
-  width: 100%;
-  height: 100%;
-  stroke: #0055d4;
-  stroke-width: 2px;
-  fill: none;
-  rx: 1em;
-  ry: 1em;
-  stroke-dasharray: 0 100;
-  transition: stroke-dasharray 0.25s ease-out;
-}
+		50% {
+			content: "in";
+		}
 
-.button_btnBaiGiang:focus .loading_btnBaiGiang {
-  transition: stroke 0.5s 7.5s, stroke-dasharray 8s 0.5s ease-out;
-  stroke: #08ca08;
-  stroke-dasharray: 100 0;
-}
+		to {
+			content: "ing";
+		}
+	}
 
-.done_btnBaiGiang {
-  fill: none;
-  stroke: #000;
-  stroke-dasharray: 0 100;
-}
+	@@keyframes anim2_btnBaiGiang {
+		0% {
+			content: "ing";
+		}
 
-.button_btnBaiGiang:focus .done-cloud_btnBaiGiang {
-  transition: stroke-dasharray 0.75s 8.5s ease-out;
-  stroke-dasharray: 100 0;
-}
+		33% {
+			content: "ing.";
+		}
 
-.button_btnBaiGiang:focus .done-check_btnBaiGiang {
-  transition: stroke-dasharray 0.5s 9.2s ease-out;
-  stroke: #08ca08;
-  stroke-dasharray: 100 0;
-}
+		66% {
+			content: "ing..";
+		}
 
-/* Trạng thái focus của button */
-.button_btnBaiGiang.focus .txt-upload_btnBaiGiang {
-	opacity: 0; /* Ẩn text Upload khi trong trạng thái focus */
-}
+		to {
+			content: "ing...";
+		}
+	}
 
-.button_btnBaiGiang.focus .loading_btnBaiGiang {
-	stroke-dasharray: 100 0; /* Hiển thị thanh tiến trình */
-}
+	.loading_btnBaiGiang {
+		width: 100%;
+		height: 100%;
+		stroke: #0055d4;
+		stroke-width: 2px;
+		fill: none;
+		rx: 1em;
+		ry: 1em;
+		stroke-dasharray: 0 100;
+		transition: stroke-dasharray 0.25s ease-out;
+	}
+
+	.button_btnBaiGiang:focus .loading_btnBaiGiang {
+		transition: stroke 0.5s 7.5s, stroke-dasharray 8s 0.5s ease-out;
+		stroke: #08ca08;
+		stroke-dasharray: 100 0;
+	}
+
+	.done_btnBaiGiang {
+		fill: none;
+		stroke: #000;
+		stroke-dasharray: 0 100;
+	}
+
+	.button_btnBaiGiang:focus .done-cloud_btnBaiGiang {
+		transition: stroke-dasharray 0.75s 8.5s ease-out;
+		stroke-dasharray: 100 0;
+	}
+
+	.button_btnBaiGiang:focus .done-check_btnBaiGiang {
+		transition: stroke-dasharray 0.5s 9.2s ease-out;
+		stroke: #08ca08;
+		stroke-dasharray: 100 0;
+	}
+
+	/* Trạng thái focus của button */
+	.button_btnBaiGiang.focus .txt-upload_btnBaiGiang {
+		opacity: 0; /* Ẩn text Upload khi trong trạng thái focus */
+	}
+
+	.button_btnBaiGiang.focus .loading_btnBaiGiang {
+		stroke-dasharray: 100 0; /* Hiển thị thanh tiến trình */
+	}
 
 </style>
 <style>
@@ -1245,18 +1127,17 @@
 <style>
 	.custom-file-upload {
 		display: inline-block;
-		padding: 7px 10px;
+		padding: 10px 20px;
 		cursor: pointer;
-		background-color: #4a71ff;
+		background-color: #007bff;
 		color: white;
 		border: none;
 		border-radius: 5px;
-		margin-top:10px;
-
+		font-size: 14px;
 	}
 
 		.custom-file-upload:hover {
-			background-color: #0022ff;
+			background-color: #0056b3;
 		}
 
 	#fileInput {
@@ -1264,13 +1145,13 @@
 	}
 </style>
 <style>
-	.ClassroomDetail-container{
+	.ClassroomDetail-container {
 		display: flex;
 		width: 100%;
 		min-height: 600px;
 	}
 
-	.ClassroomDetail-left-container{
+	.ClassroomDetail-left-container {
 		margin-left: 20px;
 		width: 20%;
 		font-family: "JetBrains Mono", serif;
@@ -1280,16 +1161,16 @@
 		border: none; /* Loại bỏ viền */
 	}
 
-	.list-group-item + .list-group-item {
-		border-top: 1px solid #ddd; /* Chỉ giữ lại viền trên */
-	}
+		.list-group-item + .list-group-item {
+			border-top: 1px solid #ddd; /* Chỉ giữ lại viền trên */
+		}
 
-	.panel-heading{
+	.panel-heading {
 		font-weight: bold;
 		font-size: 15px;
 	}
 
-	.IDClass_list-group-item1{
+	.IDClass_list-group-item1 {
 		align-content: center;
 		font-size: 25px;
 		font-weight: bold;
@@ -1297,24 +1178,85 @@
 		padding-left: 5px;
 	}
 
-<div style="position: relative;">
+	.list-group-item1-container {
+		display: flex;
+		width: 100%;
+		height: 100px;
+		justify-content: space-around;
+	}
 
+	.list-group-item {
+		margin: 0;
+		padding: 0;
+	}
+
+	.padding-custom {
+		padding: 10px;
+	}
+
+	.custom-VaoPhong {
+		display: flex;
+		justify-content: center;
+		font-weight: bold;
+		color: #295F98;
+	}
+
+		.custom-VaoPhong:hover {
+			text-decoration: none;
+		}
+
+		.custom-VaoPhong:active, .custom-VaoPhong:visited, .custom-VaoPhong:focus {
+			color: #295F98;
+		}
+
+	.ClassroomDetail-right-container {
+		width: 80%;
+		margin-left: 20px;
+		font-family: "JetBrains Mono", serif;
+	}
+
+	.searchsv-container {
+		width: 100%;
+		display: flex;
+		justify-content: center;
+		margin-bottom: 20px;
+	}
+
+	#searchsvInput {
+		width: 80%;
+		max-width: 600px;
+		padding: 12px 20px;
+		font-size: 16px;
+		border: 1px solid #ccc;
+		border-radius: 25px;
+		box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+		outline: none;
+		transition: all 0.3s ease;
+	}
+
+		#searchsvInput:focus {
+			border-color: #4CAF50;
+			box-shadow: 0 6px 8px rgba(0, 0, 0, 0.2);
+		}
+
+</style>
+<div style="position: relative; width: 100%;">
 	<img class="img-fluid" src="/images/@Model.ClassRoom.backgroundUrl" alt="No Images" style="width: 100%; height: 400px;" />
 	@{
 		if (Model.isOwner)
 		{
-						<form id="changeBG" action="/ClassRooms/changeBackground" method="POST" enctype="multipart/form-data" style="position: absolute; bottom: 10px; right: 10px;">
-							<input type="hidden" name="classId" value="@Model.ClassRoom.Id" />
-							<label for="file-upload" class="custom-file-upload">
-								<i class="fa-solid fa-camera"></i>
-								Thay đổi ảnh bìa
-							</label>
-							<input id="file-upload" type="file" name="image" accept="image/*" required
-								onchange="document.getElementById('changeBG').submit();" style="display:none;" />
-						</form>
+					<form id="changeBG" action="/ClassRooms/changeBackground" method="POST" enctype="multipart/form-data" style="position: absolute; bottom: 10px; right: 10px;">
+						<input type="hidden" name="classId" value="@Model.ClassRoom.Id" />
+						<label for="file-upload" class="custom-file-upload">
+							<i class="fa-solid fa-camera"></i>
+							Thay đổi ảnh bìa
+						</label>
+						<input id="file-upload" type="file" name="image" accept="image/*" required
+							   onchange="document.getElementById('changeBG').submit();" style="display:none;" />
+					</form>
 		}
 	}
-	
+
 </div>
 
 
@@ -1346,7 +1288,26 @@
 				</li>
 			</ul>
 		</div>
-
+		<div class="panel panel-default" style="width: 100%; margin-top: 15px;">
+			<div class="panel-heading">
+				ĐIỂM DANH
+			</div>
+			<ul class="list-group">
+				@foreach (var item in Model.ClassDates)
+				{
+					DateTime now = DateTime.Now;
+					if (item.Start <= now)
+					{
+								<li class="list-group-item padding-custom">
+									Ngày @item.Start.ToString("dd/MM/yyyy")
+									<span style="float: right;">
+										<a asp-controller="DiemDanhs" asp-action="Index" asp-route-date="@item.Start.ToString("yyyy-MM-ddTHH:mm:ss")" asp-route-classroomId="@Model.ClassRoom.Id" style="text-decoration: none; color: #428bca">Xem chi tiết</a>
+									</span>
+								</li>
+					}
+				}
+			</ul>
+		</div>
 	</div>
 	<div class="ClassroomDetail-right-container">
 		<div class="tabs" style="display: flex; justify-content: center;">
@@ -1359,11 +1320,11 @@
 			@{
 				if (Model.CustomRubric == false)
 				{
-								<div class="tab" onclick="openTab(event, 'bangdiem')" style="font-family: Poppins, sans-serif;font-weight: 600">Bảng điểm</div>
+							<div class="tab" onclick="openTab(event, 'bangdiem')" style="font-family: Poppins, sans-serif;font-weight: 600">Bảng điểm</div>
 				}
 				else
 				{
-								<div class="tab" onclick="openTab(event, 'bangdiemCustom')" style="font-family: Poppins, sans-serif;font-weight: 600">Bảng điểm</div>
+							<div class="tab" onclick="openTab(event, 'bangdiemCustom')" style="font-family: Poppins, sans-serif;font-weight: 600">Bảng điểm</div>
 				}
 			}
 			@* <div class="tab" onclick="openTab(event, 'padlet')" style="font-family: Poppins, sans-serif;font-weight: 600">Padlet</div> *@
@@ -1371,7 +1332,7 @@
 			@{
 				if (Model.isOwner)
 				{
-								<div class="tab" onclick="openTab(event, 'setting')" style="font-family: Poppins, sans-serif;font-weight: 600">Tuỳ chỉnh</div>
+							<div class="tab" onclick="openTab(event, 'setting')" style="font-family: Poppins, sans-serif;font-weight: 600">Tuỳ chỉnh</div>
 				}
 			}
 			<div class="tab" onclick="openTab(event, 'mainload')" style="font-family: Poppins, sans-serif;font-weight: 600" hidden>MainLoad</div>
@@ -1393,221 +1354,137 @@
 			@{
 				if (Model.isOwner)
 				{
-								<div>
-									<button id="browseBaiGiang" class="button_btnBaiGiang">
-										<svg xmlns="http://www.w3.org/2000/svg">
-											<rect class="border_btnBaiGiang" pathLength="100"></rect>
-											<rect class="loading_btnBaiGiang" id="progressBar_btnBaiGiang" pathLength="100"></rect>
+							<div>
+								<button id="browseBaiGiang" class="button_btnBaiGiang">
+									<svg xmlns="http://www.w3.org/2000/svg">
+										<rect class="border_btnBaiGiang" pathLength="100"></rect>
+										<rect class="loading_btnBaiGiang" id="progressBar_btnBaiGiang" pathLength="100"></rect>
 
-											<svg class="done-svg_btnBaiGiang"
-											 	xmlns="http://www.w3.org/2000/svg"
-											 	viewBox="0 0 24 24">
-												<path class="done_btnBaiGiang done-cloud_btnBaiGiang"
-												  	pathLength="100"
-												  	d="M 6.5,20 Q 4.22,20 2.61,18.43 1,16.85 1,14.58 1,12.63 2.17,11.1 3.35,9.57 5.25,9.15 5.88,6.85 7.75,5.43 9.63,4 12,4 14.93,4 16.96,6.04 19,8.07 19,11 q 1.73,0.2 2.86,1.5 1.14,1.28 1.14,3 0,1.88 -1.31,3.19 Q 20.38,20 18.5,20 Z"></path>
-												<path class="done_btnBaiGiang done-check_btnBaiGiang"
-												  	pathLength="100"
-												  	d="M 7.515,12.74 10.34143,15.563569 15.275,10.625"></path>
-											</svg>
+										<svg class="done-svg_btnBaiGiang"
+											 xmlns="http://www.w3.org/2000/svg"
+											 viewBox="0 0 24 24">
+											<path class="done_btnBaiGiang done-cloud_btnBaiGiang"
+												  pathLength="100"
+												  d="M 6.5,20 Q 4.22,20 2.61,18.43 1,16.85 1,14.58 1,12.63 2.17,11.1 3.35,9.57 5.25,9.15 5.88,6.85 7.75,5.43 9.63,4 12,4 14.93,4 16.96,6.04 19,8.07 19,11 q 1.73,0.2 2.86,1.5 1.14,1.28 1.14,3 0,1.88 -1.31,3.19 Q 20.38,20 18.5,20 Z"></path>
+											<path class="done_btnBaiGiang done-check_btnBaiGiang"
+												  pathLength="100"
+												  d="M 7.515,12.74 10.34143,15.563569 15.275,10.625"></path>
 										</svg>
-										<div class="txt-upload_btnBaiGiang">Upload</div>
-									</button>
-								</div>
+									</svg>
+									<div class="txt-upload_btnBaiGiang">Upload</div>
+								</button>
+							</div>
 				}
 			}
 			<div class="posts" id="lectureContainer">
 				<partial name="_lecturePartial" model="Model.Unit" />
 			</div>
 
-</div>
-<div id="assignments" class="tabcontent" style="width:100%">
-	@{
-		if (Model.isOwner)
-		{
-			<button id="uploadButton" onclick="Showtaobaitap()" class="btn-taobaitap">Tạo bài tập mới</button>
-			<form class="khungtaobaitap" id="uploadbaitap" action="/ClassRooms/CreateBaitap" method="POST" style="display: none;" enctype="multipart/form-data">
-				<div class="form-section">
-					<label for="titleInput">Tiêu đề bài tập:</label>
-					<input type="text" name="Title" id="titleInput" class="form-control" placeholder="Nhập tiêu đề">
-					<label for="descriptionInput">Mô tả bài tập:</label>
-					<textarea name="Content" id="descriptionInput" class="form-control" placeholder="Nhập mô tả"></textarea>
-					<label for="deadlineInput">Hạn nộp:</label>
-					<input type="datetime-local" name="Deadline" id="deadlineInput" class="form-control">
-					<label for="fileFormatSelect">Chọn định dạng file cần nộp:</label>
-					<select name="FileFormat" id="fileFormatSelect">
-						<option value="pdf">pdf</option>
-						<option value="docx">docx</option>
-						<option value="xlsx">xls</option>
-						<option value="allfile">all file</option>
-					</select>
-					<div></div>
-					<label for="maxSize">Dung lượng tối đa:</label>
-					<input type="number" name="MaxSize" id="maxSize" class="form-control" placeholder="Dung lượng tối đa cho phép nộp (MB)" />
-				</div>
-				<input type="hidden" name="ClassId" id="classIdInput" value="@Model.ClassRoom.Id">
-				<label for="fileInput">Hướng dẫn (Nếu có): </label>
-				<input type="hidden" name="AttactURL" id="attactURL">
-				<label for="fileInput" class="custom-file-upload">
-					Upload file HD
-				</label>
-				<input type="file" name="FileUpLoad" id="fileInput" onchange="uploadFile()" />
+		</div>
+		<div id="assignments" class="tabcontent">
+			@{
+				if (Model.isOwner)
+				{
+							<button id="uploadButton" onclick="Showtaobaitap()"
+									style="
+																background-color: #3498db;
+																font-family: Poppins, sans-serif;
+																color: #ffffff;
+																padding: 10px 20px;
+																border: none;
+																border-radius: 5px;
+																cursor: pointer;
+																transition: background-color 0.3s;
+																font-size: 15px;
+																font-weight: bold;">
+								Tạo bài tập mới
+							</button>
+							<form id="uploadbaitap" action="/ClassRooms/CreateBaitap" method="POST" style="display: none;">
+								<div class="form-section">
+									<label for="titleInput">Tiêu đề bài tập:</label>
+									<input type="text" name="Title" id="titleInput" class="form-control" placeholder="Nhập tiêu đề">
+									<label for="descriptionInput">Mô tả bài tập:</label>
+									<textarea name="Content" id="descriptionInput" class="form-control" placeholder="Nhập mô tả"></textarea>
+									<label for="deadlineInput">Hạn nộp:</label>
+									<input type="datetime-local" name="Deadline" id="deadlineInput" class="form-control">
+									<label for="fileFormatSelect">Chọn định dạng file cần nộp:</label>
+									<select name="FileFormat" id="fileFormatSelect">
+										<option value="pdf">pdf</option>
+										<option value="docx">docx</option>
+										<option value="xlsx">xls</option>
+										<option value="allfile">all file</option>
+									</select>
+									<div></div>
+									<label for="maxSize">Dung lượng tối đa:</label>
+									<input type="number" name="MaxSize" id="maxSize" class="form-control" placeholder="Dung lượng tối đa cho phép nộp (MB)" />
+								</div>
+								<input type="hidden" name="ClassId" id="classIdInput" value="@Model.ClassRoom.Id">
+								<label for="fileInput">Hướng dẫn (Nếu có): </label>
+								<input type="hidden" name="AttactURL" id="attactURL">
+								<label for="fileInput" class="custom-file-upload">
+									Upload file HD
+								</label>
+								<input type="file" name="FileUpLoad" id="fileInput" onchange="uploadFile()" />
 
-				<div class="modal" id="uploadModal" style="background-color: transparent;">
-					<div class="modal-content">
-						<div class="modal-header">
-							<h5 class="modal-title">Uploading File...</h5>
-						</div>
-						<div class="modal-body text-center">
-							<div class="loader" id="loader" style="display: block;"></div>
-							<progress id="progressBar" value="0" max="100" style="display: none;"></progress>
-							<div id="progressText" style="display: block;" class="mt-3">0%</div>
-							<div id="successText" class="mt-3" style="display: none;">Upload thành công</div>
-						</div>
-					</div>
-				</div>
-
-				<div class="modal-backdrop" id="modalBackdrop"></div>
-				<div id="TenFile" style="display: inline;"></div>
-				<div></div>
-				<input type="submit" value="Giao bài" class="giaobai-btn">
-				<button type="button" class="close-btn">Đóng</button>
-			</form>
-		}
-	}
-	<div class="assignments">
-		@foreach (var assignment in Model.Homework.ToList())
-		{
-			<div class="assignment">
-				<div class="assignment-left-box">
-					<h3>@assignment.Title</h3>
-					<p>@assignment.Content</p>
-				</div>
-				<div class="divider"></div>
-				<div class="assignment-middle-box">
-					@{
-						if (assignment.Deadline.HasValue)
-						{
-							<p>Hạn nộp: @assignment.Deadline</p>
-						}
-						else
-						{
-							<p>Hạn nộp: Vô thời hạn</p>
-						}
-					}
-
-					<p class="assignment-file-format">Yêu cầu nộp file: @assignment.FileFormat</p>
-					<p class="assignment-description">Dung lượng file tối đa: @assignment.MaxSize MB</p>
-					@if (!string.IsNullOrEmpty(assignment.attractUrl))
-					{
-						<a href="/Uploads/BAITAP/@assignment.attractUrl" target="_blank" style="text-decoration:none; color: deepskyblue!important;">@assignment.attractUrl</a>
-					}
-				</div>
-				<div class="divider"></div>
-				<div class="assignment-right-box">
-					@{
-						// L?y userId
-						string userId = user != null ? user.Id : null;
-
-						// L?y baiTapId t? assignment ho?c t? noi khác
-						string baiTapId = assignment != null ? assignment.Id : null;
-
-						// Ki?m tra xem user dã n?p bài t?p hay chua
-						bool hasSubmitted = userId != null && baiTapId != null ? CheckNop.HasUserSubmittedBaiTap(userId, baiTapId) : false;
-					}
-
-					<form id="submitForm_@assignment.Id" action="/ClassRooms/Nopbai" method="post" enctype="multipart/form-data" class="assignment-form" onsubmit="return validateAndSubmit('@assignment.FileFormat', '@assignment.Id', event)">
-							@{
-								if (!Model.isOwner)
-								{
-									<label for="file-upload" class="file-label1" style="white-space: nowrap;">Bài tập của bạn</label>
-									<div class="file-input-wrapper">
-										@{
-											if (hasSubmitted)
-											{
-												<p style="text-align: center; margin-left: 15px;">Đã nộp bài</p>
-											}
-											else
-											{
-												// Ki?m tra deadline
-												if (assignment != null && assignment.Deadline.HasValue)
-												{
-													// L?y ngày deadline
-													DateTime deadline = assignment.Deadline.Value;
-
-													// Ki?m tra xem deadline dã qua hay chua
-													if (DateTime.Now > deadline)
-													{
-													// X? lý khi deadline dã qua
-														// Ví d?: hi?n th? thông báo cho ngu?i dùng
-													<p style="text-align: center;">Deadline dã qua. Không thể nộp bài tập nữa.</p>
-													}
-													else
-													{
-													// X? lý khi deadline chua qua
-														// Ví d?: cho phép ngu?i dùng n?p bài t?p
-														<p>Thiếu</p>
-														<input id="FileInput_@assignment.Id" type="file" name="FileNopbai" accept="@(assignment.FileFormat == "allfile" ? "*/*" : assignment.FileFormat)" onchange="checkFileSize(this, @assignment.MaxSize)">
-
-														<input type="hidden" name="ClassId" id="classIdInput" value="@Model.ClassRoom.Id">
-														<input type="hidden" name="BaitapId" id="baitapinput" value="@assignment.Id">
-														<input type="hidden" id="uploadedFilePath" name="UploadedFilePath">
-														<p id="uploadStatus_@assignment.Id"></p>
-													<button type="submit" id="uploadButton_@assignment.Id" class="btn-nopbai">Nộp bài</button>
-													<button type="button" onclick="previewFile('@assignment.Id')" class="btn-xemtruoc">Xem trước</button>
-													}
-												}
-												else
-												{
-													<p>Thiếu</p>
-													<input id="FileInput_@assignment.Id" type="file" name="FileNopbai" accept="@(assignment.FileFormat == "allfile" ? "*/*" : assignment.FileFormat)" onchange="checkFileSize(this, @assignment.MaxSize)">
-
-													<input type="hidden" name="ClassId" id="classIdInput" value="@Model.ClassRoom.Id">
-													<input type="hidden" name="BaitapId" id="baitapinput" value="@assignment.Id">
-													<input type="hidden" id="uploadedFilePath" name="UploadedFilePath">
-													<p id="uploadStatus_@assignment.Id"></p>
-												<button type="submit" id="uploadButton_@assignment.Id" class="btn-nopbai">Nộp bài</button>
-												<button type="button" onclick="previewFile('@assignment.Id')" class="btn-xemtruoc">Xem trước</button>
-												}
-											}
-										}
+								<div class="modal" id="uploadModal" style="background-color: transparent;">
+									<div class="modal-content">
+										<div class="modal-header">
+											<h5 class="modal-title">Uploading File...</h5>
+										</div>
+										<div class="modal-body text-center">
+											<div class="loader" id="loader" style="display: block;"></div>
+											<progress id="progressBar" value="0" max="100" style="display: none;"></progress>
+											<div id="progressText" style="display: block;" class="mt-3">0%</div>
+											<div id="successText" class="mt-3" style="display: none;">Upload thành công</div>
+										</div>
 									</div>
-									<div id="previewContainer_@assignment.Id"></div>
+								</div>
+
+								<div class="modal-backdrop" id="modalBackdrop"></div>
+								<div id="TenFile" style="display: inline;"></div>
+								<div></div>
+								<input type="submit" value="Giao bài" class="btn btn-primary"></input> <!-- Nút giao bài -->
+							</form>
+				}
+			}
+			<div class="assignments">
+				@{
+					if (Model.Homework.Count == 0)
+					{
+								<img src="~/images/emptyData.gif" style="width: 200px; height: auto; display: flex; justify-self: center;" />
+								<h3 style="font-family: 'JetBrains Mono',serif; text-align: center;">Chưa có bài bật được đăng lên</h3>
+					}
+				}
+				@foreach (var assignment in Model.Homework.ToList())
+				{
+						<div class="assignment" style="height: 35vh;">
+							<div class="assignment-content" style="border-right: 1px solid black; height: 100%; width: 100%; margin: 50px; ">
+							@{
+								if (Model.isOwner)
+								{
+												<a class="btn btn-info" style="float: left; max-width: 50px; padding: 5px;" asp-action="DeleteBT" asp-controller="ClassRooms" asp-route-id="@assignment.Id" asp-route-classId="@assignment.ClassRoomId" onclick="return confirm('Bạn có chắc muốn xoá không ?')">Xóa</a>
+								}
+							}
+								<h3 class="text-center">@assignment.Title</h3>
+								<p class="assignment-description">@assignment.Content</p>
+							@{
+								if (assignment.Deadline.HasValue)
+								{
+												<p class="assignment-description">Hạn nộp: @assignment.Deadline</p>
 								}
 								else
 								{
-									<a asp-action="GetAllBTStu" asp-controller="ClassRooms" asp-route-classid="@Model.ClassRoom.Id" asp-route-baitapID="@assignment.Id" class="btn-xembaidanop ">Xem bài tập đã nộp</a>
-									<a class="btn-xoa" asp-action="DeleteBT" asp-controller="ClassRooms" asp-route-id="@assignment.Id" asp-route-classId="@assignment.ClassRoomId" onclick="return confirm('Bạn có chắc muốn xoá không ?')">Xóa</a>
+												<p class="assignment-description">Hạn nộp: Vô thời hạn</p>
 								}
 							}
-					</form>
-				</div>
-				@* <div class="assignment-content" style="border-right: 1px solid black; height: 100%; width: 100%; margin: 50px; ">
-					@{
-						if (Model.isOwner)
-						{
-									<a class="btn btn-info" style="float: left; max-width: 50px; padding: 5px;" asp-action="DeleteBT" asp-controller="ClassRooms" asp-route-id="@assignment.Id" asp-route-classId="@assignment.ClassRoomId" onclick="return confirm('Bạn có chắc muốn xoá không ?')">Xóa</a>
-						}
-					}
-					<h3 class="text-center">@assignment.Title</h3>
-					<p class="assignment-description">@assignment.Content</p>
-					@{
-						if (assignment.Deadline.HasValue)
-						{
-									<p class="assignment-description">Hạn nộp: @assignment.Deadline</p>
-						}
-						else
-						{
-									<p class="assignment-description">Hạn nộp: Vô thời hạn</p>
-						}
-					}
 
-							<p class="assignment-file-format">Yêu cầu nộp file: @assignment.FileFormat</p>
-							<p class="assignment-description">Dung lượng file tối đa: @assignment.MaxSize MB</p>
+								<p class="assignment-file-format">Yêu cầu nộp file: @assignment.FileFormat</p>
+								<p class="assignment-description">Dung lượng file tối đa: @assignment.MaxSize MB</p>
 							@if (!string.IsNullOrEmpty(assignment.attractUrl))
 							{
-								<a href="/Uploads/BAITAP/@assignment.attractUrl" target="_blank" style="text-decoration:none; color: deepskyblue!important;">@assignment.attractUrl</a>
+										<a href="/Uploads/BAITAP/@assignment.attractUrl" target="_blank" style="text-decoration:none; color: deepskyblue!important;">@assignment.attractUrl</a>
 							}
-						</div>
+							</div>
 						@{
 							// L?y userId
 							string userId = user != null ? user.Id : null;
@@ -1619,18 +1496,18 @@
 							bool hasSubmitted = userId != null && baiTapId != null ? CheckNop.HasUserSubmittedBaiTap(userId, baiTapId) : false;
 						}
 
-						<form id="submitForm_@assignment.Id" action="/ClassRooms/Nopbai" method="post" enctype="multipart/form-data" class="assignment-form" onsubmit="return validateAndSubmit('@assignment.FileFormat', '@assignment.Id', event)">
+							<form id="submitForm_@assignment.Id" action="/ClassRooms/Nopbai" method="post" enctype="multipart/form-data" class="assignment-form" onsubmit="return validateAndSubmit('@assignment.FileFormat', '@assignment.Id', event)">
 
-							<div class="upload-form " style="margin-right: 30px;">
+								<div class="upload-form " style="margin-right: 30px;">
 								@{
 									if (!Model.isOwner)
 									{
 													<label for="file-upload" class="file-label1" style="white-space: nowrap;">Bài tập của bạn</label>
 													<div class="file-input-wrapper">
-														@{
+											@{
 												if (hasSubmitted)
 												{
-																			<p style="text-align: center; margin-left: 15px;">Đã nộp bài</p>
+																		<p style="text-align: center; margin-left: 15px;">Đã nộp bài</p>
 												}
 												else
 												{
@@ -1643,23 +1520,23 @@
 														// Ki?m tra xem deadline dã qua hay chua
 														if (DateTime.Now > deadline)
 														{
-															// X? lý khi deadline dã qua
+														// X? lý khi deadline dã qua
 															// Ví d?: hi?n th? thông báo cho ngu?i dùng
-																					<p>Deadline dã qua. Không thể nộp bài tập nữa.</p>
+																						<p>Deadline dã qua. Không thể nộp bài tập nữa.</p>
 														}
 														else
 														{
 															// X? lý khi deadline chua qua
 															// Ví d?: cho phép ngu?i dùng n?p bài t?p
-																					<p>Thiếu</p>
-																					<input id="FileInput_@assignment.Id" type="file" name="FileNopbai" accept="@(assignment.FileFormat == "allfile" ? "*/*" : assignment.FileFormat)" onchange="checkFileSize(this, @assignment.MaxSize)">
+																						<p>Thiếu</p>
+																						<input id="FileInput_@assignment.Id" type="file" name="FileNopbai" accept="@(assignment.FileFormat == "allfile" ? "*/*" : assignment.FileFormat)" onchange="checkFileSize(this, @assignment.MaxSize)">
 
-																					<input type="hidden" name="ClassId" id="classIdInput" value="@Model.ClassRoom.Id">
-																					<input type="hidden" name="BaitapId" id="baitapinput" value="@assignment.Id">
-																					<input type="hidden" id="uploadedFilePath" name="UploadedFilePath">
-																					<p id="uploadStatus_@assignment.Id"></p>
-																					<button type="submit" id="uploadButton_@assignment.Id">Nộp bài</button>
-																					<button type="button" onclick="previewFile('@assignment.Id')">Xem trước</button>
+																						<input type="hidden" name="ClassId" id="classIdInput" value="@Model.ClassRoom.Id">
+																						<input type="hidden" name="BaitapId" id="baitapinput" value="@assignment.Id">
+																						<input type="hidden" id="uploadedFilePath" name="UploadedFilePath">
+																						<p id="uploadStatus_@assignment.Id"></p>
+																						<button type="submit" id="uploadButton_@assignment.Id">Nộp bài</button>
+																						<button type="button" onclick="previewFile('@assignment.Id')">Xem trước</button>
 														}
 													}
 													else
@@ -1676,7 +1553,7 @@
 																				<button type="button" onclick="previewFile('@assignment.Id')">Xem trước</button>
 													}
 												}
-														}
+											}
 													</div>
 													<div id="previewContainer_@assignment.Id"></div>
 									}
@@ -1685,63 +1562,15 @@
 													<a asp-action="GetAllBTStu" asp-controller="ClassRooms" asp-route-classid="@Model.ClassRoom.Id" asp-route-baitapID="@assignment.Id" class="btn btn-info ">Xem bài tập đã nộp</a>
 									}
 								}
-							</div>
-						</form>
-					</div>
-				</form> *@
-
+								</div>
+							</form>
+						</div>
+				}
 			</div>
 		</div>
 		<div id="discussion" class="tabcontent">
 			<div class="discussion">
 				<div class="discussion-container">
-					<!-- Khung bên trái nhỏ hơn -->
-					@*<div class="left-panel">
-						<div class="search-box_discuss" style="margin-bottom: 20px;">
-							<!-- Biểu tượng tìm kiếm -->
-							<span class="search-icon_discuss">🔍</span>
-							<!-- Thanh tìm kiếm -->
-							<input type="search"
-								   class="search-input_discuss"
-								   placeholder="Tìm kiếm sinh vien "
-								   aria-label="Tìm kiếm trên Messenger"
-								   dir="ltr"
-								   autocomplete="off"
-								   spellcheck="false">
-						</div>
-						<div class="account-info-container_discuss">
-							<div class="popup" id="popup" style="display: none;">
-								<div class="popup-content">
-									<div class="popup-image">
-										<img id="student-image" src="" alt="Student Avatar" style="width: 100%; height: 100%; object-fit:cover" />
-									</div>
-									<div class="popup-details">
-										<h3 style="margin-top:-5px; font-weight:600;">Thông tin sinh viên</h3>
-										<p id="student-mssv"></p>
-										<p id="student-name"></p>
-										<p id="student-email"></p>
-									</div>
-									<span class="popup-close" onclick="closePopup()">×</span>
-								</div>
-							</div>
-							<div id="listsv2"></div>
-							<div class="circle-text-container_discuss" id="student-template" style="display: none;">
-								<div class="circle_discuss ">
-									<img src="" alt="No Image" class="student-avatar" />
-								</div>
-								<h3 style="font-size: 18px; margin: 0; font-weight: 600;" class="student-info"></h3>
-								<span class="three-dots-icon_discuss">
-									<svg xmlns="http:www.w3.org/2000/svg" width="30" height="30" fill="currentColor" class="bi bi-three-dots-vertical" viewBox="0 0 16 16">
-										<path d="M9.5 13a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0m0-5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0m0-5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0" />
-									</svg>
-								</span>
-								<span class="star-icon_discuss">
-									<button type="button" class="send-notify-btn">★</button>
-								</span>
-							</div>
-
-						</div>
-					</div> *@
 					<div class="right-panel">
 						<div id="messagesList" class="message-list">
 							<partial name="_MessagePartial" model="Model.Message" />
@@ -1787,19 +1616,19 @@
 			@{
 				if (Model.isOwner)
 				{
-					<div style="margin-bottom: -35px;">
-						<form asp-controller="ClassRooms" asp-action="ExportDSSV" asp-route-classID="@Model.ClassRoom.Id" method="post">
-							<button type="submit" class="btn btn-info">Xuất danh sách sinh viên</button>
-						</form>
-					</div>
+							<div style="margin-bottom: -35px;">
+								<form asp-controller="ClassRooms" asp-action="ExportDSSV" asp-route-classID="@Model.ClassRoom.Id" method="post">
+									<button type="submit" class="btn btn-info">Xuất danh sách sinh viên</button>
+								</form>
+							</div>
 				}
 			}
 			<div class="searchsv-container">
 				<input type="text" id="searchsvInput" placeholder="🔍 Tìm kiếm sinh viên..." onkeyup="filterStudents()">
 			</div>
-			<div id="listsv1">				
+			<div id="listsv1">
 				<div class="container_listsv">
-					
+
 					<p class="header_listsv">Sĩ số: 0 sinh viên</p>
 					<hr class="hr_listsv">
 
@@ -1822,10 +1651,10 @@
 				if (Model.CustomRubric == false)
 				{
 								<div id="bangdiem" class="tabcontent">
-									@{
+						@{
 							List<BaiTap> bt = ViewBag.ListBT as List<BaiTap>;
 							List<DiemViewModel> diems = ViewBag.ListDiem as List<DiemViewModel>;
-									}
+						}
 									<div class="container-bangdiem">
 										<table id="user">
 											<thead>
@@ -1836,32 +1665,32 @@
 													<th style="text-align: center;" rowspan="2">ÐTB</th>
 												</tr>
 												<tr>
-													@foreach (var item in bt)
+										@foreach (var item in bt)
 										{
-														<th style="text-align: center;">@item.Title</th>
+															<th style="text-align: center;">@item.Title</th>
 										}
 												</tr>
 											</thead>
 											<tbody>
-												@foreach (var item in diems)
+									@foreach (var item in diems)
 									{
-													<tr>
-														<td>@item.HoVaTen</td>
-														<td>@item.MSSV</td>
+														<tr>
+															<td>@item.HoVaTen</td>
+															<td>@item.MSSV</td>
 
-														@if (bt.Count <= 0)
+											@if (bt.Count <= 0)
 											{
-															<td> </td>
+																	<td> </td>
 											}
 											else
 											{
-															@foreach (var d in @item.listDiemBT)
+												@foreach (var d in @item.listDiemBT)
 												{
-																<td style="text-align: center;">@d</td>
+																			<td style="text-align: center;">@d</td>
 												}
 											}
-														<td>@item.DTB</td>
-													</tr>
+															<td>@item.DTB</td>
+														</tr>
 									}
 											</tbody>
 										</table>
@@ -1882,82 +1711,82 @@
 
 					if (Model.CustomRubric == false)
 					{
-									<div id="bangdiem" class="tabcontent">
-										@{
+										<div id="bangdiem" class="tabcontent">
+							@{
 								List<BaiTap> bt = ViewBag.ListBT as List<BaiTap>;
 								List<DiemViewModel> diems = ViewBag.ListDiem as List<DiemViewModel>;
-										}
-										<div class="container-bangdiem">
-											<table id="user">
-												<thead>
-													<tr class="first-column">
-														<th style="text-align: center;" rowspan="2">Họ và tên</th>
-														<th style="text-align: center;" rowspan="2">MSSV</th>
-														<th style="text-align: center;" colspan="@bt.Count">Bài Tập</th>
-														<th style="text-align: center;" rowspan="2">ÐTB</th>
-													</tr>
-													<tr>
-														@foreach (var item in bt)
-											{
-															<th style="text-align: center;">@item.Title</th>
-											}
-													</tr>
-												</thead>
-												<tbody>
-													@foreach (var item in diems)
-										{
+							}
+											<div class="container-bangdiem">
+												<table id="user">
+													<thead>
+														<tr class="first-column">
+															<th style="text-align: center;" rowspan="2">Họ và tên</th>
+															<th style="text-align: center;" rowspan="2">MSSV</th>
+															<th style="text-align: center;" colspan="@bt.Count">Bài Tập</th>
+															<th style="text-align: center;" rowspan="2">ÐTB</th>
+														</tr>
 														<tr>
-															<td>@item.HoVaTen</td>
-															<td>@item.MSSV</td>
+											@foreach (var item in bt)
+											{
+																	<th style="text-align: center;">@item.Title</th>
+											}
+														</tr>
+													</thead>
+													<tbody>
+										@foreach (var item in diems)
+										{
+																<tr>
+																	<td>@item.HoVaTen</td>
+																	<td>@item.MSSV</td>
 
-															@if (bt.Count <= 0)
+												@if (bt.Count <= 0)
 												{
-																<td> </td>
+																			<td> </td>
 												}
 												else
 												{
-																@foreach (var d in @item.listDiemBT)
+													@foreach (var d in @item.listDiemBT)
 													{
-																	<td style="text-align: center;">@d</td>
+																					<td style="text-align: center;">@d</td>
 													}
 												}
-															<td>@item.DTB</td>
-														</tr>
+																	<td>@item.DTB</td>
+																</tr>
 										}
-												</tbody>
-											</table>
+													</tbody>
+												</table>
+											</div>
 										</div>
-									</div>
 					}
 					else
 					{
-									<div id="bangdiemCustom" class="tabcontent">
-										<iframe style="border: none;" src="@Url.Action("Details", "Rubrics", new { id = Model.Rubric.Id, classRoomId = Model.ClassRoom.Id, isowner = Model.isOwner})" width="100%" height="600px"></iframe>
-									</div>
+										<div id="bangdiemCustom" class="tabcontent">
+											<iframe style="border: none;" src="@Url.Action("Details", "Rubrics", new { id = Model.Rubric.Id, classRoomId = Model.ClassRoom.Id, isowner = Model.isOwner})" width="100%" height="600px"></iframe>
+										</div>
 					}
 				}
 				else
 				{
-					
+
 					if (Model.CustomRubric == false)
 					{
-									<div id="bangdiem" class="tabcontent">
-										<div class="text-center" style="margin-top: 150px"><p class="text-center">Bạn không có quyền xem bảng điểm !!!</p></div>
-									</div>
+										<div id="bangdiem" class="tabcontent">
+											<div class="text-center" style="margin-top: 150px"><p class="text-center">Bạn không có quyền xem bảng điểm !!!</p></div>
+										</div>
 					}
 					else
 					{
-									<div id="bangdiemCustom" class="tabcontent">
-										<div class="text-center" style="margin-top: 150px"><p class="text-center">Bạn không có quyền xem bảng điểm !!!</p></div>
-									</div>
+										<div id="bangdiemCustom" class="tabcontent">
+											<div class="text-center" style="margin-top: 150px"><p class="text-center">Bạn không có quyền xem bảng điểm !!!</p></div>
+										</div>
 					}
-				
+
 				}
 			}
 		}
 
 		@*<div id="padlet" class="tabcontent">
-			<div class="padlet-embed" style="border:1px solid rgba(0,0,0,0.1);border-radius:2px;box-sizing:border-box;overflow:hidden;position:relative;width:100%;background:#F4F4F4"><p style="padding:0;margin:0"><iframe src="https://padlet.com/embed/lup9um2r33899yju" frameborder="0" allow="camera;microphone;geolocation" style="width:100%;height:608px;display:block;padding:0;margin:0"></iframe></p><div style="display:flex;align-items:center;justify-content:end;margin:0;height:28px"><a href="https://padlet.com?ref=embed" style="display:block;flex-grow:0;margin:0;border:none;padding:0;text-decoration:none" target="_blank"><div style="display:flex;align-items:center;"><img src="https://padlet.net/embeds/made_with_padlet_2022.png" width="114" height="28" style="padding:0;margin:0;background:0 0;border:none;box-shadow:none" alt="Made with Padlet"></div></a></div></div>
+		<div class="padlet-embed" style="border:1px solid rgba(0,0,0,0.1);border-radius:2px;box-sizing:border-box;overflow:hidden;position:relative;width:100%;background:#F4F4F4"><p style="padding:0;margin:0"><iframe src="https://padlet.com/embed/lup9um2r33899yju" frameborder="0" allow="camera;microphone;geolocation" style="width:100%;height:608px;display:block;padding:0;margin:0"></iframe></p><div style="display:flex;align-items:center;justify-content:end;margin:0;height:28px"><a href="https://padlet.com?ref=embed" style="display:block;flex-grow:0;margin:0;border:none;padding:0;text-decoration:none" target="_blank"><div style="display:flex;align-items:center;"><img src="https://padlet.net/embeds/made_with_padlet_2022.png" width="114" height="28" style="padding:0;margin:0;background:0 0;border:none;box-shadow:none" alt="Made with Padlet"></div></a></div></div>
 		</div>*@
 
 		<div id="letter" class="tabcontent">
@@ -2035,13 +1864,13 @@
 					<label>Ngày học</label><br />
 					@foreach (var day in Enum.GetValues(typeof(DayOfWeek)).Cast<DayOfWeek>())
 					{
-						<div class="form-check form-check-inline">
-							<input class="form-check-input" type="checkbox"
-								   name="DaysOfWeek"
-								   value="@day"
+							<div class="form-check form-check-inline">
+								<input class="form-check-input" type="checkbox"
+									   name="DaysOfWeek"
+									   value="@day"
 							@(Model.ClassRoom.DaysOfWeek.Contains(day.ToString()) ? "checked" : "") />
-							<label class="form-check-label">@day</label>
-						</div>
+								<label class="form-check-label">@day</label>
+							</div>
 					}
 					<span asp-validation-for="@Model.ClassRoom.DaysOfWeek" class="text-danger"></span>
 				</div>
@@ -2109,68 +1938,68 @@
 			@{
 				if (Model.isOwner)
 				{
-								<div class="create-content"
-								 	style="border: 1px solid rgb(145, 137, 137);
-										border-radius: 8px;
-										padding: 10px;
-										height: 100%;
-										margin: 20px;
-										display: flex;
-										align-items: center;">
+							<div class="create-content"
+								 style="border: 1px solid rgb(145, 137, 137);
+													border-radius: 8px;
+													padding: 10px;
+													height: 100%;
+													margin: 20px;
+													display: flex;
+													align-items: center;">
 
-									<!-- Icon hình tròn với SVG bên trong -->
-									<div class="circle-icon" style="background-color: rgb(66, 133, 244); border-radius: 50%; width: 40px; height: 40px; display: flex; align-items: center; justify-content: center; margin-right: 10px; margin-left: 20px;">
-										<svg focusable="false" width="24" height="24" viewBox="0 0 24 24" class="NMm5M hhikbc" style="fill: white;">
-											<path d="M7 15h7v2H7zm0-4h10v2H7zm0-4h10v2H7z"></path>
-											<path d="M19 3h-4.18C14.4 1.84 13.3 1 12 1c-1.3 0-2.4.84-2.82 2H5c-.14 0-.27.01-.4.04a2.008 2.008 0 0 0-1.44 1.19c-.1.23-.16.49-.16.77v14c0 .27.06.54.16.78s.25.45.43.64c.27.27.62.47 1.01.55.13.02.26.03.4.03h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-7-.25c.41 0 .75.34.75.75s-.34.75-.75.75-.75-.34-.75-.75.34-.75.75-.75zM19 19H5V5h14v14z"></path>
-										</svg>
-									</div>
+								<!-- Icon hình tròn với SVG bên trong -->
+								<div class="circle-icon" style="background-color: rgb(66, 133, 244); border-radius: 50%; width: 40px; height: 40px; display: flex; align-items: center; justify-content: center; margin-right: 10px; margin-left: 20px;">
+									<svg focusable="false" width="24" height="24" viewBox="0 0 24 24" class="NMm5M hhikbc" style="fill: white;">
+										<path d="M7 15h7v2H7zm0-4h10v2H7zm0-4h10v2H7z"></path>
+										<path d="M19 3h-4.18C14.4 1.84 13.3 1 12 1c-1.3 0-2.4.84-2.82 2H5c-.14 0-.27.01-.4.04a2.008 2.008 0 0 0-1.44 1.19c-.1.23-.16.49-.16.77v14c0 .27.06.54.16.78s.25.45.43.64c.27.27.62.47 1.01.55.13.02.26.03.4.03h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-7-.25c.41 0 .75.34.75.75s-.34.75-.75.75-.75-.34-.75-.75.34-.75.75-.75zM19 19H5V5h14v14z"></path>
+									</svg>
+								</div>
 
-									<!-- Văn bản thông báo với sự kiện onclick -->
-									<h3 class="notify-text" style="cursor: pointer; margin-left: 20px;" onclick="expandContent()">Thông báo nội dung nào đó cho lớp học của bạn</h3>
-									@{
+								<!-- Văn bản thông báo với sự kiện onclick -->
+								<h3 class="notify-text" style="cursor: pointer; margin-left: 20px;" onclick="expandContent()">Thông báo nội dung nào đó cho lớp học của bạn</h3>
+						@{
 							if (Model.isOwner)
 							{
-														<div style="background-color: none; color: white; border-radius: 50%; width: 40px; height: 40px; display: flex; align-items: center; justify-content: center; margin-left: auto;">
-															<button onclick="toggleClassSelection()" class="icon">
-																<svg focusable="false" width="24" height="24" viewBox="0 0 24 24" class=" NMm5M">
-																	<path d="M19 5H4v6h2V7h13M5 19h15v-6h-2v4H5"></path>
-																	<path d="M16.29 10.71l-1.41-1.42L18.17 6l-3.29-3.29 1.41-1.42L21 6zm-8.58 12L3 18l4.71-4.71 1.41 1.42L5.83 18l3.29 3.29z"></path>
-																</svg>
-															</button>
-														</div>
+												<div style="background-color: none; color: white; border-radius: 50%; width: 40px; height: 40px; display: flex; align-items: center; justify-content: center; margin-left: auto;">
+													<button onclick="toggleClassSelection()" class="icon">
+														<svg focusable="false" width="24" height="24" viewBox="0 0 24 24" class=" NMm5M">
+															<path d="M19 5H4v6h2V7h13M5 19h15v-6h-2v4H5"></path>
+															<path d="M16.29 10.71l-1.41-1.42L18.17 6l-3.29-3.29 1.41-1.42L21 6zm-8.58 12L3 18l4.71-4.71 1.41 1.42L5.83 18l3.29 3.29z"></path>
+														</svg>
+													</button>
+												</div>
 							}
-									}
-									<!-- Phần form ẩn -->
-									<form id="uploadpost" action="/ClassRooms/CreatePost" method="POST" style="width: 100%; display: none;">
-										<div id="expandable-form" style="display: none; width: 100%;">
-											<input type="text" name="Title" id="titleInput" class="form-control" placeholder="Nhập tiêu đề" style="margin-bottom: 10px; width: 100%; border-radius: 5px; padding: 10px;" />
-											<textarea name="Content" id="inputText" rows="4" class="input-textarea" oninput="checkInput()" style="width: 100%; border-radius: 5px; margin-top: 10px; padding: 10px;" placeholder="Nhập nội dung..."></textarea>
-											<div style="display: flex; justify-content: flex-end; margin-top: 10px;">
-												<button type="button" onclick="cancelInput()" style="margin-right: 10px; padding: 5px 10px;">Hủy</button>
-												<button id="submitButton" class="disabled-button" onclick="submitInput()" style="padding: 5px 10px;" disabled>Đăng</button>
-											</div>
+						}
+								<!-- Phần form ẩn -->
+								<form id="uploadpost" action="/ClassRooms/CreatePost" method="POST" style="width: 100%; display: none;">
+									<div id="expandable-form" style="display: none; width: 100%;">
+										<input type="text" name="Title" id="titleInput" class="form-control" placeholder="Nhập tiêu đề" style="margin-bottom: 10px; width: 100%; border-radius: 5px; padding: 10px;" />
+										<textarea name="Content" id="inputText" rows="4" class="input-textarea" oninput="checkInput()" style="width: 100%; border-radius: 5px; margin-top: 10px; padding: 10px;" placeholder="Nhập nội dung..."></textarea>
+										<div style="display: flex; justify-content: flex-end; margin-top: 10px;">
+											<button type="button" onclick="cancelInput()" style="margin-right: 10px; padding: 5px 10px;">Hủy</button>
+											<button id="submitButton" class="disabled-button" onclick="submitInput()" style="padding: 5px 10px;" disabled>Đăng</button>
 										</div>
-										<input type="hidden" name="ClassId" id="classIdInput" value="@Model.ClassRoom.Id" />
-										<input type="hidden" name="UserId" id="UserIdInput" value="@Model.ClassRoom.UserId" />
-									</form>
-								</div>
-								<div id="postContainer" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0, 0, 0, 0.7); z-index: 1000;">
-									<div style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); background-color: #fff; color: black; border-radius: 8px; padding: 20px; width: 500px; height: 300px; overflow: auto;">
-										<button onclick="closePostContainer()" style="float: right;margin_bottom:10%;margin-left:20px ;background-color: red; color: white; border: none; cursor: pointer; border-radius: 4px;">
-											<i class="fas fa-times" style="font-size: 20px;"></i> <!-- Biểu tượng dấu X -->
-										</button>
-										<div class="mainList" style="margin-top:40px;">
-											@foreach (var post in ViewBag.UserPosts)
+									</div>
+									<input type="hidden" name="ClassId" id="classIdInput" value="@Model.ClassRoom.Id" />
+									<input type="hidden" name="UserId" id="UserIdInput" value="@Model.ClassRoom.UserId" />
+								</form>
+							</div>
+							<div id="postContainer" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0, 0, 0, 0.7); z-index: 1000;">
+								<div style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); background-color: #fff; color: black; border-radius: 8px; padding: 20px; width: 500px; height: 300px; overflow: auto;">
+									<button onclick="closePostContainer()" style="float: right;margin_bottom:10%;margin-left:20px ;background-color: red; color: white; border: none; cursor: pointer; border-radius: 4px;">
+										<i class="fas fa-times" style="font-size: 20px;"></i> <!-- Biểu tượng dấu X -->
+									</button>
+									<div class="mainList" style="margin-top:40px;">
+								@foreach (var post in ViewBag.UserPosts)
 								{
 												<div style="margin-bottom: 10px; display: flex; justify-content: space-between; align-items: center;">
 													<span style="text-align: left;">@post.Title</span>
 													<button type="button" style="color: black;" onclick="showPostContent('@post.Id')">Sử dụng lại</button>
 												</div>
 								}
-										</div>
+									</div>
 
-										@foreach (var post in ViewBag.UserPosts)
+							@foreach (var post in ViewBag.UserPosts)
 							{
 											<div id="postList-@post.Id" class="postList" style="display: none; margin-top: 40px;">
 												<form method="post" asp-action="ReusePost" asp-controller="ClassRooms" style="display: inline;">
@@ -2185,8 +2014,8 @@
 												</form>
 											</div>
 							}
-									</div>
 								</div>
+							</div>
 				}
 			}
 
@@ -2219,8 +2048,8 @@
 
 			@foreach (var item in combinedList)
 			{
-				<div class="create-content"
-					 style="border: 1px solid rgb(145, 137, 137);
+					<div class="create-content"
+						 style="border: 1px solid rgb(145, 137, 137);
 				border-radius: 8px;
 				padding: 10px;
 				height: 100%;
@@ -2229,22 +2058,22 @@
 				align-items: center;
 				position: relative;">
 
-					<div id="circle-icon-@item.Id" style="background-color: rgb(66, 133, 244); border-radius: 50%; width: 40px; height: 40px; display: flex; align-items: center; justify-content: center; margin-right: 10px; margin-left: 20px;">
-						<svg focusable="false" width="24" height="24" viewBox="0 0 24 24" class="NMm5M hhikbc" style="fill: white;">
-							<path d="M7 15h7v2H7zm0-4h10v2H7zm0-4h10v2H7z"></path>
-							<path d="M19 3h-4.18C14.4 1.84 13.3 1 12 1c-1.3 0-2.4.84-2.82 2H5c-.14 0-.27.01-.4.04a2.008 2.008 0 0 0-1.44 1.19c-.1.23-.16.49-.16.77v14c0 .27.06.54.16.78s.25.45.43.64c.27.27.62.47 1.01.55.13.02.26.03.4.03h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-7-.25c.41 0 .75.34.75.75s-.34.75-.75.75-.75-.34-.75-.75.34-.75.75-.75zM19 19H5V5h14v14z"></path>
-						</svg>
-					</div>
+						<div id="circle-icon-@item.Id" style="background-color: rgb(66, 133, 244); border-radius: 50%; width: 40px; height: 40px; display: flex; align-items: center; justify-content: center; margin-right: 10px; margin-left: 20px;">
+							<svg focusable="false" width="24" height="24" viewBox="0 0 24 24" class="NMm5M hhikbc" style="fill: white;">
+								<path d="M7 15h7v2H7zm0-4h10v2H7zm0-4h10v2H7z"></path>
+								<path d="M19 3h-4.18C14.4 1.84 13.3 1 12 1c-1.3 0-2.4.84-2.82 2H5c-.14 0-.27.01-.4.04a2.008 2.008 0 0 0-1.44 1.19c-.1.23-.16.49-.16.77v14c0 .27.06.54.16.78s.25.45.43.64c.27.27.62.47 1.01.55.13.02.26.03.4.03h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-7-.25c.41 0 .75.34.75.75s-.34.75-.75.75-.75-.34-.75-.75.34-.75.75-.75zM19 19H5V5h14v14z"></path>
+							</svg>
+						</div>
 
-					<div id="post-info-@item.Id" style="display: flex; flex-direction: column; margin-left: 10px; margin-top: -3.5px;">
+						<div id="post-info-@item.Id" style="display: flex; flex-direction: column; margin-left: 10px; margin-top: -3.5px;">
 
 						@if (item.Type == "Post")
 						{
-							<h3 style="font-size: 16px; margin-bottom: 0px;">đã đăng một thông báo mới: @item.Title</h3>
+									<h3 style="font-size: 16px; margin-bottom: 0px;">đã đăng một thông báo mới: @item.Title</h3>
 						}
 						else
 						{
-							<h3 style="font-size: 16px; margin-bottom: 0px;">@item.OwnerName đã đăng một bài tập mới: @item.Title</h3>
+									<h3 style="font-size: 16px; margin-bottom: 0px;">@item.OwnerName đã đăng một bài tập mới: @item.Title</h3>
 						}
 
 						@if (item.Type == "Post")
@@ -2252,22 +2081,22 @@
 							string content = item.Content;
 							string pattern = @"(https?://[a-zA-Z0-9.-]+(?:/[^\s]*)?)"; // Regex nhận diện URL đầy đủ với đường dẫn
 							var parts = System.Text.RegularExpressions.Regex.Split(content, pattern); // Tách nội dung
-							<p style="font-size: 16px; margin-bottom: 0px;">
+									<p style="font-size: 16px; margin-bottom: 0px;">
 								@foreach (var part in parts)
 								{
 									if (System.Text.RegularExpressions.Regex.IsMatch(part, pattern)) // Nếu là link hợp lệ
 									{
-										<a href="@part" target="_blank" style="color: #007bff; text-decoration: none;">@part</a>
+														<a href="@part" target="_blank" style="color: #007bff; text-decoration: none;">@part</a>
 									}
 									else // Nếu không phải là link
 									{
 										@part
 									}
 								}
-							</p>
+									</p>
 						}
-						<p class="post-created-at" style="font-size: 14px; color: gray; margin-top: 0px;">@item.CreatedAt.ToString("dd/MM/yyyy - HH:mm:ss")</p>
-					</div>
+							<p class="post-created-at" style="font-size: 14px; color: gray; margin-top: 0px;">@item.CreatedAt.ToString("dd/MM/yyyy - HH:mm:ss")</p>
+						</div>
 
 					@{
 						if (Model.isOwner && item.Type == "Post")
@@ -2301,7 +2130,7 @@
 										</div>
 						}
 					}
-				</div>
+					</div>
 			}
 		</div>
 	</div>
@@ -2356,7 +2185,7 @@
 
 	function closePostContainer() {
 		document.getElementById("postContainer").style.display = "none";
-	}	
+	}
 </script>
 <script>
 	function showEditForm(postId) {
@@ -2482,7 +2311,7 @@
 			submitButton.classList.add('active-button');
 		}
 	}
-	
+
 
 	function submitInput() {
 		document.getElementById('uploadpost').submit();
@@ -2543,7 +2372,7 @@
 <script src="https://apis.google.com/js/api.js"></script>
 <script>
 	function validateAndSubmit(requiredFormat, assignmentId, event) {
-		event.preventDefault(); 
+		event.preventDefault();
 		var form = event.target; // L?y bi?u m?u t? s? ki?n
 		var fileInput = form.querySelector("input[type='file']");
 		var fileName = fileInput.value;
@@ -2599,11 +2428,6 @@
 		var attachmentForm = document.getElementById("attachmentForm");
 		attachmentForm.style.display = "block"; // Hi?n th? form dính kèm
 	}
-
-	document.querySelector('.close-btn').addEventListener('click', () => {
-		document.getElementById("uploadbaitap").style.display = "none"; 
-		document.getElementById("uploadButton").style.display = "block";
-	});
 
 </script> @* T?o bài t?p m?i *@
 <script>
@@ -2987,7 +2811,7 @@
 
 </script> @* G?i tin nh?n *@
 <script>
-		function getListSV() {
+	function getListSV() {
 		var classId = document.getElementById("classId").value;
 		$.ajax({
 			url: '/ClassRooms/GetListSV?classId=' + classId,
@@ -3006,46 +2830,46 @@
 		});
 	}
 	@*
-	document.querySelector(".search-input_discuss").addEventListener("input", function () {
-    const query = this.value.toLowerCase(); // Lấy từ khóa tìm kiếm và chuyển về chữ thường
-    const allStudents = document.querySelectorAll("#listsv2 .circle-text-container_discuss");
-		allStudents.forEach(studentCard => { 
-			const studentInfo = studentCard.querySelector(".student-info").textContent.toLowerCase();
-			if (studentInfo.includes(query)) {
-				studentCard.style.display = "flex"; // Hiển thị nếu khớp
-			} else {
-				studentCard.style.display = "none"; // Ẩn nếu không khớp
-			}
+		document.querySelector(".search-input_discuss").addEventListener("input", function () {
+		const query = this.value.toLowerCase(); // Lấy từ khóa tìm kiếm và chuyển về chữ thường
+		const allStudents = document.querySelectorAll("#listsv2 .circle-text-container_discuss");
+		allStudents.forEach(studentCard => {
+		const studentInfo = studentCard.querySelector(".student-info").textContent.toLowerCase();
+		if (studentInfo.includes(query)) {
+		studentCard.style.display = "flex"; // Hiển thị nếu khớp
+		} else {
+		studentCard.style.display = "none"; // Ẩn nếu không khớp
+		}
 		});
-	});*@
+		});*@
 
-	function displaySV(students) {
-		const listContainer = document.getElementById("listsv2");
-		const template = document.getElementById("student-template")
-		// Duyệt qua danh sách sinh viên
-		students.forEach(function (student) {
-			// Clone template
-			const studentCard = template.cloneNode(true);
-			studentCard.style.display = "flex"; // Hiển thị
-			studentCard.id = ""; // Xóa ID để tránh trùng lặp
+		function displaySV(students) {
+			const listContainer = document.getElementById("listsv2");
+			const template = document.getElementById("student-template")
+			// Duyệt qua danh sách sinh viên
+			students.forEach(function (student) {
+				// Clone template
+				const studentCard = template.cloneNode(true);
+				studentCard.style.display = "flex"; // Hiển thị
+				studentCard.id = ""; // Xóa ID để tránh trùng lặp
 
-			// Điền thông tin sinh viên
-			studentCard.querySelector(".student-avatar").src = `/Imgs_avtUser/${student.urlAvt}`;
-			studentCard.querySelector(".student-avatar").alt = `Avatar của ${student.name}`;
-			studentCard.querySelector(".student-info").textContent = `${student.name} - ${student.mssv}`;
+				// Điền thông tin sinh viên
+				studentCard.querySelector(".student-avatar").src = `/Imgs_avtUser/${student.urlAvt}`;
+				studentCard.querySelector(".student-avatar").alt = `Avatar của ${student.name}`;
+				studentCard.querySelector(".student-info").textContent = `${student.name} - ${student.mssv}`;
 
-			// Gắn sự kiện cho biểu tượng ba chấm
-			studentCard.querySelector(".three-dots-icon_discuss").setAttribute(
-				"onclick",
-				`openPopup('${student.name}', '${student.mssv}', '${student.email}', '${student.urlAvt}')`
-			);
+				// Gắn sự kiện cho biểu tượng ba chấm
+				studentCard.querySelector(".three-dots-icon_discuss").setAttribute(
+					"onclick",
+					`openPopup('${student.name}', '${student.mssv}', '${student.email}', '${student.urlAvt}')`
+				);
 
-			// Thêm sinh viên vào danh sách
-			listContainer.appendChild(studentCard);
-		});
-	}
+				// Thêm sinh viên vào danh sách
+				listContainer.appendChild(studentCard);
+			});
+		}
 
-	
+
 	$(document).ready(function () {
 		getListSV();
 	});
@@ -3061,14 +2885,14 @@
 
 		document.getElementById("popup").style.display = "block";
 	}
-	
+
 	function closePopup() {
 		document.getElementById("popup").style.display = "none";
 	}
 
 
 
-	
+
 </script>@*chọn nhóm*@
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 @{
@@ -3124,9 +2948,13 @@
 			}
 
 			// Kiểm tra xem sinh viên có trong danh sách nhóm hay không
-			const isInGroup = listUserGroup.some(item => item.UserId === student.id);
-			if (isInGroup) {
-				listHtml += '<button class="invite_button" style="background-color: green;">Bạn cùng nhóm</button>';
+			if (listUserGroup !== null) {
+				const isInGroup = listUserGroup.some(item => item.UserId === student.id);
+				if (isInGroup) {
+					listHtml += '<button class="invite_button" style="background-color: green;">Bạn cùng nhóm</button>';
+				} else {
+					listHtml += '<button class="invite_button" onclick="sendInvite(\'' + student.id + '\')">Bạn không cùng nhóm</button>';
+				}
 			} else {
 				listHtml += '<button class="invite_button" onclick="sendInvite(\'' + student.id + '\')">Gửi lời mời tạo nhóm</button>';
 			}
@@ -3181,12 +3009,12 @@
 			}
 
 			const data = await response.json();
-			toastr.success(data.message, 'Thành công', {timeOut: 3000});
+			toastr.success(data.message, 'Thành công', { timeOut: 3000 });
 		} catch (error) {
 			console.error("Unexpected Error:", error);
 			alert("An unexpected error occurred.");
 		}
-		
+
 	}
 
 	$(document).ready(function () {
@@ -3257,7 +3085,7 @@
 			event.preventDefault(); // Prevent the default link action
 			var classId = document.getElementById("classId").value;
 			var roomOnlineUrl = $(this).attr('href');
-			
+
 
 			$.post("/ClassRooms/DiemDanhIn", { classId: classId }, function (data) {
 				if (data.success) {
@@ -3370,7 +3198,7 @@
 			progressBar.style.strokeDasharray = `100 0`;
 			txtUpload.innerText = 'Hoàn thành';
 		}
-		
+
 		resetFileName()
 		// Chờ 2 giây trước khi reload lecture
 		setTimeout(() => {
@@ -3383,7 +3211,7 @@
 				txtUpload.style.opacity = '1'; // Hiển thị lại text "Upload"
 				progressBar.style.strokeDasharray = `0 100`; // Reset progress bar
 			}
-		}, 2000); 
+		}, 2000);
 	});
 
 	// Xử lý lỗi
@@ -3424,73 +3252,73 @@
 		}
 	}
 
-// Hàm để gán giá trị mặc định cho ngày bắt đầu và ngày kết thúc
-    function setDefaultDates() {
-        const today = new Date();
-        const tomorrow = new Date(today);
-        tomorrow.setDate(today.getDate() + 1); // Cộng thêm 1 ngày để lấy ngày mai
+	// Hàm để gán giá trị mặc định cho ngày bắt đầu và ngày kết thúc
+	function setDefaultDates() {
+		const today = new Date();
+		const tomorrow = new Date(today);
+		tomorrow.setDate(today.getDate() + 1); // Cộng thêm 1 ngày để lấy ngày mai
 
-        // Định dạng ngày theo chuẩn yyyy-mm-dd
-        const todayStr = today.toISOString().split('T')[0];
-        const tomorrowStr = tomorrow.toISOString().split('T')[0];
+		// Định dạng ngày theo chuẩn yyyy-mm-dd
+		const todayStr = today.toISOString().split('T')[0];
+		const tomorrowStr = tomorrow.toISOString().split('T')[0];
 
-        document.getElementById("StartDate").value = todayStr; // Đặt giá trị mặc định cho ngày bắt đầu
-        document.getElementById("StartDate").setAttribute("min", todayStr); // Chặn các ngày trước hôm nay
+		document.getElementById("StartDate").value = todayStr; // Đặt giá trị mặc định cho ngày bắt đầu
+		document.getElementById("StartDate").setAttribute("min", todayStr); // Chặn các ngày trước hôm nay
 
-        document.getElementById("EndDate").value = tomorrowStr; // Đặt giá trị mặc định cho ngày kết thúc (ngày mai)
-        document.getElementById("EndDate").setAttribute("min", todayStr); // Chặn các ngày trước hôm nay
-    }
+		document.getElementById("EndDate").value = tomorrowStr; // Đặt giá trị mặc định cho ngày kết thúc (ngày mai)
+		document.getElementById("EndDate").setAttribute("min", todayStr); // Chặn các ngày trước hôm nay
+	}
 
-    // Gọi hàm này khi trang được load để thiết lập giá trị mặc định ban đầu
-    document.addEventListener("DOMContentLoaded", function() {
-        setDefaultDates(); // Gán giá trị mặc định
-    });
+	// Gọi hàm này khi trang được load để thiết lập giá trị mặc định ban đầu
+	document.addEventListener("DOMContentLoaded", function () {
+		setDefaultDates(); // Gán giá trị mặc định
+	});
 
-    // Đoạn mã để reset form và giữ lại ngày mặc định
-    $('#leaveRequestForm').on('reset', function() {
-        setTimeout(function() {
-            setDefaultDates(); // Gán lại giá trị mặc định sau khi form được reset
-        }, 0); // Đợi form reset xong, rồi mới gán lại giá trị
-    });
+	// Đoạn mã để reset form và giữ lại ngày mặc định
+	$('#leaveRequestForm').on('reset', function () {
+		setTimeout(function () {
+			setDefaultDates(); // Gán lại giá trị mặc định sau khi form được reset
+		}, 0); // Đợi form reset xong, rồi mới gán lại giá trị
+	});
 
-function submitLeaveRequest(event) {
-    event.preventDefault();
+	function submitLeaveRequest(event) {
+		event.preventDefault();
 
-    // Create FormData object
-    const formData = new FormData();
+		// Create FormData object
+		const formData = new FormData();
 
-    // Get form values and append to FormData
-    formData.append('ClassRoomId', document.getElementById('ClassId').value);
-    formData.append('UserID', document.getElementById('UserID').value);
-    formData.append('StartDate', document.getElementById('StartDate').value);
-    formData.append('EndDate', document.getElementById('EndDate').value);
-    formData.append('Reasion', document.getElementById('Reason').value);
+		// Get form values and append to FormData
+		formData.append('ClassRoomId', document.getElementById('ClassId').value);
+		formData.append('UserID', document.getElementById('UserID').value);
+		formData.append('StartDate', document.getElementById('StartDate').value);
+		formData.append('EndDate', document.getElementById('EndDate').value);
+		formData.append('Reasion', document.getElementById('Reason').value);
 
-    const token = document.querySelector('input[name="__RequestVerificationToken"]').value;
+		const token = document.querySelector('input[name="__RequestVerificationToken"]').value;
 
-    // Use Axios to send a POST request with FormData
-    axios.post('/LeaveRequests/Create', formData, {
-        headers: {
-            'RequestVerificationToken': token,
-            'Content-Type': 'multipart/form-data' // Important for sending FormData
-        }
-    })
-    .then(function (response) {
-        if (response.data.success) {
-			toastr.success('Gửi đơn thành công. Vui lòng đợi đơn được phê duyệt !', 'Thành công', { timeOut: 3000 })
-			$('#leaveRequestForm')[0].reset();
-			toggleLeaveRequestForm(); // Hide the form on success
-			getAllLeaveRequests();
-        }
-    })
-    .catch(function (error) {
-        if (error.response && error.response.status === 400) {
-            alert('Validation errors: ' + error.response.data.errors.join(', '));
-        } else {
-            alert('An error occurred: ' + error.message);
-        }
-    });
-}
+		// Use Axios to send a POST request with FormData
+		axios.post('/LeaveRequests/Create', formData, {
+			headers: {
+				'RequestVerificationToken': token,
+				'Content-Type': 'multipart/form-data' // Important for sending FormData
+			}
+		})
+			.then(function (response) {
+				if (response.data.success) {
+					toastr.success('Gửi đơn thành công. Vui lòng đợi đơn được phê duyệt !', 'Thành công', { timeOut: 3000 })
+					$('#leaveRequestForm')[0].reset();
+					toggleLeaveRequestForm(); // Hide the form on success
+					getAllLeaveRequests();
+				}
+			})
+			.catch(function (error) {
+				if (error.response && error.response.status === 400) {
+					alert('Validation errors: ' + error.response.data.errors.join(', '));
+				} else {
+					alert('An error occurred: ' + error.message);
+				}
+			});
+	}
 
 	function getAllLeaveRequests() {
 		const classId = document.getElementById('ClassId').value;
@@ -3523,7 +3351,7 @@ function submitLeaveRequest(event) {
 
 	function createLeaveRequestCard(request) {
 		const card = document.createElement('div');
-		card.classList.add('card-letter', ); // Ensure cards are equal height
+		card.classList.add('card-letter',); // Ensure cards are equal height
 
 		// Set the background color based on status
 		if (request.status === 0) {
@@ -3531,7 +3359,7 @@ function submitLeaveRequest(event) {
 		} else if (request.status === 1) {
 			card.style.backgroundColor = '#76ff93'; // Background color for status 1
 		} else if (request.status === -1) {
-				card.style.backgroundColor = '#ff8c8c'; // Background color for status -1
+			card.style.backgroundColor = '#ff8c8c'; // Background color for status -1
 		}
 
 		const cardBody = document.createElement('div');
@@ -3554,17 +3382,16 @@ function submitLeaveRequest(event) {
 		const userId = @Html.Raw(Json.Serialize(Model.Owner.Id));
 		const currentUserId = @Html.Raw(Json.Serialize(user.Id));
 
-		if (isOwner)
-		{
+		if (isOwner) {
 			cardBody.innerHTML = `
-				<h5 class="card-title">Lý do: ${request.reasion}</h5>
-				<p class="card-text">
-					<strong>Họ và tên:</strong> ${request.name}<br/>
-					<strong>Ngày bắt đầu:</strong> ${new Date(request.startDate).toLocaleDateString()}<br/>
-					<strong>Ngày kết thúc:</strong> ${new Date(request.endDate).toLocaleDateString()}<br/>
-					<strong>Trạng thái:</strong> ${statusMessage}<br/>
-				</p>`;
-			
+					<h5 class="card-title">Lý do: ${request.reasion}</h5>
+					<p class="card-text">
+						<strong>Họ và tên:</strong> ${request.name}<br/>
+						<strong>Ngày bắt đầu:</strong> ${new Date(request.startDate).toLocaleDateString()}<br/>
+						<strong>Ngày kết thúc:</strong> ${new Date(request.endDate).toLocaleDateString()}<br/>
+						<strong>Trạng thái:</strong> ${statusMessage}<br/>
+					</p>`;
+
 			if (request.status === 0 && request.userID.trim() !== userId) {
 
 				// Tạo button Duyệt
@@ -3582,23 +3409,23 @@ function submitLeaveRequest(event) {
 				rejectButton.onclick = function () {
 					updateLeaveRequestStatus(request.id, -1); // -1 cho "Đã từ chối"
 				};
-				
+
 				// Thêm các nút vào card body
 				cardBody.appendChild(approveButton);
 				cardBody.appendChild(rejectButton);
-				
+
 			}
 		}
 		else {
 			cardBody.innerHTML = `
-						<h5 class="card-title">Lý do: ${request.reasion}</h5>
-						<p class="card-text">
-							<strong>Ngày bắt đầu:</strong> ${new Date(request.startDate).toLocaleDateString()}<br/>
-							<strong>Ngày kết thúc:</strong> ${new Date(request.endDate).toLocaleDateString()}<br/>
-							<strong>Trạng thái:</strong> ${statusMessage}<br/>
-						</p>`;
+							<h5 class="card-title">Lý do: ${request.reasion}</h5>
+							<p class="card-text">
+								<strong>Ngày bắt đầu:</strong> ${new Date(request.startDate).toLocaleDateString()}<br/>
+								<strong>Ngày kết thúc:</strong> ${new Date(request.endDate).toLocaleDateString()}<br/>
+								<strong>Trạng thái:</strong> ${statusMessage}<br/>
+							</p>`;
 		}
-	
+
 
 		if (request.status === 0 && request.userID.trim() === currentUserId) {
 			// Create a delete button
