@@ -224,6 +224,13 @@
     <script>
         const criteriaList = [];
 
+        // Mẫu rubric mặc định
+        const defaultRubric = [
+            { Title: "Chuyên cần", Weight: 0.3 },
+            { Title: "Bài tập", Weight: 0.3 },
+            { Title: "Thi", Weight: 0.4 }
+        ];
+
         // Function to add criteria to the table
         function addRowTieuChi(tieuChi_name, tieuChi_trongSo) {
             // Thêm tiêu chí vào mảng criteriaList
@@ -239,8 +246,6 @@
                 <td class="weight-cell" contenteditable="true" class="text-center number-only" data-index="${criteriaList.length - 1}">${tieuChi_trongSo}</td>
                 <td class="text-center"><span class="deleteTieuChiRow" style="cursor:pointer">Xoá</span></td>
             `;
-
-            console.log(criteriaList); // Kiểm tra mảng criteriaList sau khi thêm
 
             // Reset input fields
             document.getElementById("Title").value = "";
@@ -344,14 +349,38 @@
 
         // Convert criteria list to JSON before submitting
         document.getElementById("rubric-form").addEventListener("submit", (e) => {
-            document.getElementById("criteriaData").value = JSON.stringify(criteriaList);
+            // Tính tổng trọng số
+            const totalWeight = calculateTotalWeight();
+
+            // Kiểm tra nếu tổng trọng số > 1
+            if (totalWeight > 1) {
+                e.preventDefault(); // Ngừng gửi biểu mẫu
+                alert("Tổng trọng số không thể lớn hơn 1. Vui lòng kiểm tra lại.");
+            } else {
+                // Chuyển đổi mảng criteriaList thành JSON và gán vào input ẩn
+                document.getElementById("criteriaData").value = JSON.stringify(criteriaList);
+            }
         });
+
 
         function validateInput(input) {
             if (parseFloat(input.value) > 1) {
                 input.value = 1;
             }
         }
+
+        // Tính tổng trọng số của tất cả các tiêu chí
+        function calculateTotalWeight() {
+            return criteriaList.reduce((total, criteria) => total + criteria.Weight, 0);
+        }
+
+        // Thêm các tiêu chí mặc định vào bảng khi trang được tải
+        window.onload = function () {
+            defaultRubric.forEach((rubric) => {
+                addRowTieuChi(rubric.Title, rubric.Weight);
+            });
+        };
+
     </script>
 
 </body>
