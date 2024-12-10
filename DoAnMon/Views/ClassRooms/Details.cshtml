@@ -38,45 +38,6 @@
 		box-sizing: border-box;
 	}
 
-	.cover-photo {
-		width: 100%;
-		height: 300px;
-		background-image: url('path/to/your/cover/photo.jpg');
-		background-size: cover;
-		background-position: center;
-	}
-
-	/* Menu dropdown Thêm thành viên */
-	.dropdown {
-		position: relative;
-		display: inline-block;
-	}
-
-	.dropdown-content {
-		display: none;
-		position: absolute;
-		background-color: #f9f9f9;
-		min-width: 190px;
-		box-shadow: 0 8px 16px 0 rgba(0, 0, 0, 0.2);
-		z-index: 1;
-		text-align: start;
-	}
-
-		.dropdown-content a, .dropdown-content p {
-			color: black;
-			padding: 12px 16px;
-			text-decoration: none;
-			display: block;
-		}
-
-			.dropdown-content a:hover {
-				background-color: #f1f1f1;
-			}
-
-	.dropdown:hover .dropdown-content {
-		display: block;
-	}
-
 	/* ================================= */
 
 	.tabs {
@@ -91,13 +52,13 @@
 		transition: background-color 0.3s;
 	}
 
-		.tab:hover {
-			background-color: #ddd;
-		}
+	.tab:hover {
+		background-color: #ddd;
+	}
 
-		.tab.active {
-			background-color: #ccc;
-		}
+	.tab.active {
+		background-color: #ccc;
+	}
 
 	.tabcontent {
 		display: none;
@@ -115,26 +76,26 @@
 		margin-bottom: 20px;
 	}
 
-		.post img {
-			max-width: 100%;
-			height: auto;
-			margin-bottom: 10px;
-		}
+	.post img {
+		max-width: 100%;
+		height: auto;
+		margin-bottom: 10px;
+	}
 
-		.post h2 {
-			font-size: 20px;
-			margin-bottom: 10px;
-		}
+	.post h2 {
+		font-size: 20px;
+		margin-bottom: 10px;
+	}
 
-		.post p {
-			font-size: 16px;
-			margin-bottom: 10px;
-		}
+	.post p {
+		font-size: 16px;
+		margin-bottom: 10px;
+	}
 
-		.post .author {
-			font-style: italic;
-			color: #666;
-		}
+	.post .author {
+		font-style: italic;
+		color: #666;
+	}
 
 	/* THÔNG TIN GI?NG VIÊN */
 	.teacher-info {
@@ -164,16 +125,16 @@
 		flex: 1;
 	}
 
-		.teacher-text p {
-			margin-bottom: 10px;
-		}
+	.teacher-text p {
+		margin-bottom: 10px;
+	}
 
-			.teacher-text p strong {
-				font-weight: bold;
-				color: #e72323;
-			}
+	.teacher-text p strong {
+		font-weight: bold;
+		color: #e72323;
+	}
 
-	/* POST BÀI GI?NG */
+	/* POST BÀI GIẢNG */
 	.post {
 		margin-bottom: 20px;
 		padding: 20px;
@@ -182,11 +143,11 @@
 		box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
 	}
 
-		.post h2 {
-			font-size: 24px;
-			margin-bottom: 10px;
-			text-align: center;
-		}
+	.post h2 {
+		font-size: 24px;
+		margin-bottom: 10px;
+		text-align: center;
+	}
 
 	.pdf-container {
 		width: 100%;
@@ -194,17 +155,17 @@
 		overflow: auto;
 	}
 
-		.pdf-container object {
-			width: 100%;
-			height: 100%;
-		}
+	.pdf-container object {
+		width: 100%;
+		height: 100%;
+	}
 
-		.pdf-container embed {
-			width: 100%;
-			height: 100%;
-		}
+	.pdf-container embed {
+		width: 100%;
+		height: 100%;
+	}
 
-	/* BÀI T?P */
+	/* BÀI TẬP */
 	.assignment {
 		background-color: white;
 		padding: 20px;
@@ -212,11 +173,6 @@
 		margin-top: 20px;
 		display: flex;
 		border: 1px solid #333; /* Thêm vi?n */
-	}
-
-	.assignment-content {
-		flex-grow: 1;
-		margin-right: 20px;
 	}
 
 	.assignment h3 {
@@ -249,9 +205,9 @@
 		transition: background-color 0.3s;
 	}
 
-		.btn:hover {
-			background-color: #0056b3;
-		}
+	.btn:hover {
+		background-color: #0056b3;
+	}
 
 	/* UPLOAD BAITAP */
 	.upload-form {
@@ -279,10 +235,10 @@
 		margin: 10px;
 	}
 
-		.file-input:focus {
-			border-color: #007bff;
-			outline: none;
-		}
+	.file-input:focus {
+		border-color: #007bff;
+		outline: none;
+	}
 
 	.btn {
 		width: 100%;
@@ -309,29 +265,28 @@
 		overflow-x: auto; /* Horizontal scroll for small screens */
 	}
 
-		#user td,
-		#user th {
-			border: 1px solid #ddd;
-			padding: 8px;
-		}
+	#user td,
+	#user th {
+		border: 1px solid #ddd;
+		padding: 8px;
+	}
 
-		#user tr:nth-child(even) {
-			background-color: #f2f2f2;
-		}
+	#user tr:nth-child(even) {
+		background-color: #f2f2f2;
+	}
 
-		#user tr:hover {
-			background-color: #ddd;
-		}
+	#user tr:hover {
+		background-color: #ddd;
+	}
 
-		#user th {
-			padding-top: 12px;
-			padding-bottom: 12px;
-			text-align: left;
-			background-color: #04AA6D;
-			color: white;
-		}
+	#user th {
+		padding-top: 12px;
+		padding-bottom: 12px;
+		text-align: left;
+		background-color: #04AA6D;
+		color: white;
+	}
 
-	/* T?o icon copy */
 	/* T?o button change background */
 	.custom-file-upload {
 		display: inline-block;
@@ -345,13 +300,13 @@
 		transition: background-color 0.3s ease; /* Hi?u ?ng chuy?n d?i màu */
 	}
 
-		.custom-file-upload:hover {
-			background-color: #E3E1D9; /* Màu n?n khi hover */
-		}
+	.custom-file-upload:hover {
+		background-color: #E3E1D9; /* Màu n?n khi hover */
+	}
 
-		.custom-file-upload:active {
-			background-color: #B4B4B8; /* Màu n?n khi click */
-		}
+	.custom-file-upload:active {
+		background-color: #B4B4B8; /* Màu n?n khi click */
+	}
 
 	/* Bright Modal */
 	.modal {
@@ -401,9 +356,9 @@
 		z-index: 999; /* Below the modal */
 	}
 
-		.modal.show, .modal-backdrop.show {
-			display: block;
-		}
+	.modal.show, .modal-backdrop.show {
+		display: block;
+	}
 
 	/*LOADER*/
 	.loader {
@@ -440,9 +395,9 @@
 		cursor: pointer;
 	}
 
-		.delete-btn:hover {
-			color: #ff0000;
-		}
+	.delete-btn:hover {
+		color: #ff0000;
+	}
 
 	.ctnleaveForm {
 		justify-content: flex-start;
@@ -470,14 +425,14 @@
 		resize: none;
 	}
 
-		.input-textarea:hover {
-			background-color: rgb(141, 250, 250); /* Màu nền khi hover */
-		}
+	.input-textarea:hover {
+		background-color: rgb(141, 250, 250); /* Màu nền khi hover */
+	}
 
-		.input-textarea:focus {
-			outline: none; /* Bỏ viền mặc định khi focus */
-			border-bottom: 2px solid rgb(66, 133, 244); /* Đường viền dưới khi focus */
-		}
+	.input-textarea:focus {
+		outline: none; /* Bỏ viền mặc định khi focus */
+		border-bottom: 2px solid rgb(66, 133, 244); /* Đường viền dưới khi focus */
+	}
 
 
 	/* Nút bị vô hiệu hóa (disabled) */
@@ -507,9 +462,9 @@
 		justify-content: center; /* Màu nền khi hover */
 	}
 
-		.icon:hover {
-			background-color: rgba(145, 137, 137, 0.2);
-		}
+	.icon:hover {
+		background-color: rgba(145, 137, 137, 0.2);
+	}
 
 	.discussion-container {
 		display: flex;
@@ -721,12 +676,12 @@
 		margin-right: 10px; /* Khoảng cách giữa hình tròn và chữ */
 	}
 
-		.circle_discuss img {
-			width: 90px;
-			height: 90px;
-			object-fit: cover;
-			border-radius: 50%;
-		}
+	.circle_discuss img {
+		width: 90px;
+		height: 90px;
+		object-fit: cover;
+		border-radius: 50%;
+	}
 
 	#listsv2 {
 		display: flex;
@@ -793,12 +748,12 @@
 		margin-top: -10px;
 	}
 
-		.popup-close:hover,
-		.popup-close:focus {
-			color: red;
-			text-decoration: none;
-			cursor: pointer;
-		}
+	.popup-close:hover,
+	.popup-close:focus {
+		color: red;
+		text-decoration: none;
+		cursor: pointer;
+	}
 
 	.popup-image {
 		width: 150px;
@@ -836,10 +791,10 @@
 		font-family: 'Itim', serif;
 	}
 
-		.btn-nghiphep:hover {
-			background-color: #2000ff;
-			color: white;
-		}
+	.btn-nghiphep:hover {
+		background-color: #2000ff;
+		color: white;
+	}
 
 	.card-letter {
 		margin-top: 20px;
@@ -850,9 +805,9 @@
 		position: relative;
 	}
 
-		.card-letter:hover {
-			transform: translateY(-5px);
-		}
+	.card-letter:hover {
+		transform: translateY(-5px);
+	}
 
 	.btn-duyet {
 		background-color: #28a745;
@@ -959,9 +914,9 @@
 		font-size: 14px;
 	}
 
-		.invite_button:hover {
-			background-color: darkorange;
-		}
+	.invite_button:hover {
+		background-color: darkorange;
+	}
 </style>
 <style>
 	.button_btnBaiGiang {
@@ -973,11 +928,11 @@
 		background: none;
 	}
 
-		.button_btnBaiGiang svg {
-			width: 100%;
-			height: 100%;
-			overflow: visible;
-		}
+	.button_btnBaiGiang svg {
+		width: 100%;
+		height: 100%;
+		overflow: visible;
+	}
 
 	.border_btnBaiGiang {
 		width: 100%;
@@ -1019,9 +974,9 @@
 		justify-content: center;
 	}
 
-		.txt-upload_btnBaiGiang::after {
-			content: "";
-		}
+	.txt-upload_btnBaiGiang::after {
+		content: "";
+	}
 
 	.button_btnBaiGiang:focus .rect_btnBaiGiang {
 		stroke-dasharray: 50;
@@ -1036,9 +991,9 @@
 		transition: opacity 0.25s 8s;
 	}
 
-		.button_btnBaiGiang:focus .txt-upload_btnBaiGiang::after {
-			animation: 0.66666s anim_btnBaiGiang step-end forwards, 1.33333s 0.6666s anim2_btnBaiGiang linear infinite alternate;
-		}
+	.button_btnBaiGiang:focus .txt-upload_btnBaiGiang::after {
+		animation: 0.66666s anim_btnBaiGiang step-end forwards, 1.33333s 0.6666s anim2_btnBaiGiang linear infinite alternate;
+	}
 
 	@@keyframes anim_btnBaiGiang {
 		0% {
@@ -1118,11 +1073,6 @@
 
 </style>
 <style>
-	.material-symbols-outlined {
-		font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 16
-	}
-</style>
-<style>
 	.custom-file-upload {
 		display: inline-block;
 		padding: 10px 20px;
@@ -1134,9 +1084,9 @@
 		font-size: 14px;
 	}
 
-		.custom-file-upload:hover {
-			background-color: #0056b3;
-		}
+	.custom-file-upload:hover {
+		background-color: #0056b3;
+	}
 
 	#fileInput {
 		display: none; /* Ẩn thẻ input gốc */
@@ -1159,9 +1109,9 @@
 		border: none; /* Loại bỏ viền */
 	}
 
-		.list-group-item + .list-group-item {
-			border-top: 1px solid #ddd; /* Chỉ giữ lại viền trên */
-		}
+	.list-group-item + .list-group-item {
+		border-top: 1px solid #ddd; /* Chỉ giữ lại viền trên */
+	}
 
 	.panel-heading {
 		font-weight: bold;
@@ -1199,13 +1149,13 @@
 		color: #295F98;
 	}
 
-		.custom-VaoPhong:hover {
-			text-decoration: none;
-		}
+	.custom-VaoPhong:hover {
+		text-decoration: none;
+	}
 
-		.custom-VaoPhong:active, .custom-VaoPhong:visited, .custom-VaoPhong:focus {
-			color: #295F98;
-		}
+	.custom-VaoPhong:active, .custom-VaoPhong:visited, .custom-VaoPhong:focus {
+		color: #295F98;
+	}
 
 	.ClassroomDetail-right-container {
 		width: 80%;
@@ -1232,10 +1182,10 @@
 		transition: all 0.3s ease;
 	}
 
-		#searchsvInput:focus {
-			border-color: #4CAF50;
-			box-shadow: 0 6px 8px rgba(0, 0, 0, 0.2);
-		}
+	#searchsvInput:focus {
+		border-color: #4CAF50;
+		box-shadow: 0 6px 8px rgba(0, 0, 0, 0.2);
+	}
 
 	.khungtaodontu {
 		font-family: 'Itim',serif;
@@ -1305,9 +1255,9 @@
 		border-radius: 20px;
 	}
 
-		.close-btn:hover {
-			background-color: #ff1a1a;
-		}
+	.close-btn:hover {
+		background-color: #ff1a1a;
+	}
 
 	.giaobai-btn {
 		background-color: #4a71ff;
@@ -1357,10 +1307,10 @@
 		transition: 0.3s;
 	}
 
-		.btn-xoa:hover {
-			color: white;
-			text-decoration: none;
-		}
+	.btn-xoa:hover {
+		color: white;
+		text-decoration: none;
+	}
 
 	.btn-xembaidanop {
 		background-color: #4a71ff;
@@ -1373,10 +1323,10 @@
 		margin-right: 20px;
 	}
 
-		.btn-xembaidanop:hover {
-			color: white;
-			text-decoration: none;
-		}
+	.btn-xembaidanop:hover {
+		color: white;
+		text-decoration: none;
+	}
 
 	.btn-nopbai {
 		background-color: #28a745;
@@ -1388,9 +1338,9 @@
 		transition: 0.3s;
 	}
 
-		.btn-nopbai:hover {
-			background-color: #218838;
-		}
+	.btn-nopbai:hover {
+		background-color: #218838;
+	}
 
 	.btn-xemtruoc {
 		background-color: #007bff;
@@ -1402,9 +1352,9 @@
 		transition: 0.3s;
 	}
 
-		.btn-xemtruoc:hover {
-			background-color: #0056b3;
-		}
+	.btn-xemtruoc:hover {
+		background-color: #0056b3;
+	}
 
 </style>
 <div style="position: relative; width: 100%;">
@@ -1423,10 +1373,7 @@
 			</form>
 		}
 	}
-
 </div>
-
-
 @* ================================= *@
 <div class="ClassroomDetail-container">
 	<div class="ClassroomDetail-left-container">
@@ -1483,7 +1430,6 @@
 			<div class="tab" onclick="openTab(event, 'assignments')" style="font-family: Poppins, sans-serif;font-weight: 600">Bài tập</div>
 			<div class="tab" onclick="openTab(event, 'discussion')" style="font-family: Poppins, sans-serif;font-weight: 600">Thảo luận</div>
 			<div class="tab" onclick="openTab(event, 'listsv')" style="font-family: Poppins, sans-serif;font-weight: 600">Danh sách sinh viên</div>
-
 			@{
 				if (Model.CustomRubric == false)
 				{
@@ -1546,7 +1492,6 @@
 			<div class="posts" id="lectureContainer">
 				<partial name="_lecturePartial" model="Model.Unit" />
 			</div>
-
 		</div>
 		<div id="assignments" class="tabcontent" style="width:100%">
 			@{
@@ -1558,7 +1503,7 @@
 							<label for="titleInput">Tiêu đề bài tập:</label>
 							<input type="text" name="Title" id="titleInput" class="form-control" placeholder="Nhập tiêu đề">
 							<label for="descriptionInput">Mô tả bài tập:</label>
-							<textarea name="Content" id="descriptionInput" class="form-control" placeholder="Nhập mô tả"></textarea>
+							<textarea name="Content" id="descriptionInput" class="form-control" placeholder="Nhập mô tả" style="display: block;width: 660px;height: 130px; resize: none;"></textarea>
 							<label for="deadlineInput">Hạn nộp:</label>
 							<input type="datetime-local" name="Deadline" id="deadlineInput" class="form-control">
 							<label for="fileFormatSelect">Chọn định dạng file cần nộp:</label>
@@ -1566,7 +1511,15 @@
 								<option value="pdf">pdf</option>
 								<option value="docx">docx</option>
 								<option value="xlsx">xls</option>
+								<option value="zip">zip</option>
+								<option value="rar">rar</option>
+								<option value="png">png</option>
+								<option value="mp4">mp4</option>
 								<option value="allfile">all file</option>
+							</select>
+							<select name="bt_category">
+								<option value="BTNhom">Bài tập nhóm</option>
+								<option value="CaNhan">Bài cá nhân</option>
 							</select>
 							<div></div>
 							<label for="maxSize">Dung lượng tối đa:</label>
@@ -1617,6 +1570,16 @@
 						<div class="assignment-left-box">
 							<h3>@assignment.Title</h3>
 							<p>@assignment.Content</p>
+							@{
+								if (assignment.Loaibt.Equals("CaNhan"))
+								{
+									<p><strong>Loại bài tập:</strong> Bài tập cá nhân</p>
+								}
+								else
+								{
+									<p><strong>Loại bài tập:</strong> Bài tập nhóm</p>
+								}
+							}
 						</div>
 						<div class="divider"></div>
 						<div class="assignment-middle-box">
@@ -1770,11 +1733,11 @@
 			@{
 				if (Model.isOwner)
 				{
-							<div style="margin-bottom: -35px;">
-								<form asp-controller="ClassRooms" asp-action="ExportDSSV" asp-route-classID="@Model.ClassRoom.Id" method="post">
-									<button type="submit" class="btn btn-info">Xuất danh sách sinh viên</button>
-								</form>
-							</div>
+					<div style="margin-bottom: -35px;">
+						<form asp-controller="ClassRooms" asp-action="ExportDSSV" asp-route-classID="@Model.ClassRoom.Id" method="post">
+							<button type="submit" class="btn btn-info">Xuất danh sách sinh viên</button>
+						</form>
+					</div>
 				}
 			}
 			<div class="searchsv-container">
@@ -1782,7 +1745,6 @@
 			</div>
 			<div id="listsv1">
 				<div class="container_listsv">
-
 					<p class="header_listsv">Sĩ số: 0 sinh viên</p>
 					<hr class="hr_listsv">
 
@@ -1801,7 +1763,6 @@
 		@{
 			if (Model.isOwner)
 			{
-
 				if (Model.CustomRubric == false)
 				{
 					<div id="bangdiem" class="tabcontent">
@@ -2018,13 +1979,13 @@
 					<label>Ngày học</label><br />
 					@foreach (var day in Enum.GetValues(typeof(DayOfWeek)).Cast<DayOfWeek>())
 					{
-							<div class="form-check form-check-inline">
-								<input class="form-check-input" type="checkbox"
-									   name="DaysOfWeek"
-									   value="@day"
-							@(Model.ClassRoom.DaysOfWeek.Contains(day.ToString()) ? "checked" : "") />
-								<label class="form-check-label">@day</label>
-							</div>
+						<div class="form-check form-check-inline">
+							<input class="form-check-input" type="checkbox"
+									name="DaysOfWeek"
+									value="@day"
+								@(Model.ClassRoom.DaysOfWeek.Contains(day.ToString()) ? "checked" : "") />
+							<label class="form-check-label">@day</label>
+						</div>
 					}
 					<span asp-validation-for="@Model.ClassRoom.DaysOfWeek" class="text-danger"></span>
 				</div>
@@ -2202,55 +2163,55 @@
 
 			@foreach (var item in combinedList)
 			{
-					<div class="create-content"
-						 style="border: 1px solid rgb(145, 137, 137);
-				border-radius: 8px;
-				padding: 10px;
-				height: 100%;
-				margin: 20px;
-				display: flex;
-				align-items: center;
-				position: relative;">
+				<div class="create-content"
+						style="border: 1px solid rgb(145, 137, 137);
+						border-radius: 8px;
+						padding: 10px;
+						height: 100%;
+						margin: 20px;
+						display: flex;
+						align-items: center;
+						position: relative;">
 
-						<div id="circle-icon-@item.Id" style="background-color: rgb(66, 133, 244); border-radius: 50%; width: 40px; height: 40px; display: flex; align-items: center; justify-content: center; margin-right: 10px; margin-left: 20px;">
-							<svg focusable="false" width="24" height="24" viewBox="0 0 24 24" class="NMm5M hhikbc" style="fill: white;">
-								<path d="M7 15h7v2H7zm0-4h10v2H7zm0-4h10v2H7z"></path>
-								<path d="M19 3h-4.18C14.4 1.84 13.3 1 12 1c-1.3 0-2.4.84-2.82 2H5c-.14 0-.27.01-.4.04a2.008 2.008 0 0 0-1.44 1.19c-.1.23-.16.49-.16.77v14c0 .27.06.54.16.78s.25.45.43.64c.27.27.62.47 1.01.55.13.02.26.03.4.03h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-7-.25c.41 0 .75.34.75.75s-.34.75-.75.75-.75-.34-.75-.75.34-.75.75-.75zM19 19H5V5h14v14z"></path>
-							</svg>
-						</div>
+					<div id="circle-icon-@item.Id" style="background-color: rgb(66, 133, 244); border-radius: 50%; width: 40px; height: 40px; display: flex; align-items: center; justify-content: center; margin-right: 10px; margin-left: 20px;">
+						<svg focusable="false" width="24" height="24" viewBox="0 0 24 24" class="NMm5M hhikbc" style="fill: white;">
+							<path d="M7 15h7v2H7zm0-4h10v2H7zm0-4h10v2H7z"></path>
+							<path d="M19 3h-4.18C14.4 1.84 13.3 1 12 1c-1.3 0-2.4.84-2.82 2H5c-.14 0-.27.01-.4.04a2.008 2.008 0 0 0-1.44 1.19c-.1.23-.16.49-.16.77v14c0 .27.06.54.16.78s.25.45.43.64c.27.27.62.47 1.01.55.13.02.26.03.4.03h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-7-.25c.41 0 .75.34.75.75s-.34.75-.75.75-.75-.34-.75-.75.34-.75.75-.75zM19 19H5V5h14v14z"></path>
+						</svg>
+					</div>
 
-						<div id="post-info-@item.Id" style="display: flex; flex-direction: column; margin-left: 10px; margin-top: -3.5px;">
+					<div id="post-info-@item.Id" style="display: flex; flex-direction: column; margin-left: 10px; margin-top: -3.5px;">
 
-						@if (item.Type == "Post")
-						{
-									<h3 style="font-size: 16px; margin-bottom: 0px;">đã đăng một thông báo mới: @item.Title</h3>
-						}
-						else
-						{
-									<h3 style="font-size: 16px; margin-bottom: 0px;">@item.OwnerName đã đăng một bài tập mới: @item.Title</h3>
-						}
+					@if (item.Type == "Post")
+					{
+						<h3 style="font-size: 16px; margin-bottom: 0px;">đã đăng một thông báo mới: @item.Title</h3>
+					}
+					else
+					{
+						<h3 style="font-size: 16px; margin-bottom: 0px;">@item.OwnerName đã đăng một bài tập mới: @item.Title</h3>
+					}
 
-						@if (item.Type == "Post")
-						{
-							string content = item.Content;
-							string pattern = @"(https?://[a-zA-Z0-9.-]+(?:/[^\s]*)?)"; // Regex nhận diện URL đầy đủ với đường dẫn
-							var parts = System.Text.RegularExpressions.Regex.Split(content, pattern); // Tách nội dung
-									<p style="font-size: 16px; margin-bottom: 0px;">
-								@foreach (var part in parts)
+					@if (item.Type == "Post")
+					{
+						string content = item.Content;
+						string pattern = @"(https?://[a-zA-Z0-9.-]+(?:/[^\s]*)?)"; // Regex nhận diện URL đầy đủ với đường dẫn
+						var parts = System.Text.RegularExpressions.Regex.Split(content, pattern); // Tách nội dung
+						<p style="font-size: 16px; margin-bottom: 0px;">
+							@foreach (var part in parts)
+							{
+								if (System.Text.RegularExpressions.Regex.IsMatch(part, pattern)) // Nếu là link hợp lệ
 								{
-									if (System.Text.RegularExpressions.Regex.IsMatch(part, pattern)) // Nếu là link hợp lệ
-									{
-														<a href="@part" target="_blank" style="color: #007bff; text-decoration: none;">@part</a>
-									}
-									else // Nếu không phải là link
-									{
-										@part
-									}
+													<a href="@part" target="_blank" style="color: #007bff; text-decoration: none;">@part</a>
 								}
-									</p>
-						}
-							<p class="post-created-at" style="font-size: 14px; color: gray; margin-top: 0px;">@item.CreatedAt.ToString("dd/MM/yyyy - HH:mm:ss")</p>
-						</div>
+								else // Nếu không phải là link
+								{
+									@part
+								}
+							}
+						</p>
+					}
+						<p class="post-created-at" style="font-size: 14px; color: gray; margin-top: 0px;">@item.CreatedAt.ToString("dd/MM/yyyy - HH:mm:ss")</p>
+					</div>
 
 					@{
 						if (Model.isOwner && item.Type == "Post")
@@ -2284,7 +2245,7 @@
 							</div>
 						}
 					}
-					</div>
+				</div>
 			}
 		</div>
 	</div>
@@ -2582,6 +2543,11 @@
 		var attachmentForm = document.getElementById("attachmentForm");
 		attachmentForm.style.display = "block"; // Hi?n th? form dính kèm
 	}
+
+	document.querySelector('.close-btn').addEventListener('click', () => {
+		document.getElementById("uploadbaitap").style.display = "none"; 
+		document.getElementById("uploadButton").style.display = "block";
+	});
 
 </script> @* T?o bài t?p m?i *@
 <script>
@@ -2983,45 +2949,6 @@
 			}
 		});
 	}
-	@*
-		document.querySelector(".search-input_discuss").addEventListener("input", function () {
-		const query = this.value.toLowerCase(); // Lấy từ khóa tìm kiếm và chuyển về chữ thường
-		const allStudents = document.querySelectorAll("#listsv2 .circle-text-container_discuss");
-		allStudents.forEach(studentCard => {
-		const studentInfo = studentCard.querySelector(".student-info").textContent.toLowerCase();
-		if (studentInfo.includes(query)) {
-		studentCard.style.display = "flex"; // Hiển thị nếu khớp
-		} else {
-		studentCard.style.display = "none"; // Ẩn nếu không khớp
-		}
-		});
-		});*@
-
-		function displaySV(students) {
-			const listContainer = document.getElementById("listsv2");
-			const template = document.getElementById("student-template")
-			// Duyệt qua danh sách sinh viên
-			students.forEach(function (student) {
-				// Clone template
-				const studentCard = template.cloneNode(true);
-				studentCard.style.display = "flex"; // Hiển thị
-				studentCard.id = ""; // Xóa ID để tránh trùng lặp
-
-				// Điền thông tin sinh viên
-				studentCard.querySelector(".student-avatar").src = `/Imgs_avtUser/${student.urlAvt}`;
-				studentCard.querySelector(".student-avatar").alt = `Avatar của ${student.name}`;
-				studentCard.querySelector(".student-info").textContent = `${student.name} - ${student.mssv}`;
-
-				// Gắn sự kiện cho biểu tượng ba chấm
-				studentCard.querySelector(".three-dots-icon_discuss").setAttribute(
-					"onclick",
-					`openPopup('${student.name}', '${student.mssv}', '${student.email}', '${student.urlAvt}')`
-				);
-
-				// Thêm sinh viên vào danh sách
-				listContainer.appendChild(studentCard);
-			});
-		}
 
 
 	$(document).ready(function () {
@@ -3043,9 +2970,6 @@
 	function closePopup() {
 		document.getElementById("popup").style.display = "none";
 	}
-
-
-
 
 </script>@*chọn nhóm*@
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
