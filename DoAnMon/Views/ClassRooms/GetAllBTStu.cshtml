@@ -142,13 +142,14 @@
 
 		var diem = parseFloat(editInput.value);
 		if (diem < 0 || diem > 10 || isNaN(diem)) {
-			alert("Điểm phải nằm trong khoảng từ 0 đến 10");
+			alert("");
+			toastr.warning('Điểm phải nằm trong khoảng từ 0 đến 10', 'Cảnh báo', { timeOut: 3000 });
 			return;
 		}
 
 		$.post("/ClassRooms/SaveGrade", { baiNopId: baiNopId, diem: diem }, function (data) {
 			if (data.success) {
-				alert("Đã lưu điểm thành công!");
+				toastr.success('Đã lưu điểm thành công', 'Thành công', { timeOut: 3000 });
 			}
 		});
 	}
