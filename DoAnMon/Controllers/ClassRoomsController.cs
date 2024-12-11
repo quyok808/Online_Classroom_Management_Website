@@ -598,7 +598,7 @@ namespace DoAnMon.Controllers
 		}
 
 		[HttpPost]
-		public async Task<IActionResult> CreateBaitap(string AttactURL, string Content, string Title, string ClassId, string FileFormat, DateTime Deadline, DateTime CreateAt, int MaxSize, string bt_category)
+		public async Task<IActionResult> CreateBaitap(string AttactURL, string Content, string Title, string ClassId, string FileFormat, DateTime Deadline, DateTime CreateAt, int MaxSize, string bt_category, string showMode)
 		{
 
 			BaiTap baitap = new BaiTap();
@@ -607,6 +607,7 @@ namespace DoAnMon.Controllers
 			baitap.Id = Guid.NewGuid().ToString();
 			baitap.attractUrl = AttactURL;
 			baitap.ClassRoomId = ClassId;
+			baitap.ShowMode = showMode;
 			baitap.CreatedAt = DateTime.Now;
 			baitap.FileFormat = FileFormat;
 			baitap.MaxSize = MaxSize != 0 ? MaxSize : 10;

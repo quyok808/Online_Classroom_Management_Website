@@ -14,6 +14,7 @@ namespace DoAnMon.Models
 		public string? ClassRoomId { get; set; }
 		public int? MaxSize { get; set; }
 
+		public string? ShowMode { get; set; }
 		public string? Loaibt {  get; set; }
 		
 		public DateTime? Deadline { get; set; }
