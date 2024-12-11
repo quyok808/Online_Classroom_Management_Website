@@ -1241,6 +1241,7 @@
 		text-align: left;
 		position: fixed;
 		font-size: 16px;
+		margin-top: 35px;
 	}
 
 	.close-btn {
@@ -1521,7 +1522,8 @@
 								<option value="BTNhom">Bài tập nhóm</option>
 								<option value="CaNhan">Bài cá nhân</option>
 							</select>
-							<label for="fileFormatSelect">Chế độ hiển thị:</label>
+							<div></div>
+							<label for="showMode">Chế độ hiển thị:</label>
 							<select name="showMode">
 								<option value="All">Tất cả mọi người</option>
 								<option value="Chan">Sinh viên có mã số chẵn (4 số cuối)</option>
@@ -1534,7 +1536,7 @@
 						<input type="hidden" name="ClassId" id="classIdInput" value="@Model.ClassRoom.Id">
 						<label for="fileInput">Hướng dẫn (Nếu có): </label>
 						<input type="hidden" name="AttactURL" id="attactURL">
-						<label for="fileInput" class="custom-file-upload">
+						<label for="fileInput" class="custom-file-upload" style="height: 30px; margin-top: 10px; display: inline-flex; align-items: center;">
 							Upload file HD
 						</label>
 						<input type="file" name="FileUpLoad" id="fileInput" onchange="uploadFile()" />
