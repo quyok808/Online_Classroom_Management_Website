@@ -841,7 +841,6 @@
 		margin-top: 0;
 		font-weight: bold;
 	}
-
 </style>
 <style>
 	.container_listsv {
@@ -1356,6 +1355,165 @@
 		background-color: #0056b3;
 	}
 
+	.options-menu {
+		display: none;
+		position: absolute;
+		top: 85px;
+		right: 40px;
+		padding: 15px;
+		background-color: #fff;
+		border: 1px solid #ccc;
+		border-radius: 8px;
+		box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+		z-index: 10;
+		width: 150px;
+	}
+
+		.options-menu a {
+			display: block;
+			text-align: center;
+			text-decoration: none;
+			color: #333;
+			padding: 10px;
+			margin-bottom: 5px;
+			border-radius: 5px;
+			font-weight: 500;
+			transition: background-color 0.3s ease, color 0.3s ease;
+		}
+
+			.options-menu a.btn-reusesua {
+				background-color: #40c752;
+				color: #fff;
+				margin-bottom: 10px;
+			}
+
+			.options-menu a.btn-reusesxoa {
+				background-color: #dc3545;
+				color: #fff;
+			}
+
+	.overlay {
+		display: none;
+		position: fixed;
+		top: 0;
+		left: 0;
+		width: 100%;
+		height: 100%;
+		background-color: rgba(0, 0, 0, 0.7);
+		z-index: 1000;
+	}
+
+	/* Modal container */
+	.khungreuse {
+		position: absolute;
+		top: 50%;
+		left: 50%;
+		transform: translate(-50%, -50%);
+		background-color: #fff;
+		color: black;
+		border-radius: 8px;
+		padding: 20px;
+		width: 500px;
+		height: 300px;
+		overflow-y: auto;
+		box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+	}
+
+	/* Close button */
+	.close-btn {
+		float: right;
+		background-color: red;
+		color: white;
+		border: none;
+		cursor: pointer;
+		border-radius: 4px;
+		padding: 5px 10px;
+		font-size: 18px;
+		margin:0;
+	}
+
+		.close-btn i {
+			font-size: 20px;
+		}
+
+	/* Post list and items */
+	.mainList {
+		margin-top: 40px;
+	}
+
+	.post-item {
+		display: flex;
+		justify-content: space-between;
+		align-items: center;
+		margin-bottom: 10px;
+		padding: 5px 0;
+		border-bottom: 1px solid #eee;
+	}
+
+	.post-title {
+		font-weight: 500;
+		flex-grow: 1;
+	}
+
+	.reuse-btn {
+		background-color: #007bff;
+		color: white;
+		border: none;
+		padding: 6px 12px;
+		cursor: pointer;
+		border-radius: 4px;
+		transition: background-color 0.3s ease;
+	}
+
+		.reuse-btn:hover {
+			background-color: #0056b3;
+		}
+
+	/* Post edit form */
+	.postList {
+		display: none;
+		margin-top: 40px;
+	}
+
+	.form-control {
+		width: 100%;
+		padding: 10px;
+		margin-bottom: 10px;
+		border: 1px solid #ddd;
+		border-radius: 5px;
+	}
+
+	.input-textarea {
+		width: 100%;
+		border-radius: 5px;
+		margin-top: 10px;
+		padding: 10px;
+		border: 1px solid #ddd;
+		resize: vertical;
+	}
+
+	.submit-btn, .cancel-btn {
+		background-color: #007bff;
+		color: white;
+		border: none;
+		padding: 8px 16px;
+		border-radius: 4px;
+		cursor: pointer;
+		margin-right: 10px;
+		transition: background-color 0.3s ease;
+	}
+
+		.submit-btn:hover {
+			background-color: #0056b3;
+		}
+
+	.cancel-btn {
+		background-color: gray;
+	}
+
+		.cancel-btn:hover {
+			background-color: #555;
+		}
 </style>
 <div style="position: relative; width: 100%;">
 	<img class="img-fluid" src="/images/@Model.ClassRoom.backgroundUrl" alt="No Images" style="width: 100%; height: 400px;" />
@@ -2099,33 +2257,32 @@
 							<input type="hidden" name="UserId" id="UserIdInput" value="@Model.ClassRoom.UserId" />
 						</form>
 					</div>
-					<div id="postContainer" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0, 0, 0, 0.7); z-index: 1000;">
-						<div style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); background-color: #fff; color: black; border-radius: 8px; padding: 20px; width: 500px; height: 300px; overflow: auto;">
-							<button onclick="closePostContainer()" style="float: right;margin_bottom:10%;margin-left:20px ;background-color: red; color: white; border: none; cursor: pointer; border-radius: 4px;">
-								<i class="fas fa-times" style="font-size: 20px;"></i> <!-- Biểu tượng dấu X -->
+					<div id="postContainer" class="overlay">
+						<div class="khungreuse">
+							<button class="close-btn" onclick="closePostContainer()">
+								<i class="fas fa-times"></i>
 							</button>
-							<div class="mainList" style="margin-top:40px;">
+							<div class="mainList">
 								@foreach (var post in ViewBag.UserPosts)
 								{
-									<div style="margin-bottom: 10px; display: flex; justify-content: space-between; align-items: center;">
-										<span style="text-align: left;">@post.Title</span>
-										<button type="button" style="color: black;" onclick="showPostContent('@post.Id')">Sử dụng lại</button>
+									<div class="post-item">
+										<span class="post-title">@post.Title</span>
+										<button class="reuse-btn" onclick="showPostContent('@post.Id')">Sử dụng lại</button>
 									</div>
 								}
 							</div>
 
 							@foreach (var post in ViewBag.UserPosts)
 							{
-								<div id="postList-@post.Id" class="postList" style="display: none; margin-top: 40px;">
-									<form method="post" asp-action="ReusePost" asp-controller="ClassRooms" style="display: inline;">
+								<div id="postList-@post.Id" class="postList">
+									<form method="post" asp-action="ReusePost" asp-controller="ClassRooms">
 										<input type="hidden" name="postId" value="@post.Id" />
 										<input type="hidden" name="ClassId" id="classIdInput" value="@Model.ClassRoom.Id" />
 										<input type="hidden" name="UserId" id="UserIdInput" value="@Model.ClassRoom.UserId" />
-										<!-- Cho phép chỉnh sửa tiêu đề và nội dung -->
 										<input type="text" name="Title" class="form-control" value="@post.Title" />
-										<textarea name="Content" class="input-textarea" style="width: 100%; border-radius: 5px; margin-top: 10px; padding: 10px;">@post.Content</textarea>
-										<button type="submit" style="color: black;">Đăng</button>
-										<button type="button" onclick="cancelReuse('@post.Id')" style="color: black; margin-left: 10px;">Hủy</button>
+										<textarea name="Content" class="input-textarea">@post.Content</textarea>
+										<button type="submit" class="submit-btn">Đăng</button>
+										<button type="button" class="cancel-btn" onclick="cancelReuse('@post.Id')">Hủy</button>
 									</form>
 								</div>
 							}
@@ -2224,9 +2381,9 @@
 										<circle cx="12" cy="19" r="2" fill="gray"></circle>
 									</svg>
 								</button>
-								<div class="options-menu" style="display: none;padding:10px; top: 85px; right:40px; position: absolute; background-color: white; border: 1px solid gray; border-radius: 5px; z-index: 10;">
-									<a class="btn" href="javascript:void(0);" onclick="showEditForm('@item.Id')">Sửa</a>
-									<a class="btn" asp-action="Delete" asp-controller="Posts" asp-route-id="@item.Id" asp-route-classId="@item.ClassRoomId" onclick="return confirm('Bạn có chắc muốn xóa không ?')">Xóa</a>
+								<div class="options-menu" style="display: none;">
+									<a class="btn-reusesua" href="javascript:void(0);" onclick="showEditForm('@item.Id')">Sửa</a>
+									<a class="btn-reusesxoa" asp-action="Delete" asp-controller="Posts" asp-route-id="@item.Id" asp-route-classId="@item.ClassRoomId" onclick="return confirm('Bạn có chắc muốn xóa không ?')">Xóa</a>
 								</div>
 							</div>
 							<!-- Form ẩn để chỉnh sửa bài viết -->
