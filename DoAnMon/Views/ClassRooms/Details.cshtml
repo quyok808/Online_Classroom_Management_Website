@@ -3982,7 +3982,7 @@
 		if (file) {
 			// Kiểm tra dung lượng file
 			if (file.size > max_size) {
-				alert("File quá lớn, vui lòng chọn file có dung lượng nhỏ hơn " + (max_size / (1024 * 1024)) + " MB.");
+				toastr.error("File quá lớn, vui lòng chọn file có dung lượng nhỏ hơn " + (max_size / (1024 * 1024)) + " MB.", 'Thất bại', { timeOut: 3000 });
 				input.value = ''; // Xóa giá trị của input nếu file vượt quá dung lượng
 			}
 		}
