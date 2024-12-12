@@ -220,7 +220,7 @@ namespace DoAnMon.Controllers
 								</div>
 								<div class='content'>
 									<p>Chào <span class='deadline'>{leaveRequest.User.Name},</span></p>
-									<p>Đơn xin nghỉ phép bạn gửi ngày <span class='deadline'>{leaveRequest.ThoiGianYeuCau}</span> từ ngày <span class='deadline'>{leaveRequest.StartDate.ToString("dd/MM/yyyy")}</span> đến ngày <span class='deadline'>{leaveRequest.EndDate.ToString("dd/MM/yyyy")}</span> với lý do <span class='deadline'>{leaveRequest.Reasion}</span> đã được duyệt thành công.</p>
+									<p>Đơn xin nghỉ phép bạn gửi ngày <span class='deadline'>{leaveRequest.ThoiGianYeuCau}</span> yêu cầu nghỉ từ ngày <span class='deadline'>{leaveRequest.StartDate.ToString("dd/MM/yyyy")}</span> đến ngày <span class='deadline'>{leaveRequest.EndDate.ToString("dd/MM/yyyy")}</span> với lý do <span class='deadline'>{leaveRequest.Reasion}</span> đã được duyệt thành công.</p>
 									<p>Kết quả là bạn <span class='deadline'>{(leaveRequest.Status == 1 ? "được phép nghỉ" : "không được phép nghỉ")}</span> từ ngày <span>{leaveRequest.StartDate.ToString("dd/MM/yyyy")}</span> đến ngày <span>{leaveRequest.EndDate.ToString("dd/MM/yyyy")}</span></p>
 								</div>
 								<div class='footer'>
