@@ -3041,7 +3041,6 @@
 		showModal();
 
 		const fileHash = await calculateFileHash(file);
-		console.log('File hash:', fileHash); // Log the file hash
 
 		const showProgress = document.getElementById('progressBar');
 		const loader = document.getElementById('loader');
@@ -3141,7 +3140,6 @@
 <script src="https://cdn.jsdelivr.net/npm/he@1.2.0/he.min.js"></script>
 <script>
 	document.addEventListener("DOMContentLoaded", async function () {
-		console.log(document.getElementById('FileInput'));
 		const connection = new signalR.HubConnectionBuilder()
 			.withUrl("/chathub")
 			.build();
@@ -3274,7 +3272,6 @@
 			formData.append("file", file);
 
 			try {
-				console.log("Đang gửi file tới API...");
 				let response = await fetch('/api/upfilemessage', {
 					method: 'POST',
 					body: formData
@@ -3584,13 +3581,10 @@
 
 			$.post("/ClassRooms/DiemDanhIn", { classId: classId }, function (data) {
 				if (data.success) {
-					console.log('Điểm danh thành công');
 					window.open(roomOnlineUrl, '_blank');
 				}
 				else {
-					console.log(data.error);
 					alert(data.error);
-					console.log('Điểm danh thất bại');
 				}
 			});
 		});
@@ -3644,7 +3638,6 @@
 				return;
 			}
 
-			console.log('Bắt đầu upload file:', file.fileName);
 			r.upload(); // Bắt đầu upload
 		});
 	}
@@ -3682,7 +3675,6 @@
 
 	// Xử lý khi hoàn thành upload
 	r.on('fileSuccess', function (file, message) {
-		console.log('Hoàn thành upload file:', file.fileName);
 		const progressBar = document.getElementById('progressBar_btnBaiGiang');
 		const button = document.querySelector('.button_btnBaiGiang');
 		const txtUpload = document.querySelector('.txt-upload_btnBaiGiang');
@@ -3730,7 +3722,6 @@
 		recognition.onresult = function (event) {
 			const transcript = event.results[0][0].transcript; // Lấy văn bản từ kết quả nhận dạng
 			document.getElementById('messageInput').value = transcript; // Đưa văn bản vào thẻ input
-			console.log(transcript);
 		};
 
 		recognition.start(); // Bắt đầu nhận dạng giọng nói từ microphone
