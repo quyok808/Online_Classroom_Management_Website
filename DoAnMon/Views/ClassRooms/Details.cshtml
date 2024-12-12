@@ -841,7 +841,6 @@
 		margin-top: 0;
 		font-weight: bold;
 	}
-
 </style>
 <style>
 	.container_listsv {
@@ -1355,6 +1354,236 @@
 
 	.btn-xemtruoc:hover {
 		background-color: #0056b3;
+	}
+
+	.options-menu {
+		display: none;
+		position: absolute;
+		top: 85px;
+		right: 40px;
+		padding: 15px;
+		background-color: #fff;
+		border: 1px solid #ccc;
+		border-radius: 8px;
+		box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+		z-index: 10;
+		width: 150px;
+	}
+
+		.options-menu a {
+			display: block;
+			text-align: center;
+			text-decoration: none;
+			color: #333;
+			padding: 10px;
+			margin-bottom: 5px;
+			border-radius: 5px;
+			font-weight: 500;
+			transition: background-color 0.3s ease, color 0.3s ease;
+		}
+
+			.options-menu a.btn-reusesua {
+				background-color: #40c752;
+				color: #fff;
+				margin-bottom: 10px;
+			}
+
+			.options-menu a.btn-reusesxoa {
+				background-color: #dc3545;
+				color: #fff;
+			}
+
+	.overlay {
+		display: none;
+		position: fixed;
+		top: 0;
+		left: 0;
+		width: 100%;
+		height: 100%;
+		background-color: rgba(0, 0, 0, 0.7);
+		z-index: 1000;
+	}
+
+	/* Modal container */
+	.khungreuse {
+		position: absolute;
+		top: 50%;
+		left: 50%;
+		transform: translate(-50%, -50%);
+		background-color: #fff;
+		color: black;
+		border-radius: 8px;
+		padding: 20px;
+		width: 800px;
+		height: 500px;
+		overflow-y: auto;
+		box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+	}
+
+	/* Close button */
+	.close-btn {
+		float: right;
+		background-color: red;
+		color: white;
+		border: none;
+		cursor: pointer;
+		border-radius: 4px;
+		padding: 5px 10px;
+		font-size: 18px;
+		margin-top:0;
+		margin-left:20px;
+	}
+
+	.tab-header {
+		display: flex;
+		justify-content: space-around;
+		margin-bottom: 10px;
+	}
+
+	.tab-link {
+		flex: 1;
+		text-align: center;
+		padding: 10px 0;
+		cursor: pointer;
+		font-size: 16px;
+		background-color: #f8f9fa;
+		border: none;
+		transition: background-color 0.3s ease, font-weight 0.3s ease;
+	}
+
+		.tab-link.active {
+			background-color: #007bff;
+			color: white;
+			font-weight: bold;
+		}
+
+	/* Tabs Body */
+	.tab-body {
+		flex-grow: 1;
+		overflow-y: auto;
+	}
+
+	.tab-content {
+		display: none;
+	}
+
+		.tab-content.active {
+			display: block;
+		}
+
+
+
+		.close-btn i {
+			font-size: 20px;
+		}
+
+	/* Post list and items */
+
+	.post-item {
+		display: flex;
+		flex-direction: column;
+		margin-bottom: 10px;
+		padding: 5px;
+		border-bottom: 1px solid #eee;
+	}
+
+	.post-title {
+		font-weight: 500;
+		flex-grow: 1;
+	}
+
+	.post-content {
+		margin-bottom: 10px; 
+		color: #555; 
+	}
+
+	.reuse-btn {
+		align-self: flex-end;
+		background-color: #007bff;
+		color: white;
+		border: none;
+		padding: 6px 12px;
+		cursor: pointer;
+		border-radius: 4px;
+		transition: background-color 0.3s ease;
+	}
+
+		.reuse-btn:hover {
+			background-color: #0056b3;
+		}
+
+	/* Post edit form */
+
+	.form-control {
+		width: 100%;
+		padding: 10px;
+		margin-bottom: 10px;
+		border: 1px solid #ddd;
+		border-radius: 5px;
+	}
+
+	.input-textarea {
+		width: 100%;
+		border-radius: 5px;
+		margin-top: 10px;
+		padding: 10px;
+		border: 1px solid #ddd;
+		resize: vertical;
+	}
+
+	.submit-btn, .cancel-btn {
+		background-color: #007bff;
+		color: white;
+		border: none;
+		padding: 8px 16px;
+		border-radius: 4px;
+		cursor: pointer;
+		margin-right: 10px;
+		transition: background-color 0.3s ease;
+	}
+
+		.submit-btn:hover {
+			background-color: #0056b3;
+		}
+
+	.cancel-btn {
+		background-color: gray;
+	}
+
+		.cancel-btn:hover {
+			background-color: #555;
+		}
+	.postList {
+		margin-top:40px;
+		display: none;
+	}
+
+	.reuse-form {
+		display: flex;
+		flex-direction: column;
+		gap: 16px;
+		padding: 16px;
+		background-color: #f9f9f9;
+		border: 1px solid #ddd;
+		border-radius: 8px;
+		max-width: 600px;
+		margin: auto;
+	}
+
+	.reuse-group {
+		display: flex;
+		flex-direction: column;
+		gap: 8px;
+	}
+
+		.reuse-group label {
+			font-weight: bold;
+		}
+
+	.formreuse-actions {
+		display: flex;
+		justify-content: flex-end;
+		gap: 8px;
 	}
 
 </style>
@@ -2446,6 +2675,31 @@
 				<p id="currentDateTime" style="font-family: 'Poppins', sans-serif"></p>
 			</div>
 			@{
+				// Tạo một danh sách kết hợp các đối tượng vô danh
+				var combinedList = Model.Post.Select(p => new
+				{
+					Type = "Post",
+					Id = p.Id,
+					Title = p.Title,
+					Content = p.Content,
+					CreatedAt = p.CreateTime,
+					OwnerName = Model.Owner.Name,
+					ClassRoomId = p.ClassRoomId
+				})
+				.Union(Model.Homework.Select(h => new
+				{
+					Type = "Homework",
+					Id = h.Id,
+					Title = h.Title,
+					Content = (string)null, // Bài tập có thể không có nội dung
+					CreatedAt = h.CreatedAt,
+					OwnerName = Model.Owner.Name,
+					ClassRoomId = h.ClassRoomId
+				}))
+				.OrderByDescending(item => item.CreatedAt) // Sắp xếp theo thời gian tạo
+				.ToList();
+			}
+			@{
 				if (Model.isOwner)
 				{
 						<div class="create-content"
@@ -2490,69 +2744,173 @@
 										<button id="submitButton" class="disabled-button" onclick="submitInput()" style="padding: 5px 10px;" disabled>Đăng</button>
 									</div>
 								</div>
-								<input type="hidden" name="ClassId" id="classIdInput" value="@Model.ClassRoom.Id" />
-								<input type="hidden" name="UserId" id="UserIdInput" value="@Model.ClassRoom.UserId" />
-							</form>
-						</div>
-						<div id="postContainer" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0, 0, 0, 0.7); z-index: 1000;">
-							<div style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); background-color: #fff; color: black; border-radius: 8px; padding: 20px; width: 500px; height: 300px; overflow: auto;">
-								<button onclick="closePostContainer()" style="float: right;margin_bottom:10%;margin-left:20px ;background-color: red; color: white; border: none; cursor: pointer; border-radius: 4px;">
-									<i class="fas fa-times" style="font-size: 20px;"></i> <!-- Biểu tượng dấu X -->
-								</button>
-								<div class="mainList" style="margin-top:40px;">
-									@foreach (var post in ViewBag.UserPosts)
-								{
-										<div style="margin-bottom: 10px; display: flex; justify-content: space-between; align-items: center;">
-											<span style="text-align: left;">@post.Title</span>
-											<button type="button" style="color: black;" onclick="showPostContent('@post.Id')">Sử dụng lại</button>
-										</div>
-								}
-								</div>
-
-								@foreach (var post in ViewBag.UserPosts)
-							{
-									<div id="postList-@post.Id" class="postList" style="display: none; margin-top: 40px;">
-										<form method="post" asp-action="ReusePost" asp-controller="ClassRooms" style="display: inline;">
-											<input type="hidden" name="postId" value="@post.Id" />
-											<input type="hidden" name="ClassId" id="classIdInput" value="@Model.ClassRoom.Id" />
-											<input type="hidden" name="UserId" id="UserIdInput" value="@Model.ClassRoom.UserId" />
-											<!-- Cho phép chỉnh sửa tiêu đề và nội dung -->
-											<input type="text" name="Title" class="form-control" value="@post.Title" />
-											<textarea name="Content" class="input-textarea" style="width: 100%; border-radius: 5px; margin-top: 10px; padding: 10px;">@post.Content</textarea>
-											<button type="submit" style="color: black;">Đăng</button>
-											<button type="button" onclick="cancelReuse('@post.Id')" style="color: black; margin-left: 10px;">Hủy</button>
-										</form>
-									</div>
-							}
 							</div>
+							<input type="hidden" name="ClassId" id="classIdInput" value="@Model.ClassRoom.Id" />
+							<input type="hidden" name="UserId" id="UserIdInput" value="@Model.ClassRoom.UserId" />
+						</form>
+					</div>
+					<div id="postContainer" class="overlay">
+						<div class="khungreuse">
+							<button class="close-btn" onclick="closePostContainer()"><i class="fas fa-times"></i></button>
+								<div class="tab-header">
+									<button class="tab-link active" onclick="switchTab(event, 'notifications')">Thông báo</button>
+									<button class="tab-link" onclick="switchTab(event, 'baigiang')">Bài giảng</button>
+									<button class="tab-link" onclick="switchTab(event, 'baitap')">Bài tập</button>
+								</div>
+								<div class="tab-body">
+									<!-- Tab: Thông báo -->
+									<div id="notifications" class="tab-content active">
+										<div class="mainList">
+											@foreach (var post in ViewBag.UserPosts)
+											{
+												<div class="post-item">
+													<span class="post-title">@post.Title</span>
+													<span class="post-content">@post.Content</span>
+													<button class="reuse-btn" onclick="showPostContent('@post.Id')">Sử dụng lại</button>
+												</div>
+											}
+										</div>
+										@foreach (var post in ViewBag.UserPosts)
+										{
+											<div id="postList-@post.Id" class="postList">
+												<form method="post" asp-action="ReusePost" asp-controller="ClassRooms">
+													<input type="hidden" name="postId" value="@post.Id" />
+													<input type="hidden" name="ClassId" id="classIdInput" value="@Model.ClassRoom.Id" />
+													<input type="hidden" name="UserId" id="UserIdInput" value="@Model.ClassRoom.UserId" />
+													<input type="text" name="Title" class="form-control" value="@post.Title" />
+													<textarea name="Content" class="input-textarea">@post.Content</textarea>
+													<button type="submit" class="submit-btn">Đăng</button>
+													<button type="button" class="cancel-btn" onclick="cancelReuse('@post.Id')">Hủy</button>
+												</form>
+											</div>
+										}
+
+									</div>
+									<!-- Tab: Bài giảng -->
+									<div id="baigiang" class="tab-content">
+										<div class="mainList" style="display: block;">
+										@foreach (var lecture in ViewBag.ReuseBaigiang)
+											{
+												<div class="post-item">
+													<span class="post-title">@lecture.Name</span>
+													<button class="reuse-btn" onclick="openReuseLectureModal('@lecture.Id')">Sử dụng lại</button>
+												</div>
+											}
+										</div>
+										@foreach (var lecture in ViewBag.ReuseBaigiang)
+										{
+											<div id="postList-@lecture.Id" class="postList">
+												<form method="post" asp-action="ReuseLecture" asp-controller="ClassRooms" class="reuse-form">
+													<input type="hidden" name="originalLectureId" value="@lecture.Id" />
+													<input type="hidden" name="classId" value="@Model.ClassRoom.Id" />
+													<div class="reuse-group">
+														<label for="newLectureName">Tên bài giảng mới:</label>
+														<input type="text" name="newLectureName" id="newLectureName" value="@lecture.Name" />
+													</div>
+													<div class="formreuse-actions">
+														<button type="submit" class="submit-btn">Đăng</button>
+														<button type="button" class="cancel-btn" onclick="closeReuseLectureModal('@lecture.Id')">Hủy</button>
+													</div>
+												</form>
+											</div>
+										}
+									</div>
+									<!-- Tab: Bài tập -->
+									<div id="baitap" class="tab-content">
+										<div class="mainList">
+											@foreach (var assignment in ViewBag.ReuseBaitap)
+											{
+												<div class="post-item">
+													<span class="post-title">@assignment.Title</span>
+													<span class="post-content">@assignment.Content</span>
+													<button class="reuse-btn" onclick="openReuseModal('@assignment.Id')">Sử dụng lại</button>
+												</div>
+											}
+										</div>
+										@foreach (var assignment in ViewBag.ReuseBaitap)
+										{
+											<div id="assignmentList-@assignment.Id" class="postList">
+												<form method="post" asp-action="ReuseBaitap" asp-controller="ClassRooms" class="reuse-form">
+													<input type="hidden" name="originalBaitapId" value="@assignment.Id" />
+													<input type="hidden" name="classId" value="@Model.ClassRoom.Id" />
+													<div class="reuse-group">
+														<label for="newTitle">Tiêu đề mới:</label>
+														<input type="text" name="newTitle" id="newTitle" value="@assignment.Title" />
+													</div>
+													<div class="reuse-group">
+														<label for="newContent">Nội dung mới:</label>
+														<textarea name="newContent" id="newContent">@assignment.Content</textarea>
+													</div>
+													<div class="reuse-group">
+														<label for="newDeadline">Hạn nộp mới:</label>
+														<input type="datetime-local" name="newDeadline" id="newDeadline" value="@assignment.Deadline?.ToString("yyyy-MM-ddTHH:mm")" />
+													</div>
+													<div class="reuse-group">
+														<label for="newfileFormatSelect">Chọn định dạng file cần nộp:</label>
+														<select name="newFileFormat" id="newfileFormatSelect">
+															<option value="pdf">pdf</option>
+															<option value="docx">docx</option>
+															<option value="xlsx">xls</option>
+															<option value="zip">zip</option>
+															<option value="rar">rar</option>
+															<option value="png">png</option>
+															<option value="mp4">mp4</option>
+															<option value="allfile">all file</option>
+														</select>
+													</div>
+													<div class="reuse-group">
+														<select name="newbt_category">
+															<option value="BTNhom">Bài tập nhóm</option>
+															<option value="CaNhan">Bài cá nhân</option>
+														</select>
+													</div>
+													<div class="reuse-group">
+														<label for="newshowMode">Chế độ hiển thị:</label>
+														<select name="newshowMode">
+															<option value="All">Tất cả mọi người</option>
+															<option value="Chan">Sinh viên có mã số chẵn (4 số cuối)</option>
+															<option value="Le">Sinh viên có mã số lẻ (4 số cuối)</option>
+														</select>
+													</div>
+													<div class="reuse-group">
+														<label for="newmaxSize">Dung lượng tối đa:</label>
+													<input type="number" name="MaxSize" id="maxSize" class="form-control" value="@assignment.MaxSize" placeholder="Dung lượng tối đa cho phép nộp (MB)" />
+													</div>
+													<div class="reuse-group">
+														<label for="fileInput">Hướng dẫn (Nếu có):</label>
+														<input type="hidden" name="AttactURL" id="attactURL" />
+														<label for="fileInput" class="custom-file-upload">Upload file HD</label>
+														<input type="file" name="FileUpLoad" id="fileInput" onchange="uploadFile()" />
+													</div>
+													<!-- Modal Upload -->
+													<div class="modal" id="uploadModal" style="background-color: transparent; display: none;">
+														<div class="modal-content">
+															<div class="modal-header">
+																<h5 class="modal-title">Uploading File...</h5>
+															</div>
+															<div class="modal-body text-center">
+																<div class="loader" id="loader" style="display: block;"></div>
+																<progress id="progressBar" value="0" max="100" style="display: none;"></progress>
+																<div id="progressText" style="display: block;" class="mt-3">0%</div>
+																<div id="successText" class="mt-3" style="display: none;">Upload thành công</div>
+															</div>
+														</div>
+													</div>
+													<div class="modal-backdrop" id="modalBackdrop" style="display: none;"></div>
+													<div class="reuse-group">
+													<div id="TenFile" style="display: inline;">@assignment.attractUrl</div>
+													</div>
+													<div class="formreuse-actions">
+														<button type="submit" class="submit-btn">Đăng</button>
+														<button type="button" class="cancel-btn" onclick="closeReuseModal('@assignment.Id')">Hủy</button>
+													</div>
+												</form>
+											</div>
+										}
+									</div>
+								</div>							
 						</div>
 				}
-			}
-
-			@{
-				// Tạo một danh sách kết hợp các đối tượng vô danh
-				var combinedList = Model.Post.Select(p => new
-				{
-					Type = "Post",
-					Id = p.Id,
-					Title = p.Title,
-					Content = p.Content,
-					CreatedAt = p.CreateTime,
-					OwnerName = Model.Owner.Name,
-					ClassRoomId = p.ClassRoomId
-				})
-				.Union(Model.Homework.Select(h => new
-				{
-					Type = "Homework",
-					Id = h.Id,
-					Title = h.Title,
-					Content = (string)null, // Bài tập có thể không có nội dung
-					CreatedAt = h.CreatedAt,
-					OwnerName = Model.Owner.Name,
-					ClassRoomId = h.ClassRoomId
-				}))
-				.OrderByDescending(item => item.CreatedAt) // Sắp xếp theo thời gian tạo
-				.ToList();
 			}
 
 
@@ -2579,7 +2937,7 @@
 
 					@if (item.Type == "Post")
 					{
-						<h3 style="font-size: 16px; margin-bottom: 0px;">đã đăng một thông báo mới: @item.Title</h3>
+						<h3 style="font-size: 16px; margin-bottom: 0px;">@item.OwnerName đã đăng một thông báo mới: @item.Title</h3>
 					}
 					else
 					{
@@ -2611,17 +2969,28 @@
 					@{
 						if (Model.isOwner && item.Type == "Post")
 						{
-								<div id="post-options-@item.Id" style="margin-left: auto; cursor: pointer; display: flex; align-items: center; height: 100%;">
-									<button id="post-options-@item.Id" class="icon">
-										<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-											<circle cx="12" cy="5" r="2" fill="gray"></circle>
-											<circle cx="12" cy="12" r="2" fill="gray"></circle>
-											<circle cx="12" cy="19" r="2" fill="gray"></circle>
-										</svg>
-									</button>
-									<div class="options-menu" style="display: none;padding:10px; top: 85px; right:40px; position: absolute; background-color: white; border: 1px solid gray; border-radius: 5px; z-index: 10;">
-										<a class="btn" href="javascript:void(0);" onclick="showEditForm('@item.Id')">Sửa</a>
-										<a class="btn" asp-action="Delete" asp-controller="Posts" asp-route-id="@item.Id" asp-route-classId="@item.ClassRoomId" onclick="return confirm('Bạn có chắc muốn xóa không ?')">Xóa</a>
+							<div id="post-options-@item.Id" style="margin-left: auto; cursor: pointer; display: flex; align-items: center; height: 100%;">
+								<button id="post-options-@item.Id" class="icon">
+									<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+										<circle cx="12" cy="5" r="2" fill="gray"></circle>
+										<circle cx="12" cy="12" r="2" fill="gray"></circle>
+										<circle cx="12" cy="19" r="2" fill="gray"></circle>
+									</svg>
+								</button>
+								<div class="options-menu" style="display: none;">
+									<a class="btn-reusesua" href="javascript:void(0);" onclick="showEditForm('@item.Id')">Sửa</a>
+									<a class="btn-reusesxoa" asp-action="Delete" asp-controller="Posts" asp-route-id="@item.Id" asp-route-classId="@item.ClassRoomId" onclick="return confirm('Bạn có chắc muốn xóa không ?')">Xóa</a>
+								</div>
+							</div>
+							<!-- Form ẩn để chỉnh sửa bài viết -->
+							<div id="editForm-@item.Id" style="display: none; margin-top: 10px; width: 100%;">
+								<form action="/Posts/Editpost" method="POST">
+									<input type="hidden" name="Id" value="@item.Id" />
+									<input type="text" name="Title" value="@item.Title" class="form-control" placeholder="Nhập tiêu đề" style="margin-bottom: 10px;" />
+									<textarea name="Content" rows="4" class="input-textarea" style="width: 100%; border-radius: 5px; margin-top: 10px; padding: 10px;" placeholder="Nhập nội dung">@item.Content</textarea>
+									<div style="display: flex; justify-content: flex-end; margin-top: 10px;">
+										<button type="button" onclick="hideEditForm('@item.Id')" style="margin-right: 10px;">Hủy</button>
+										<button type="submit" class="btn btn-success">Lưu</button>
 									</div>
 								</div>
 								<!-- Form ẩn để chỉnh sửa bài viết -->
@@ -2647,6 +3016,97 @@
 </div>
 @* ==================================SCRIPT======================================================*@
 <script>
+	function switchTab(event, tabId) {
+		// Hide all tab contents
+		document.querySelectorAll('.tab-content').forEach((tab) => {
+			tab.classList.remove('active');
+		});
+
+		// Deactivate all tab links
+		document.querySelectorAll('.tab-link').forEach((link) => {
+			link.classList.remove('active');
+		});
+
+		// Show the selected tab content and activate the corresponding link
+		document.getElementById(tabId).classList.add('active');
+		event.target.classList.add('active');
+	}
+</script>@* Chuyển tap trong reuse*@
+<script>
+	function openReuseLectureModal(lectureId) {
+		// Hide all post lists
+		const postLists = document.querySelectorAll('.postList');
+		postLists.forEach(postList => {
+			postList.style.display = 'none'; // Hide all postLists
+		});
+
+		// Show the specific postList related to the clicked button
+		const postListToShow = document.getElementById(`postList-${lectureId}`);
+		if (postListToShow) {
+			postListToShow.style.display = 'block'; // Show the specific postList
+		}
+
+		// Hide the main list (you may need to adjust the selector based on your structure)
+		const mainLists = document.querySelectorAll('.mainList'); // Lấy tất cả các phần tử với class "mainList"
+
+		mainLists.forEach(mainList => {
+			mainList.style.display = 'none'; // Ẩn từng phần tử
+		});
+
+	}
+
+	function closeReuseLectureModal(lectureId) {
+		// Hide the specific postList when cancel is clicked
+		const postListToHide = document.getElementById(`postList-${lectureId}`);
+		if (postListToHide) {
+			postListToHide.style.display = 'none'; // Hide the postList
+		}
+
+		const mainLists = document.querySelectorAll('.mainList'); // Lấy tất cả các phần tử với class "mainList"
+
+		mainLists.forEach(mainList => {
+			mainList.style.display = 'block'; // Ẩn từng phần tử
+		});
+	}
+</script>
+<script>
+	function openReuseModal(assignmentId) {
+		// Hide all post lists
+		const postLists = document.querySelectorAll('.postList');
+		postLists.forEach(postList => {
+			postList.style.display = 'none'; // Hide all postLists
+		});
+
+		// Show the specific postList related to the clicked button
+		const postListToShow = document.getElementById(`assignmentList-${assignmentId}`);
+		if (postListToShow) {
+			postListToShow.style.display = 'block'; // Show the specific postList
+		}
+
+		// Hide the main list (you may need to adjust the selector based on your structure)
+		const mainLists = document.querySelectorAll('.mainList'); // Lấy tất cả các phần tử với class "mainList"
+
+		mainLists.forEach(mainList => {
+			mainList.style.display = 'none'; // Ẩn từng phần tử
+		});
+	}
+
+	function closeReuseModal(assignmentId) {
+		// Hide the specific postList when cancel is clicked
+		const postListToHide = document.getElementById(`assignmentList-${assignmentId}`);
+		if (postListToHide) {
+			postListToHide.style.display = 'none'; // Hide the postList
+		}
+
+		// Optionally show the main list again
+		const mainLists = document.querySelectorAll('.mainList'); // Lấy tất cả các phần tử với class "mainList"
+
+		mainLists.forEach(mainList => {
+			mainList.style.display = 'block'; // Ẩn từng phần tử
+		});
+	}
+</script>
+<script>
 	function showPostContent(postId) {
 		// Hide all post lists
 		const postLists = document.querySelectorAll('.postList');
@@ -2661,10 +3121,11 @@
 		}
 
 		// Hide the main list (you may need to adjust the selector based on your structure)
-		const mainList = document.querySelector('.mainList'); // Assuming you wrap your main list in a div with class "mainList"
-		if (mainList) {
-			mainList.style.display = 'none'; // Hide the main list
-		}
+		const mainLists = document.querySelectorAll('.mainList'); // Lấy tất cả các phần tử với class "mainList"
+
+		mainLists.forEach(mainList => {
+			mainList.style.display = 'none'; // Ẩn từng phần tử
+		});
 	}
 
 	function cancelReuse(postId) {
@@ -2675,13 +3136,14 @@
 		}
 
 		// Optionally show the main list again
-		const mainList = document.querySelector('.mainList'); // Again, adjust if necessary
-		if (mainList) {
-			mainList.style.display = 'block'; // Show the main list
-		}
+		const mainLists = document.querySelectorAll('.mainList'); // Lấy tất cả các phần tử với class "mainList"
+
+		mainLists.forEach(mainList => {
+			mainList.style.display = 'block'; // Ẩn từng phần tử
+		});
 	}
 
-</script>
+</script>@*Hiển thị nội dung bài post*@
 <script>
 	function toggleClassSelection() {
 		var form = document.getElementById("postContainer");
@@ -4033,7 +4495,7 @@
 		if (file) {
 			// Kiểm tra dung lượng file
 			if (file.size > max_size) {
-				alert("File quá lớn, vui lòng chọn file có dung lượng nhỏ hơn " + (max_size / (1024 * 1024)) + " MB.");
+				toastr.error("File quá lớn, vui lòng chọn file có dung lượng nhỏ hơn " + (max_size / (1024 * 1024)) + " MB.", 'Thất bại', { timeOut: 3000 });
 				input.value = ''; // Xóa giá trị của input nếu file vượt quá dung lượng
 			}
 		}
