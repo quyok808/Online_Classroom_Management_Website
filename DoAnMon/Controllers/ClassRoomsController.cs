@@ -821,7 +821,7 @@ namespace DoAnMon.Controllers
 			await _context.SaveChangesAsync();
 
 			// Gọi hàm tính điểm trung bình (nếu cần)
-			TinhDTB(classId ?? originalBaitap.ClassRoomId);
+			await TinhDTBAsync(classId ?? originalBaitap.ClassRoomId);
 
 			// Redirect về trang chi tiết lớp học
 			return RedirectToAction("Details", "ClassRooms", new { id = classId ?? originalBaitap.ClassRoomId });
