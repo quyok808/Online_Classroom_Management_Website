@@ -35,6 +35,7 @@ using System.Text.RegularExpressions;
 using DoAnMon.ViewModels;
 using Humanizer;
 using Microsoft.VisualStudio.Web.CodeGenerators.Mvc.Templates.BlazorIdentity.Pages.Manage;
+using System.Drawing;
 namespace DoAnMon.Controllers
 {
 	[Authorize(Roles ="Admin, Teacher, Student")]
@@ -792,7 +793,7 @@ namespace DoAnMon.Controllers
 		}
 
 		[HttpPost]
-		public async Task<IActionResult> ReuseBaitap(string originalBaitapId, string newTitle, string newContent, DateTime? newDeadline, string classId)
+		public async Task<IActionResult> ReuseBaitap(string originalBaitapId, string newTitle, string newContent, DateTime? newDeadline, string classId, string newshowMode)
 		{
 			// Tìm bài tập gốc
 			var originalBaitap = await _context.baiTaps.FindAsync(originalBaitapId);
@@ -812,6 +813,7 @@ namespace DoAnMon.Controllers
 				FileFormat = originalBaitap.FileFormat,
 				MaxSize = originalBaitap.MaxSize,
 				Loaibt = originalBaitap.Loaibt,
+				ShowMode = newshowMode,
 				CreatedAt = DateTime.Now,
 				Deadline = newDeadline ?? originalBaitap.Deadline
 			};
@@ -819,6 +821,129 @@ namespace DoAnMon.Controllers
 			// Thêm bài tập mới vào database
 			_context.Add(newBaitap);
 			await _context.SaveChangesAsync();
+
+			List<CustomUser>? listUserId = await _context.classroomDetail.Where(p => p.ClassRoomId.Equals(classId)).Select(p => p.User).ToListAsync();
+			List<CustomUser>? userMssvChan = new List<CustomUser>();
+			List<CustomUser>? userMssvLe = new List<CustomUser>();
+
+			foreach (var item in listUserId)
+			{
+				string s = item.Mssv;
+				int total = 0;
+
+				// Lấy 4 ký tự cuối
+				string lastFour = s.Substring(s.Length - 4);
+
+				// Chuyển đổi thành số
+				int number = int.Parse(lastFour);
+
+				total += number;
+
+				if (total % 2 == 0)
+				{
+					userMssvChan.Add(item);
+				}
+				else
+				{
+					userMssvLe.Add(item);
+				}
+			}
+			if (newBaitap.ShowMode.Equals("Chan"))
+			{
+				listUserId.Clear();
+				listUserId = userMssvChan;
+			}
+			else if (newBaitap.ShowMode.Equals("Le"))
+			{
+				listUserId.Clear();
+				listUserId = userMssvLe;
+			}
+
+
+			// Gửi email thông báo
+			foreach (var user in listUserId)
+			{
+				try
+				{
+					string email = user.Email;
+					string subject = $"Bài tập mới: {newBaitap.Title}";
+					string body = $@"
+						<!DOCTYPE html>
+						<html lang='en'>
+						<head>
+							<meta charset='UTF-8'>
+							<meta name='viewport' content='width=device-width, initial-scale=1.0'>
+							<style>
+								body {{
+									font-family: 'JetBrains Mono', serif;
+									margin: 0;
+									padding: 0;
+									background-color: #f4f4f4;
+								}}
+								.email-container {{
+									max-width: 600px;
+									margin: 20px auto;
+									background-color: #ffffff;
+									border: 1px solid #dddddd;
+									border-radius: 8px;
+									overflow: hidden;
+								}}
+								.header {{
+									background-color: #007bff;
+									color: #ffffff;
+									text-align: center;
+									padding: 20px;
+									font-family: 'Rowdies', serif;
+								}}
+								.content {{
+									padding: 20px;
+									color: #333333;
+								}}
+								.content h1 {{
+									font-size: 24px;
+									margin-bottom: 10px;
+								}}
+								.content p {{
+									font-size: 16px;
+									line-height: 1.5;
+								}}
+								.footer {{
+									background-color: #f4f4f4;
+									color: #888888;
+									text-align: center;
+									padding: 10px;
+									font-size: 12px;
+								}}
+								.deadline {{
+									color: #e74c3c;
+									font-weight: bold;
+								}}
+							</style>
+						</head>
+						<body>
+							<div class='email-container'>
+								<div class='header'>
+									<h1>THÔNG BÁO BÀI TẬP</h1>
+								</div>
+								<div class='content'>
+									<h1>{newBaitap.Title}</h1>
+									<p>{newBaitap.Content}</p>
+									<p>Hạn nộp: <span class='deadline'>{(string.IsNullOrEmpty(newBaitap.Deadline?.ToString("dd/MM/yyyy HH:mm")) ? "Vô thời hạn" : newBaitap.Deadline?.ToString("dd/MM/yyyy HH:mm"))}</span></p>
+								</div>
+								<div class='footer'>
+									<p>Email này được gửi tự động từ hệ thống quản lý lớp học trực tuyến OnlyA.</p>
+								</div>
+							</div>
+						</body>
+						</html>";
+					await _mailService.SendEmailAsync(email, subject, body);
+				}
+				catch (Exception ex)
+				{
+					// Ghi log lỗi hoặc thông báo lỗi
+					Console.WriteLine($"Error sending email: {ex.Message}");
+				}
+			}
 
 			// Gọi hàm tính điểm trung bình (nếu cần)
 			await TinhDTBAsync(classId ?? originalBaitap.ClassRoomId);
