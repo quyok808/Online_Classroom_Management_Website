@@ -34,6 +34,8 @@ using DoAnMon.SignalR;
 using System.Text.RegularExpressions;
 using DoAnMon.ViewModels;
 using Humanizer;
+using Microsoft.VisualStudio.Web.CodeGenerators.Mvc.Templates.BlazorIdentity.Pages.Manage;
+using System.Drawing;
 namespace DoAnMon.Controllers
 {
 	[Authorize(Roles ="Admin, Teacher, Student")]
@@ -45,15 +47,16 @@ namespace DoAnMon.Controllers
 		private readonly IStudent _studentRepo;
 		private static readonly SemaphoreSlim _semaphore = new SemaphoreSlim(1, 1);
 		private readonly ILogger<HomeController> _logger;
+		private readonly Mail _mailService;
 
-		public ClassRoomsController(ApplicationDbContext context, UserManager<CustomUser> userManager, IWebHostEnvironment environment, IStudent studentRepo, ILogger<HomeController> logger)
+		public ClassRoomsController(ApplicationDbContext context, UserManager<CustomUser> userManager, IWebHostEnvironment environment, IStudent studentRepo, ILogger<HomeController> logger, Mail mailService)
 		{
 			_context = context;
 			_userManager = userManager;
 			_environment = environment;
 			_studentRepo = studentRepo;
 			_logger = logger;
-
+			_mailService = mailService;
 		}
         public static List<ClassRoom>? userClasses;
 		// GET: ClassRooms
@@ -239,7 +242,22 @@ namespace DoAnMon.Controllers
 			ViewBag.UserPosts = userposts;
 			ViewBag.UserId = userId;
 
-			
+			var reusableAssignments = await _context.baiTaps
+				.Where(bt => _context.classRooms
+				.Any(cr => cr.Id == bt.ClassRoomId && cr.UserId == userId))
+				.GroupBy(bt => new { bt.Title, bt.Content})
+				.Select(g => g.First())
+				.ToListAsync();
+			ViewBag.ReuseBaitap = reusableAssignments;
+
+			var reusableLectures = await _context.BaiGiang
+				.Where(bt => _context.classRooms
+				.Any(cr => cr.Id == bt.ClassId && cr.UserId == userId))
+				.GroupBy(bt => new { bt.Name, bt.UrlBaiGiang })
+				.Select(g => g.First())
+				.ToListAsync();
+			ViewBag.ReuseBaigiang = reusableLectures;
+
 			var listBT = await _context.baiTaps.Where(p => p.ClassRoomId == id).ToListAsync();
 
 
@@ -495,7 +513,33 @@ namespace DoAnMon.Controllers
 			return Ok();
 		}
 
-        [HttpGet]
+		[HttpPost]
+		public async Task<IActionResult> ReuseLecture(int originalLectureId, string newLectureName, string classId)
+		{
+			// Kiểm tra xem bài giảng gốc có tồn tại không
+			var originalLecture = await _context.BaiGiang.FindAsync(originalLectureId);
+			if (originalLecture == null)
+			{
+				return NotFound("Bài giảng không tồn tại.");
+			}
+
+			// Tạo một bài giảng mới dựa trên bài giảng gốc
+			BaiGiang reusedLecture = new BaiGiang
+			{
+				Name = !string.IsNullOrWhiteSpace(newLectureName) ? newLectureName : originalLecture.Name,
+				UrlBaiGiang = originalLecture.UrlBaiGiang, // Dùng lại file URL
+				ClassId = classId, // Gán vào lớp học mới
+			};
+
+			// Thêm bài giảng mới vào cơ sở dữ liệu
+			_context.BaiGiang.Add(reusedLecture);
+			await _context.SaveChangesAsync();
+
+			// Chuyển hướng về chi tiết lớp học
+			return RedirectToAction("Details", "ClassRooms", new { id = classId });
+		}
+
+		[HttpGet]
         public async Task<PartialViewResult> GetLectureAsync(string ClassId)
         {
             var currentUser = await _userManager.GetUserAsync(User);
@@ -598,7 +642,7 @@ namespace DoAnMon.Controllers
 		}
 
 		[HttpPost]
-		public async Task<IActionResult> CreateBaitap(string AttactURL, string Content, string Title, string ClassId, string FileFormat, DateTime Deadline, DateTime CreateAt, int MaxSize, string bt_category)
+		public async Task<IActionResult> CreateBaitap(string AttactURL, string Content, string Title, string ClassId, string FileFormat, DateTime Deadline, DateTime CreateAt, int MaxSize, string bt_category, string showMode)
 		{
 
 			BaiTap baitap = new BaiTap();
@@ -607,6 +651,7 @@ namespace DoAnMon.Controllers
 			baitap.Id = Guid.NewGuid().ToString();
 			baitap.attractUrl = AttactURL;
 			baitap.ClassRoomId = ClassId;
+			baitap.ShowMode = showMode;
 			baitap.CreatedAt = DateTime.Now;
 			baitap.FileFormat = FileFormat;
 			baitap.MaxSize = MaxSize != 0 ? MaxSize : 10;
@@ -621,9 +666,290 @@ namespace DoAnMon.Controllers
 			baitap.Loaibt = bt_category;
 			_context.Add(baitap);
 			await _context.SaveChangesAsync();
+			List<CustomUser>? listUserId = await _context.classroomDetail.Where(p => p.ClassRoomId.Equals(ClassId)).Select(p => p.User).ToListAsync();
+			List<CustomUser>? userMssvChan = new List<CustomUser>();
+			List<CustomUser>? userMssvLe = new List<CustomUser>();
 
-			TinhDTB(ClassId);
+			foreach (var item in listUserId)
+			{
+				string s = item.Mssv;
+				int total = 0;
+
+				// Lấy 4 ký tự cuối
+				string lastFour = s.Substring(s.Length - 4);
+
+				// Chuyển đổi thành số
+				int number = int.Parse(lastFour);
+
+				total += number;
+
+				if (total % 2 == 0)
+				{
+					userMssvChan.Add(item);
+				}
+				else
+				{
+					userMssvLe.Add(item);
+				}
+			}
+			if (baitap.ShowMode.Equals("Chan"))
+			{
+				listUserId.Clear();
+				listUserId = userMssvChan;
+			} else if (baitap.ShowMode.Equals("Le"))
+			{
+				listUserId.Clear();
+				listUserId = userMssvLe;
+			}
+
+			
+			// Gửi email thông báo
+			foreach(var user in listUserId)
+			{
+				try
+				{
+					string email = user.Email;
+					string subject = $"Bài tập mới: {baitap.Title}";
+					string body = $@"
+						<!DOCTYPE html>
+						<html lang='en'>
+						<head>
+							<meta charset='UTF-8'>
+							<meta name='viewport' content='width=device-width, initial-scale=1.0'>
+							<style>
+								body {{
+									font-family: 'JetBrains Mono', serif;
+									margin: 0;
+									padding: 0;
+									background-color: #f4f4f4;
+								}}
+								.email-container {{
+									max-width: 600px;
+									margin: 20px auto;
+									background-color: #ffffff;
+									border: 1px solid #dddddd;
+									border-radius: 8px;
+									overflow: hidden;
+								}}
+								.header {{
+									background-color: #007bff;
+									color: #ffffff;
+									text-align: center;
+									padding: 20px;
+									font-family: 'Rowdies', serif;
+								}}
+								.content {{
+									padding: 20px;
+									color: #333333;
+								}}
+								.content h1 {{
+									font-size: 24px;
+									margin-bottom: 10px;
+								}}
+								.content p {{
+									font-size: 16px;
+									line-height: 1.5;
+								}}
+								.footer {{
+									background-color: #f4f4f4;
+									color: #888888;
+									text-align: center;
+									padding: 10px;
+									font-size: 12px;
+								}}
+								.deadline {{
+									color: #e74c3c;
+									font-weight: bold;
+								}}
+							</style>
+						</head>
+						<body>
+							<div class='email-container'>
+								<div class='header'>
+									<h1>THÔNG BÁO BÀI TẬP</h1>
+								</div>
+								<div class='content'>
+									<h1>{baitap.Title}</h1>
+									<p>{baitap.Content}</p>
+									<p>Hạn nộp: <span class='deadline'>{(string.IsNullOrEmpty(baitap.Deadline?.ToString("dd/MM/yyyy HH:mm")) ? "Vô thời hạn" : baitap.Deadline?.ToString("dd/MM/yyyy HH:mm"))}</span></p>
+								</div>
+								<div class='footer'>
+									<p>Email này được gửi tự động từ hệ thống quản lý lớp học trực tuyến OnlyA.</p>
+								</div>
+							</div>
+						</body>
+						</html>";
+					await _mailService.SendEmailAsync(email, subject, body);
+				}
+				catch (Exception ex)
+				{
+					// Ghi log lỗi hoặc thông báo lỗi
+					Console.WriteLine($"Error sending email: {ex.Message}");
+				}
+			}
+
+			await TinhDTBAsync(ClassId);
 			return RedirectToAction("Details", "ClassRooms", new { id = ClassId });
+		}
+
+		[HttpPost]
+		public async Task<IActionResult> ReuseBaitap(string originalBaitapId, string newTitle, string newContent, DateTime? newDeadline, string classId, string newshowMode)
+		{
+			// Tìm bài tập gốc
+			var originalBaitap = await _context.baiTaps.FindAsync(originalBaitapId);
+			if (originalBaitap == null)
+			{
+				return NotFound("Bài tập không tồn tại.");
+			}
+
+			// Tạo bài tập mới từ bài tập gốc
+			BaiTap newBaitap = new BaiTap
+			{
+				Id = Guid.NewGuid().ToString(),
+				Title = string.IsNullOrWhiteSpace(newTitle) ? originalBaitap.Title : newTitle,
+				Content = string.IsNullOrWhiteSpace(newContent) ? originalBaitap.Content : newContent,
+				attractUrl = originalBaitap.attractUrl,
+				ClassRoomId = classId ?? originalBaitap.ClassRoomId,
+				FileFormat = originalBaitap.FileFormat,
+				MaxSize = originalBaitap.MaxSize,
+				Loaibt = originalBaitap.Loaibt,
+				ShowMode = newshowMode,
+				CreatedAt = DateTime.Now,
+				Deadline = newDeadline ?? originalBaitap.Deadline
+			};
+
+			// Thêm bài tập mới vào database
+			_context.Add(newBaitap);
+			await _context.SaveChangesAsync();
+
+			List<CustomUser>? listUserId = await _context.classroomDetail.Where(p => p.ClassRoomId.Equals(classId)).Select(p => p.User).ToListAsync();
+			List<CustomUser>? userMssvChan = new List<CustomUser>();
+			List<CustomUser>? userMssvLe = new List<CustomUser>();
+
+			foreach (var item in listUserId)
+			{
+				string s = item.Mssv;
+				int total = 0;
+
+				// Lấy 4 ký tự cuối
+				string lastFour = s.Substring(s.Length - 4);
+
+				// Chuyển đổi thành số
+				int number = int.Parse(lastFour);
+
+				total += number;
+
+				if (total % 2 == 0)
+				{
+					userMssvChan.Add(item);
+				}
+				else
+				{
+					userMssvLe.Add(item);
+				}
+			}
+			if (newBaitap.ShowMode.Equals("Chan"))
+			{
+				listUserId.Clear();
+				listUserId = userMssvChan;
+			}
+			else if (newBaitap.ShowMode.Equals("Le"))
+			{
+				listUserId.Clear();
+				listUserId = userMssvLe;
+			}
+
+
+			// Gửi email thông báo
+			foreach (var user in listUserId)
+			{
+				try
+				{
+					string email = user.Email;
+					string subject = $"Bài tập mới: {newBaitap.Title}";
+					string body = $@"
+						<!DOCTYPE html>
+						<html lang='en'>
+						<head>
+							<meta charset='UTF-8'>
+							<meta name='viewport' content='width=device-width, initial-scale=1.0'>
+							<style>
+								body {{
+									font-family: 'JetBrains Mono', serif;
+									margin: 0;
+									padding: 0;
+									background-color: #f4f4f4;
+								}}
+								.email-container {{
+									max-width: 600px;
+									margin: 20px auto;
+									background-color: #ffffff;
+									border: 1px solid #dddddd;
+									border-radius: 8px;
+									overflow: hidden;
+								}}
+								.header {{
+									background-color: #007bff;
+									color: #ffffff;
+									text-align: center;
+									padding: 20px;
+									font-family: 'Rowdies', serif;
+								}}
+								.content {{
+									padding: 20px;
+									color: #333333;
+								}}
+								.content h1 {{
+									font-size: 24px;
+									margin-bottom: 10px;
+								}}
+								.content p {{
+									font-size: 16px;
+									line-height: 1.5;
+								}}
+								.footer {{
+									background-color: #f4f4f4;
+									color: #888888;
+									text-align: center;
+									padding: 10px;
+									font-size: 12px;
+								}}
+								.deadline {{
+									color: #e74c3c;
+									font-weight: bold;
+								}}
+							</style>
+						</head>
+						<body>
+							<div class='email-container'>
+								<div class='header'>
+									<h1>THÔNG BÁO BÀI TẬP</h1>
+								</div>
+								<div class='content'>
+									<h1>{newBaitap.Title}</h1>
+									<p>{newBaitap.Content}</p>
+									<p>Hạn nộp: <span class='deadline'>{(string.IsNullOrEmpty(newBaitap.Deadline?.ToString("dd/MM/yyyy HH:mm")) ? "Vô thời hạn" : newBaitap.Deadline?.ToString("dd/MM/yyyy HH:mm"))}</span></p>
+								</div>
+								<div class='footer'>
+									<p>Email này được gửi tự động từ hệ thống quản lý lớp học trực tuyến OnlyA.</p>
+								</div>
+							</div>
+						</body>
+						</html>";
+					await _mailService.SendEmailAsync(email, subject, body);
+				}
+				catch (Exception ex)
+				{
+					// Ghi log lỗi hoặc thông báo lỗi
+					Console.WriteLine($"Error sending email: {ex.Message}");
+				}
+			}
+
+			// Gọi hàm tính điểm trung bình (nếu cần)
+			await TinhDTBAsync(classId ?? originalBaitap.ClassRoomId);
+
+			// Redirect về trang chi tiết lớp học
+			return RedirectToAction("Details", "ClassRooms", new { id = classId ?? originalBaitap.ClassRoomId });
 		}
 
 		[HttpPost]
@@ -665,36 +991,75 @@ namespace DoAnMon.Controllers
 
 			return RedirectToAction("Details", "ClassRooms", new { id = ClassId });
 		}
-		private void TinhDTB(string classId)
+		private async Task TinhDTBAsync(string classId)
 		{
-			// Lấy bản ghi của lớp học
-			BangDiem score = _context.bangDiem.FirstOrDefault(p => p.ClassRoomId == classId);
+			// Lấy danh sách userId trong lớp học
+			var listUser = await _context.bangDiem
+				.Where(p => p.ClassRoomId == classId)
+				.Select(p => p.UserId)
+				.ToListAsync();
 
-			if (score != null)
+			// Đếm số lượng bài tập
+			int tongslBT = await _context.baiTaps
+				.Where(p => p.ClassRoomId.Trim() == classId && p.ShowMode.Equals("All"))
+				.CountAsync();
+
+			// Lặp qua từng người dùng và tính tổng điểm
+			foreach (var userId in listUser)
 			{
-				// Lấy danh sách userId trong lớp học
-				var listUser = _context.bangDiem.Where(p => p.ClassRoomId == classId).Select(p => p.UserId).ToList();
+				var user = await _userManager.FindByIdAsync(userId);
+				string s = user.Mssv;
+				int total = 0;
 
-				// Đếm số lượng bài tập
-				int tongslBT = _context.baiTaps.Where(p => p.ClassRoomId.Trim() == classId).Count();
+				// Lấy 4 ký tự cuối
+				string lastFour = s.Substring(s.Length - 4);
 
-				// Lặp qua từng người dùng và tính tổng điểm
-				foreach (var userId in listUser)
+				// Chuyển đổi thành số
+				int number = int.Parse(lastFour);
+				total += number;
+
+				if (total % 2 == 0)
 				{
-					decimal TongDiem_User = (decimal)_context.BaiNop.Where(p => p.UserId.Trim() == userId.Trim() && p.ClassId.Trim() == classId.Trim()).Select(p => p.Diem).Sum();
+					int tongslBTChan = await _context.baiTaps
+						.Where(p => p.ClassRoomId.Trim() == classId && p.ShowMode.Equals("Chan"))
+						.CountAsync();
+					tongslBT += tongslBTChan;
+				}
+				else
+				{
+					int tongslBTLe = await _context.baiTaps
+						.Where(p => p.ClassRoomId.Trim() == classId && p.ShowMode.Equals("Le"))
+						.CountAsync();
+					tongslBT += tongslBTLe;
+				}
+
+				// Lấy tổng điểm của người dùng
+				decimal TongDiem_User = (decimal)await _context.BaiNop
+					.Where(p => p.UserId.Trim() == userId.Trim() && p.ClassId.Trim() == classId.Trim())
+					.Select(p => p.Diem)
+					.SumAsync();
+
+				// Lấy bản ghi của người dùng
+				var score = await _context.bangDiem
+					.FirstOrDefaultAsync(p => p.UserId == userId && p.ClassRoomId == classId);
+
+				if (score != null)
+				{
 					if (tongslBT > 0)
 					{
 						score.DTB = ((TongDiem_User / tongslBT) * 0.7m) + (decimal)DiemDD(userId, classId);
-
 					}
 					else
 					{
 						score.DTB = (decimal)DiemDD(userId, classId);
 					}
-					_context.SaveChanges(); // Lưu thay đổi cho mỗi người dùng
 				}
 			}
+
+			// Lưu tất cả thay đổi cùng lúc
+			await _context.SaveChangesAsync();
 		}
+
 
 
 		[HttpPost]
@@ -1220,7 +1585,7 @@ namespace DoAnMon.Controllers
 				baiNop.Diem = diem;
 				_context.SaveChanges();
 
-				TinhDTB(baiNop.UserId, baiNop.ClassId);
+				await TinhDTBAsync(baiNop.UserId, baiNop.ClassId);
 				return Json(new { success = true });
 			}
 			catch (Exception ex)
@@ -1251,25 +1616,50 @@ namespace DoAnMon.Controllers
 			return diemDD;
 		}
 
-		private void TinhDTB(string userId, string classId)
+		private async Task TinhDTBAsync(string userId, string classId)
 		{
-			BangDiem score = _context.bangDiem.FirstOrDefault(p => p.UserId == userId && p.ClassRoomId == classId);
-            if (score != null)          
+			var score = await _context.bangDiem.FirstOrDefaultAsync(p => p.UserId == userId && p.ClassRoomId == classId);
+			if (score != null)
 			{
-                int tongslBT = _context.baiTaps.Where(p => p.ClassRoomId.Trim() == classId.Trim()).Count();
-				decimal TongDiem_User = (decimal)_context.BaiNop.Where(p => p.UserId.ToString().Trim() == userId.Trim() && p.ClassId.Trim() == classId.Trim()).Select(p => p.Diem).Sum();
+				int tongslBT = await _context.baiTaps.CountAsync(p => p.ClassRoomId.Trim() == classId.Trim() && p.ShowMode.Equals("All"));
+
+				var user = await _userManager.FindByIdAsync(userId);
+				string s = user.Mssv;
+				int total = 0;
+
+				string lastFour = s.Substring(s.Length - 4);
+				int number = int.Parse(lastFour);
+				total += number;
+
+				if (total % 2 == 0)
+				{
+					int tongslBTChan = await _context.baiTaps.CountAsync(p => p.ClassRoomId.Trim() == classId && p.ShowMode.Equals("Chan"));
+					tongslBT += tongslBTChan;
+				}
+				else
+				{
+					int tongslBTLe = await _context.baiTaps.CountAsync(p => p.ClassRoomId.Trim() == classId && p.ShowMode.Equals("Le"));
+					tongslBT += tongslBTLe;
+				}
+
+				decimal TongDiem_User = (decimal)await _context.BaiNop
+					.Where(p => p.UserId.ToString().Trim() == userId.Trim() && p.ClassId.Trim() == classId.Trim())
+					.Select(p => p.Diem)
+					.SumAsync();
+
 				if (tongslBT > 0)
 				{
 					score.DTB = ((TongDiem_User / tongslBT) * 0.7m) + (decimal)DiemDD(userId, classId);
-
 				}
 				else
 				{
 					score.DTB = (decimal)DiemDD(userId, classId);
 				}
-            }
-			_context.SaveChanges();
+			}
+
+			await _context.SaveChangesAsync();
 		}
+
 
 		[HttpGet]
 		public async Task<IActionResult> Search(string query)
@@ -1451,7 +1841,7 @@ namespace DoAnMon.Controllers
 		}
 
 		[HttpGet]
-		public IActionResult DeleteBT(string id, string classId)
+		public async Task<IActionResult> DeleteBTAsync(string id, string classId)
 		{
 			var temp = _context.baiTaps.FirstOrDefault(p => p.Id == id);
 			if (temp == null)
@@ -1471,7 +1861,7 @@ namespace DoAnMon.Controllers
 			}
 			_context.baiTaps.Remove(temp);
 			_context.SaveChanges();
-			TinhDTB(classId);
+			await TinhDTBAsync(classId);
 			return RedirectToAction("Details", "ClassRooms", new { id = classId });
 		}
 		
@@ -1572,7 +1962,7 @@ namespace DoAnMon.Controllers
 					}
 				}
 			}
-			TinhDTB(UserID, classId);
+			await TinhDTBAsync(UserID, classId);
 			return RedirectToAction("Details", "ClassRooms", new { id = classId });
         }
 

@@ -42,32 +42,31 @@
             @{
                 for (int i = 0; i < (Model.DiemDanhs != null ? Model.DiemDanhs.Count() : 1); i += 2)
                 {
-                                <tr>
-                                    <th scope="row" class="text-center" style="vertical-align: middle;">@((i / 2) + 1)</th>
-                                    <td style="vertical-align: middle;">@Model.DiemDanhs[i].User?.Mssv</td>
-                                    <td style="vertical-align: middle;">@Model.DiemDanhs[i].User?.Name</td>
-                                    @if (Model.DiemDanhs[i].Check.Equals("IN"))
+                    <tr>
+                        <th scope="row" class="text-center" style="vertical-align: middle;">@((i / 2) + 1)</th>
+                        <td style="vertical-align: middle;">@Model.DiemDanhs[i].User?.Mssv</td>
+                        <td style="vertical-align: middle;">@Model.DiemDanhs[i].User?.Name</td>
+                        @if (Model.DiemDanhs[i].Check.Equals("IN") || Model.DiemDanhs[i].Check.Equals("LATE"))
                         {
-                                        <span style="display: none;">@Model.DiemDanhs[i].Id</span>
-                                        <td id="in_@Model.DiemDanhs[i].Id" style="vertical-align: middle;">@Model.DiemDanhs[i].time</td>
+                            <span style="display: none;">@Model.DiemDanhs[i].Id</span>
+                            <td id="in_@Model.DiemDanhs[i].Id" style="vertical-align: middle;">@Model.DiemDanhs[i].time</td>
                             bool outFound = false; // Variable to track if "OUT" is found
                             for (int j = i + 1; j < (Model.DiemDanhs != null ? Model.DiemDanhs.Count() : 1); j++)
                             {
                                 if (Model.DiemDanhs[j].UserId.Equals(Model.DiemDanhs[i].UserId) && Model.DiemDanhs[j].Check.Equals("OUT"))
                                 {
-                                            <span style="display: none;">@Model.DiemDanhs[j].Id</span>
-                                            @functions {
+                                    <span style="display: none;">@Model.DiemDanhs[j].Id</span>
+                                    @functions {
                                         public string SafeSubstringBefore(string input, string separator)
                                         {
                                             if (string.IsNullOrEmpty(input) || !input.Contains(separator))
                                                 return input;
                                             return input.Substring(0, input.IndexOf(separator));
                                         }
-                                            }
-                                            <td id="out_@Model.DiemDanhs[j].Id" style="vertical-align: middle;">
-                                                @SafeSubstringBefore(Model.DiemDanhs[j].time, " ~")
-                                            </td>
-
+                                    }
+                                    <td id="out_@Model.DiemDanhs[j].Id" style="vertical-align: middle;">
+                                        @SafeSubstringBefore(Model.DiemDanhs[j].time, " ~")
+                                    </td>
                                     outFound = true;
                                     break; // Exit loop after finding "OUT"
                                 }
@@ -77,7 +76,7 @@
                             if (!outFound && Model.OwnerId.Equals(user.Id))
                             {
                                 <td>
-                                    <button class="btn btn-primary" onclick="markOut('@Model.DiemDanhs[i].UserId', '@Model.DiemDanhs[i].ClassRoomId', '@Model.DiemDanhs[i].time')">Mark OUT</button>
+                                    <button class="btn btn-primary" onclick="markOut('@Model.DiemDanhs[i].UserId', '@Model.DiemDanhs[i].ClassRoomId', '@Model.DiemDanhs[i].time')">Điểm danh lần 2</button>
                                 </td>
                             }
                         }
