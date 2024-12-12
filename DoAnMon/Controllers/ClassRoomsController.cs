@@ -239,7 +239,22 @@ namespace DoAnMon.Controllers
 			ViewBag.UserPosts = userposts;
 			ViewBag.UserId = userId;
 
-			
+			var reusableAssignments = await _context.baiTaps
+				.Where(bt => _context.classRooms
+				.Any(cr => cr.Id == bt.ClassRoomId && cr.UserId == userId))
+				.GroupBy(bt => new { bt.Title, bt.Content})
+				.Select(g => g.First())
+				.ToListAsync();
+			ViewBag.ReuseBaitap = reusableAssignments;
+
+			var reusableLectures = await _context.BaiGiang
+				.Where(bt => _context.classRooms
+				.Any(cr => cr.Id == bt.ClassId && cr.UserId == userId))
+				.GroupBy(bt => new { bt.Name, bt.UrlBaiGiang })
+				.Select(g => g.First())
+				.ToListAsync();
+			ViewBag.ReuseBaigiang = reusableLectures;
+
 			var listBT = await _context.baiTaps.Where(p => p.ClassRoomId == id).ToListAsync();
 
 
@@ -495,7 +510,33 @@ namespace DoAnMon.Controllers
 			return Ok();
 		}
 
-        [HttpGet]
+		[HttpPost]
+		public async Task<IActionResult> ReuseLecture(int originalLectureId, string newLectureName, string classId)
+		{
+			// Kiểm tra xem bài giảng gốc có tồn tại không
+			var originalLecture = await _context.BaiGiang.FindAsync(originalLectureId);
+			if (originalLecture == null)
+			{
+				return NotFound("Bài giảng không tồn tại.");
+			}
+
+			// Tạo một bài giảng mới dựa trên bài giảng gốc
+			BaiGiang reusedLecture = new BaiGiang
+			{
+				Name = !string.IsNullOrWhiteSpace(newLectureName) ? newLectureName : originalLecture.Name,
+				UrlBaiGiang = originalLecture.UrlBaiGiang, // Dùng lại file URL
+				ClassId = classId, // Gán vào lớp học mới
+			};
+
+			// Thêm bài giảng mới vào cơ sở dữ liệu
+			_context.BaiGiang.Add(reusedLecture);
+			await _context.SaveChangesAsync();
+
+			// Chuyển hướng về chi tiết lớp học
+			return RedirectToAction("Details", "ClassRooms", new { id = classId });
+		}
+
+		[HttpGet]
         public async Task<PartialViewResult> GetLectureAsync(string ClassId)
         {
             var currentUser = await _userManager.GetUserAsync(User);
@@ -624,6 +665,42 @@ namespace DoAnMon.Controllers
 
 			TinhDTB(ClassId);
 			return RedirectToAction("Details", "ClassRooms", new { id = ClassId });
+		}
+
+		[HttpPost]
+		public async Task<IActionResult> ReuseBaitap(string originalBaitapId, string newTitle, string newContent, DateTime? newDeadline, string classId)
+		{
+			// Tìm bài tập gốc
+			var originalBaitap = await _context.baiTaps.FindAsync(originalBaitapId);
+			if (originalBaitap == null)
+			{
+				return NotFound("Bài tập không tồn tại.");
+			}
+
+			// Tạo bài tập mới từ bài tập gốc
+			BaiTap newBaitap = new BaiTap
+			{
+				Id = Guid.NewGuid().ToString(),
+				Title = string.IsNullOrWhiteSpace(newTitle) ? originalBaitap.Title : newTitle,
+				Content = string.IsNullOrWhiteSpace(newContent) ? originalBaitap.Content : newContent,
+				attractUrl = originalBaitap.attractUrl,
+				ClassRoomId = classId ?? originalBaitap.ClassRoomId,
+				FileFormat = originalBaitap.FileFormat,
+				MaxSize = originalBaitap.MaxSize,
+				Loaibt = originalBaitap.Loaibt,
+				CreatedAt = DateTime.Now,
+				Deadline = newDeadline ?? originalBaitap.Deadline
+			};
+
+			// Thêm bài tập mới vào database
+			_context.Add(newBaitap);
+			await _context.SaveChangesAsync();
+
+			// Gọi hàm tính điểm trung bình (nếu cần)
+			TinhDTB(classId ?? originalBaitap.ClassRoomId);
+
+			// Redirect về trang chi tiết lớp học
+			return RedirectToAction("Details", "ClassRooms", new { id = classId ?? originalBaitap.ClassRoomId });
 		}
 
 		[HttpPost]

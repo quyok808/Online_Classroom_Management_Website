@@ -1413,8 +1413,8 @@
 		color: black;
 		border-radius: 8px;
 		padding: 20px;
-		width: 500px;
-		height: 300px;
+		width: 700px;
+		height: 400px;
 		overflow-y: auto;
 		box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 	}
@@ -1432,21 +1432,60 @@
 		margin:0;
 	}
 
+	.tab-header {
+		display: flex;
+		justify-content: space-around;
+		border-bottom: 2px solid #ddd;
+		margin-bottom: 10px;
+	}
+
+	.tab-link {
+		flex: 1;
+		text-align: center;
+		padding: 10px 0;
+		cursor: pointer;
+		font-size: 16px;
+		background-color: #f8f9fa;
+		border: none;
+		transition: background-color 0.3s ease, font-weight 0.3s ease;
+	}
+
+		.tab-link.active {
+			background-color: #007bff;
+			color: white;
+			font-weight: bold;
+		}
+
+	/* Tabs Body */
+	.tab-body {
+		flex-grow: 1;
+		overflow-y: auto;
+	}
+
+	.tab-content {
+		display: none;
+	}
+
+		.tab-content.active {
+			display: block;
+		}
+
+
+
 		.close-btn i {
 			font-size: 20px;
 		}
 
 	/* Post list and items */
 	.mainList {
-		margin-top: 40px;
+		display: block;
 	}
 
 	.post-item {
 		display: flex;
-		justify-content: space-between;
-		align-items: center;
+		flex-direction: column;
 		margin-bottom: 10px;
-		padding: 5px 0;
+		padding: 5px;
 		border-bottom: 1px solid #eee;
 	}
 
@@ -1455,7 +1494,13 @@
 		flex-grow: 1;
 	}
 
+	.post-content {
+		margin-bottom: 10px; 
+		color: #555; 
+	}
+
 	.reuse-btn {
+		align-self: flex-end;
 		background-color: #007bff;
 		color: white;
 		border: none;
@@ -1470,10 +1515,6 @@
 		}
 
 	/* Post edit form */
-	.postList {
-		display: none;
-		margin-top: 40px;
-	}
 
 	.form-control {
 		width: 100%;
@@ -1514,6 +1555,16 @@
 		.cancel-btn:hover {
 			background-color: #555;
 		}
+	.postList {
+		margin-top:40px;
+		display: none;
+	}
+
+	.postList {
+		margin-top: 40px;
+		display: none;
+	}
+
 </style>
 <div style="position: relative; width: 100%;">
 	<img class="img-fluid" src="/images/@Model.ClassRoom.backgroundUrl" alt="No Images" style="width: 100%; height: 400px;" />
@@ -2209,6 +2260,31 @@
 				<p id="currentDateTime" style="font-family: 'Poppins', sans-serif"></p>
 			</div>
 			@{
+				// Tạo một danh sách kết hợp các đối tượng vô danh
+				var combinedList = Model.Post.Select(p => new
+				{
+					Type = "Post",
+					Id = p.Id,
+					Title = p.Title,
+					Content = p.Content,
+					CreatedAt = p.CreateTime,
+					OwnerName = Model.Owner.Name,
+					ClassRoomId = p.ClassRoomId
+				})
+				.Union(Model.Homework.Select(h => new
+				{
+					Type = "Homework",
+					Id = h.Id,
+					Title = h.Title,
+					Content = (string)null, // Bài tập có thể không có nội dung
+					CreatedAt = h.CreatedAt,
+					OwnerName = Model.Owner.Name,
+					ClassRoomId = h.ClassRoomId
+				}))
+				.OrderByDescending(item => item.CreatedAt) // Sắp xếp theo thời gian tạo
+				.ToList();
+			}
+			@{
 				if (Model.isOwner)
 				{
 					<div class="create-content"
@@ -2259,10 +2335,147 @@
 					</div>
 					<div id="postContainer" class="overlay">
 						<div class="khungreuse">
-							<button class="close-btn" onclick="closePostContainer()">
-								<i class="fas fa-times"></i>
-							</button>
-							<div class="mainList">
+							<button class="close-btn" onclick="closePostContainer()"><i class="fas fa-times"></i></button>
+								<div class="tab-header">
+									<button class="tab-link active" onclick="switchTab(event, 'notifications')">Thông báo</button>
+									<button class="tab-link" onclick="switchTab(event, 'baigiang')">Bài giảng</button>
+									<button class="tab-link" onclick="switchTab(event, 'baitap')">Bài tập</button>
+								</div>
+								<div class="tab-body">
+									<!-- Tab: Thông báo -->
+									<div id="notifications" class="tab-content active">
+										<div class="mainList">
+											@foreach (var post in ViewBag.UserPosts)
+											{
+												<div class="post-item">
+													<span class="post-title">@post.Title</span>
+													<span class="post-content">@post.Content</span>
+													<button class="reuse-btn" onclick="showPostContent('@post.Id')">Sử dụng lại</button>
+												</div>
+											}
+										</div>
+										@foreach (var post in ViewBag.UserPosts)
+										{
+											<div id="postList-@post.Id" class="postList">
+												<form method="post" asp-action="ReusePost" asp-controller="ClassRooms">
+													<input type="hidden" name="postId" value="@post.Id" />
+													<input type="hidden" name="ClassId" id="classIdInput" value="@Model.ClassRoom.Id" />
+													<input type="hidden" name="UserId" id="UserIdInput" value="@Model.ClassRoom.UserId" />
+													<input type="text" name="Title" class="form-control" value="@post.Title" />
+													<textarea name="Content" class="input-textarea">@post.Content</textarea>
+													<button type="submit" class="submit-btn">Đăng</button>
+													<button type="button" class="cancel-btn" onclick="cancelReuse('@post.Id')">Hủy</button>
+												</form>
+											</div>
+										}
+
+									</div>
+									<!-- Tab: Bài giảng -->
+									<div id="baigiang" class="tab-content">
+										<div class="mainList">
+										@foreach (var lecture in ViewBag.ReuseBaigiang)
+											{
+												<div class="post-item">
+													<span class="post-title">@lecture.Name</span>
+													<button class="reuse-btn" onclick="openReuseLectureModal('@lecture.Id')">Sử dụng lại</button>
+												</div>
+											}
+										</div>
+									@foreach (var lecture in ViewBag.ReuseBaigiang)
+									{
+										<div id="postList-@lecture.Id" class="postList">
+											<form method="post" asp-action="ReuseLecture" asp-controller="ClassRooms">
+												<input type="hidden" name="originalLectureId" value="@lecture.Id" />
+												<input type="hidden" name="classId" value="@Model.ClassRoom.Id" />
+
+												<label for="newLectureName">Tên bài giảng mới:</label>
+												<input type="text" name="newLectureName" id="newLectureName" value="@lecture.Name" />
+
+												<button type="submit" class="submit-btn">Đăng</button>
+												<button type="button" class="cancel-btn" onclick="closeReuseLectureModal('@lecture.Id')">Hủy</button>
+											</form>
+										</div>
+									}
+								</div>
+									<!-- Tab: Bài tập -->
+									<div id="baitap" class="tab-content">
+										<div class="mainList">
+										@foreach (var assignment in ViewBag.ReuseBaitap)
+										{
+											<div class="post-item">
+												<span class="post-title">@assignment.Title</span>
+												<span class="post-content">@assignment.Content</span>
+												<button class="reuse-btn" onclick="openReuseModal('@assignment.Id')">Sử dụng lại</button>
+											</div>
+										}
+										</div>
+									@foreach (var assignment in ViewBag.ReuseBaitap)
+									{
+										<div id="assignmentList-@assignment.Id" class="postList">
+											<form method="post" asp-action="ReuseBaitap" asp-controller="ClassRooms">
+												<input type="hidden" name="originalBaitapId" value="@assignment.Id" />
+												<input type="hidden" name="classId" value="@Model.ClassRoom.Id" />
+
+												<label for="newTitle">Tiêu đề mới:</label>
+												<input type="text" name="newTitle" id="newTitle" value="@assignment.Title" />
+
+												<label for="newContent">Nội dung mới:</label>
+												<textarea name="newContent" id="newContent">@assignment.Content</textarea>
+
+												<label for="newDeadline">Hạn nộp mới:</label>
+												<input type="datetime-local" name="newDeadline" id="newDeadline" value="@assignment.Deadline?.ToString("yyyy-MM-ddTHH:mm")" />
+
+												<label for="newfileFormatSelect">Chọn định dạng file cần nộp:</label>
+												<select name="newFileFormat" id="newfileFormatSelect">
+													<option value="pdf">pdf</option>
+													<option value="docx">docx</option>
+													<option value="xlsx">xls</option>
+													<option value="zip">zip</option>
+													<option value="rar">rar</option>
+													<option value="png">png</option>
+													<option value="mp4">mp4</option>
+													<option value="allfile">all file</option>
+												</select>
+
+												<select name="newbt_category">
+													<option value="BTNhom">Bài tập nhóm</option>
+													<option value="CaNhan">Bài cá nhân</option>
+												</select>
+
+
+												<label for="newmaxSize">Dung lượng tối đa:</label>
+												<input type="number" name="MaxSize" id="maxSize" class="form-control" placeholder="Dung lượng tối đa cho phép nộp (MB)" />
+
+												<label for="fileInput">Hướng dẫn (Nếu có):</label>
+												<input type="hidden" name="AttactURL" id="attactURL" />
+												<label for="fileInput" class="custom-file-upload">Upload file HD</label>
+												<input type="file" name="FileUpLoad" id="fileInput" onchange="uploadFile()" />
+
+												<!-- Modal Upload -->
+												<div class="modal" id="uploadModal" style="background-color: transparent; display: none;">
+													<div class="modal-content">
+														<div class="modal-header">
+															<h5 class="modal-title">Uploading File...</h5>
+														</div>
+														<div class="modal-body text-center">
+															<div class="loader" id="loader" style="display: block;"></div>
+															<progress id="progressBar" value="0" max="100" style="display: none;"></progress>
+															<div id="progressText" style="display: block;" class="mt-3">0%</div>
+															<div id="successText" class="mt-3" style="display: none;">Upload thành công</div>
+														</div>
+													</div>
+												</div>
+												<div class="modal-backdrop" id="modalBackdrop" style="display: none;"></div>
+												<div id="TenFile" style="display: inline;"></div>
+
+												<button type="submit" class="submit-btn">Đăng</button>
+												<button type="button" class="cancel-btn" onclick="closeReuseModal('@assignment.Id')">Hủy</button>
+											</form>
+										</div>
+									}
+									</div>
+								</div>
+							@*<div class="mainList">
 								@foreach (var post in ViewBag.UserPosts)
 								{
 									<div class="post-item">
@@ -2285,36 +2498,10 @@
 										<button type="button" class="cancel-btn" onclick="cancelReuse('@post.Id')">Hủy</button>
 									</form>
 								</div>
-							}
+					}*@
 						</div>
 					</div>
 				}
-			}
-
-			@{
-				// Tạo một danh sách kết hợp các đối tượng vô danh
-				var combinedList = Model.Post.Select(p => new
-				{
-					Type = "Post",
-					Id = p.Id,
-					Title = p.Title,
-					Content = p.Content,
-					CreatedAt = p.CreateTime,
-					OwnerName = Model.Owner.Name,
-					ClassRoomId = p.ClassRoomId
-				})
-				.Union(Model.Homework.Select(h => new
-				{
-					Type = "Homework",
-					Id = h.Id,
-					Title = h.Title,
-					Content = (string)null, // Bài tập có thể không có nội dung
-					CreatedAt = h.CreatedAt,
-					OwnerName = Model.Owner.Name,
-					ClassRoomId = h.ClassRoomId
-				}))
-				.OrderByDescending(item => item.CreatedAt) // Sắp xếp theo thời gian tạo
-				.ToList();
 			}
 
 
@@ -2341,7 +2528,7 @@
 
 					@if (item.Type == "Post")
 					{
-						<h3 style="font-size: 16px; margin-bottom: 0px;">đã đăng một thông báo mới: @item.Title</h3>
+						<h3 style="font-size: 16px; margin-bottom: 0px;">@item.OwnerName đã đăng một thông báo mới: @item.Title</h3>
 					}
 					else
 					{
@@ -2409,6 +2596,92 @@
 </div>
 @* ==================================SCRIPT======================================================*@
 <script>
+	function switchTab(event, tabId) {
+		// Hide all tab contents
+		document.querySelectorAll('.tab-content').forEach((tab) => {
+			tab.classList.remove('active');
+		});
+
+		// Deactivate all tab links
+		document.querySelectorAll('.tab-link').forEach((link) => {
+			link.classList.remove('active');
+		});
+
+		// Show the selected tab content and activate the corresponding link
+		document.getElementById(tabId).classList.add('active');
+		event.target.classList.add('active');
+	}
+</script>@* Chuyển tap trong reuse*@
+<script>
+	function openReuseLectureModal(lectureId) {
+		// Hide all post lists
+		const postLists = document.querySelectorAll('.postList');
+		postLists.forEach(postList => {
+			postList.style.display = 'none'; // Hide all postLists
+		});
+
+		// Show the specific postList related to the clicked button
+		const postListToShow = document.getElementById(`postList-${lectureId}`);
+		if (postListToShow) {
+			postListToShow.style.display = 'block'; // Show the specific postList
+		}
+
+		// Hide the main list (you may need to adjust the selector based on your structure)
+		const mainList = document.querySelector('.mainList'); // Assuming you wrap your main list in a div with class "mainList"
+		if (mainList) {
+			mainList.style.display = 'none'; // Hide the main list
+		}
+	}
+
+	function closeReuseLectureModal(lectureId) {
+		// Hide the specific postList when cancel is clicked
+		const postListToHide = document.getElementById(`postList-${lectureId}`);
+		if (postListToHide) {
+			postListToHide.style.display = 'none'; // Hide the postList
+		}
+
+		const mainList = document.querySelector('.mainList'); // Again, adjust if necessary
+		if (mainList) {
+			mainList.style.display = 'block'; // Show the main list
+		}
+	}
+</script>
+<script>
+	function openReuseModal(assignmentId) {
+		// Hide all post lists
+		const postLists = document.querySelectorAll('.postList');
+		postLists.forEach(postList => {
+			postList.style.display = 'none'; // Hide all postLists
+		});
+
+		// Show the specific postList related to the clicked button
+		const postListToShow = document.getElementById(`assignmentList-${assignmentId}`);
+		if (postListToShow) {
+			postListToShow.style.display = 'block'; // Show the specific postList
+		}
+
+		// Hide the main list (you may need to adjust the selector based on your structure)
+		const mainList = document.querySelector('.mainList'); // Assuming you wrap your main list in a div with class "mainList"
+		if (mainList) {
+			mainList.style.display = 'none'; // Hide the main list
+		}
+	}
+
+	function closeReuseModal(assignmentId) {
+		// Hide the specific postList when cancel is clicked
+		const postListToHide = document.getElementById(`assignmentList-${assignmentId}`);
+		if (postListToHide) {
+			postListToHide.style.display = 'none'; // Hide the postList
+		}
+
+		// Optionally show the main list again
+		const mainList = document.querySelector('.mainList'); // Again, adjust if necessary
+		if (mainList) {
+			mainList.style.display = 'block'; // Show the main list
+		}
+	}
+</script>
+<script>
 	function showPostContent(postId) {
 		// Hide all post lists
 		const postLists = document.querySelectorAll('.postList');
@@ -2443,7 +2716,7 @@
 		}
 	}
 
-</script>
+</script>@*Hiển thị nội dung bài post*@
 <script>
 	function toggleClassSelection() {
 		var form = document.getElementById("postContainer");
