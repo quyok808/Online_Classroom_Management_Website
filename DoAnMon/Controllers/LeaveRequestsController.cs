@@ -10,6 +10,8 @@ using DoAnMon.Models;
 using DoAnMon.IdentityCudtomUser;
 using Microsoft.AspNetCore.Identity;
 using static System.Runtime.InteropServices.JavaScript.JSType;
+using DoAnMon.SendMail;
+using System.Drawing;
 
 namespace DoAnMon.Controllers
 {
@@ -17,11 +19,13 @@ namespace DoAnMon.Controllers
     {
         private readonly ApplicationDbContext _context;
 		private readonly UserManager<CustomUser> _userManager;
+		private readonly Mail _mailService;
 
-		public LeaveRequestsController(ApplicationDbContext context, UserManager<CustomUser> userManager)
+		public LeaveRequestsController(ApplicationDbContext context, UserManager<CustomUser> userManager, Mail mailService)
         {
             _context = context;
 			_userManager = userManager;
+			_mailService = mailService;
         }
 
 		public IActionResult GetAllLeaveRequest()
@@ -36,7 +40,6 @@ namespace DoAnMon.Controllers
 		{
 			try
 			{
-				
 				// Asynchronously retrieve all leave requests by ClassID and UserID
 				var leaveRequests = await _context.leaveRequest
 					.Where(p => p.ClassRoomId.Equals(ClassID))
@@ -148,7 +151,7 @@ namespace DoAnMon.Controllers
 				return BadRequest(new { success = false, errors = "ID không hợp lệ!" });
 			}
 
-			var leaveRequest = await _context.leaveRequest.FindAsync(request.leaveRequestId);
+			var leaveRequest = await _context.leaveRequest.Include(p => p.User).FirstOrDefaultAsync(p => p.Id == request.leaveRequestId);
 			if (leaveRequest == null)
 			{
 				return NotFound(new { success = false, errors = "Không tìm thấy đơn này" });
@@ -156,6 +159,83 @@ namespace DoAnMon.Controllers
 
 			leaveRequest.Status = request.status;
 			await _context.SaveChangesAsync();
+			
+			try
+			{
+				string email = leaveRequest.User.Email;
+				string subject = $"Đã duyệt đơn xin nghỉ phép";
+				string body = $@"
+						<!DOCTYPE html>
+						<html lang='en'>
+						<head>
+							<meta charset='UTF-8'>
+							<meta name='viewport' content='width=device-width, initial-scale=1.0'>
+							<style>
+								body {{
+									font-family: 'JetBrains Mono', serif;
+									margin: 0;
+									padding: 0;
+									background-color: #f4f4f4;
+								}}
+								.email-container {{
+									max-width: 600px;
+									margin: 20px auto;
+									background-color: #ffffff;
+									border: 1px solid #dddddd;
+									border-radius: 8px;
+									overflow: hidden;
+								}}
+								.header {{
+									background-color: #007bff;
+									color: #ffffff;
+									text-align: center;
+									padding: 20px;
+									font-family: 'Rowdies', serif;
+								}}
+								.content {{
+									padding: 20px;
+									color: #333333;
+								}}
+								.content p {{
+									font-size: 16px;
+									line-height: 1.5;
+								}}
+								.footer {{
+									background-color: #f4f4f4;
+									color: #888888;
+									text-align: center;
+									padding: 10px;
+									font-size: 12px;
+								}}
+								.deadline {{
+									color: #FF8A8A;
+									font-weight: bold;
+								}}
+							</style>
+						</head>
+						<body>
+							<div class='email-container'>
+								<div class='header'>
+									<h1>ĐƠN XIN NGHỈ PHÉP ĐÃ ĐƯỢC DUYỆT</h1>
+								</div>
+								<div class='content'>
+									<p>Chào <span class='deadline'>{leaveRequest.User.Name},</span></p>
+									<p>Đơn xin nghỉ phép bạn gửi ngày <span class='deadline'>{leaveRequest.ThoiGianYeuCau}</span> từ ngày <span class='deadline'>{leaveRequest.StartDate.ToString("dd/MM/yyyy")}</span> đến ngày <span class='deadline'>{leaveRequest.EndDate.ToString("dd/MM/yyyy")}</span> với lý do <span class='deadline'>{leaveRequest.Reasion}</span> đã được duyệt thành công.</p>
+									<p>Kết quả là bạn <span class='deadline'>{(leaveRequest.Status == 1 ? "được phép nghỉ" : "không được phép nghỉ")}</span> từ ngày <span>{leaveRequest.StartDate.ToString("dd/MM/yyyy")}</span> đến ngày <span>{leaveRequest.EndDate.ToString("dd/MM/yyyy")}</span></p>
+								</div>
+								<div class='footer'>
+									<p>Email này được gửi tự động từ hệ thống quản lý lớp học trực tuyến OnlyA.</p>
+								</div>
+							</div>
+						</body>
+						</html>";
+				await _mailService.SendEmailAsync(email, subject, body);
+			}
+			catch (Exception ex)
+			{
+				// Ghi log lỗi hoặc thông báo lỗi
+				Console.WriteLine($"Error sending email: {ex.Message}");
+			}
 
 			return Ok(new { success = true, message = "Cập nhật trạng thái thành công!" });
 		}
