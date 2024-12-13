@@ -2130,9 +2130,13 @@
 			@{
 				if (Model.isOwner)
 				{
-					<div style="margin-bottom: -35px;">
+					<div style="margin-bottom: -45px; display: flex; width: 23%; justify-content: space-evenly; padding-top: 10px;">
 						<form asp-controller="ClassRooms" asp-action="ExportDSSV" asp-route-classID="@Model.ClassRoom.Id" method="post">
-							<button type="submit" class="btn btn-info">Xuất danh sách sinh viên</button>
+							<button type="submit" title="Tải file danh sách sinh viên"><i class="fas fa-file-download fa-lg" style="color: #B197FC; font-size: 3.25em;"></i></button>
+						</form>
+						<form asp-action="ImportDataFromExcel" asp-route-classID="@Model.ClassRoom.Id" method="post" enctype="multipart/form-data">
+							<input type="file" id="excelFile" name="excelFile" style="display: none;" onchange="this.form.submit()">
+							<button type="button" onclick="document.getElementById('excelFile').click()" title="Thêm danh sách sinh viên bằng file excel"><i class="fas fa-file-import fa-lg" style="color: #74C0FC; font-size: 3.25em;"></i></button>
 						</form>
 					</div>
 				}

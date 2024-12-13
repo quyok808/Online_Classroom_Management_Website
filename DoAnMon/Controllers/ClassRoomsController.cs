@@ -1423,16 +1423,9 @@ namespace DoAnMon.Controllers
         }
 
 		private static string classID;
-		public IActionResult AddListSV(string id)
-		{
-			ViewBag.ListRoom = userClasses;
-			classID = id;
-
-			return View();
-		}
 
 		[HttpPost]
-		public async Task<IActionResult> ImportDataFromExcel(IFormFile excelFile)
+		public async Task<IActionResult> ImportDataFromExcel(IFormFile excelFile, string classID)
 		{
 			if (excelFile == null || excelFile.Length <= 0)
 			{
@@ -1473,6 +1466,14 @@ namespace DoAnMon.Controllers
 						};
 						// Thêm đối tượng Employee vào cơ sở dữ liệu
 						_context.classroomDetail.Add(student);
+
+						var newDiemRecord = new BangDiem
+						{
+							UserId = user.Id,
+							ClassRoomId = classID,
+							DTB = 0
+						};
+						_context.bangDiem.Add(newDiemRecord);
 					}
 				}
 
