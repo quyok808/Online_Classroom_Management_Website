@@ -356,6 +356,9 @@
             if (totalWeight > 1) {
                 e.preventDefault(); // Ngừng gửi biểu mẫu
                 alert("Tổng trọng số không thể lớn hơn 1. Vui lòng kiểm tra lại.");
+            } else if (totalWeight < 1) { 
+                e.preventDefault(); // Ngừng gửi biểu mẫu
+                alert("Tổng trọng số không thể nhỏ hơn 1. Vui lòng kiểm tra lại.");
             } else {
                 // Chuyển đổi mảng criteriaList thành JSON và gán vào input ẩn
                 document.getElementById("criteriaData").value = JSON.stringify(criteriaList);

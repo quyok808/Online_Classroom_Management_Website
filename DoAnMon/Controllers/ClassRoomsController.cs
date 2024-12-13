@@ -170,7 +170,14 @@ namespace DoAnMon.Controllers
 				StudentsList.ForEachAsync(p => _context.Students.Remove(p));
 				_context.Rubric.Remove(rubric);
 			}
-			_context.classRooms.Remove(classRoom);
+
+			var diemdanh = _context.diemDanh.Where(p => p.ClassRoomId.Equals(id)).ToList();
+            foreach (var item in diemdanh) 
+            {
+                _context.diemDanh.Remove(item);
+            }
+
+            _context.classRooms.Remove(classRoom);
             _context.SaveChanges();
         }
 
@@ -1227,7 +1234,13 @@ namespace DoAnMon.Controllers
 				await StudentsList.ForEachAsync(p => _context.Students.Remove(p));
 				_context.Rubric.Remove(rubric);
 			}
-			_context.classRooms.Remove(classRoom);
+
+            var diemdanh = _context.diemDanh.Where(p => p.ClassRoomId.Equals(id)).ToList();
+            foreach (var item in diemdanh)
+            {
+                _context.diemDanh.Remove(item);
+            }
+            _context.classRooms.Remove(classRoom);
 			await _context.SaveChangesAsync();
 			return RedirectToAction(nameof(Index));
 		}

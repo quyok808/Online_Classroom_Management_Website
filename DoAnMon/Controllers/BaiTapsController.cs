@@ -57,7 +57,7 @@ namespace DoAnMon.Controllers
                 lop = userClasses.Select(p => p.Id).ToList();
                 
 			}
-            int pageSize = 5;
+            int pageSize = 8;
 			IQueryable<BaiTap> BaitapsQuery = _context.baiTaps.Where(p => lop.Contains(p.ClassRoomId));
 			List<BaiTap> t = _context.baiTaps.Where(p => lop.Contains(p.ClassRoomId)).ToList();
 			if (!string.IsNullOrEmpty(query))

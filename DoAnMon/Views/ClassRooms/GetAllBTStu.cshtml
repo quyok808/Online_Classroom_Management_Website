@@ -88,14 +88,14 @@
 						<a href="/BAINOP/@item.Urlbainop" download>@item.Urlbainop</a>
 					</td>
 					<td>
-						<span id="displayLabel">@item.Diem</span>
+						<span id="displayLabel_@item.IdBaiNop">@item.Diem</span>
 					</td>
 					<td>
 						@if (User.IsInRole("Teacher") || User.IsInRole("Admin"))
 						{
-							<input type="number" id="editInput" style="display:none;" value="@item.Diem" />
-							<button class="btn btn-warning btn-sm" onclick="toggleEdit()" id="editButton">Chấm điểm</button>
-							<button class="btn btn-success btn-sm d-none" onclick="saveGrade('@item.IdBaiNop')" id="saveButton" style="display:none;">Lưu</button>
+							<input type="number" id="editInput_@item.IdBaiNop" style="display:none;" value="@item.Diem" />
+							<button class="btn btn-warning btn-sm" onclick="toggleEdit('@item.IdBaiNop')" id="editButton_@item.IdBaiNop">Chấm điểm</button>
+							<button class="btn btn-success btn-sm d-none" onclick="saveGrade('@item.IdBaiNop')" id="saveButton_@item.IdBaiNop" style="display:none;">Lưu</button>
 						}
 
 					</td>
@@ -108,11 +108,11 @@
 
 
 <script>
-	function toggleEdit() {
-		var displayLabel = document.getElementById('displayLabel');
-		var editInput = document.getElementById('editInput');
-		var saveButton = document.getElementById('saveButton');
-		var editButton = document.getElementById('editButton');
+	function toggleEdit(idBaiNop) {
+		var displayLabel = document.getElementById(`displayLabel_${idBaiNop}`);
+		var editInput = document.getElementById(`editInput_${idBaiNop}`);
+		var saveButton = document.getElementById(`saveButton_${idBaiNop}`);
+		var editButton = document.getElementById(`editButton_${idBaiNop}`);
 
 		if (displayLabel.style.display === 'none') {
 			displayLabel.style.display = 'inline';
@@ -129,10 +129,10 @@
 	}
 
 	function saveGrade(baiNopId) {
-		var displayLabel = document.getElementById('displayLabel');
-		var editInput = document.getElementById('editInput');
-		var saveButton = document.getElementById('saveButton');
-		var editButton = document.getElementById('editButton');
+		var displayLabel = document.getElementById(`displayLabel_${baiNopId}`);
+		var editInput = document.getElementById(`editInput_${baiNopId}`);
+		var saveButton = document.getElementById(`saveButton_${baiNopId}`);
+		var editButton = document.getElementById(`editButton_${baiNopId}`);
 
 		displayLabel.textContent = editInput.value;
 		displayLabel.style.display = 'inline';
@@ -142,7 +142,6 @@
 
 		var diem = parseFloat(editInput.value);
 		if (diem < 0 || diem > 10 || isNaN(diem)) {
-			alert("");
 			toastr.warning('Điểm phải nằm trong khoảng từ 0 đến 10', 'Cảnh báo', { timeOut: 3000 });
 			return;
 		}
