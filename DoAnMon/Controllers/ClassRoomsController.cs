@@ -709,89 +709,104 @@ namespace DoAnMon.Controllers
 				listUserId = userMssvLe;
 			}
 
-			
+
 			// Gửi email thông báo
-			foreach(var user in listUserId)
+			const int batchSize = 50; // Số lượng email gửi trong một batch
+
+			// Chia danh sách người dùng thành từng lô
+			var emailBatches = listUserId.Select((user, index) => new { user, index })
+				.GroupBy(x => x.index / batchSize)
+				.Select(g => g.Select(x => x.user).ToList())
+				.ToList();
+
+			foreach (var batch in emailBatches)
 			{
 				try
 				{
-					string email = user.Email;
-					string subject = $"Bài tập mới: {baitap.Title}";
-					string body = $@"
-						<!DOCTYPE html>
-						<html lang='en'>
-						<head>
-							<meta charset='UTF-8'>
-							<meta name='viewport' content='width=device-width, initial-scale=1.0'>
-							<style>
-								body {{
-									font-family: 'JetBrains Mono', serif;
-									margin: 0;
-									padding: 0;
-									background-color: #f4f4f4;
-								}}
-								.email-container {{
-									max-width: 600px;
-									margin: 20px auto;
-									background-color: #ffffff;
-									border: 1px solid #dddddd;
-									border-radius: 8px;
-									overflow: hidden;
-								}}
-								.header {{
-									background-color: #007bff;
-									color: #ffffff;
-									text-align: center;
-									padding: 20px;
-									font-family: 'Rowdies', serif;
-								}}
-								.content {{
-									padding: 20px;
-									color: #333333;
-								}}
-								.content h1 {{
-									font-size: 24px;
-									margin-bottom: 10px;
-								}}
-								.content p {{
-									font-size: 16px;
-									line-height: 1.5;
-								}}
-								.footer {{
-									background-color: #f4f4f4;
-									color: #888888;
-									text-align: center;
-									padding: 10px;
-									font-size: 12px;
-								}}
-								.deadline {{
-									color: #e74c3c;
-									font-weight: bold;
-								}}
-							</style>
-						</head>
-						<body>
-							<div class='email-container'>
-								<div class='header'>
-									<h1>THÔNG BÁO BÀI TẬP</h1>
-								</div>
-								<div class='content'>
-									<h1>{baitap.Title}</h1>
-									<p>{baitap.Content}</p>
-									<p>Hạn nộp: <span class='deadline'>{(string.IsNullOrEmpty(baitap.Deadline?.ToString("dd/MM/yyyy HH:mm")) ? "Vô thời hạn" : baitap.Deadline?.ToString("dd/MM/yyyy HH:mm"))}</span></p>
-								</div>
-								<div class='footer'>
-									<p>Email này được gửi tự động từ hệ thống quản lý lớp học trực tuyến OnlyA.</p>
-								</div>
-							</div>
-						</body>
-						</html>";
-					await _mailService.SendEmailAsync(email, subject, body);
+					// Tạo danh sách email trong batch
+					var emails = batch.Select(user => user.Email).ToList();
+
+					// Gửi email cho từng người trong batch
+					foreach (var user in batch)
+					{
+						string email = user.Email;
+						string subject = $"Bài tập mới: {baitap.Title}";
+						string body = $@"
+                <!DOCTYPE html>
+                <html lang='en'>
+                <head>
+                    <meta charset='UTF-8'>
+                    <meta name='viewport' content='width=device-width, initial-scale=1.0'>
+                    <style>
+                        body {{
+                            font-family: 'JetBrains Mono', serif;
+                            margin: 0;
+                            padding: 0;
+                            background-color: #f4f4f4;
+                        }}
+                        .email-container {{
+                            max-width: 600px;
+                            margin: 20px auto;
+                            background-color: #ffffff;
+                            border: 1px solid #dddddd;
+                            border-radius: 8px;
+                            overflow: hidden;
+                        }}
+                        .header {{
+                            background-color: #007bff;
+                            color: #ffffff;
+                            text-align: center;
+                            padding: 20px;
+                            font-family: 'Rowdies', serif;
+                        }}
+                        .content {{
+                            padding: 20px;
+                            color: #333333;
+                        }}
+                        .content h1 {{
+                            font-size: 24px;
+                            margin-bottom: 10px;
+                        }}
+                        .content p {{
+                            font-size: 16px;
+                            line-height: 1.5;
+                        }}
+                        .footer {{
+                            background-color: #f4f4f4;
+                            color: #888888;
+                            text-align: center;
+                            padding: 10px;
+                            font-size: 12px;
+                        }}
+                        .deadline {{
+                            color: #e74c3c;
+                            font-weight: bold;
+                        }}
+                    </style>
+                </head>
+                <body>
+                    <div class='email-container'>
+                        <div class='header'>
+                            <h1>THÔNG BÁO BÀI TẬP</h1>
+                        </div>
+                        <div class='content'>
+                            <h1>{baitap.Title}</h1>
+                            <p>{baitap.Content}</p>
+                            <p>Hạn nộp: <span class='deadline'>{(string.IsNullOrEmpty(baitap.Deadline?.ToString("dd/MM/yyyy HH:mm")) ? "Vô thời hạn" : baitap.Deadline?.ToString("dd/MM/yyyy HH:mm"))}</span></p>
+                        </div>
+                        <div class='footer'>
+                            <p>Email này được gửi tự động từ hệ thống quản lý lớp học trực tuyến OnlyA.</p>
+                        </div>
+                    </div>
+                </body>
+                </html>";
+						await _mailService.SendEmailAsync(email, subject, body);
+					}
 				}
 				catch (Exception ex)
 				{
-					// Ghi log lỗi hoặc thông báo lỗi
-					Console.WriteLine($"Error sending email: {ex.Message}");
+					// Ghi log lỗi cho từng batch
+					Console.WriteLine($"Lỗi khi gửi email batch: {ex.Message}");
 				}
 			}
 
@@ -868,89 +883,105 @@ namespace DoAnMon.Controllers
 
 
 			// Gửi email thông báo
-			foreach (var user in listUserId)
+			const int batchSize = 50; // Số lượng email gửi trong một batch
+
+			// Chia danh sách người dùng thành từng lô
+			var emailBatches = listUserId.Select((user, index) => new { user, index })
+				.GroupBy(x => x.index / batchSize)
+				.Select(g => g.Select(x => x.user).ToList())
+				.ToList();
+
+			foreach (var batch in emailBatches)
 			{
 				try
 				{
-					string email = user.Email;
-					string subject = $"Bài tập mới: {newBaitap.Title}";
-					string body = $@"
-						<!DOCTYPE html>
-						<html lang='en'>
-						<head>
-							<meta charset='UTF-8'>
-							<meta name='viewport' content='width=device-width, initial-scale=1.0'>
-							<style>
-								body {{
-									font-family: 'JetBrains Mono', serif;
-									margin: 0;
-									padding: 0;
-									background-color: #f4f4f4;
-								}}
-								.email-container {{
-									max-width: 600px;
-									margin: 20px auto;
-									background-color: #ffffff;
-									border: 1px solid #dddddd;
-									border-radius: 8px;
-									overflow: hidden;
-								}}
-								.header {{
-									background-color: #007bff;
-									color: #ffffff;
-									text-align: center;
-									padding: 20px;
-									font-family: 'Rowdies', serif;
-								}}
-								.content {{
-									padding: 20px;
-									color: #333333;
-								}}
-								.content h1 {{
-									font-size: 24px;
-									margin-bottom: 10px;
-								}}
-								.content p {{
-									font-size: 16px;
-									line-height: 1.5;
-								}}
-								.footer {{
-									background-color: #f4f4f4;
-									color: #888888;
-									text-align: center;
-									padding: 10px;
-									font-size: 12px;
-								}}
-								.deadline {{
-									color: #e74c3c;
-									font-weight: bold;
-								}}
-							</style>
-						</head>
-						<body>
-							<div class='email-container'>
-								<div class='header'>
-									<h1>THÔNG BÁO BÀI TẬP</h1>
-								</div>
-								<div class='content'>
-									<h1>{newBaitap.Title}</h1>
-									<p>{newBaitap.Content}</p>
-									<p>Hạn nộp: <span class='deadline'>{(string.IsNullOrEmpty(newBaitap.Deadline?.ToString("dd/MM/yyyy HH:mm")) ? "Vô thời hạn" : newBaitap.Deadline?.ToString("dd/MM/yyyy HH:mm"))}</span></p>
-								</div>
-								<div class='footer'>
-									<p>Email này được gửi tự động từ hệ thống quản lý lớp học trực tuyến OnlyA.</p>
-								</div>
-							</div>
-						</body>
-						</html>";
-					await _mailService.SendEmailAsync(email, subject, body);
+					// Tạo danh sách email trong batch
+					var emails = batch.Select(user => user.Email).ToList();
+
+					// Gửi email cho từng người trong batch
+					foreach (var user in batch)
+					{
+						string email = user.Email;
+						string subject = $"Bài tập mới: {newBaitap.Title}";
+						string body = $@"
+                <!DOCTYPE html>
+                <html lang='en'>
+                <head>
+                    <meta charset='UTF-8'>
+                    <meta name='viewport' content='width=device-width, initial-scale=1.0'>
+                    <style>
+                        body {{
+                            font-family: 'JetBrains Mono', serif;
+                            margin: 0;
+                            padding: 0;
+                            background-color: #f4f4f4;
+                        }}
+                        .email-container {{
+                            max-width: 600px;
+                            margin: 20px auto;
+                            background-color: #ffffff;
+                            border: 1px solid #dddddd;
+                            border-radius: 8px;
+                            overflow: hidden;
+                        }}
+                        .header {{
+                            background-color: #007bff;
+                            color: #ffffff;
+                            text-align: center;
+                            padding: 20px;
+                            font-family: 'Rowdies', serif;
+                        }}
+                        .content {{
+                            padding: 20px;
+                            color: #333333;
+                        }}
+                        .content h1 {{
+                            font-size: 24px;
+                            margin-bottom: 10px;
+                        }}
+                        .content p {{
+                            font-size: 16px;
+                            line-height: 1.5;
+                        }}
+                        .footer {{
+                            background-color: #f4f4f4;
+                            color: #888888;
+                            text-align: center;
+                            padding: 10px;
+                            font-size: 12px;
+                        }}
+                        .deadline {{
+                            color: #e74c3c;
+                            font-weight: bold;
+                        }}
+                    </style>
+                </head>
+                <body>
+                    <div class='email-container'>
+                        <div class='header'>
+                            <h1>THÔNG BÁO BÀI TẬP</h1>
+                        </div>
+                        <div class='content'>
+                            <h1>{newBaitap.Title}</h1>
+                            <p>{newBaitap.Content}</p>
+                            <p>Hạn nộp: <span class='deadline'>{(string.IsNullOrEmpty(newBaitap.Deadline?.ToString("dd/MM/yyyy HH:mm")) ? "Vô thời hạn" : newBaitap.Deadline?.ToString("dd/MM/yyyy HH:mm"))}</span></p>
+                        </div>
+                        <div class='footer'>
+                            <p>Email này được gửi tự động từ hệ thống quản lý lớp học trực tuyến OnlyA.</p>
+                        </div>
+                    </div>
+                </body>
+                </html>";
+						await _mailService.SendEmailAsync(email, subject, body);
+					}
 				}
 				catch (Exception ex)
 				{
-					// Ghi log lỗi hoặc thông báo lỗi
-					Console.WriteLine($"Error sending email: {ex.Message}");
+					// Ghi log lỗi cho từng batch
+					Console.WriteLine($"Lỗi khi gửi email batch: {ex.Message}");
 				}
 			}
+
 
 			// Gọi hàm tính điểm trung bình (nếu cần)
 			await TinhDTBAsync(classId ?? originalBaitap.ClassRoomId);
