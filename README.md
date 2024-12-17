@@ -1,13 +1,59 @@
-![image](https://github.com/quyok808/DAMH_QLClassroom/assets/54305138/c0e30145-234f-49c3-b4dc-a2c0e3c7599a)
-![image](https://github.com/quyok808/DAMH_QLClassroom/assets/54305138/dc3abe41-85f4-4a67-b2b0-5640647f8513)
-![image](https://github.com/quyok808/DAMH_QLClassroom/assets/54305138/1f5b12b3-95ec-412f-b34d-d33ad1a53f64)
-![image](https://github.com/quyok808/DAMH_QLClassroom/assets/54305138/9dfa2243-2320-4c3d-a7f5-acd0c8bfff8b)
-![image](https://github.com/quyok808/DAMH_QLClassroom/assets/54305138/582db91e-a447-4d33-a917-516dd7bc1239)
-![image](https://github.com/quyok808/DAMH_QLClassroom/assets/54305138/933411b1-258a-4b2b-aeda-13ea8d3f9506)
-![image](https://github.com/quyok808/DAMH_QLClassroom/assets/54305138/a3809d6b-1b3c-44c8-ab58-336636ee78e6)
-![image](https://github.com/quyok808/DAMH_QLClassroom/assets/54305138/a5034996-95a0-41dc-b46c-ff8339f159cc)
-![image](https://github.com/quyok808/DAMH_QLClassroom/assets/54305138/c79c7d76-ea40-41ad-b096-e054189434cd)
-![image](https://github.com/quyok808/DAMH_QLClassroom/assets/54305138/2841bd4c-4f9e-46c7-a289-baff3605e882)
-![image](https://github.com/quyok808/DAMH_QLClassroom/assets/54305138/2599a489-0846-4ac6-8aef-ac112717a5e9)
-![image](https://github.com/quyok808/DAMH_QLClassroom/assets/54305138/3eae6fd9-9077-4e43-988f-13822ace4936)
-![image](https://github.com/quyok808/DAMH_QLClassroom/assets/54305138/4f167d1e-805a-4804-8757-fe8a104ab82a)
+**1. Classroom Index**
+
+![image](https://github.com/user-attachments/assets/157f4ecb-a9a8-49fd-8cb1-4b6395b2ca49)
+
+**2. Tạo lớp mới**
+
+![image](https://github.com/user-attachments/assets/466622a6-60bf-410b-8b83-5104d12cd898)
+
+**3. Tham gia lớp học**
+
+![image](https://github.com/user-attachments/assets/ee27c53e-faa2-4727-a512-6b30d74588f0)
+
+**4. Chi tiết lớp học**
+
+![image](https://github.com/user-attachments/assets/d1ef1dc8-f544-4ee9-ba28-0dec15e105ff)
+
+**5. Quản lý bài tập**
+
+  *- Quản lý bài tập*
+  
+  ![image](https://github.com/user-attachments/assets/e92358bf-616c-4585-98fc-c64d682f76c6)
+  ![image](https://github.com/user-attachments/assets/c3d614db-4b37-4214-9af7-d0918a9dc182)
+  
+  *- Chấm điểm bài tập*
+  
+  ![image](https://github.com/user-attachments/assets/de25f83c-546b-4112-9df6-0e3b78ff15cd)
+  
+**6. Quản lý danh sách sinh viên**
+
+![image](https://github.com/user-attachments/assets/037bc865-e0cc-4913-96f3-b4b916eac5e5)
+
+**7. Quản lý trò chuyện**
+
+![image](https://github.com/user-attachments/assets/5477c50e-ab71-4fb5-8b6c-5a27e4106ec1)
+
+**8. Quản lý đơn xin nghỉ phép**
+
+![image](https://github.com/user-attachments/assets/25c3cd84-3983-48db-83d8-6f0d97b51233)
+
+**9. Tuỳ chỉnh lớp học**
+
+![image](https://github.com/user-attachments/assets/4a6cf23d-72a4-4d24-b163-5aae68b6ea93)
+
+**10. Quản lý bảng điểm**
+
+![image](https://github.com/user-attachments/assets/cf227edd-ab60-4a92-88a0-150e19efdf20)
+
+**11. Quản lý thời khoá biểu**
+
+![image](https://github.com/user-attachments/assets/87e87c0c-6462-4518-947f-0a87bc91abce)
+
+**12. Thông báo lớp học**
+
+![image](https://github.com/user-attachments/assets/2584a912-1c81-435c-bc1c-6a30adf998df)
+
+**13. Sử dụng lại bài đăng, bài giảng, bài tập đã đăng ở lớp khác**
+
+![image](https://github.com/user-attachments/assets/fe09094d-3f88-4bd0-9bc9-9bdcc8369eb9)
+

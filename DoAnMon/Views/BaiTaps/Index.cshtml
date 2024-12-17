@@ -155,7 +155,7 @@
                 <div class="assignment">
                     <div class="assignment-content">
                         <h3>@item.Title</h3>
-                        <p><strong>Hạn nộp:</strong> @item.Deadline</p>
+                        <p><strong>Hạn nộp:</strong> @(item.Deadline == null ? "Vô thời hạn" : item.Deadline)</p>
                         <p><strong>Ngày tạo:</strong> @item.CreatedAt</p>
                     </div>
                     @if (User.IsInRole("Teacher"))

@@ -96,18 +96,17 @@
                     <a href="/Identity/Account/Manage/Index"><i class="fa-solid fa-id-card"></i> Cập nhật thông tin cá nhân</a>
                     <a asp-area="Identity" asp-page="/Account/Manage/ChangePassword"><i class="fa-solid fa-key"></i> Đổi mật khẩu</a>
                 </div>
+                @if (User.IsInRole("Admin"))
+                {
+                    <div class="dropdown-item">
+                        <a href="/Admin">Admin</a>
+                    </div>
+                }
                 <form class="form-inline dropdown-item" asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Action("Index", "Home", new { area = "" })">
                     <button>
                         <i class="fas fa-sign-out-alt"></i> Logout
                     </button>
                 </form>
-                @if (User.IsInRole("Admin"))
-                {
-                    <div class="dropdown-item">
-                        <a href="/Admin/Home/PhanQuyen"><i class="fas fa-tools"></i> Quản lí người dùng</a>
-                        <a href="/Admin/Home/DSbaipost">Bài post</a>
-                    </div>
-                }
             </div>
         </li>
     }
