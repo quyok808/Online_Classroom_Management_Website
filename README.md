@@ -52,3 +52,8 @@
 **12. Thông báo lớp học**
 
 ![image](https://github.com/user-attachments/assets/2584a912-1c81-435c-bc1c-6a30adf998df)
+
+**13. Sử dụng lại bài đăng, bài giảng, bài tập đã đăng ở lớp khác**
+
+![image](https://github.com/user-attachments/assets/fe09094d-3f88-4bd0-9bc9-9bdcc8369eb9)
+
