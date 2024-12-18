@@ -539,6 +539,7 @@
 		width: 100%;
 		overflow-y: auto; /* Hiển thị thanh cuộn dọc nếu nội dung vượt quá chiều cao */
 		box-sizing: border-box; /* Đảm bảo padding không tăng kích thước phần tử */
+		 scroll-behavior: smooth;
 	}
 
 	.message-form {
@@ -1588,7 +1589,50 @@
 		gap: 8px;
 	}
 
+	/* Ẩn nền và ảnh lớn */
+	.modal-zoomImage {
+		display: none;
+		position: fixed;
+		z-index: 1000;
+		left: 0;
+		top: 0;
+		width: 100%;
+		height: 100%;
+		background-color: rgba(0, 0, 0, 0.8);
+		justify-content: center;
+		align-items: center;
+	}
 
+		.modal-zoomImage img {
+			max-width: 90%;
+			max-height: 90%;
+			border: 2px solid white;
+			border-radius: 8px;
+			box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5);
+			animation: fadeIn 0.3s ease-in-out;
+		}
+
+	/* Hiệu ứng fade-in */
+	@@keyframes fadeIn {
+		from {
+			opacity: 0;
+		}
+
+		to {
+			opacity: 1;
+		}
+	}
+
+	/* Đóng modal */
+	.modal-zoomImage-close {
+		position: absolute;
+		top: 20px;
+		right: 20px;
+		color: white;
+		font-size: 24px;
+		cursor: pointer;
+		font-weight: bold;
+	}
 </style>
 <div id="loading-bar" style="display: none;"></div>
 
@@ -2318,7 +2362,7 @@
 			<div class="discussion">
 				<div class="discussion-container">
 					<div class="right-panel">
-						<div id="messagesList" class="message-list">
+						<div class="message-list" id="messageList1">
 							<partial name="_MessagePartial" model="Model.Message" />
 						</div>
 						<form id="uploadForm" enctype="multipart/form-data" class="message-form">
@@ -2334,7 +2378,7 @@
 										<path d="M3.5 20.5a1 1 0 011-1h2.75a.5.5 0 00.5-.5v-.66a.52.52 0 00-.43-.5A8.5 8.5 0 01.5 9.5V9a1 1 0 011-1H2a1 1 0 011 1v.5a6 6 0 0012 0V9a1 1 0 011-1h.5a1 1 0 011 1v.5a8.5 8.5 0 01-6.82 8.33.52.52 0 00-.43.51V19c0 .28.22.5.5.5h2.75a1 1 0 011 1v.5a1 1 0 01-1 1h-9a1 1 0 01-1-1v-.5z" fill="#ff397f"></path>
 									</svg>
 								</button>
-								<label class="file-label" for="FileInput" title="Chọn tệp">
+								<label class="file-label" for="FileInput" title="Chọn tệp" style="cursor:pointer;">
 									<span class="image-icon_discuss">
 										<svg xmlns="http://www.w3.org/2000/svg" width="25px" height="25px" fill="#ff397f" class="bi bi-paperclip" viewBox="0 0 16 16">
 											<path d="M4.5 3a2.5 2.5 0 0 1 5 0v9a1.5 1.5 0 0 1-3 0V5a.5.5 0 0 1 1 0v7a.5.5 0 0 0 1 0V3a1.5 1.5 0 1 0-3 0v9a2.5 2.5 0 0 0 5 0V5a.5.5 0 0 1 1 0v7a3.5 3.5 0 1 1-7 0z" />
@@ -3615,12 +3659,31 @@
 		timeElement.style.cssText = "font-size: 13px; margin-top: 5px; margin: 0;";
 		timeElement.textContent = `(${formatTime})`;
 
-		if (fileUrl) {
-			var fileLink = document.createElement("a");
-			fileLink.href = fileUrl;
-			fileLink.target = "_blank";
-			fileLink.textContent = "[Open File]";
-			messageElement.appendChild(fileLink);
+		// Hàm hiển thị modal với ảnh lớn
+		function showImageModal(imageUrl) {
+			// Tạo modal nếu chưa có
+			var modal = document.createElement("div");
+			modal.className = "modal-zoomImage";
+			modal.innerHTML = `
+			<span class="modal-zoomImage-close">&times;</span>
+			<img src="${imageUrl}" alt="Zoomed Image">
+		`;
+			document.body.appendChild(modal);
+
+			// Đóng modal khi click vào nút đóng
+			modal.querySelector('.modal-zoomImage-close').addEventListener("click", function () {
+				modal.remove();
+			});
+
+			// Đóng modal khi click ra ngoài ảnh
+			modal.addEventListener("click", function (e) {
+				if (e.target === modal) {
+					modal.remove();
+				}
+			});
+
+			// Hiển thị modal
+			modal.style.display = "flex";
 		}
 
 		var avatarElement = document.createElement("img");
@@ -3637,8 +3700,37 @@
 		messageBox.classList.add("message-box");
 		messageBox.appendChild(nameElement);
 		messageBox.appendChild(messageElement);
-		messageBox.appendChild(timeElement);
+		
 
+		if (fileUrl) {
+			var fileExtension = fileUrl.split('.').pop().toLowerCase();
+			var imageExtensions = ['jpg', 'jpeg', 'png', 'gif', 'bmp', 'tiff', 'webp'];
+
+			if (imageExtensions.includes(fileExtension)) {
+				// Tạo thẻ img nếu là hình ảnh
+				var image = document.createElement("img");
+				image.src = fileUrl;
+				image.alt = "Full-size Image";
+				image.style.width = "350px";  // Điều chỉnh kích thước hình ảnh nếu cần
+				image.style.height = "auto";
+				image.style.cursor = "pointer";  // Thêm hiệu ứng con trỏ khi di chuột vào hình
+
+				// Khi click vào hình ảnh, hiển thị nó trong modal
+				image.addEventListener("click", function () {
+					showImageModal(fileUrl);
+				});
+
+				messageBox.appendChild(image);
+			} else {
+				// Tạo thẻ a nếu không phải là hình ảnh
+				var fileLink = document.createElement("a");
+				fileLink.href = fileUrl;
+				fileLink.target = "_blank";
+				fileLink.textContent = "[Download file]";
+				messageBox.appendChild(fileLink);
+			}
+		}
+		messageBox.appendChild(timeElement);
 
 		li.style.cssText = "font-family: 'JetBrains Mono', serif; ";
 
@@ -3656,11 +3748,29 @@
 		const messagesList = document.querySelector(".message-list");
 		messagesList.appendChild(li);
 
-		setTimeout(() => {
-			messagesList.scrollTop = messagesList.scrollHeight;
-		}, 0);
+		if (messagesList) {
+			messagesList.scrollTo({ top: messagesList.scrollHeight, behavior: 'instant' });
+		}
 
 	});
+
+	window.onload = function () {
+		setTimeout(function () {
+			scrollToBottom();
+		}, 1000);  // Đợi một chút trước khi cuộn xuống dưới
+	};
+
+	function scrollToBottom() {
+		const messageList = document.getElementById("messageList1");
+		if (messageList) {
+			messageList.scrollTop = messageList.scrollHeight;
+			console.log("Scrolled to bottom");
+		} else {
+			console.error("Message list element not found");
+		}
+	}
+
+
 
 	function getCurrentTime() {
 		const currentTime = new Date();
@@ -3685,6 +3795,15 @@
 		var FileInput = document.getElementById("FileInput");
 		var fileUrl = null;
 		var Urlavt = "@((await _userManager.GetUserAsync(User))?.UrlAvt)";
+		// Lấy tên tệp từ FileInput
+		var fileName = FileInput.files.length > 0 ? FileInput.files[0].name : null;
+
+		// Kiểm tra nếu message trùng với tên tệp
+		if (message === fileName) {
+			// Xóa nội dung của message
+			message = "";
+		}
+
 		if (FileInput.files.length > 0) {
 			var file = FileInput.files[0];
 
@@ -3716,6 +3835,7 @@
 
 				// Xóa nội dung sau khi gửi
 				document.getElementById("messageInput").value = '';
+				document.getElementById("messageInput").placeholder = 'Nhập tin nhắn';
 				FileInput.value = '';
 			} catch (err) {
 				console.error("Lỗi khi gửi tin nhắn:", err.toString());
@@ -3732,9 +3852,7 @@
 
 			// Hiển thị tên file trong khung nhập tin nhắn
 			if (messageInput.value.trim() === '') {
-				messageInput.value = fileName; // Nếu khung trống, hiển thị tên file
-			} else {
-				messageInput.value += ` [${fileName}]`; // Nếu có nội dung, thêm tên file vào sau
+				messageInput.placeholder = fileName; // Nếu khung trống, hiển thị tên file
 			}
 		} else {
 			console.log('Không có file nào được chọn.');
@@ -3752,60 +3870,7 @@
 			await sendMessage();
 		}
 	});
-
-	window.onload = function () {
-		const messagesList = document.querySelector(".message-list");
-
-		if (messagesList) {
-			// Cuộn thanh trượt xuống cuối
-			messagesList.scrollTop = messagesList.scrollHeight;
-		}
-	};
-
-
 </script> @* G?i tin nh?n *@
-<script>
-	function getListSV() {
-		var classId = document.getElementById("classId").value;
-		$.ajax({
-			url: '/ClassRooms/GetListSV?classId=' + classId,
-			type: 'GET',
-			dataType: 'json',
-			success: function (response) {
-				if (response.success) {
-					displaySV(response.students);
-				} else {
-					console.error('Error fetching student list:', response.error);
-				}
-			},
-			error: function (xhr, status, error) {
-				console.error('Error fetching student list:', error);
-			}
-		});
-	}
-
-
-	$(document).ready(function () {
-		getListSV();
-	});
-
-	function openPopup(name, mssv, email, urlAvt) {
-		document.getElementById("student-name").textContent = name;
-		document.getElementById("student-mssv").textContent = mssv;
-		document.getElementById("student-email").textContent = email;
-
-		const imageElement = document.getElementById("student-image");
-		imageElement.src = `/Imgs_avtUser/${urlAvt}`;
-		imageElement.alt = `Image of ${name}`;
-
-		document.getElementById("popup").style.display = "block";
-	}
-
-	function closePopup() {
-		document.getElementById("popup").style.display = "none";
-	}
-
-</script>@*chọn nhóm*@
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 @{
 	var settings = new Newtonsoft.Json.JsonSerializerSettings
