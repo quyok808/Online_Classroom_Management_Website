@@ -4037,12 +4037,12 @@
 
 			// Nếu là BAIGIANG và chưa nhập tên file
 			if (folderType === 'BAIGIANG' && !fileNameSet) {
-				var customFileName = prompt("Nhập tên file cho BAIGIANG:");
+				var customFileName = prompt("Nhập tên bài giảng:");
 				if (customFileName) {
 					r.opts.query.fileName = customFileName; // Đặt tên file
 					fileNameSet = true; // Đánh dấu là đã nhập tên
 				} else {
-					alert("Tên file không thể để trống. Upload bị hủy."); // Thông báo nếu không nhập tên
+					toastr.error('Tên file không thể để trống. Upload bị hủy.','Lỗi',{timeOut: 3000}); // Thông báo nếu không nhập tên
 					return; // Dừng hàm nếu không có tên
 				}
 			}
@@ -4053,7 +4053,7 @@
 			// Kiểm tra định dạng file
 			var fileExtension = file.fileName.split('.').pop().toLowerCase();
 			if (fileExtension !== 'pdf') {
-				alert("Chỉ được phép upload file PDF. Upload bị hủy.");
+				toastr.error('Chỉ được phép upload file PDF. Upload bị hủy.','Lỗi',{timeOut: 3000});
 				r.removeFile(file); // Loại bỏ file không hợp lệ khỏi danh sách
 				return;
 			}

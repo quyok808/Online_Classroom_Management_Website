@@ -1545,7 +1545,7 @@ namespace DoAnMon.Controllers
 			string zipFilePath = Path.Combine(_environment.WebRootPath, zipFileName);
 			if (System.IO.File.Exists(zipFilePath))
 			{
-				// Xử lý trường hợp tập tin đã tồn tại (ví dụ: xóa tập tin cũ)
+				// Xử lý trường hợp tập tin đã tồn tại (xóa tập tin cũ)
 				System.IO.File.Delete(zipFilePath);
 			}
 			// Nén các tập tin thành tập tin nén
