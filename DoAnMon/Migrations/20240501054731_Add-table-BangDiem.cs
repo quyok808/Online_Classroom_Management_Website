@@ -63,7 +63,7 @@ namespace DoAnMon.Migrations
 			var securityStamp = Guid.NewGuid().ToString();
 			migrationBuilder.Sql($"INSERT INTO AspNetRoles (Id, Name, NormalizedName) VALUES ('{teacherRoleId}', 'Teacher', 'TEACHER')");
 			migrationBuilder.Sql($"INSERT INTO AspNetRoles (Id, Name, NormalizedName) VALUES ('{adminRoleId}', 'Admin', 'ADMIN')");
-			migrationBuilder.Sql($"INSERT INTO AspNetUsers (Id, UserName, NormalizedUserName, Email, NormalizedEmail, EmailConfirmed, PasswordHash, PhoneNumberConfirmed, TwoFactorEnabled, AccessFailedCount, LockoutEnabled, SecurityStamp,Name,Mssv) VALUES ('{adminUserId}', 'admin', 'ADMIN', 'admin@gmail.com', 'ADMIN@GMAIL.COM', 1, '{hashedPassword}', 0, 0, 0, 0, '{securityStamp}','Admin','1234567891')");
+			migrationBuilder.Sql($"INSERT INTO AspNetUsers (Id, UserName, NormalizedUserName, Email, NormalizedEmail, EmailConfirmed, PasswordHash, PhoneNumberConfirmed, TwoFactorEnabled, AccessFailedCount, LockoutEnabled, SecurityStamp,Name,Mssv,UrlAvt) VALUES ('{adminUserId}', 'admin', 'ADMIN', 'admin@gmail.com', 'ADMIN@GMAIL.COM', 1, '{hashedPassword}', 0, 0, 0, 0, '{securityStamp}','Admin','1234567891','avatar.jpg')");
 			migrationBuilder.Sql($"INSERT INTO AspNetUserRoles (UserId, RoleId) VALUES ('{adminUserId}', '{adminRoleId}')");
 
 		}
