@@ -109,7 +109,7 @@ async function postFile(postData) {
 
         const content = hide_content.innerHTML;
         await postToSheets(content);
-        redirectToHomePage();
+        window.location.href = "/Admin/Home/DSbaipost";
     } catch (error) {
         console.error('Error:', error);
         alert("Vui lòng thử lại");
@@ -142,5 +142,5 @@ async function postToSheets(content) {
 }
 
 function redirectToHomePage() {
-    window.location.href = '/';
+    window.location.href = 'https://localhost:7142/Admin/Home/DSbaipost';
 }
