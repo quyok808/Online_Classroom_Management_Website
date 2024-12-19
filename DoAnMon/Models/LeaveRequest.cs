@@ -13,6 +13,7 @@ namespace DoAnMon.Models
         public string? Reasion {  get; set; }
         public DateTime ThoiGianYeuCau {  get; set; }
         public int Status { get; set; }
+        public string? Image {  get; set; }
 
         [ValidateNever]
         public ClassRoom? ClassRoom { get; set; }

@@ -12,20 +12,24 @@ using Microsoft.AspNetCore.Identity;
 using static System.Runtime.InteropServices.JavaScript.JSType;
 using DoAnMon.SendMail;
 using System.Drawing;
+using System.Numerics;
+using Microsoft.IdentityModel.Tokens;
 
 namespace DoAnMon.Controllers
 {
     public class LeaveRequestsController : Controller
     {
+        private readonly IWebHostEnvironment _environment;
         private readonly ApplicationDbContext _context;
 		private readonly UserManager<CustomUser> _userManager;
 		private readonly Mail _mailService;
 
-		public LeaveRequestsController(ApplicationDbContext context, UserManager<CustomUser> userManager, Mail mailService)
+		public LeaveRequestsController(IWebHostEnvironment environment, ApplicationDbContext context, UserManager<CustomUser> userManager, Mail mailService)
         {
             _context = context;
 			_userManager = userManager;
 			_mailService = mailService;
+			_environment = environment;
         }
 
 		public IActionResult GetAllLeaveRequest()
@@ -73,6 +77,7 @@ namespace DoAnMon.Controllers
 										lr.EndDate,
 										lr.Status,
 										lr.UserID,
+										lr.Image,
 										Name = lr.User.Name // Assuming the 'User' entity has the 'Name' property
 									})
 
@@ -90,7 +95,8 @@ namespace DoAnMon.Controllers
 									lr.EndDate,
 									lr.Status,
 									lr.UserID,
-									Name = lr.User.Name ,// Assuming the 'User' entity has the 'Name' property
+                                    lr.Image,
+                                    Name = lr.User.Name ,// Assuming the 'User' entity has the 'Name' property
 								})
 
 								.ToList();
@@ -104,7 +110,7 @@ namespace DoAnMon.Controllers
 		// For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
 		[HttpPost]
 		[ValidateAntiForgeryToken]
-		public async Task<IActionResult> Create(LeaveRequest leaveRequest)
+		public async Task<IActionResult> Create(LeaveRequest leaveRequest, IFormFile? ImageUpload)
 		{
 			// Check what data is being received
 			if (leaveRequest == null)
@@ -116,6 +122,31 @@ namespace DoAnMon.Controllers
 			{
 				DateTime now = DateTime.Now;
 				leaveRequest.ThoiGianYeuCau = now;
+                if (ImageUpload != null && ImageUpload.Length > 0)
+                {
+					// Đảm bảo thư mục tồn tại
+					var uploadsFolder = Path.Combine(_environment.WebRootPath, "LeaveRequest");
+					if (!Directory.Exists(uploadsFolder))
+					{
+						Directory.CreateDirectory(uploadsFolder);
+					}
+
+					// Tạo tên file duy nhất
+					var uniqueFileName = Guid.NewGuid().ToString() + "_" + ImageUpload.FileName;
+					var filePath = Path.Combine(uploadsFolder, uniqueFileName);
+
+					// Lưu file
+					leaveRequest.Image = uniqueFileName;
+					using (var fileStream = new FileStream(filePath, FileMode.Create))
+					{
+						await ImageUpload.CopyToAsync(fileStream);
+					}
+				}
+				else
+				{
+					// Nếu không có file, lưu thông tin mà không kèm ảnh
+					leaveRequest.Image = null; // Hoặc giá trị mặc định nếu cần
+				}
 				_context.Add(leaveRequest);
 				await _context.SaveChangesAsync();
 				return Json(new { success = true, message = "Leave request created successfully." });
@@ -138,10 +169,28 @@ namespace DoAnMon.Controllers
             {
 				return BadRequest(new { success = false, errors = "Lỗi không tìm thấy đơn này" });
 			}
+
+			deleteFile("LeaveRequest", leaveRequest.Image);
 			_context.leaveRequest.Remove(leaveRequest);
 			await _context.SaveChangesAsync();
 			return Ok();
         }
+
+		//DELETE FILE
+		public void deleteFile(string folder, string fileName)
+		{
+			if (fileName.IsNullOrEmpty())
+			{
+				return;
+			}
+			var uploadsFolder = Path.Combine(_environment.WebRootPath, folder);
+
+			var filePath = Path.Combine(uploadsFolder, fileName);
+			if (System.IO.File.Exists(filePath))
+			{
+				System.IO.File.Delete(filePath);
+			}
+		}
 
 		[HttpPut]
 		public async Task<IActionResult> UpdateStatus([FromBody] UpdateStatusRequest request)

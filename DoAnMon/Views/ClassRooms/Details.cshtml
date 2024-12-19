@@ -2584,7 +2584,7 @@
 		<div id="letter" class="tabcontent">
 			<button type="button" class="btn btn-nghiphep" onclick="toggleLeaveRequestForm()">Tạo đơn xin nghỉ phép</button>
 			<div id="leaveRequestFormContainer" style="display:none; margin-top: 20px;">
-				<form id="leaveRequestForm" class="khungtaodontu">
+				<form id="leaveRequestForm" class="khungtaodontu" enctype="multipart/form-data">
 					<input type="hidden" name="Id" value="0" />
 
 					<div class="form-group" hidden>
@@ -2611,6 +2611,11 @@
 					<div class="form-group">
 						<label for="Reason">Lý do:</label>
 						<textarea class="form-control" id="Reason" name="Reason" rows="4" style="resize: none;"></textarea>
+					</div>
+
+					<div class="form-group">
+						<label for="ImageUpload">Hình ảnh minh chứng:</label>
+						<input required type="file" class="form-control" id="ImageUpload" name="ImageUpload"/>
 					</div>
 
 					<button type="submit" class="btn-guiyeucau" onclick="submitLeaveRequest(event)">Gửi yêu cầu</button>
@@ -4264,6 +4269,11 @@
 		formData.append('StartDate', document.getElementById('StartDate').value);
 		formData.append('EndDate', document.getElementById('EndDate').value);
 		formData.append('Reasion', document.getElementById('Reason').value);
+		// Append the image file if selected
+		const imageFile = document.getElementById('ImageUpload').files[0];
+		if (imageFile) {
+			formData.append('ImageUpload', imageFile);
+		}
 
 		const token = document.querySelector('input[name="__RequestVerificationToken"]').value;
 
@@ -4360,6 +4370,8 @@
 							<strong>Họ và tên:</strong> ${request.name}<br/>
 							<strong>Ngày bắt đầu:</strong> ${new Date(request.startDate).toLocaleDateString()}<br/>
 							<strong>Ngày kết thúc:</strong> ${new Date(request.endDate).toLocaleDateString()}<br/>
+							<strong>Hình ảnh minh chứng:</strong><br/>
+							<img src="/LeaveRequest/${request.image}" alt="Image Minh Chứng" style="width: 100%; height: auto; object-fit: cover;"/><br/>
 							<strong>Trạng thái:</strong> ${statusMessage}<br/>
 						</p>`;
 
@@ -4393,6 +4405,8 @@
 								<p class="card-text">
 									<strong>Ngày bắt đầu:</strong> ${new Date(request.startDate).toLocaleDateString()}<br/>
 									<strong>Ngày kết thúc:</strong> ${new Date(request.endDate).toLocaleDateString()}<br/>
+									<strong>Hình ảnh minh chứng:</strong><br/>
+									<img src="/LeaveRequest/${request.image}" alt="Image Minh Chứng" style="width: 100%; height: auto; object-fit: cover;"/><br/>
 									<strong>Trạng thái:</strong> ${statusMessage}<br/>
 								</p>`;
 		}
