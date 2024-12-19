@@ -34,6 +34,16 @@ builder.WebHost.ConfigureKestrel(serverOptions =>
 	serverOptions.Limits.MaxRequestBodySize = 1000 * 1024 * 1024; // 50MB (có thể điều chỉnh tùy nhu cầu)
 });
 
+builder.Services.AddCors(options =>
+{
+	options.AddPolicy("AllowAll", policy =>
+	{
+		policy.AllowAnyOrigin()
+			  .AllowAnyMethod()
+			  .AllowAnyHeader();
+	});
+});
+
 builder.Services.AddControllersWithViews();
 
 builder.Services.AddSingleton<ClassroomViewModel>();
@@ -48,13 +58,10 @@ builder.Services.Configure<SmtpSettings>(builder.Configuration.GetSection("SmtpS
 builder.Services.AddScoped<Mail>();
 builder.Services.AddHostedService<EmailSchedulerService>();
 
-
-
-
-
 ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
 var app = builder.Build();
 // Configure the HTTP request pipeline.
+app.UseCors("AllowAll");
 if (app.Environment.IsDevelopment())
 {
     app.UseMigrationsEndPoint();

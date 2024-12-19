@@ -22,7 +22,7 @@ namespace DoAnMon.SignalR
 		{
 			if (!string.IsNullOrEmpty(message) || !string.IsNullOrEmpty(fileUrl))
 			{
-				var content = string.IsNullOrEmpty(message) ? "Đã gửi một file." : message;
+				var content = string.IsNullOrEmpty(message) ? "" : message;
 				await SaveMessageToDatabase(classID, content, time, fileUrl);
 				await Clients.All.SendAsync("ReceiveMessage", user, content, fileUrl, Urlavt);
 			}

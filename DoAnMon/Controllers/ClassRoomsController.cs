@@ -575,10 +575,6 @@ namespace DoAnMon.Controllers
 			return PartialView("_MessagePartial", messages);
 		}
 
-		
-
-
-
 		[HttpPost]
 		public async Task<IActionResult> JoinClassV1(ClassroomDetail classroom)
 		{
@@ -1545,7 +1541,7 @@ namespace DoAnMon.Controllers
 			string zipFilePath = Path.Combine(_environment.WebRootPath, zipFileName);
 			if (System.IO.File.Exists(zipFilePath))
 			{
-				// Xử lý trường hợp tập tin đã tồn tại (ví dụ: xóa tập tin cũ)
+				// Xử lý trường hợp tập tin đã tồn tại (xóa tập tin cũ)
 				System.IO.File.Delete(zipFilePath);
 			}
 			// Nén các tập tin thành tập tin nén
@@ -1825,7 +1821,14 @@ namespace DoAnMon.Controllers
                     cellStyle_A5D5.Font.Bold = true;
                     cellStyle_A5D5.HorizontalAlignment = OfficeOpenXml.Style.ExcelHorizontalAlignment.Center;
 					students = _studentRepo.getListSV();
-					worksheet.Cells[6, 1].LoadFromCollection(students, false);
+                    var filteredStudents = students.Select(s => new
+                    {
+                        s.STT,
+                        s.Mssv,
+                        s.Name,
+                        s.Email
+                    }).ToList();
+                    worksheet.Cells[6, 1].LoadFromCollection(filteredStudents, false);
 
                     // Tạo đối tượng Style cho border của dữ liệu được load
                     var borderStyle = worksheet.Cells[5, 1, 5 + students.Count, 4].Style.Border;

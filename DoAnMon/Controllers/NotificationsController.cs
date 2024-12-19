@@ -38,7 +38,7 @@ namespace DoAnMon.Controllers
                 if (item.createAt.HasValue)
 				{
                     TimeSpan difference = endDate - item.createAt.Value;
-                    if (difference.Days > 3)
+                    if (difference.Days >= 3)
                     {
                         listfriend.Remove(item);
                         _context.Remove(item);
