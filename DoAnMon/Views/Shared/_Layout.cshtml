@@ -176,12 +176,95 @@
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/microsoft-signalr/3.1.18/signalr.min.js"></script>
+    <style>
+        /* General Styles */
+        .menu-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .menu {
+            display: flex;
+            list-style: none;
+            padding: 0;
+        }
+
+        .menu li {
+            margin: 0 10px;
+        }
+
+        .menu a {
+            text-decoration: none;
+            color: #333;
+        }
+
+        .menu a.active {
+            color: #007bff;
+        }
+
+        .menu-toggle {
+            display: none;
+            font-size: 30px;
+            background: none;
+            border: none;
+            color: #333;
+        }
+
+        /* Responsive Styles */
+        @@media (max-width: 768px) {
+            .menu {
+                display: none;
+                flex-direction: column;
+                position: absolute;
+                top: 60px;
+                left: 0;
+                background-color: white;
+                width: 100px;
+                height: 100vh;
+                box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+                padding: 10px;
+                margin: 0;
+                transition: ease-in-out;
+            }
+
+            .menu li {
+                margin: 10px 0;
+            }
+
+            .menu-toggle {
+                display: block;
+            }
+
+            .menu.active {
+                display: flex;
+            }
+        }
+
+        /* Show the menu on mobile when toggle is clicked */
+        #menuToggle.active + #menuList {
+            display: flex;
+        }
+
+        .menu-toggle > i {
+            transition: opacity 0.3s ease, transform 0.3s ease;
+        }
+
+
+    </style>
 </head>
 <body>
     <div class="wrapper">
         <header>
             <div class="menu-container">
-                <ul class="menu">
+                <div class="menu-header">
+                    <button class="menu-toggle" id="menuToggle" style="margin-left: 20px;">
+                        <i class="fas fa-bars"></i>
+                        <i class="fa-solid fa-x" style="display: none;"></i>
+                    </button>
+                </div>
+
+                <ul class="menu" id="menuList">
                     <li>
                         <a href="/Home/Index" class="@(ViewContext.RouteData.Values["action"]?.ToString() == "Index" && ViewContext.RouteData.Values["controller"]?.ToString() == "Home" ? "active" : "")">
                             <i class="fas fa-home"></i>
@@ -202,13 +285,14 @@
                             <i class="fas fa-calendar-alt"></i>
                         </a>
                     </li> <!-- Thời khoá biểu -->
-
                 </ul>
+
                 <ul class="login-item">
                     <partial name="_LoginPartial" />
                 </ul>
             </div>
         </header>
+
         <main class="content">
             @RenderBody()
         </main>
@@ -267,6 +351,18 @@
             }
         });
         connections.start().catch(err => console.error(err.toString()));
+
+        document.getElementById('menuToggle').addEventListener('click', function () {
+            const menuList = document.getElementById('menuList');
+            menuList.classList.toggle('active');
+
+            const barsIcon = menuToggle.querySelector(".fa-bars");
+            const xIcon = menuToggle.querySelector(".fa-x");
+            barsIcon.style.display = barsIcon.style.display === "none" ? "block" : "none";
+            xIcon.style.display = xIcon.style.display === "none" ? "block" : "none";
+        });
+
     </script>
+
 </body>
 </html>

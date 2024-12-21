@@ -143,7 +143,26 @@
     .new::-webkit-scrollbar{
         display: none;
     }
-    
+
+    @@media (max-width: 768px) {
+        .slider-container, .post-listcontent {
+            display: none;
+        }
+
+        .main-content{
+            width: 100%;
+            padding: 10px;
+        }
+
+        .hr_left {
+            display: none;
+        }
+
+        .post-container {
+            margin-left: 0;
+            align-content: space-between;
+        }
+    }
 </style>
 <div class="container1">
     <div class="slider-container">
@@ -163,7 +182,7 @@
         </div>
         
     </div>
-    <div style="width: 1px; height: 900px; background-color: gainsboro; margin-left:20px;"></div>
+    <div class="hr_left" style="width: 1px; height: 900px; background-color: gainsboro; margin-left:20px;"></div>
     
     <div class="post-container">
         <div class="main-content"></div>
@@ -191,42 +210,8 @@
                 <p>Học online không chỉ giúp bạn tiếp thu kiến thức mà còn mở rộng mối quan hệ với những người có cùng đam mê ở khắp nơi trên thế giới.</p>
             </div>
         </div>
-
     </div>
 </div>
-@* <div class="container">
-   <div class="sidebar">
-        <h2>Chủ đề</h2>
-        <!-- Nội dung của cột chủ đề -->
-        <ul>
-            <li><a href="https://sinhvien.hutech.edu.vn/#/sinhvien/login/login">Sinh viên Hutech</a></li>
-            <li><a href="https://daotao.hutech.edu.vn/>">Cổng Thông Tin Đào Tạo</a></li>
-            <li><a href="https://e-graduate.hutech.edu.vn/">E-Learning Hutech</a></li>
-            <!-- Thêm các mục chủ đề khác cần thiết -->
-        </ul>
-    </div>
-
-    <div class="main-content">
-		
-        <!-- Nội dung của trang chính -->
-    </div>
-    <div class="sidebar-right">
-        <div id="posts_container">
-            <!-- Danh sách bài viết sẽ được hiển thị ở đây -->
-            <div id="loading" style="display: none;">
-                <div class="typing-indicator">
-                    <div class="typing-circle"></div>
-                    <div class="typing-circle"></div>
-                    <div class="typing-circle"></div>
-                    <div class="typing-shadow"></div>
-                    <div class="typing-shadow"></div>
-                    <div class="typing-shadow"></div>
-                </div>
-            </div>
-        </div>
-
-    </div> 
-</div>*@
  <script>
     
     /*bài post*/
@@ -294,20 +279,3 @@
         fetchPosts(); // Gọi hàm lấy dữ liệu bài đăng
     });
 </script> 
-@* <script>
-    document.addEventListener('DOMContentLoaded', (event) => {
-        const dropbtn = document.querySelector('.btnchude');
-        const dropdownContent = document.querySelector('.chude-content');
-
-        dropbtn.addEventListener('click', () => {
-            dropdownContent.style.display = dropdownContent.style.display === 'block' ? 'none' : 'block';
-        });
-
-        window.addEventListener('click', (event) => {
-            if (!event.target.matches('.btnchude')) {
-                dropdownContent.style.display = 'none';
-            }
-        });
-    });
-
-</script> *@

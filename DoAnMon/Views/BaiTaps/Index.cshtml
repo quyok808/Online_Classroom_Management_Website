@@ -11,12 +11,13 @@
         display: flex;
         justify-content: center;
         align-items: center;
-        gap: 10px; 
-        
+        gap: 10px;
+        flex-wrap: wrap;
     }
 
     .search-input {
-        width: 600px;
+        width: 100%;
+        max-width: 600px;
         padding: 10px;
         font-size: 16px;
         border: 1px solid #ccc;
@@ -24,11 +25,11 @@
         transition: border-color 0.3s ease, box-shadow 0.3s ease;
     }
 
-        .search-input:focus {
-            border-color: #007bff;
-            box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
-            outline: none;
-        }
+    .search-input:focus {
+        border-color: #007bff;
+        box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
+        outline: none;
+    }
 
     #searchButton {
         padding: 10px 20px;
@@ -36,83 +37,83 @@
         background-color: #4a71ff;
         color: #fff;
         border-radius: 30px;
-        border:none;
+        border: none;
         cursor: pointer;
         transition: background-color 0.3s ease, transform 0.2s ease;
     }
 
-        #searchButton:hover {
-            background-color: #3300ff;
-            transform: scale(1.05);
-        }
+    #searchButton:hover {
+        background-color: #3300ff;
+        transform: scale(1.05);
+    }
 
     .assignments-panel {
-        width:100%;
-        margin-top:100px;
-        font-family: 'Itim',serif;
+        width: 100%;
+        margin-top: 100px;
+        font-family: 'Itim', serif;
     }
 
     #assignmentContainer {
         display: flex;
         flex-wrap: wrap;
-        gap: 20px; 
-        justify-content: flex-start; 
-        margin-top:30px;
-        margin-left:20px;
+        gap: 20px;
+        justify-content: flex-start;
+        margin-top: 30px;
+        margin-left: 20px;
     }
 
     .item {
-        flex: 1 1 calc(25% - 20px); 
+        flex: 1 1 calc(25% - 20px);
         background: #dcdcff;
         border-radius: 10px;
         box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
         overflow: hidden;
         transition: transform 0.2s ease, box-shadow 0.2s ease;
-        max-width: calc(25% - 20px); 
+        max-width: calc(25% - 20px);
     }
 
-        .item:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
-        }
+    .item:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+    }
 
     .assignment {
         padding: 20px;
         text-align: center;
     }
 
-        .assignment h3 {
-            font-size: 18px;
-            color: #333;
-            font-weight: bold;
-            margin-top: 0;
-        }
+    .assignment h3 {
+        font-size: 18px;
+        color: #333;
+        font-weight: bold;
+        margin-top: 0;
+    }
 
-        .assignment p {
-            font-size: 14px;
-            color: #333;
-            margin: 0 0 10px;
-            text-align: justify;
-        }
+    .assignment p {
+        font-size: 14px;
+        color: #333;
+        margin: 0 0 10px;
+        text-align: justify;
+    }
 
-        .assignment .button {
-            display: inline-block;
-            padding: 5px 12px;
-            font-size: 14px;
-            margin: 10px;
-            font-weight: bold;
-            text-transform: uppercase;
-            color: #fff;
-            background: #4a71ff;
-            border-radius: 20px;
-            text-decoration: none;
-            transition: background-color 0.3s ease, transform 0.2s ease;
-        }
+    .assignment .button {
+        display: inline-block;
+        padding: 5px 12px;
+        font-size: 14px;
+        margin: 10px;
+        font-weight: bold;
+        text-transform: uppercase;
+        color: #fff;
+        background: #4a71ff;
+        border-radius: 20px;
+        text-decoration: none;
+        transition: background-color 0.3s ease, transform 0.2s ease;
+    }
 
-            .assignment .button:hover {
-                background-color: #3300ff;
-                transform: scale(1.05);
-            }
+    .assignment .button:hover {
+        background-color: #3300ff;
+        transform: scale(1.05);
+    }
 
     .pagination {
         display: flex;
@@ -122,26 +123,80 @@
         max-width: 600px;
     }
 
-        .pagination a {
-            display: inline-block;
-            padding: 10px 20px;
-            font-size: 14px;
-            font-weight: bold;
-            color: #fff;
-            background: #007bff;
-            border-radius: 4px;
-            text-decoration: none;
-            transition: background-color 0.3s ease;
+    .pagination a {
+        display: inline-block;
+        padding: 10px 20px;
+        font-size: 14px;
+        font-weight: bold;
+        color: #fff;
+        background: #007bff;
+        border-radius: 4px;
+        text-decoration: none;
+        transition: background-color 0.3s ease;
+    }
+
+    .pagination a:hover {
+        background-color: #0056b3;
+    }
+
+    .pagination a.hidden {
+        visibility: hidden;
+    }
+
+    /* Responsive design for smaller screens */
+    @@media (max-width: 768px) {
+        #assignmentContainer {
+            justify-content: center;
         }
 
-            .pagination a:hover {
-                background-color: #0056b3;
-            }
+        .item {
+            flex: 1 1 calc(50% - 20px);
+        }
 
-            .pagination a.hidden {
-                visibility: hidden;
-            }
+        .search-input {
+            width: 100%;
+            max-width: 400px;
+        }
+
+        #searchButton {
+            width: 100%;
+            max-width: 200px;
+            margin-top: 10px;
+        }
+
+        #assignmentContainer{
+            margin-left: 0;
+            padding: 10px;
+        }
+    }
+
+    @@media (max-width: 480px) {
+        .item {
+            flex: 1 1 100%;
+            max-width: 100%;
+        }
+
+        .pagination {
+            flex-direction: column;
+            align-items: flex-start;
+        }
+
+        .pagination a {
+            width: 100%;
+            margin-bottom: 10px;
+        }
+
+        #searchButton {
+            width: 100%;
+        }
+
+        #assignmentContainer {
+            margin-left: 0;
+            padding: 10px;
+        }
+    }
 </style>
+
 <div class="assignments-panel">
     <form id="Search-form" method="get">
         <input type="text" id="query" name="query" placeholder="Nhập tên bài tập hoặc mã lớp" class="search-input" value="@Model.CurrentQuery" />

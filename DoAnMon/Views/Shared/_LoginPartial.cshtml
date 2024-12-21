@@ -81,7 +81,7 @@
     var user = await UserManager.GetUserAsync(User);
 }
 
-<ul style="list-style: none; padding: 0; margin: 0;">
+<ul style="list-style: none; padding: 0; margin-top: 10px;">
     @if (SignInManager.IsSignedIn(User) && user != null)
     {
         <li class="nav-item dropdown">

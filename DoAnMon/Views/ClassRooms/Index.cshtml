@@ -187,10 +187,21 @@
         .classrooms-content {
             grid-template-columns: repeat(2, 1fr); /* Hiển thị 2 thẻ trên dòng khi màn hình nhỏ */
         }
+
+        
     }
     @@media (max-width: 480px) {
         .classrooms-content {
             grid-template-columns: 1fr; /* Hiển thị 1 thẻ trên dòng khi màn hình rất nhỏ */
+        }
+
+        .card-item {
+            width: 250px;
+            height: 160px;
+        }
+
+        .div-responsive {
+            display: none;
         }
     }
 </style>
@@ -217,11 +228,11 @@
          }
         <button data-toggle="modal" data-target="#JoinModal" type="button" class="btn btn-light btn-custom-indexControl"><img src="https://cdn-icons-png.flaticon.com/512/12366/12366453.png" alt="Alternate Text" width="33.75px" height="35px" style="margin-right:26px; " /> Tham gia lớp học</button>
         <hr style="border-top: 2px solid #ddd; margin: 10px 0 auto;" />
-        <div class="btn btn-light btn-custom-indexControl">
+        <div class="btn btn-light btn-custom-indexControl div-responsive">
             <img src="~/images/group.gif" alt="Alternate Text" width="40px" height="40px">
             Lớp học đang tham gia
         </div>
-        <div class="classroomList_Leftside">
+        <div class="classroomList_Leftside div-responsive">
             @{
                 if (Model != null)
                 {

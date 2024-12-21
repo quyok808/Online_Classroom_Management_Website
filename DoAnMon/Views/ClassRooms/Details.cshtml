@@ -1197,11 +1197,16 @@
 		padding: 20px;
 		border-radius: 8px;
 		box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-		width: 700px;
+		width: max-content;
 		text-align: left;
 		position: fixed;
 		font-size: 16px;
 		z-index: 1000;
+		margin-top: 20px;
+	}
+
+	.size-khungtaodontu {
+		width: 700px!important;
 	}
 
 	.btn-guiyeucau {
@@ -1252,14 +1257,13 @@
 		padding: 7px 15px;
 		cursor: pointer;
 		font-size: 16px;
-		margin-top: 20px;
 		float: right;
 		border-radius: 20px;
 	}
 
-		.close-btn:hover {
-			background-color: #ff1a1a;
-		}
+	.close-btn:hover {
+		background-color: #ff1a1a;
+	}
 
 	.giaobai-btn {
 		background-color: #4a71ff;
@@ -1272,9 +1276,9 @@
 		border-radius: 20px;
 	}
 
-		.giaobai-btn:hover {
-			background-color: #0022ff;
-		}
+	.giaobai-btn:hover {
+		background-color: #0022ff;
+	}
 
 	.assignment-left-box {
 		width: 50%;
@@ -1633,6 +1637,19 @@
 		cursor: pointer;
 		font-weight: bold;
 	}
+
+	.img-fluid {
+		width: 100%;
+		height: 400px;
+	}
+
+	.download-button {
+		margin-bottom: -45px;
+		display: flex;
+		width: 23%;
+		justify-content: space-evenly;
+		padding-top: 10px;
+	}
 </style>
 <div id="loading-bar" style="display: none;"></div>
 
@@ -1647,10 +1664,188 @@
 		z-index: 9999;
 		transition: width 0.4s ease;
 	}
+
+	.dropdown1 {
+		display: none;
+	}
 </style>
 
-<div style="position: relative; width: 100%;">
-	<img class="img-fluid" src="/images/@Model.ClassRoom.backgroundUrl" alt="No Images" style="width: 100%; height: 400px;" />
+<style>
+	/* Responsive design for smaller screens */
+	@@media (max-width: 768px) {
+		.ClassroomDetail-container {
+			display: inline-grid;
+		}
+
+		.ClassroomDetail-left-container {
+			width: 90%;
+		}
+
+		.img-fluid {
+			height: 200px;
+		}
+	}
+
+	@@media (max-width: 480px) {
+		.ClassroomDetail-container {
+			display: inline-grid;
+		}
+
+		.ClassroomDetail-left-container, .ClassroomDetail-right-container {
+			width: 90%;
+		}
+
+		.img-fluid {
+			height: 200px;
+		}
+	}
+</style>
+
+<style>
+    /* Responsive design for small screens */
+    @@media (max-width: 768px) {
+        .tabs {
+            display: none; /* Hide the normal tabs */
+        }
+
+        .dropdown1 {
+            display: block; /* Show dropdown */
+            width: 100%;
+            margin-top: 10px;
+        }
+
+        .dropdown1 select {
+            width: 100%;
+            padding: 10px;
+            font-size: 16px;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+            font-family: Poppins, sans-serif;
+        }
+    }
+
+	@@media (max-width: 480px) {
+		.tabs {
+			display: none; /* Hide the normal tabs */
+		}
+
+		.dropdown1 {
+			display: block; /* Show dropdown */
+			width: 100%;
+			margin-top: 10px;
+		}
+
+		.dropdown1 select {
+			width: 100%;
+			padding: 10px;
+			font-size: 16px;
+			border-radius: 5px;
+			border: 1px solid #ccc;
+			font-family: Poppins, sans-serif;
+		}
+	}
+</style>
+<style>
+	/* Responsive Styles */
+    @@media (max-width: 768px) {
+        .teacher-details {
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+        }
+
+        .teacher-image {
+            width: 120px;
+            height: 120px;
+            margin-bottom: 15px;
+        }
+
+        .teacher-text {
+            align-items: center;
+        }
+
+		.assignment-right-box, .assignment-middle-box {
+			width: 100%;
+		}
+
+		.assignment-middle-box {
+			padding: 0 0 10px 0;
+		}
+
+		.assignment {
+			display: block;
+		}
+
+
+    }
+
+	/* Media Queries for Responsiveness */
+@@media (max-width: 768px) {
+    .header_listsv {
+        font-size: 16px;
+    }
+
+    .card_listsv {
+        width: 100%;
+        padding: 10px;
+    }
+
+    .p_listsv {
+        font-size: 13px;
+    }
+
+    .searchsv-container input {
+        width: 100%;
+        font-size: 14px;
+    }
+}
+
+@@media (max-width: 480px) {
+    .header_listsv {
+        font-size: 14px;
+    }
+
+    .card_listsv {
+        width: 100%;
+        padding: 8px;
+    }
+
+    .p_listsv {
+        font-size: 12px;
+    }
+
+    .searchsv-container input {
+        font-size: 12px;
+    }
+
+    .invite_button {
+        font-size: 12px;
+        padding: 6px 12px;
+    }
+
+	.container_listsv {
+		margin-top: 0;
+	}
+
+	#searchsvInput{
+		width: 100%;
+	}
+
+	.download-button {
+		margin-bottom: 10px;
+		width: 100%;
+
+	}
+
+	.size-khungtaodontu {
+		width: -webkit-fill-available!important;
+	}
+}
+</style>
+
+
+<div style="position: relative; width: 100%; margin-top: 80px;">
+	<img class="img-fluid" src="/images/@Model.ClassRoom.backgroundUrl" alt="No Images" />
 	@{
 		if (Model.isOwner)
 		{
@@ -1717,6 +1912,7 @@
 	</div>
 	<div class="ClassroomDetail-right-container">
 		<div class="tabs" style="display: flex; justify-content: center;">
+			<div class="tab" onclick="openTab(event, 'mainload')" style="font-family: Poppins, sans-serif;font-weight: 600">Trang chủ lớp học</div>
 			<div class="tab" onclick="openTab(event, 'teacher')" style="font-family: Poppins, sans-serif;font-weight: 600">Thông tin giáo viên</div>
 			<div class="tab" onclick="openTab(event, 'posts')" style="font-family: Poppins, sans-serif;font-weight: 600">Bài Giảng</div>
 			<div class="tab" onclick="openTab(event, 'assignments')" style="font-family: Poppins, sans-serif;font-weight: 600">Bài tập</div>
@@ -1740,8 +1936,34 @@
 					<div class="tab" onclick="openTab(event, 'setting')" style="font-family: Poppins, sans-serif;font-weight: 600">Tuỳ chỉnh</div>
 				}
 			}
-			<div class="tab" onclick="openTab(event, 'mainload')" style="font-family: Poppins, sans-serif;font-weight: 600" hidden>MainLoad</div>
 		</div>
+
+		<!-- Dropdown for small screens -->
+		<div class="dropdown1">
+			<select id="tabSelect" onchange="dropdownTabChange()">
+				<option value="mainload">Trang chủ lớp học</option>
+				<option value="teacher">Thông tin giáo viên</option>
+				<option value="posts">Bài Giảng</option>
+				<option value="assignments">Bài tập</option>
+				<option value="discussion">Thảo luận</option>
+				<option value="listsv">Danh sách sinh viên</option>
+				@if (Model.CustomRubric == false)
+				{
+					<option value="bangdiem">Bảng điểm</option>
+				}
+				else
+				{
+					<option value="bangdiemCustom">Bảng điểm</option>
+				}
+				<option value="letter">Đơn từ</option>
+				@if (Model.isOwner)
+				{
+					<option value="setting">Tuỳ chỉnh</option>
+				}
+				<option value="mainload" hidden>MainLoad</option>
+			</select>
+		</div>
+		@*=================================================================*@
 		<div id="teacher" class="tabcontent">
 			<div class="teacher-info" style="background-color: #fdffe0">
 				<h2 style="font-family: Poppins, sans-serif;">Thông tin giáo viên</h2>
@@ -2406,7 +2628,7 @@
 			@{
 				if (Model.isOwner)
 				{
-					<div style="margin-bottom: -45px; display: flex; width: 23%; justify-content: space-evenly; padding-top: 10px;">
+					<div class="download-button">
 						<form asp-controller="ClassRooms" asp-action="ExportDSSV" asp-route-classID="@Model.ClassRoom.Id" method="post">
 							<button type="submit" title="Tải file danh sách sinh viên"><i class="fas fa-file-download fa-lg" style="color: #B197FC; font-size: 3.25em;"></i></button>
 						</form>
@@ -2583,7 +2805,7 @@
 
 		<div id="letter" class="tabcontent">
 			<button type="button" class="btn btn-nghiphep" onclick="toggleLeaveRequestForm()">Tạo đơn xin nghỉ phép</button>
-			<div id="leaveRequestFormContainer" style="display:none; margin-top: 20px;">
+			<div id="leaveRequestFormContainer" style="display:none;">
 				<form id="leaveRequestForm" class="khungtaodontu" enctype="multipart/form-data">
 					<input type="hidden" name="Id" value="0" />
 
@@ -2610,17 +2832,19 @@
 
 					<div class="form-group">
 						<label for="Reason">Lý do:</label>
-						<textarea class="form-control" id="Reason" name="Reason" rows="4" style="resize: none;"></textarea>
+						<textarea class="form-control size-khungtaodontu" id="Reason" name="Reason" rows="4" style="resize: none;"></textarea>
 					</div>
 
 					<div class="form-group">
 						<label for="ImageUpload">Hình ảnh minh chứng:</label>
-						<input required type="file" class="form-control" id="ImageUpload" name="ImageUpload"/>
+						<input required type="file" class="form-control" id="ImageUpload" name="ImageUpload" />
 					</div>
 
+					<button type="button" class="close-btn" onclick="document.getElementById('leaveRequestFormContainer').style.display = 'none'">Đóng</button>
 					<button type="submit" class="btn-guiyeucau" onclick="submitLeaveRequest(event)">Gửi yêu cầu</button>
 				</form>
 			</div>
+
 
 			<div class="ctnleaveForm">
 				<div id="leaveRequestsList" class="row">
@@ -4583,4 +4807,46 @@
 			});
 		}
 	});
+</script>
+
+<script>
+	function openTab(evt, tabName) {
+		// Hide all tabs and display the selected tab's content
+		var i, tabcontent, tablinks;
+		tabcontent = document.getElementsByClassName("tabcontent");
+		for (i = 0; i < tabcontent.length; i++) {
+			tabcontent[i].style.display = "none";
+		}
+		tablinks = document.getElementsByClassName("tab");
+		for (i = 0; i < tablinks.length; i++) {
+			tablinks[i].className = tablinks[i].className.replace(" active", "");
+		}
+		document.getElementById(tabName).style.display = "block";
+		evt.currentTarget.className += " active";
+	}
+
+	function dropdownTabChange() {
+		var selectedTab = document.getElementById("tabSelect").value;
+		openTab(event, selectedTab);
+	}
+
+	// Toggle between showing the tabs or dropdown based on screen size
+	window.addEventListener('resize', function () {
+		if (window.innerWidth <= 768) {
+			document.querySelector('.tabs').style.display = 'none';
+			document.querySelector('.dropdown1').style.display = 'block';
+		} else {
+			document.querySelector('.tabs').style.display = 'flex';
+			document.querySelector('.dropdown1').style.display = 'none';
+		}
+	});
+
+	// Initial check
+	if (window.innerWidth <= 768) {
+		document.querySelector('.tabs').style.display = 'none';
+		document.querySelector('.dropdown1').style.display = 'block';
+	} else {
+		document.querySelector('.tabs').style.display = 'flex';
+		document.querySelector('.dropdown1').style.display = 'none';
+	}
 </script>
