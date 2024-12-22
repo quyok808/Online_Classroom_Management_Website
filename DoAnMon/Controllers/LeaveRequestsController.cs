@@ -14,6 +14,7 @@ using DoAnMon.SendMail;
 using System.Drawing;
 using System.Numerics;
 using Microsoft.IdentityModel.Tokens;
+using DoAnMon.Cloudinary;
 
 namespace DoAnMon.Controllers
 {
@@ -23,13 +24,15 @@ namespace DoAnMon.Controllers
         private readonly ApplicationDbContext _context;
 		private readonly UserManager<CustomUser> _userManager;
 		private readonly Mail _mailService;
+		private readonly CloudinaryService _cloudinaryService;
 
-		public LeaveRequestsController(IWebHostEnvironment environment, ApplicationDbContext context, UserManager<CustomUser> userManager, Mail mailService)
+		public LeaveRequestsController(IWebHostEnvironment environment, ApplicationDbContext context, UserManager<CustomUser> userManager, Mail mailService, CloudinaryService cloudinaryService)
         {
             _context = context;
 			_userManager = userManager;
 			_mailService = mailService;
 			_environment = environment;
+			_cloudinaryService = cloudinaryService;
         }
 
 		public IActionResult GetAllLeaveRequest()
@@ -124,23 +127,24 @@ namespace DoAnMon.Controllers
 				leaveRequest.ThoiGianYeuCau = now;
                 if (ImageUpload != null && ImageUpload.Length > 0)
                 {
-					// Đảm bảo thư mục tồn tại
-					var uploadsFolder = Path.Combine(_environment.WebRootPath, "LeaveRequest");
-					if (!Directory.Exists(uploadsFolder))
-					{
-						Directory.CreateDirectory(uploadsFolder);
-					}
+					//// Đảm bảo thư mục tồn tại
+					//var uploadsFolder = Path.Combine(_environment.WebRootPath, "LeaveRequest");
+					//if (!Directory.Exists(uploadsFolder))
+					//{
+					//	Directory.CreateDirectory(uploadsFolder);
+					//}
 
-					// Tạo tên file duy nhất
-					var uniqueFileName = Guid.NewGuid().ToString() + "_" + ImageUpload.FileName;
-					var filePath = Path.Combine(uploadsFolder, uniqueFileName);
+					//// Tạo tên file duy nhất
+					//var uniqueFileName = Guid.NewGuid().ToString() + "_" + ImageUpload.FileName;
+					//var filePath = Path.Combine(uploadsFolder, uniqueFileName);
 
+					var fileName = await _cloudinaryService.UploadImageAsync(ImageUpload, leaveRequest.ClassRoomId);
 					// Lưu file
-					leaveRequest.Image = uniqueFileName;
-					using (var fileStream = new FileStream(filePath, FileMode.Create))
-					{
-						await ImageUpload.CopyToAsync(fileStream);
-					}
+					leaveRequest.Image = fileName;
+					//using (var fileStream = new FileStream(filePath, FileMode.Create))
+					//{
+					//	await ImageUpload.CopyToAsync(fileStream);
+					//}
 				}
 				else
 				{

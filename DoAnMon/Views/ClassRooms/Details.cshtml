@@ -1651,7 +1651,7 @@
 		padding-top: 10px;
 	}
 </style>
-<div id="loading-bar" style="display: none;"></div>
+
 
 <style>
 	#loading-bar {
@@ -1843,9 +1843,10 @@
 }
 </style>
 
-
+<div id="loading-bar" style="display: none;"></div>
 <div style="position: relative; width: 100%; margin-top: 80px;">
-	<img class="img-fluid" src="/images/@Model.ClassRoom.backgroundUrl" alt="No Images" />
+	@* <img class="img-fluid" src="/images/@Model.ClassRoom.backgroundUrl" alt="No Images" /> *@
+	<img class="img-fluid" src="@Model.ClassRoom.backgroundUrl" alt="No Images" />
 	@{
 		if (Model.isOwner)
 		{
@@ -4500,6 +4501,10 @@
 		}
 
 		const token = document.querySelector('input[name="__RequestVerificationToken"]').value;
+		const loadingBar = document.getElementById('loading-bar');
+		// Hiển thị và bắt đầu thanh loading
+		loadingBar.style.display = 'block';
+		loadingBar.style.width = '30%'; // Khởi động thanh với một giá trị nhỏ
 
 		// Use Axios to send a POST request with FormData
 		axios.post('/LeaveRequests/Create', formData, {
@@ -4510,6 +4515,7 @@
 		})
 			.then(function (response) {
 				if (response.data.success) {
+					loadingBar.style.width = '100%'; // Hoàn thành thanh loading
 					toastr.success('Gửi đơn thành công. Vui lòng đợi đơn được phê duyệt !', 'Thành công', { timeOut: 3000 })
 					$('#leaveRequestForm')[0].reset();
 					toggleLeaveRequestForm(); // Hide the form on success
@@ -4522,6 +4528,13 @@
 				} else {
 					alert('An error occurred: ' + error.message);
 				}
+			})
+			.finally(() => {
+				setTimeout(() => {
+					loadingBar.style.display = 'none'; // Ẩn thanh loading sau khi hoàn tất
+					loadingBar.style.width = '0%'; // Reset lại chiều rộng
+					loadingBar.style.backgroundColor = '#3498db'; // Reset màu thanh về mặc định
+				}, 500); // Đợi một chút để người dùng thấy hiệu ứng hoàn thành
 			});
 	}
 
@@ -4595,7 +4608,7 @@
 							<strong>Ngày bắt đầu:</strong> ${new Date(request.startDate).toLocaleDateString()}<br/>
 							<strong>Ngày kết thúc:</strong> ${new Date(request.endDate).toLocaleDateString()}<br/>
 							<strong>Hình ảnh minh chứng:</strong><br/>
-							<img src="/LeaveRequest/${request.image}" alt="Image Minh Chứng" style="width: 100%; height: auto; object-fit: cover;"/><br/>
+							<img src="${request.image}" alt="Image Minh Chứng" style="width: 100%; height: auto; object-fit: cover;"/><br/>
 							<strong>Trạng thái:</strong> ${statusMessage}<br/>
 						</p>`;
 
@@ -4630,7 +4643,7 @@
 									<strong>Ngày bắt đầu:</strong> ${new Date(request.startDate).toLocaleDateString()}<br/>
 									<strong>Ngày kết thúc:</strong> ${new Date(request.endDate).toLocaleDateString()}<br/>
 									<strong>Hình ảnh minh chứng:</strong><br/>
-									<img src="/LeaveRequest/${request.image}" alt="Image Minh Chứng" style="width: 100%; height: auto; object-fit: cover;"/><br/>
+									<img src="${request.image}" alt="Image Minh Chứng" style="width: 100%; height: auto; object-fit: cover;"/><br/>
 									<strong>Trạng thái:</strong> ${statusMessage}<br/>
 								</p>`;
 		}

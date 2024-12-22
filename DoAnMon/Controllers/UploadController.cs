@@ -1,4 +1,5 @@
-﻿using DoAnMon.Data;
+﻿using DoAnMon.Cloudinary;
+using DoAnMon.Data;
 using DoAnMon.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -98,6 +99,17 @@ namespace DoAnMon.Controllers
 
 				// Xóa thư mục tạm
 				Directory.Delete(Path.Combine(_tempPath, resumableIdentifier));
+
+				//// Chuyển tệp ghép thành IFormFile
+				//var file = new FormFile(new FileStream(finalFilePath, FileMode.Open), 0, new FileInfo(finalFilePath).Length, null, Path.GetFileName(finalFilePath));
+
+				//// Gọi UploadFileAsync để tải lên Cloudinary
+				//var uploadedUrl = await _cloudinaryService.UploadFileAsync(file, ClassId);
+				//if (string.IsNullOrEmpty(uploadedUrl))
+				//{
+				//	return BadRequest("Tải lên Cloudinary thất bại.");
+				//}
+				//await SavedatabaseBAIGIANG(ClassId, uploadedUrl, fileName);
 
 				return Ok("Upload complete");
 			}

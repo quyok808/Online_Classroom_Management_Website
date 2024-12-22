@@ -1,4 +1,5 @@
-﻿using DoAnMon.Data;
+﻿using DoAnMon.Cloudinary;
+using DoAnMon.Data;
 using DoAnMon.IdentityCudtomUser;
 using DoAnMon.ModelListSVDownload;
 using DoAnMon.Models;
@@ -18,7 +19,7 @@ var connectionString = builder.Configuration.GetConnectionString("DefaultConnect
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseSqlServer(connectionString));
 builder.Services.AddDatabaseDeveloperPageExceptionFilter();
-
+builder.Services.AddTransient<CloudinaryService>();
 builder.Services.AddScoped<IStudent, StudentRepo>();
 
 builder.Services.AddDefaultIdentity<CustomUser>(options => options.SignIn.RequireConfirmedAccount = true)

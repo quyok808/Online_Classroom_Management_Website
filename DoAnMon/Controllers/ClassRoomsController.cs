@@ -36,6 +36,7 @@ using DoAnMon.ViewModels;
 using Humanizer;
 using Microsoft.VisualStudio.Web.CodeGenerators.Mvc.Templates.BlazorIdentity.Pages.Manage;
 using System.Drawing;
+using DoAnMon.Cloudinary;
 namespace DoAnMon.Controllers
 {
 	[Authorize(Roles ="Admin, Teacher, Student")]
@@ -48,8 +49,9 @@ namespace DoAnMon.Controllers
 		private static readonly SemaphoreSlim _semaphore = new SemaphoreSlim(1, 1);
 		private readonly ILogger<HomeController> _logger;
 		private readonly Mail _mailService;
+		private readonly CloudinaryService _cloudinaryService;
 
-		public ClassRoomsController(ApplicationDbContext context, UserManager<CustomUser> userManager, IWebHostEnvironment environment, IStudent studentRepo, ILogger<HomeController> logger, Mail mailService)
+		public ClassRoomsController(ApplicationDbContext context, UserManager<CustomUser> userManager, IWebHostEnvironment environment, IStudent studentRepo, ILogger<HomeController> logger, Mail mailService, CloudinaryService cloudinaryService)
 		{
 			_context = context;
 			_userManager = userManager;
@@ -57,6 +59,7 @@ namespace DoAnMon.Controllers
 			_studentRepo = studentRepo;
 			_logger = logger;
 			_mailService = mailService;
+			_cloudinaryService = cloudinaryService;
 		}
         public static List<ClassRoom>? userClasses;
 		// GET: ClassRooms
@@ -2019,19 +2022,16 @@ namespace DoAnMon.Controllers
 		{
 			if (image != null && !string.IsNullOrEmpty(classId))
 			{
-				// Xử lý lưu ảnh và liên kết với classId
-				var uploadsFolder = Path.Combine(_environment.WebRootPath, "images");
-				var filePath = Path.Combine(uploadsFolder, classId + "_img.png");
-
-				using (var stream = new FileStream(filePath, FileMode.Create))
+				var imageUrl = await _cloudinaryService.UploadImageAsync(image, classId);
+				if (string.IsNullOrEmpty(imageUrl))
 				{
-					await image.CopyToAsync(stream);
+					return BadRequest("Lỗi không upload được file !!!");
 				}
 
 				var classroom = _context.classRooms.FirstOrDefault(p => p.Id == classId);
 				if (classroom != null)
 				{
-					classroom.backgroundUrl = classId + "_img.png";
+					classroom.backgroundUrl = imageUrl;
 				}
 				await _context.SaveChangesAsync();
 			}
