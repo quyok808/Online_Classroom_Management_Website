@@ -3928,7 +3928,13 @@
 
 		var avatarElement = document.createElement("img");
 		avatarElement.style.cssText = "width: 100%; height: 100%; object-fit: cover;border-radius: 50%";
-		avatarElement.src = `/Imgs_avtUser/${urlavt}`;
+		if (urlavt !== null || urlavt.contains('student.urlAvt')) {
+			avatarElement.src = `${urlavt}`;
+		}
+		else {
+			avatarElement.src = `/Imgs_avtUser/avatar.jpg`;
+		}
+		
 		avatarElement.alt = "Avatar";
 
 		var avatarBox = document.createElement("div");
@@ -4153,7 +4159,11 @@
 		listHtml += '<div class="row_listsv">';
 		students.forEach(function (student) {
 			listHtml += '<div class="card_listsv">';
-			listHtml += '<img class="img_listsv" src="/Imgs_avtUser/' + student.urlAvt + '" alt="No Image">';
+			if (student.urlAvt === "" || student.urlAvt.contains('avatar')){
+				listHtml += '<img class="img_listsv" src="/Imgs_avtUser/' + student.urlAvt + '" alt="No Image">';
+			} else {
+				listHtml += '<img class="img_listsv" src="' + student.urlAvt + '" alt="No Image">';
+			}
 			listHtml += '<p class="p_listsv">' + student.mssv + '</p>';
 			listHtml += '<p class="p_listsv">' + student.name + '</p>';
 

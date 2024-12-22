@@ -87,7 +87,7 @@
         <li class="nav-item dropdown">
             <a class="nav-link dropdown-toggle text-dark" id="userDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
 
-                @if (string.IsNullOrEmpty(user.UrlAvt))
+                @if (string.IsNullOrEmpty(user.UrlAvt) || user.UrlAvt.Contains("avatar"))
 					{
 						<img class="custom-avt" src="~/Imgs_avtUser/avatar.jpg" alt="@user.Name" width="46px" height="46px" />
 					}

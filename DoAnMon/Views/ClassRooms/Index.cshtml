@@ -238,7 +238,18 @@
                 {
                     @foreach (var viewModel in Model)
                     {
-                        <button type="button" class="btn btn-light btn-custom-indexControl text-ellipsis" onclick="location.href='/ClassRooms/Details/@viewModel.ClassRoom.Id'"><img src="@viewModel.Owner.UrlAvt" style="border-radius: 50px;" width="32px" height="32px" alt="Class Image" /> @viewModel.ClassRoom.Name</button>
+                        <button type="button" class="btn btn-light btn-custom-indexControl text-ellipsis" onclick="location.href='/ClassRooms/Details/@viewModel.ClassRoom.Id'">
+                            @{
+                                if (string.IsNullOrEmpty(viewModel.Owner.UrlAvt) || viewModel.Owner.UrlAvt.Contains("avatar"))
+                                {
+                                    <img src="~/Imgs_avtUser/avatar.jpg" style="border-radius: 50px;" width="32px" height="32px" alt="Class Image" />
+                                } else
+                                {
+                                    <img src="@viewModel.Owner.UrlAvt" style="border-radius: 50px;" width="32px" height="32px" alt="Class Image" />
+                                }
+                            }    
+                         @viewModel.ClassRoom.Name
+                        </button>
                     }
 
                 }
