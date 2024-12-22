@@ -1846,7 +1846,17 @@
 <div id="loading-bar" style="display: none;"></div>
 <div style="position: relative; width: 100%; margin-top: 80px;">
 	@* <img class="img-fluid" src="/images/@Model.ClassRoom.backgroundUrl" alt="No Images" /> *@
-	<img class="img-fluid" src="@Model.ClassRoom.backgroundUrl" alt="No Images" />
+	@{
+		if (Model.ClassRoom.backgroundUrl.Contains("classImage_Default"))
+		{
+			<img src="~/images/@Model.ClassRoom.backgroundUrl" class="img-fluid" alt="Front Image">
+		}
+		else
+		{
+			<img src="@Model.ClassRoom.backgroundUrl" class="img-fluid" alt="Front Image">
+		}
+	}
+	@* <img class="img-fluid" src="@Model.ClassRoom.backgroundUrl" alt="No Images" /> *@
 	@{
 		if (Model.isOwner)
 		{

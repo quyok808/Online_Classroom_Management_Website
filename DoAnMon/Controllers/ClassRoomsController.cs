@@ -1250,6 +1250,17 @@ namespace DoAnMon.Controllers
 
 				_context.BaiNop.Remove(item);
 			}
+
+			// Xóa hình ảnh trên Cloudinary
+			if (!classRoom.backgroundUrl.Contains("classImage_Default"))
+			{
+				var publicId = ExtractPublicId(classRoom.backgroundUrl); // Tách publicId từ URL nếu cần
+				var deletionResult = await _cloudinaryService.DeleteImageAsync(publicId, classRoom.Id);
+				if (!deletionResult)
+				{
+					return BadRequest("Không thể xóa hình ảnh từ Cloudinary");
+				}
+			}
 			List<ClassroomDetail> classroomDetails = await _context.classroomDetail.Where(p => p.ClassRoomId.Equals(id)).ToListAsync();
 			foreach(var item in classroomDetails)
 			{
@@ -1273,6 +1284,14 @@ namespace DoAnMon.Controllers
             _context.classRooms.Remove(classRoom);
 			await _context.SaveChangesAsync();
 			return RedirectToAction(nameof(Index));
+		}
+
+		// Helper: Tách publicId từ URL (nếu cần)
+		private string ExtractPublicId(string imageUrl)
+		{
+			var uri = new Uri(imageUrl);
+			var segments = uri.AbsolutePath.Split('/');
+			return segments[^1].Split('.')[0]; // Tách publicId từ URL
 		}
 
 		//DELETE FILE

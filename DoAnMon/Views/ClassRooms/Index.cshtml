@@ -314,7 +314,16 @@
                             <div class="card-item" data-id="@viewModel.ClassRoom.Id">
                                 <div class="card-inner">
                                     <div class="card-front">
-                                        <img src="@viewModel.ClassRoom.backgroundUrl" class="card-img" alt="Front Image">
+                                        @{
+                                            if (viewModel.ClassRoom.backgroundUrl.Contains("classImage_Default"))
+                                            {
+                                                <img src="~/images/@viewModel.ClassRoom.backgroundUrl" class="card-img" alt="Front Image">
+                                            } else
+                                            {
+                                                <img src="@viewModel.ClassRoom.backgroundUrl" class="card-img" alt="Front Image">
+                                            }
+                                        }
+                                        @*<img src="@viewModel.ClassRoom.backgroundUrl" class="card-img" alt="Front Image">*@
                                     </div>
                                     <div class="card-back">
                                         <div class="card">
