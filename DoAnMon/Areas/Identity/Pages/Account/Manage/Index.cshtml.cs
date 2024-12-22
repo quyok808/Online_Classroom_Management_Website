@@ -7,6 +7,7 @@ using System.ComponentModel.DataAnnotations;
 using System.Numerics;
 using System.Text.Encodings.Web;
 using System.Threading.Tasks;
+using DoAnMon.Cloudinary;
 using DoAnMon.IdentityCudtomUser;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -21,15 +22,18 @@ namespace DoAnMon.Areas.Identity.Pages.Account.Manage
         private readonly UserManager<CustomUser> _userManager;
         private readonly SignInManager<CustomUser> _signInManager;
 		private readonly IWebHostEnvironment _environment;
+		private readonly CloudinaryService _cloudinaryService;
 
 		public IndexModel(
             UserManager<CustomUser> userManager,
             SignInManager<CustomUser> signInManager,
-			IWebHostEnvironment environment)
+			IWebHostEnvironment environment,
+			CloudinaryService cloudinaryService)
         {
             _userManager = userManager;
             _signInManager = signInManager;
 			_environment = environment;
+			_cloudinaryService = cloudinaryService;
         }
 
         /// <summary>
@@ -140,15 +144,17 @@ namespace DoAnMon.Areas.Identity.Pages.Account.Manage
 
 			if (Input.ProfilePicture != null && Input.ProfilePicture.Length > 0)
 			{
-				var uploadsFolder = Path.Combine(_environment.WebRootPath, "Imgs_avtUser");
+				//var uploadsFolder = Path.Combine(_environment.WebRootPath, "Imgs_avtUser");
 				//đổi tên sau khi upload
-				var filePath = Path.Combine(uploadsFolder, user.Mssv + ".jpg");
-				
-				using (var fileStream = new FileStream(filePath, FileMode.Create))
-				{
-					await Input.ProfilePicture.CopyToAsync(fileStream);
-				}
-				user.UrlAvt = user.Mssv + ".jpg";
+				//var filePath = Path.Combine(uploadsFolder, user.Mssv + ".jpg");
+
+				//using (var fileStream = new FileStream(filePath, FileMode.Create))
+				//{
+				//	await Input.ProfilePicture.CopyToAsync(fileStream);
+				//}
+				var imageUrl = await _cloudinaryService.UploadImageAsync(Input.ProfilePicture, "User_Avatar");
+				//user.UrlAvt = user.Mssv + ".jpg";
+				user.UrlAvt = imageUrl;
 			}
 
 			// Update user properties

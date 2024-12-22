@@ -1651,7 +1651,7 @@
 		padding-top: 10px;
 	}
 </style>
-<div id="loading-bar" style="display: none;"></div>
+
 
 <style>
 	#loading-bar {
@@ -1843,9 +1843,20 @@
 }
 </style>
 
-
+<div id="loading-bar" style="display: none;"></div>
 <div style="position: relative; width: 100%; margin-top: 80px;">
-	<img class="img-fluid" src="/images/@Model.ClassRoom.backgroundUrl" alt="No Images" />
+	@* <img class="img-fluid" src="/images/@Model.ClassRoom.backgroundUrl" alt="No Images" /> *@
+	@{
+		if (Model.ClassRoom.backgroundUrl.Contains("classImage_Default"))
+		{
+			<img src="~/images/@Model.ClassRoom.backgroundUrl" class="img-fluid" alt="Front Image">
+		}
+		else
+		{
+			<img src="@Model.ClassRoom.backgroundUrl" class="img-fluid" alt="Front Image">
+		}
+	}
+	@* <img class="img-fluid" src="@Model.ClassRoom.backgroundUrl" alt="No Images" /> *@
 	@{
 		if (Model.isOwner)
 		{
@@ -2832,12 +2843,12 @@
 
 					<div class="form-group">
 						<label for="Reason">Lý do:</label>
-						<textarea class="form-control size-khungtaodontu" id="Reason" name="Reason" rows="4" style="resize: none;"></textarea>
+						<textarea required class="form-control size-khungtaodontu" id="Reason" name="Reason" rows="4" style="resize: none;"></textarea>
 					</div>
 
 					<div class="form-group">
 						<label for="ImageUpload">Hình ảnh minh chứng:</label>
-						<input required type="file" class="form-control" id="ImageUpload" name="ImageUpload" />
+						<input required type="file" class="form-control" id="ImageUpload" name="ImageUpload" accept="image/*"/>
 					</div>
 
 					<button type="button" class="close-btn" onclick="document.getElementById('leaveRequestFormContainer').style.display = 'none'">Đóng</button>
@@ -3917,7 +3928,13 @@
 
 		var avatarElement = document.createElement("img");
 		avatarElement.style.cssText = "width: 100%; height: 100%; object-fit: cover;border-radius: 50%";
-		avatarElement.src = `/Imgs_avtUser/${urlavt}`;
+		if (urlavt !== null || urlavt.contains('student.urlAvt')) {
+			avatarElement.src = `${urlavt}`;
+		}
+		else {
+			avatarElement.src = `/Imgs_avtUser/avatar.jpg`;
+		}
+		
 		avatarElement.alt = "Avatar";
 
 		var avatarBox = document.createElement("div");
@@ -4142,7 +4159,11 @@
 		listHtml += '<div class="row_listsv">';
 		students.forEach(function (student) {
 			listHtml += '<div class="card_listsv">';
-			listHtml += '<img class="img_listsv" src="/Imgs_avtUser/' + student.urlAvt + '" alt="No Image">';
+			if (student.urlAvt === "" || student.urlAvt.contains('avatar')){
+				listHtml += '<img class="img_listsv" src="/Imgs_avtUser/' + student.urlAvt + '" alt="No Image">';
+			} else {
+				listHtml += '<img class="img_listsv" src="' + student.urlAvt + '" alt="No Image">';
+			}
 			listHtml += '<p class="p_listsv">' + student.mssv + '</p>';
 			listHtml += '<p class="p_listsv">' + student.name + '</p>';
 
@@ -4500,6 +4521,10 @@
 		}
 
 		const token = document.querySelector('input[name="__RequestVerificationToken"]').value;
+		const loadingBar = document.getElementById('loading-bar');
+		// Hiển thị và bắt đầu thanh loading
+		loadingBar.style.display = 'block';
+		loadingBar.style.width = '30%'; // Khởi động thanh với một giá trị nhỏ
 
 		// Use Axios to send a POST request with FormData
 		axios.post('/LeaveRequests/Create', formData, {
@@ -4510,6 +4535,7 @@
 		})
 			.then(function (response) {
 				if (response.data.success) {
+					loadingBar.style.width = '100%'; // Hoàn thành thanh loading
 					toastr.success('Gửi đơn thành công. Vui lòng đợi đơn được phê duyệt !', 'Thành công', { timeOut: 3000 })
 					$('#leaveRequestForm')[0].reset();
 					toggleLeaveRequestForm(); // Hide the form on success
@@ -4522,6 +4548,13 @@
 				} else {
 					alert('An error occurred: ' + error.message);
 				}
+			})
+			.finally(() => {
+				setTimeout(() => {
+					loadingBar.style.display = 'none'; // Ẩn thanh loading sau khi hoàn tất
+					loadingBar.style.width = '0%'; // Reset lại chiều rộng
+					loadingBar.style.backgroundColor = '#3498db'; // Reset màu thanh về mặc định
+				}, 500); // Đợi một chút để người dùng thấy hiệu ứng hoàn thành
 			});
 	}
 
@@ -4595,7 +4628,7 @@
 							<strong>Ngày bắt đầu:</strong> ${new Date(request.startDate).toLocaleDateString()}<br/>
 							<strong>Ngày kết thúc:</strong> ${new Date(request.endDate).toLocaleDateString()}<br/>
 							<strong>Hình ảnh minh chứng:</strong><br/>
-							<img src="/LeaveRequest/${request.image}" alt="Image Minh Chứng" style="width: 100%; height: auto; object-fit: cover;"/><br/>
+							<img src="${request.image}" alt="Image Minh Chứng" style="width: 100%; height: auto; object-fit: cover;"/><br/>
 							<strong>Trạng thái:</strong> ${statusMessage}<br/>
 						</p>`;
 
@@ -4630,7 +4663,7 @@
 									<strong>Ngày bắt đầu:</strong> ${new Date(request.startDate).toLocaleDateString()}<br/>
 									<strong>Ngày kết thúc:</strong> ${new Date(request.endDate).toLocaleDateString()}<br/>
 									<strong>Hình ảnh minh chứng:</strong><br/>
-									<img src="/LeaveRequest/${request.image}" alt="Image Minh Chứng" style="width: 100%; height: auto; object-fit: cover;"/><br/>
+									<img src="${request.image}" alt="Image Minh Chứng" style="width: 100%; height: auto; object-fit: cover;"/><br/>
 									<strong>Trạng thái:</strong> ${statusMessage}<br/>
 								</p>`;
 		}
@@ -4850,3 +4883,14 @@
 		document.querySelector('.dropdown1').style.display = 'none';
 	}
 </script>
+<script>
+    document.getElementById('ImageUpload').addEventListener('change', function (event) {
+        const file = event.target.files[0];
+        if (file) {
+            if (!file.type.startsWith('image/')) {
+                toastr.error("Chỉ được tải lên file hình ảnh !!!", "Lỗi", {timeOut: 3000});
+                event.target.value = ''; // Reset input
+            }
+        }
+    });
+</script> @* Chỉ cho phép hình ảnh trong chọn hình minh chứng xin nghỉ*@
