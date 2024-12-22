@@ -174,14 +174,33 @@ namespace DoAnMon.Controllers
 				return BadRequest(new { success = false, errors = "Lỗi không tìm thấy đơn này" });
 			}
 
-			deleteFile("LeaveRequest", leaveRequest.Image);
-			_context.leaveRequest.Remove(leaveRequest);
+			//deleteFile("LeaveRequest", leaveRequest.Image);
+
+            // Xóa hình ảnh trên Cloudinary
+            if (!string.IsNullOrEmpty(leaveRequest.Image))
+            {
+                var publicId = ExtractPublicId(leaveRequest.Image); // Tách publicId từ URL nếu cần
+                var deletionResult = await _cloudinaryService.DeleteImageAsync(publicId, leaveRequest.ClassRoomId);
+                if (!deletionResult)
+                {
+                    return StatusCode(500, new { success = false, errors = "Không thể xóa hình ảnh từ Cloudinary" });
+                }
+            }
+            _context.leaveRequest.Remove(leaveRequest);
 			await _context.SaveChangesAsync();
 			return Ok();
         }
 
-		//DELETE FILE
-		public void deleteFile(string folder, string fileName)
+        // Helper: Tách publicId từ URL (nếu cần)
+        private string ExtractPublicId(string imageUrl)
+        {
+            var uri = new Uri(imageUrl);
+            var segments = uri.AbsolutePath.Split('/');
+            return segments[^1].Split('.')[0]; // Tách publicId từ URL
+        }
+
+        //DELETE FILE
+        public void deleteFile(string folder, string fileName)
 		{
 			if (fileName.IsNullOrEmpty())
 			{

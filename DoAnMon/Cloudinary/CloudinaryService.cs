@@ -46,5 +46,26 @@
 			}
 			return null;
 		}
-	}
+
+        public async Task<bool> DeleteImageAsync(string publicId, string folderName)
+        {
+            try
+            {
+                // Kết hợp folderName và publicId
+                var fullPublicId = string.IsNullOrEmpty(folderName) ? publicId : $"{folderName}/{publicId}";
+
+                var deletionParams = new DeletionParams(fullPublicId);
+                var deletionResult = await _cloudinary.DestroyAsync(deletionParams);
+
+                return deletionResult.Result == "ok" || deletionResult.Result == "not found"; // Kiểm tra kết quả xóa
+            }
+            catch (Exception ex)
+            {
+                // Log lỗi nếu cần
+                Console.WriteLine($"Lỗi khi xóa ảnh: {ex.Message}");
+                return false;
+            }
+        }
+
+    }
 }

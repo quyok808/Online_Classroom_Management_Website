@@ -238,7 +238,7 @@
                 {
                     @foreach (var viewModel in Model)
                     {
-                        <button type="button" class="btn btn-light btn-custom-indexControl text-ellipsis" onclick="location.href='/ClassRooms/Details/@viewModel.ClassRoom.Id'"><img src="~/Imgs_avtUser/@viewModel.Owner.UrlAvt" style="border-radius: 50px;" width="32px" height="32px" alt="Class Image" /> @viewModel.ClassRoom.Name</button>
+                        <button type="button" class="btn btn-light btn-custom-indexControl text-ellipsis" onclick="location.href='/ClassRooms/Details/@viewModel.ClassRoom.Id'"><img src="@viewModel.Owner.UrlAvt" style="border-radius: 50px;" width="32px" height="32px" alt="Class Image" /> @viewModel.ClassRoom.Name</button>
                     }
 
                 }
