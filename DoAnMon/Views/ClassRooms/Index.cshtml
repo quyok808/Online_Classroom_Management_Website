@@ -183,6 +183,24 @@
         line-height: 18px;
     }
 
+    .null_Classroom {
+        text-align: center; /* Căn giữa nội dung */
+        margin: 20px auto; /* Tạo khoảng cách và căn giữa phần tử */
+    }
+
+    .null_Classroom img {
+        max-width: 100%; /* Hình ảnh tự động co giãn theo kích thước container */
+        height: auto; /* Giữ tỷ lệ hình ảnh */
+    }
+
+    .null_Classroom h3 {
+        font-family: 'Itim', serif;
+        font-size: 20px; /* Điều chỉnh kích thước font chữ */
+        margin-top: -30px; /* Giảm khoảng cách trên */
+        color: #333; /* Thêm màu chữ */
+    }
+
+
     @@media (max-width: 768px) {
         .classrooms-content {
             grid-template-columns: repeat(2, 1fr); /* Hiển thị 2 thẻ trên dòng khi màn hình nhỏ */
@@ -202,6 +220,18 @@
 
         .div-responsive {
             display: none;
+        }
+
+        .null_Classroom img {
+            width: 100%;
+            z-index: 1;
+            background-color: white;
+            margin-top: -10px;
+        }
+
+        .null_Classroom h3 {
+            font-size: 14px; /* Giảm kích thước font chữ */
+            margin-top: -20px; /* Điều chỉnh khoảng cách trên */
         }
     }
 </style>
@@ -358,7 +388,7 @@
                 {
                     <div class="null_Classroom">
                         <img src="~/images/null_Classroom_Index.gif" width="600px" height="400px" alt=" Null Classroom" />
-                        <h3 style="font-family: 'Itim', serif; font-size: 25px; margin-top: -50px;">Hiện tại bạn đang không tham gia lớp học nào !!!</h3>
+                        <h3>Hiện tại bạn đang không tham gia lớp học nào !!!</h3>
                     </div>
                 }
             } 
