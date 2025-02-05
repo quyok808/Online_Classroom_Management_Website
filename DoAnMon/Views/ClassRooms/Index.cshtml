@@ -183,14 +183,55 @@
         line-height: 18px;
     }
 
+    .null_Classroom {
+        text-align: center; /* Căn giữa nội dung */
+        margin: 20px auto; /* Tạo khoảng cách và căn giữa phần tử */
+    }
+
+    .null_Classroom img {
+        max-width: 100%; /* Hình ảnh tự động co giãn theo kích thước container */
+        height: auto; /* Giữ tỷ lệ hình ảnh */
+    }
+
+    .null_Classroom h3 {
+        font-family: 'Itim', serif;
+        font-size: 20px; /* Điều chỉnh kích thước font chữ */
+        margin-top: -30px; /* Giảm khoảng cách trên */
+        color: #333; /* Thêm màu chữ */
+    }
+
+
     @@media (max-width: 768px) {
         .classrooms-content {
             grid-template-columns: repeat(2, 1fr); /* Hiển thị 2 thẻ trên dòng khi màn hình nhỏ */
         }
+
+        
     }
     @@media (max-width: 480px) {
         .classrooms-content {
             grid-template-columns: 1fr; /* Hiển thị 1 thẻ trên dòng khi màn hình rất nhỏ */
+        }
+
+        .card-item {
+            width: 250px;
+            height: 160px;
+        }
+
+        .div-responsive {
+            display: none;
+        }
+
+        .null_Classroom img {
+            width: 100%;
+            z-index: 1;
+            background-color: white;
+            margin-top: -10px;
+        }
+
+        .null_Classroom h3 {
+            font-size: 14px; /* Giảm kích thước font chữ */
+            margin-top: -20px; /* Điều chỉnh khoảng cách trên */
         }
     }
 </style>
@@ -217,17 +258,28 @@
          }
         <button data-toggle="modal" data-target="#JoinModal" type="button" class="btn btn-light btn-custom-indexControl"><img src="https://cdn-icons-png.flaticon.com/512/12366/12366453.png" alt="Alternate Text" width="33.75px" height="35px" style="margin-right:26px; " /> Tham gia lớp học</button>
         <hr style="border-top: 2px solid #ddd; margin: 10px 0 auto;" />
-        <div class="btn btn-light btn-custom-indexControl">
+        <div class="btn btn-light btn-custom-indexControl div-responsive">
             <img src="~/images/group.gif" alt="Alternate Text" width="40px" height="40px">
             Lớp học đang tham gia
         </div>
-        <div class="classroomList_Leftside">
+        <div class="classroomList_Leftside div-responsive">
             @{
                 if (Model != null)
                 {
                     @foreach (var viewModel in Model)
                     {
-                        <button type="button" class="btn btn-light btn-custom-indexControl text-ellipsis" onclick="location.href='/ClassRooms/Details/@viewModel.ClassRoom.Id'"><img src="~/Imgs_avtUser/@viewModel.Owner.UrlAvt" style="border-radius: 50px;" width="32px" height="32px" alt="Class Image" /> @viewModel.ClassRoom.Name</button>
+                        <button type="button" class="btn btn-light btn-custom-indexControl text-ellipsis" onclick="location.href='/ClassRooms/Details/@viewModel.ClassRoom.Id'">
+                            @{
+                                if (string.IsNullOrEmpty(viewModel.Owner.UrlAvt) || viewModel.Owner.UrlAvt.Contains("avatar"))
+                                {
+                                    <img src="~/Imgs_avtUser/avatar.jpg" style="border-radius: 50px;" width="32px" height="32px" alt="Class Image" />
+                                } else
+                                {
+                                    <img src="@viewModel.Owner.UrlAvt" style="border-radius: 50px;" width="32px" height="32px" alt="Class Image" />
+                                }
+                            }    
+                         @viewModel.ClassRoom.Name
+                        </button>
                     }
 
                 }
@@ -303,7 +355,16 @@
                             <div class="card-item" data-id="@viewModel.ClassRoom.Id">
                                 <div class="card-inner">
                                     <div class="card-front">
-                                        <img src="~/images/@viewModel.ClassRoom.backgroundUrl" class="card-img" alt="Front Image">
+                                        @{
+                                            if (viewModel.ClassRoom.backgroundUrl.Contains("classImage_Default"))
+                                            {
+                                                <img src="~/images/@viewModel.ClassRoom.backgroundUrl" class="card-img" alt="Front Image">
+                                            } else
+                                            {
+                                                <img src="@viewModel.ClassRoom.backgroundUrl" class="card-img" alt="Front Image">
+                                            }
+                                        }
+                                        @*<img src="@viewModel.ClassRoom.backgroundUrl" class="card-img" alt="Front Image">*@
                                     </div>
                                     <div class="card-back">
                                         <div class="card">
@@ -327,7 +388,7 @@
                 {
                     <div class="null_Classroom">
                         <img src="~/images/null_Classroom_Index.gif" width="600px" height="400px" alt=" Null Classroom" />
-                        <h3 style="font-family: 'Itim', serif; font-size: 25px; margin-top: -50px;">Hiện tại bạn đang không tham gia lớp học nào !!!</h3>
+                        <h3>Hiện tại bạn đang không tham gia lớp học nào !!!</h3>
                     </div>
                 }
             } 

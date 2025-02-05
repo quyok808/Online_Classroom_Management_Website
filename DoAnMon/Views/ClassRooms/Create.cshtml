@@ -27,10 +27,16 @@
 			gap: 10px; /* Khoảng cách giữa các cột */
 		}
 
+		#ClassPeriodContainer .form-check {
+			flex: 1 1 calc(50% - 10px); /* Chia đều thành 2 cột */
+			min-width: 200px; /* Đảm bảo kích thước tối thiểu */
+		}
+
+		@@media (max-width: 768px) {
 			#ClassPeriodContainer .form-check {
-				flex: 1 1 calc(50% - 10px); /* Chia đều thành 2 cột */
-				min-width: 200px; /* Đảm bảo kích thước tối thiểu */
+				flex: 1 1 100%; /* Trên màn hình nhỏ, mỗi item chiếm toàn bộ chiều ngang */
 			}
+		}
 
 	</style>
 </head>

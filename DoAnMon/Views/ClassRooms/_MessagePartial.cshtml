@@ -74,6 +74,36 @@
     font-weight: bold;
 }
 
+/* Media Queries for responsiveness */
+@@media (max-width: 768px) {
+    .message-box {
+        width: calc(100% - 60px); /* Adjust message-box width for smaller screens */
+        padding: 8px;
+    }
+
+    .message-box h3 {
+        font-size: 14px; /* Shrink title font size */
+    }
+
+    .message-box p {
+        font-size: 12px; /* Shrink content font size */
+    }
+}
+
+@@media (max-width: 480px) {
+    .message-box {
+        width: calc(100% - 60px); /* Ensure message-box fits on small screens */
+        padding: 6px;
+    }
+
+    .message-box h3 {
+        font-size: 11px; /* Further shrink title font size */
+    }
+
+    .message-box p {
+        font-size: 9px; /* Further shrink content font size */
+    }
+}
 </style>
 @{
     List<Message>? listmsg = Model.ToList();
@@ -93,9 +123,20 @@
             @if (alignmentClass == "other-user")
             {
                 <div class="avatar" style="width: 50px; height: 50px; background-color: #ddd; border-radius: 50%; text-align: center; line-height: 40px; margin-left: 10px; font-size: 18px; font-weight: bold; color: #555;">
-                    <img src="/Imgs_avtUser/@chattinguser.UrlAvt"
-                         alt="Avatar"
-                         style="width: 100%; height: 100%; object-fit: cover;border-radius: 50%">
+                    @if (string.IsNullOrEmpty(chattinguser.UrlAvt) || chattinguser.UrlAvt.Contains("avatar.jpg"))
+                    {
+                            <img src="/Imgs_avtUser/avatar.jpg"
+                                 alt="Avatar"
+                                 style="width: 100%; height: 100%; object-fit: cover;border-radius: 50%">
+                    }
+                    else
+                    {
+                            <img src="@chattinguser.UrlAvt"
+                                 alt="Avatar"
+                                 style="width: 100%; height: 100%; object-fit: cover;border-radius: 50%">
+                    }
+                    
+                    
                 </div>
             }
             <div class="message-box">

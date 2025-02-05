@@ -14,6 +14,7 @@ using DoAnMon.SendMail;
 using System.Drawing;
 using System.Numerics;
 using Microsoft.IdentityModel.Tokens;
+using DoAnMon.Cloudinary;
 
 namespace DoAnMon.Controllers
 {
@@ -23,13 +24,15 @@ namespace DoAnMon.Controllers
         private readonly ApplicationDbContext _context;
 		private readonly UserManager<CustomUser> _userManager;
 		private readonly Mail _mailService;
+		private readonly CloudinaryService _cloudinaryService;
 
-		public LeaveRequestsController(IWebHostEnvironment environment, ApplicationDbContext context, UserManager<CustomUser> userManager, Mail mailService)
+		public LeaveRequestsController(IWebHostEnvironment environment, ApplicationDbContext context, UserManager<CustomUser> userManager, Mail mailService, CloudinaryService cloudinaryService)
         {
             _context = context;
 			_userManager = userManager;
 			_mailService = mailService;
 			_environment = environment;
+			_cloudinaryService = cloudinaryService;
         }
 
 		public IActionResult GetAllLeaveRequest()
@@ -124,23 +127,24 @@ namespace DoAnMon.Controllers
 				leaveRequest.ThoiGianYeuCau = now;
                 if (ImageUpload != null && ImageUpload.Length > 0)
                 {
-					// Đảm bảo thư mục tồn tại
-					var uploadsFolder = Path.Combine(_environment.WebRootPath, "LeaveRequest");
-					if (!Directory.Exists(uploadsFolder))
-					{
-						Directory.CreateDirectory(uploadsFolder);
-					}
+					//// Đảm bảo thư mục tồn tại
+					//var uploadsFolder = Path.Combine(_environment.WebRootPath, "LeaveRequest");
+					//if (!Directory.Exists(uploadsFolder))
+					//{
+					//	Directory.CreateDirectory(uploadsFolder);
+					//}
 
-					// Tạo tên file duy nhất
-					var uniqueFileName = Guid.NewGuid().ToString() + "_" + ImageUpload.FileName;
-					var filePath = Path.Combine(uploadsFolder, uniqueFileName);
+					//// Tạo tên file duy nhất
+					//var uniqueFileName = Guid.NewGuid().ToString() + "_" + ImageUpload.FileName;
+					//var filePath = Path.Combine(uploadsFolder, uniqueFileName);
 
+					var fileName = await _cloudinaryService.UploadImageAsync(ImageUpload, leaveRequest.ClassRoomId);
 					// Lưu file
-					leaveRequest.Image = uniqueFileName;
-					using (var fileStream = new FileStream(filePath, FileMode.Create))
-					{
-						await ImageUpload.CopyToAsync(fileStream);
-					}
+					leaveRequest.Image = fileName;
+					//using (var fileStream = new FileStream(filePath, FileMode.Create))
+					//{
+					//	await ImageUpload.CopyToAsync(fileStream);
+					//}
 				}
 				else
 				{
@@ -170,14 +174,33 @@ namespace DoAnMon.Controllers
 				return BadRequest(new { success = false, errors = "Lỗi không tìm thấy đơn này" });
 			}
 
-			deleteFile("LeaveRequest", leaveRequest.Image);
-			_context.leaveRequest.Remove(leaveRequest);
+			//deleteFile("LeaveRequest", leaveRequest.Image);
+
+            // Xóa hình ảnh trên Cloudinary
+            if (!string.IsNullOrEmpty(leaveRequest.Image))
+            {
+                var publicId = ExtractPublicId(leaveRequest.Image); // Tách publicId từ URL nếu cần
+                var deletionResult = await _cloudinaryService.DeleteImageAsync(publicId, leaveRequest.ClassRoomId);
+                if (!deletionResult)
+                {
+                    return StatusCode(500, new { success = false, errors = "Không thể xóa hình ảnh từ Cloudinary" });
+                }
+            }
+            _context.leaveRequest.Remove(leaveRequest);
 			await _context.SaveChangesAsync();
 			return Ok();
         }
 
-		//DELETE FILE
-		public void deleteFile(string folder, string fileName)
+        // Helper: Tách publicId từ URL (nếu cần)
+        private string ExtractPublicId(string imageUrl)
+        {
+            var uri = new Uri(imageUrl);
+            var segments = uri.AbsolutePath.Split('/');
+            return segments[^1].Split('.')[0]; // Tách publicId từ URL
+        }
+
+        //DELETE FILE
+        public void deleteFile(string folder, string fileName)
 		{
 			if (fileName.IsNullOrEmpty())
 			{
